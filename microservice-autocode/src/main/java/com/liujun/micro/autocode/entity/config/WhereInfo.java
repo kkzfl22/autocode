@@ -1,0 +1,40 @@
+package com.liujun.micro.autocode.entity.config;
+
+import com.liujun.micro.autocode.generator.builder.constant.MyBatisOperatorFlag;
+import lombok.Data;
+import lombok.ToString;
+
+/**
+ * @author liujun
+ * @version 0.0.1
+ */
+@ToString
+@Data
+public class WhereInfo {
+
+  /** 使用条件的字段 */
+  private String sqlColumn;
+
+  /** 操作符 */
+  private String operator;
+
+  /** 操作符枚举信息 */
+  private MyBatisOperatorFlag operatorFlag;
+
+  /**
+   * 默认使用相等的符号
+   *
+   * @param sqlColumn
+   */
+  public WhereInfo(String sqlColumn) {
+    this.sqlColumn = sqlColumn;
+    this.operator = MyBatisOperatorFlag.EQUAL.getOperator();
+    this.operatorFlag = MyBatisOperatorFlag.EQUAL;
+  }
+
+  public WhereInfo(String sqlColumn, String operator) {
+    this.sqlColumn = sqlColumn;
+    this.operator = operator;
+    this.operatorFlag = MyBatisOperatorFlag.getOperator(operator);
+  }
+}
