@@ -2,9 +2,9 @@ package com.liujun.micro.autocode.generator.builder.service;
 
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.JavaCodePersistObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.JavaCodeRepositoryObjectCreate;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
-import com.liujun.micro.autocode.generator.database.service.tableInfo.DatabaseOperator;
+import com.liujun.micro.autocode.generator.database.service.DatabaseOperator;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class AutoCodeBeanBuilder {
 
   /** 添加数据库实体的方法 */
   public AutoCodeBeanBuilder addPersistObject() {
-    this.autoList.add(new JavaCodePersistObjectCreate());
+    this.autoList.add(new JavaCodeRepositoryObjectCreate());
     return this;
   }
 

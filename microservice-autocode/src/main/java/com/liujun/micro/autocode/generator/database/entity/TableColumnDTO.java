@@ -43,6 +43,9 @@ public class TableColumnDTO {
   /** 数据库设置的默认值 */
   private String defaultValue;
 
+  /** 创建表语句时指定的类型 */
+  private String sqlColumnType;
+
   public TableColumnDTO() {}
 
   public TableColumnDTO(

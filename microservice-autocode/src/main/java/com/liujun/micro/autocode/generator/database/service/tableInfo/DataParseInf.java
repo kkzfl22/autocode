@@ -25,12 +25,4 @@ public interface DataParseInf {
    * @return 类型
    */
   String parseJavaType(TableColumnDTO bean);
-
-  /**
-   * 通过数据库的类型转换为java的类型
-   *
-   * @param bean java的列信息
-   * @return 类型信息
-   */
-  String getJavaDefValue(TableColumnDTO bean);
 }

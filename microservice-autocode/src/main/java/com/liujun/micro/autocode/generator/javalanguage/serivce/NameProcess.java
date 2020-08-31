@@ -103,6 +103,10 @@ public class NameProcess {
     return sb.toString();
   }
 
+
+
+
+
   /**
    * 获取Spring的名称的信息 方法描述
    *
@@ -123,9 +127,23 @@ public class NameProcess {
    * @param str
    * @return
    */
-  public String toJavaNameFirst(String str) {
+  public String toJavaNameFirstLower(String str) {
     StringBuilder sb = new StringBuilder();
     sb.append(str.substring(0, 1).toLowerCase());
+    sb.append(str.substring(1));
+    return sb.toString();
+  }
+
+
+  /**
+   * 转换为java命名规则,首字线小写，其他的首字母大写 方法描述
+   *
+   * @param str
+   * @return
+   */
+  public String toJavaNameFirstUpper(String str) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(str.substring(0, 1).toUpperCase());
     sb.append(str.substring(1));
     return sb.toString();
   }

@@ -3,6 +3,7 @@ package com.liujun.micro.autocode.generator.builder.operator.code;
 import com.liujun.micro.autocode.config.generate.GenerateConfig;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.service.AutoCodeBeanBuilder;
+import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 
 /**
  * 基础的代码路径
@@ -29,7 +30,12 @@ public class CodeBaseUtils {
 
     GenerateCodeContext param =
         new GenerateCodeContext(
-            filePath, basePkg, modelName, tableSpace, GenerateConfig.INSTANCE.getCfgEntity());
+            filePath,
+            basePkg,
+            modelName,
+            DatabaseTypeEnum.MYSQL,
+            tableSpace,
+            GenerateConfig.INSTANCE.getCfgEntity());
 
     AutoCodeBeanBuilder builder = new AutoCodeBeanBuilder(param);
 

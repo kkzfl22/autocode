@@ -9,6 +9,7 @@ import com.liujun.micro.autocode.generator.builder.constant.MyBatisKey;
 import com.liujun.micro.autocode.generator.builder.constant.MyBatisOperatorFlag;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeSourceEnum;
 import com.liujun.micro.autocode.generator.database.entity.DatabaseTypeMsgBO;
@@ -629,7 +630,7 @@ public class GenerateJavaMybatisMapperXml {
     sb.append(Symbol.ENTER_LINE);
 
     // 检查当前是否为批量操作
-    boolean batchFlag = checkBatch(methodInfo.getParamType());
+    boolean batchFlag = MethodUtils.checkBatch(methodInfo.getParamType());
 
     if (batchFlag) {
       insertBatch(sb, columnList);
@@ -641,27 +642,6 @@ public class GenerateJavaMybatisMapperXml {
     sb.append(JavaFormat.appendTab(1)).append(MyBatisKey.INSERT_XML_END).append(Symbol.ENTER_LINE);
     sb.append(Symbol.ENTER_LINE);
     sb.append(Symbol.ENTER_LINE);
-  }
-
-  /**
-   * 检查当前是否为批量操作
-   *
-   * @param typeList 配制 的文件信息
-   * @return true 当前为批量操作，false 当前为单行操作
-   */
-  private boolean checkBatch(List<TypeInfo> typeList) {
-    if (typeList.isEmpty()) {
-      return false;
-    }
-
-    for (TypeInfo info : typeList) {
-      // 当前是否为集合
-      if (JavaKeyWord.IMPORT_LIST.equals(info.getImportPath())) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   /**

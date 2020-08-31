@@ -3,6 +3,7 @@ package com.liujun.micro.autocode.generator.builder.entity;
 import com.liujun.micro.autocode.config.menuTree.DomainMenuTree;
 import com.liujun.micro.autocode.config.menuTree.ProjectMenuTree;
 import com.liujun.micro.autocode.entity.config.GenerateConfigEntity;
+import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
 import lombok.Data;
@@ -37,6 +38,9 @@ public class GenerateCodeContext {
   /** 表空间名称 */
   private String tableSpaceName;
 
+  /** 当前的数据库类型 */
+  private DatabaseTypeEnum typeEnum;
+
   /** 列描述的map信息 */
   private Map<String, List<TableColumnDTO>> columnMapList;
 
@@ -65,11 +69,14 @@ public class GenerateCodeContext {
       String fileBasePath,
       String javaPackage,
       String modelName,
+      DatabaseTypeEnum typeEnum,
       String tableSpaceName,
       GenerateConfigEntity configEntity) {
     this.fileBasePath = fileBasePath;
     this.javaPackage = javaPackage;
     this.modelName = modelName;
+    // 类型枚举
+    this.typeEnum = typeEnum;
     this.mybatisBaseSpace = javaPackage;
     this.tableSpaceName = tableSpaceName;
     this.generateConfig = configEntity;

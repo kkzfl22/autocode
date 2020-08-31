@@ -9,7 +9,7 @@ import org.junit.Test;
  * @author liujun
  * @version 0.0.1
  */
-public class JavaCodePersistObjectCreateTest {
+public class JavaCodeRepositoryObjectCreateTest {
 
   @Test
   public void testOutPersistObject() {

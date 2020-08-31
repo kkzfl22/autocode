@@ -29,7 +29,7 @@ import java.util.Map;
  * @version 0.0.1
  * @since 2020/04/08
  */
-public class JavaCodePersistObjectCreate implements GenerateCodeInf {
+public class JavaCodeRepositoryObjectCreate implements GenerateCodeInf {
 
   /** 注释中的描述 */
   private static final String DOC_ANNOTATION = "的数据库存储实体信息";

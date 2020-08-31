@@ -58,7 +58,7 @@ generate:
       operator: delete
       #方法的注释
       comment: 批量删除
-      #where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配,全部小写
+      #where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
       where: namespace_id,oid in
       #排序
       order: 500

@@ -44,4 +44,22 @@ public class MenuTreeProjectPath {
             .getChildren(ProjectMenuTreeKey.MAIN_JAVA.getKey());
     return javaNode;
   }
+
+
+  /**
+   * 获取java的源代码目录
+   *
+   * @param projectMenuTree 树形结构
+   * @return 模块名称
+   */
+  public static MenuNode getTestJavaNode(ProjectMenuTree projectMenuTree) {
+    MenuNode javaNode =
+            projectMenuTree
+                    .getRoot()
+                    .getChildren(ProjectMenuTreeKey.SRC.getKey())
+                    .getChildren(ProjectMenuTreeKey.SRC_TEST.getKey())
+                    .getChildren(ProjectMenuTreeKey.MAIN_JAVA.getKey());
+    return javaNode;
+  }
+
 }

@@ -50,6 +50,16 @@ public class ProjectMenuTree {
     // test目录下添加resource目录
     srcTestNode.addChildren(ProjectMenuTreeKey.MAIN_RESOURCES.getKey());
 
+    // resource目录
+    MenuNode testResourceNode = srcTestNode.addChildren(ProjectMenuTreeKey.MAIN_RESOURCES.getKey());
+    // 添加mapper的目录
+    MenuNode testMapperNode = testResourceNode.addChildren(ProjectMenuTreeKey.RESOURCES_MAPPER.getKey());
+    // 在mapper添加模块
+    MenuNode testModelNode = testMapperNode.addChildren(modelName);
+    // 模块下添加repository目录
+    testModelNode.addChildren(ProjectMenuTreeKey.RESOURCES_REPOSITORY.getKey());
+
+
     return root;
   }
 

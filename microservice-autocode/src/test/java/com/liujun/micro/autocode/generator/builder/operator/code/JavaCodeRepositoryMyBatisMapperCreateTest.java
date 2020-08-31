@@ -1,8 +1,8 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.JavaCodePersistMyBatisMapperCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.JavaCodePersistObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.JavaCodeRepositoryMyBatisMapperCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.JavaCodeRepositoryObjectCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.JavaCodeRepositoryDaoInfCreate;
 import org.junit.Test;
 
@@ -12,16 +12,16 @@ import org.junit.Test;
  * @author liujun
  * @version 0.0.1
  */
-public class JavaCodePersistMyBatisMapperCreateTest {
+public class JavaCodeRepositoryMyBatisMapperCreateTest {
 
   @Test
   public void testOutPersistObject() {
 
     GenerateCodeContext context = CodeBaseUtils.getBase();
 
-    JavaCodePersistObjectCreate poInstance = new JavaCodePersistObjectCreate();
+    JavaCodeRepositoryObjectCreate poInstance = new JavaCodeRepositoryObjectCreate();
     JavaCodeRepositoryDaoInfCreate daoInstance = new JavaCodeRepositoryDaoInfCreate();
-    JavaCodePersistMyBatisMapperCreate mapperInstance = new JavaCodePersistMyBatisMapperCreate();
+    JavaCodeRepositoryMyBatisMapperCreate mapperInstance = new JavaCodeRepositoryMyBatisMapperCreate();
 
     // po优先生成
     poInstance.generateCode(context);

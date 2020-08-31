@@ -33,7 +33,7 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
   private static final String QUERY_ALL_COLUMN =
       "select table_name,column_name,data_type,COLUMN_COMMENT,COLUMN_KEY,EXTRA,"
           + "NUMERIC_PRECISION,NUMERIC_SCALE,CHARACTER_MAXIMUM_LENGTH,CHARACTER_OCTET_LENGTH,"
-          + "IS_NULLABLE,COLUMN_DEFAULT "
+          + "IS_NULLABLE,COLUMN_DEFAULT,COLUMN_TYPE "
           + "from information_schema.COLUMNS where table_schema = ? order by table_name";
 
   public static final DatabaseMysqlProcessImpl INSTANCE = new DatabaseMysqlProcessImpl();
@@ -154,6 +154,7 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
     String octLength = rs.getString("CHARACTER_OCTET_LENGTH");
     String isNullAble = rs.getString("IS_NULLABLE");
     String columnDefault = rs.getString("COLUMN_DEFAULT");
+    String columnType = rs.getString("COLUMN_TYPE");
 
     columnName = columnName.toLowerCase();
 
@@ -178,6 +179,21 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
     }
     bean.setAutoIncrement("auto_increment".equals(extra) ? true : false);
     bean.setTableName(tableName);
+    bean.setSqlColumnType(columnType);
+
+    // 检查数据库创建表语句中是否存在长度
+    int bracketStartIndex = bean.getSqlColumnType().indexOf(Symbol.BRACKET_LEFT);
+
+    // 如果两个长度不一，使用建表语句为准
+    if (bracketStartIndex != -1) {
+      int bracketIndexEnd = bean.getSqlColumnType().indexOf(Symbol.BRACKET_RIGHT);
+      String valueStr = columnType.substring(bracketStartIndex + 1, bracketIndexEnd);
+      int sqlDataLength = Integer.parseInt(valueStr);
+
+      if (sqlDataLength != bean.getDataLength()) {
+        bean.setDataLength(sqlDataLength);
+      }
+    }
 
     return bean;
   }

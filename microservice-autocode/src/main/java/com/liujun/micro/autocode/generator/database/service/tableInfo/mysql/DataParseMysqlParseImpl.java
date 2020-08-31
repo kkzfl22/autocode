@@ -1,5 +1,9 @@
 package com.liujun.micro.autocode.generator.database.service.tableInfo.mysql;
 
+import com.liujun.micro.autocode.generator.builder.utils.TypeProcessUtils;
+import com.liujun.micro.autocode.generator.database.constant.JavaDataTypeGenerateValueEnum;
+import com.liujun.micro.autocode.generator.database.constant.MysqlDataTypeEnum;
+import com.liujun.micro.autocode.generator.database.constant.StandardTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.service.tableInfo.DataParseInf;
 
@@ -11,18 +15,21 @@ import com.liujun.micro.autocode.generator.database.service.tableInfo.DataParseI
  */
 public class DataParseMysqlParseImpl implements DataParseInf {
 
-    @Override
-    public String createValue(TableColumnDTO bean) {
-        return null;
-    }
+  public static final DataParseMysqlParseImpl INSTANCE = new DataParseMysqlParseImpl();
 
-    @Override
-    public String parseJavaType(TableColumnDTO bean) {
-        return null;
-    }
+  @Override
+  public String createValue(TableColumnDTO bean) {
 
-    @Override
-    public String getJavaDefValue(TableColumnDTO bean) {
-        return null;
-    }
+    // 1,得到标准的类型
+    StandardTypeEnum standType = MysqlDataTypeEnum.databaseToStandKey(bean.getDataType());
+
+    String outGenerate = JavaDataTypeGenerateValueEnum.getGenerateFun(standType, bean.getDataLength());
+
+    return outGenerate;
+  }
+
+  @Override
+  public String parseJavaType(TableColumnDTO bean) {
+    return TypeProcessUtils.getJavaType(bean.getDataType());
+  }
 }

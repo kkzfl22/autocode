@@ -4,18 +4,14 @@ import com.liujun.micro.autocode.constant.GenerateDefineFlag;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.entity.config.MethodInfo;
 import com.liujun.micro.autocode.entity.config.TypeInfo;
-import com.liujun.micro.autocode.entity.config.WhereInfo;
 import com.liujun.micro.autocode.generator.builder.constant.CodeCommentEnum;
 import com.liujun.micro.autocode.generator.builder.constant.MethodTypeEnum;
-import com.liujun.micro.autocode.generator.builder.constant.MyBatisOperatorFlag;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
-import com.liujun.micro.autocode.generator.builder.utils.TypeProcessUtils;
-import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
-import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashSet;
@@ -219,7 +215,8 @@ public class GenerateJavaDao {
     // 添加参数注释
     sb.append(JavaFormat.appendTab(1))
         .append(JavaKeyWord.ANNO_CLASS_MID)
-        .append(JavaKeyWord.METHOD_PARAM)
+        .append(JavaVarName.METHOD_PARAM)
+        .append(JavaVarName.METHOD_PARAM_NAME)
         .append(CodeCommentEnum.METHOD_PARAM_DOC)
         .append(Symbol.ENTER_LINE);
     // 添加返回注释
@@ -246,7 +243,8 @@ public class GenerateJavaDao {
       }
       sb.append(outClass);
       sb.append(Symbol.SPACE);
-      sb.append(JavaKeyWord.METHOD_PARAM_NAME);
+      sb.append(JavaVarName.METHOD_PARAM);
+      sb.append(JavaVarName.METHOD_PARAM_NAME);
       sb.append(Symbol.COMMA);
     }
 
@@ -280,7 +278,8 @@ public class GenerateJavaDao {
     // 添加参数注释
     sb.append(JavaFormat.appendTab(1))
         .append(JavaKeyWord.ANNO_CLASS_MID)
-        .append(JavaKeyWord.METHOD_PARAM)
+        .append(JavaVarName.METHOD_PARAM)
+        .append(JavaVarName.METHOD_PARAM_NAME)
         .append(CodeCommentEnum.METHOD_PARAM_DOC)
         .append(Symbol.ENTER_LINE);
     // 添加返回注释
@@ -323,7 +322,8 @@ public class GenerateJavaDao {
     for (TypeInfo typeInfo : methodItem.getParamType()) {
       outParam.append(this.getTypeName(typeInfo, poClassName));
       outParam.append(Symbol.SPACE);
-      outParam.append(JavaKeyWord.METHOD_PARAM_NAME);
+      outParam.append(JavaVarName.METHOD_PARAM);
+      outParam.append(JavaVarName.METHOD_PARAM_NAME);
       outParam.append(Symbol.COMMA);
     }
     // 去除最后一个逗号

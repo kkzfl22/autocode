@@ -44,6 +44,9 @@ public class JavaKeyWord {
   /** 无返回值对象定义 */
   public static final String VOID = "void";
 
+  /** 继承关键字 */
+  public static final String EXTEND = "extend";
+
   /** 判断 */
   public static final String IF = "if ";
 
@@ -86,18 +89,29 @@ public class JavaKeyWord {
   /** 集合结束 */
   public static final String LIST_TYPE_END = ">";
 
-  /** 方法的参数注释 */
-  public static final String METHOD_PARAM = " @param param ";
+  /** 数据集合 */
+  public static final String LIST_TYPE_ARRAYLIST = "ArrayList<>";
 
   /** 方法的返回注释 */
   public static final String METHOD_RETURN_COMMENT = " @return ";
-
-  /** 用于定义参数的变量名称 */
-  public static final String METHOD_PARAM_NAME = "param";
 
   /** 属性条件的后缀 */
   public static final String FIELD_SUFFIX_NAME = "List";
 
   /** 导入集合的包 */
   public static final String IMPORT_LIST = "java.util.List";
+
+  /** 数据库的boolean的类型 */
+  public static final String TYPE_BOOLEAN = "boolean";
+
+  /** 设置方法 */
+  public static final String SET = "set";
+
+  /** 获取方法 */
+  public static final String GET = "get";
+
+  /** for关键字 */
+  public static final String FOR_KEY = "for";
+
+
 }

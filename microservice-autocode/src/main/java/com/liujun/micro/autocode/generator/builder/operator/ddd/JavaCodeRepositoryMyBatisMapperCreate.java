@@ -41,7 +41,7 @@ import java.util.Map.Entry;
  * @version 0.0.1
  * @author liujun
  */
-public class JavaCodePersistMyBatisMapperCreate implements GenerateCodeInf {
+public class JavaCodeRepositoryMyBatisMapperCreate implements GenerateCodeInf {
 
   public static final String DOC = "数据库操作";
 

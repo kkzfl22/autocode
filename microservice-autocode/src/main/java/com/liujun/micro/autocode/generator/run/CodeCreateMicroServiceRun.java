@@ -3,6 +3,7 @@ package com.liujun.micro.autocode.generator.run;
 import com.liujun.micro.autocode.config.generate.GenerateConfig;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.service.AutoCodeBeanBuilder;
+import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 
 /**
  * 微服务相当的类的代码生成
@@ -26,7 +27,12 @@ public class CodeCreateMicroServiceRun {
 
     GenerateCodeContext param =
         new GenerateCodeContext(
-            filePath, basePkg, modelName, tableSpace, GenerateConfig.INSTANCE.getCfgEntity());
+            filePath,
+            basePkg,
+            modelName,
+            DatabaseTypeEnum.MYSQL,
+            tableSpace,
+            GenerateConfig.INSTANCE.getCfgEntity());
     AutoCodeBeanBuilder builder = new AutoCodeBeanBuilder(param);
 
     // 1,数据准备,从数据库捞取数据
