@@ -410,8 +410,7 @@ public class GenerateJunitDaoQuery {
       List<MethodInfo> methodList) {
     // 1,检查当前方法是否结果为结果集,如果为结果集需要执行批量插入
     // 或者当前的请求条件中带有in条件，也需要批量插入
-    if (method.getReturns() != null && method.getReturns().indexOf(JavaKeyWord.IMPORT_LIST) != -1
-        || WhereUtils.checkInCondition(method.getWhereInfo())) {
+    if (batchFlag(method)) {
       // 进行in的处理
       conditionIn(sb, method, tabIndex, poPackage, columnMap);
 
@@ -433,6 +432,32 @@ public class GenerateJunitDaoQuery {
       // 进行标识的设置操作
       GenerateJunitDao.INSTANCE.setBatchInsertFlag(sb, tabIndex, JavaVarValue.INSERT_TYPE_ONE_KEY);
     }
+  }
+
+  /**
+   * 检查当前是否为批量操作的检查
+   *
+   * @param method
+   * @return
+   */
+  private boolean batchFlag(MethodInfo method) {
+
+    // 1,如果当前存在in关键字，则为批量操作
+    if (WhereUtils.checkInCondition(method.getWhereInfo())) {
+      return true;
+    }
+
+    // 如果当前存在使用主键标识，则说明为当前为单个添加
+    if (null != method.getPrimaryFlag() && method.getPrimaryFlag()) {
+      return false;
+    }
+
+    // 其他情况，则检查返回类型，为集合说明为批量操作
+    if (method.getReturns() != null && method.getReturns().indexOf(JavaKeyWord.IMPORT_LIST) != -1) {
+      return true;
+    }
+
+    return false;
   }
 
   /**

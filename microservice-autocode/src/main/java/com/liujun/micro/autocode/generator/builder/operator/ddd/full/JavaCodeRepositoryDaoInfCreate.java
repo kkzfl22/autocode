@@ -1,4 +1,4 @@
-package com.liujun.micro.autocode.generator.builder.operator.ddd;
+package com.liujun.micro.autocode.generator.builder.operator.ddd.full;
 
 import com.liujun.micro.autocode.config.menuTree.DomainMenuTree;
 import com.liujun.micro.autocode.config.menuTree.MenuNode;

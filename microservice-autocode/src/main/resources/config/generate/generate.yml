@@ -50,7 +50,7 @@ generate:
       operator: delete
       #方法的注释
       comment: 单个删除
-      #标识当前是否为主刍
+      #标识当前是否为主键操作
       primaryFlag: true
       #排序
       order: 400

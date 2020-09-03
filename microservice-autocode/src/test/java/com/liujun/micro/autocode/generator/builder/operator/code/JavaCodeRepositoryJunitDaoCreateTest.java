@@ -1,10 +1,10 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.JavaCodeRepositoryDaoInfCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.JavaCodeRepositoryJunitDaoCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.JavaCodeRepositoryMyBatisMapperCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.JavaCodeRepositoryObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryDaoInfCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryJunitDaoCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryMyBatisMapperCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryObjectCreate;
 import org.junit.Test;
 
 /**
