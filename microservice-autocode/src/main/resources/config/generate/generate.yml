@@ -50,6 +50,8 @@ generate:
       operator: delete
       #方法的注释
       comment: 单个删除
+      #标识当前是否为主刍
+      primaryFlag: true
       #排序
       order: 400
     #批量根据主键删除数据
@@ -89,7 +91,7 @@ generate:
       #方法的注释
       comment: 根据一批id查询
       ##where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
-      where: user_name in
+      where: OID in
       #返回值类型信息
       returns: java.util.List<table_name>
       #排序
@@ -106,6 +108,18 @@ generate:
       returns: java.util.List<table_name>
       #排序
       order: 900
+    #根据主键集合进行查询操作
+    - name: queryByInfo
+      #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
+      operator: query
+      #方法的注释
+      comment: 根据信息查询
+      ##where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
+      where: NAMESPACE_ID,USER_NAME
+      #返回值类型信息
+      returns: table_name
+      #排序
+      order: 1000
   #代码内的目录结构的配制
   codeMenuTree:
     #最基础的目标配制
@@ -113,6 +127,6 @@ generate:
     #最新输出的模块的名称
     modelName: user
   #输出文件的配制
-  output: D:/java/encode/javacode/
+  output: D:/java/workspace/selfwork/autocode/generateCode/
   #公共文件和路径
   commonPath: D:/java/encode/common/

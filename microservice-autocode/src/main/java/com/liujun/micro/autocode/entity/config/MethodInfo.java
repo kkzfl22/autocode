@@ -37,6 +37,9 @@ public class MethodInfo implements Comparable<MethodInfo> {
   /** 参数类型,可能存在多个参数的情况,默认三个参数以内 */
   private List<TypeInfo> paramType = new ArrayList<>(3);
 
+  /** 标识当前是否为主键操作，一般用于删除时，主键删除 */
+  private Boolean primaryFlag;
+
   /** 返回类型信息 */
   private String returns;
 

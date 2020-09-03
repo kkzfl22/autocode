@@ -14,9 +14,31 @@ public class JavaVarValue {
   /** 索引开始的值 */
   public static final int FOR_INDEX_START = 0;
 
+  /** 当前从1开始的遍历 */
+  public static final int FOR_INDEX_START_1 = 1;
+
   /** 默认插入的行数 */
   public static final int DEFAULT_ADD_RSP = 1;
 
   /** 加加 */
   public static final String ADD_ADD = "++";
+
+  /** 数据不操作 */
+  public static final int INSERT_TYPE_NONE = 0;
+
+  /** 单条插入 */
+  public static final int INSERT_TYPE_ONE = 1;
+
+  /** 批量插入 */
+  public static final int INSERT_TYPE_BATCH = 2;
+
+
+  /** 不执行删除标识 */
+  public static final String INSERT_TYPE_NONE_KEY = "InsertType.INSERT_TYPE_NONE";
+
+  /** 单个插入标识 */
+  public static final String INSERT_TYPE_ONE_KEY = "InsertType.INSERT_TYPE_ONE";
+
+  /** 批量插入标识 */
+  public static final String INSERT_TYPE_BATCH_KEY = "InsertType.INSERT_TYPE_BATCH";
 }

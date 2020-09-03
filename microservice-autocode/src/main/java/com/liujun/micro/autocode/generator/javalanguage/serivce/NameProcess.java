@@ -22,7 +22,7 @@ public class NameProcess {
    */
   public String toJavaClassName(String tableName) {
     tableName = tableName.toLowerCase();
-    String[] strs = tableName.split("_");
+    String[] strs = tableName.split(Symbol.UNDER_LINE);
     StringBuilder sb = new StringBuilder();
 
     boolean firstOne = false;
@@ -103,10 +103,6 @@ public class NameProcess {
     return sb.toString();
   }
 
-
-
-
-
   /**
    * 获取Spring的名称的信息 方法描述
    *
@@ -133,7 +129,6 @@ public class NameProcess {
     sb.append(str.substring(1));
     return sb.toString();
   }
-
 
   /**
    * 转换为java命名规则,首字线小写，其他的首字母大写 方法描述

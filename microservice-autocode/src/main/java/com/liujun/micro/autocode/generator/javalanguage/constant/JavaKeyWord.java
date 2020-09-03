@@ -41,14 +41,21 @@ public class JavaKeyWord {
   /** 静态 */
   public static final String STATIC = "static";
 
+  /** 最终的关键字 */
+  public static final String FINAL = "final";
+
   /** 无返回值对象定义 */
   public static final String VOID = "void";
 
   /** 继承关键字 */
-  public static final String EXTEND = "extend";
+  public static final String EXTEND = "extends";
 
   /** 判断 */
   public static final String IF = "if ";
+
+
+  /** 判断 */
+  public static final String ELSE_IF = "else if ";
 
   /** 空关键字 */
   public static final String NULL = "null ";
@@ -92,26 +99,39 @@ public class JavaKeyWord {
   /** 数据集合 */
   public static final String LIST_TYPE_ARRAYLIST = "ArrayList<>";
 
+  /** 导入集合的包 */
+  public static final String IMPORT_ARRAYLIST = "java.util.ArrayList";
+
+  /** 方法的参数注释 */
+  public static final String METHOD_PARAM = " @param ";
+
   /** 方法的返回注释 */
   public static final String METHOD_RETURN_COMMENT = " @return ";
 
   /** 属性条件的后缀 */
   public static final String FIELD_SUFFIX_NAME = "List";
 
+  /** 转换为map结构 */
+  public static final String MAP_TYPE = "Map";
+
+  /** 使用的hashmap操作 */
+  public static final String MAP_TYPE_HASHMAP = "HashMap";
+
   /** 导入集合的包 */
   public static final String IMPORT_LIST = "java.util.List";
+
+  /** 导入map的包 */
+  public static final String IMPORT_MAP = "java.util.Map";
 
   /** 数据库的boolean的类型 */
   public static final String TYPE_BOOLEAN = "boolean";
 
-  /** 设置方法 */
-  public static final String SET = "set";
-
-  /** 获取方法 */
-  public static final String GET = "get";
-
   /** for关键字 */
   public static final String FOR_KEY = "for";
 
+  /** String类型 */
+  public static final String TYPE_STRING = "String";
 
+  /** java中的StringBuilder对象 */
+  public static final String TYPE_STRING_BUILDER_NAME = "StringBuilder";
 }

@@ -26,7 +26,7 @@ public class CodeBaseUtils {
     // 模块名称
     String modelName = "attribute";
     // 文件输出代码路径
-    String filePath = "D:/java/encode/javacode/";
+    String filePath = "D:/java/workspace/selfwork/autocode/generateCode/";
 
     GenerateCodeContext param =
         new GenerateCodeContext(

@@ -20,6 +20,9 @@ public class JunitKey {
   /** 测试的标识 */
   public static final String ANNO_TEST = "@Test";
 
+  /** 方法执行后的方法 */
+  public static final String ANNO_AFTER = "@After";
+
   /** 进行结果的断言 */
   public static final String ASSERT = "Assert.assertEquals(";
 }

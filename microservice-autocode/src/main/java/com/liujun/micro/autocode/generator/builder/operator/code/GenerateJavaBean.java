@@ -3,7 +3,7 @@ package com.liujun.micro.autocode.generator.builder.operator.code;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.entity.config.MethodInfo;
 import com.liujun.micro.autocode.entity.config.WhereInfo;
-import com.liujun.micro.autocode.generator.builder.constant.CodeCommentEnum;
+import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
 import com.liujun.micro.autocode.generator.builder.constant.MyBatisOperatorFlag;
 import com.liujun.micro.autocode.generator.builder.utils.TypeProcessUtils;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
@@ -125,7 +125,7 @@ public class GenerateJavaBean {
           sb,
           javaDataType,
           javaName,
-          tableInfo.getColumnMsg() + CodeCommentEnum.FIELD_CONDITION_LIST);
+          tableInfo.getColumnMsg() + CodeComment.FIELD_CONDITION_LIST);
     }
   }
 

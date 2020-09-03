@@ -101,9 +101,13 @@ public class MyBatisKey {
   /** 当前遍历名称 */
   public static final String FOREACH_ITEM_NAME = "item";
 
-  /** 结束的定义 */
-  public static final String FOREACH_START_FINISH =
+  /** 批量插入的定义 */
+  public static final String FOREACH_BATCH_INSERT_FINISH =
       "\" open=\"(\" separator=\"),(\" close=\")\" index=\"index\">";
+
+  /** in的条件的情况 */
+  public static final String FOREACH_CONDITION_IN =
+      "\" open=\"(\" separator=\",\" close=\")\" index=\"index\">";
 
   /** 遍历的结束 */
   public static final String FOREACH_LIST_END = "</foreach>";

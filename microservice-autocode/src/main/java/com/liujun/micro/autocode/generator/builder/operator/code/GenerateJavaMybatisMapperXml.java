@@ -2,7 +2,6 @@ package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.entity.config.MethodInfo;
-import com.liujun.micro.autocode.entity.config.TypeInfo;
 import com.liujun.micro.autocode.entity.config.WhereInfo;
 import com.liujun.micro.autocode.generator.builder.constant.MethodTypeEnum;
 import com.liujun.micro.autocode.generator.builder.constant.MyBatisKey;
@@ -10,13 +9,13 @@ import com.liujun.micro.autocode.generator.builder.constant.MyBatisOperatorFlag;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
+import com.liujun.micro.autocode.generator.builder.utils.TypeProcessUtils;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeSourceEnum;
 import com.liujun.micro.autocode.generator.database.entity.DatabaseTypeMsgBO;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
 import com.liujun.micro.autocode.generator.database.service.datatype.DataTypeResource;
-import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
@@ -231,7 +230,8 @@ public class GenerateJavaMybatisMapperXml {
         .append(Symbol.ENTER_LINE);
 
     String javaName = NameProcess.INSTANCE.toFieldName(columnName);
-    String typeName = tableMapper.getDataType();
+    String typeName = TypeProcessUtils.dbTypeParseMyBatis(
+            tableMapper.getDataType(), tableMapper.getDataLength());;
 
     // 添加条件的连接符
     sb.append(JavaFormat.appendTab(tabNum));
@@ -305,7 +305,7 @@ public class GenerateJavaMybatisMapperXml {
         .append(fieldName)
         .append(MyBatisKey.FOREACH_ITEM)
         .append(MyBatisKey.FOREACH_ITEM_NAME)
-        .append(MyBatisKey.FOREACH_START_FINISH)
+        .append(MyBatisKey.FOREACH_CONDITION_IN)
         .append(Symbol.ENTER_LINE);
 
     sb.append(JavaFormat.appendTab(tabNum + 1))
@@ -339,7 +339,8 @@ public class GenerateJavaMybatisMapperXml {
       column = columnList.get(i);
       String columnName = column.getColumnName();
       String javaName = NameProcess.INSTANCE.toFieldName(columnName);
-      String typeName = column.getDataType();
+      String typeName = TypeProcessUtils.dbTypeParseMyBatis(
+              column.getDataType(), column.getDataLength());;
 
       // 定义输出列注释
       sb.append(JavaFormat.appendTab(tabNum + 1))
@@ -555,7 +556,7 @@ public class GenerateJavaMybatisMapperXml {
     }
 
     for (MethodInfo methodItem : methodList) {
-      if (methodItem.getOperator() == MethodTypeEnum.QUERY.getType()) {
+      if (methodItem.getOperator().equals(MethodTypeEnum.QUERY.getType())) {
         return true;
       }
     }
@@ -657,13 +658,15 @@ public class GenerateJavaMybatisMapperXml {
         .append(MyBatisKey.FOREACH_LIST_DEFAULT_NAME)
         .append(MyBatisKey.FOREACH_ITEM)
         .append(MyBatisKey.FOREACH_ITEM_NAME)
-        .append(MyBatisKey.FOREACH_START_FINISH)
+        .append(MyBatisKey.FOREACH_BATCH_INSERT_FINISH)
         .append(Symbol.ENTER_LINE);
     // 生成批量的SQL
     for (int i = 0; i < columnList.size(); i++) {
       TableColumnDTO tableMapper = columnList.get(i);
       String javaName = NameProcess.INSTANCE.toFieldName(tableMapper.getColumnName());
-      String typeName = tableMapper.getDataType();
+      String typeName =
+          TypeProcessUtils.dbTypeParseMyBatis(
+              tableMapper.getDataType(), tableMapper.getDataLength());
       // 添加列注释信息
       sb.append(JavaFormat.appendTab(3))
           .append(MyBatisKey.DOC_START)
@@ -707,7 +710,9 @@ public class GenerateJavaMybatisMapperXml {
     for (int i = 0; i < columnList.size(); i++) {
       TableColumnDTO tableMapper = columnList.get(i);
       String javaName = NameProcess.INSTANCE.toFieldName(tableMapper.getColumnName());
-      String typeName = tableMapper.getDataType();
+      String typeName =
+          TypeProcessUtils.dbTypeParseMyBatis(
+              tableMapper.getDataType(), tableMapper.getDataLength());
       // 添加列注释信息
       sb.append(JavaFormat.appendTab(3))
           .append(MyBatisKey.DOC_START)
@@ -795,7 +800,8 @@ public class GenerateJavaMybatisMapperXml {
       TableColumnDTO tableMapper = copyColumnList.get(i);
       String columnName = tableMapper.getColumnName();
       String javaName = NameProcess.INSTANCE.toFieldName(tableMapper.getColumnName());
-      String typeName = tableMapper.getDataType();
+      String typeName = TypeProcessUtils.dbTypeParseMyBatis(
+              tableMapper.getDataType(), tableMapper.getDataLength());;
       // 添加列注释信息
       sb.append(JavaFormat.appendTab(4))
           .append(MyBatisKey.DOC_START)

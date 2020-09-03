@@ -4,7 +4,7 @@ import com.liujun.micro.autocode.constant.GenerateDefineFlag;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.entity.config.MethodInfo;
 import com.liujun.micro.autocode.entity.config.TypeInfo;
-import com.liujun.micro.autocode.generator.builder.constant.CodeCommentEnum;
+import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
 import com.liujun.micro.autocode.generator.builder.constant.MethodTypeEnum;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
@@ -213,17 +213,14 @@ public class GenerateJavaDao {
     sb.append(JavaFormat.appendTab(1)).append(JavaKeyWord.ANNO_CLASS_MID).append(Symbol.ENTER_LINE);
 
     // 添加参数注释
-    sb.append(JavaFormat.appendTab(1))
-        .append(JavaKeyWord.ANNO_CLASS_MID)
-        .append(JavaVarName.METHOD_PARAM)
-        .append(JavaVarName.METHOD_PARAM_NAME)
-        .append(CodeCommentEnum.METHOD_PARAM_DOC)
-        .append(Symbol.ENTER_LINE);
+    sb.append(JavaFormat.appendTab(1)).append(JavaKeyWord.ANNO_CLASS_MID);
+    sb.append(JavaKeyWord.METHOD_PARAM).append(JavaVarName.METHOD_PARAM_NAME).append(Symbol.SPACE);
+    sb.append(CodeComment.METHOD_PARAM_DOC).append(Symbol.ENTER_LINE);
     // 添加返回注释
     sb.append(JavaFormat.appendTab(1))
         .append(JavaKeyWord.ANNO_CLASS_MID)
         .append(JavaKeyWord.METHOD_RETURN_COMMENT)
-        .append(CodeCommentEnum.METHOD_DAO_UPDATE_RETURN)
+        .append(CodeComment.METHOD_DAO_UPDATE_RETURN)
         .append(Symbol.ENTER_LINE);
     // 注释结束
     sb.append(JavaFormat.appendTab(1)).append(JavaKeyWord.ANNO_OVER).append(Symbol.ENTER_LINE);
@@ -243,7 +240,6 @@ public class GenerateJavaDao {
       }
       sb.append(outClass);
       sb.append(Symbol.SPACE);
-      sb.append(JavaVarName.METHOD_PARAM);
       sb.append(JavaVarName.METHOD_PARAM_NAME);
       sb.append(Symbol.COMMA);
     }
@@ -276,17 +272,14 @@ public class GenerateJavaDao {
     sb.append(JavaFormat.appendTab(1)).append(JavaKeyWord.ANNO_CLASS_MID).append(Symbol.ENTER_LINE);
 
     // 添加参数注释
-    sb.append(JavaFormat.appendTab(1))
-        .append(JavaKeyWord.ANNO_CLASS_MID)
-        .append(JavaVarName.METHOD_PARAM)
-        .append(JavaVarName.METHOD_PARAM_NAME)
-        .append(CodeCommentEnum.METHOD_PARAM_DOC)
-        .append(Symbol.ENTER_LINE);
+    sb.append(JavaFormat.appendTab(1)).append(JavaKeyWord.ANNO_CLASS_MID);
+    sb.append(JavaKeyWord.METHOD_PARAM).append(JavaVarName.METHOD_PARAM_NAME);
+    sb.append(Symbol.SPACE).append(CodeComment.METHOD_PARAM_DOC).append(Symbol.ENTER_LINE);
     // 添加返回注释
     sb.append(JavaFormat.appendTab(1))
         .append(JavaKeyWord.ANNO_CLASS_MID)
         .append(JavaKeyWord.METHOD_RETURN_COMMENT)
-        .append(CodeCommentEnum.METHOD_QUERY_RESULT)
+        .append(CodeComment.METHOD_QUERY_RESULT)
         .append(Symbol.ENTER_LINE);
     // 注释结束
     sb.append(JavaFormat.appendTab(1)).append(JavaKeyWord.ANNO_OVER).append(Symbol.ENTER_LINE);
@@ -322,7 +315,6 @@ public class GenerateJavaDao {
     for (TypeInfo typeInfo : methodItem.getParamType()) {
       outParam.append(this.getTypeName(typeInfo, poClassName));
       outParam.append(Symbol.SPACE);
-      outParam.append(JavaVarName.METHOD_PARAM);
       outParam.append(JavaVarName.METHOD_PARAM_NAME);
       outParam.append(Symbol.COMMA);
     }

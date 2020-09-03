@@ -11,17 +11,14 @@ public class JavaVarName {
   /** 用于定义参数的变量名称 */
   public static final String METHOD_PARAM_NAME = "param";
 
-  /** 方法的参数注释 */
-  public static final String METHOD_PARAM = " @param ";
-
   /** 数据库实例的名称 */
   public static final String INSTANCE_NAME = "instDao";
 
   /** 临时变量名 */
   public static final String PARAM_BEAN = "paramBean";
 
-  /** 数据库是否执行插入语句的标识 */
-  public static final String JUNIT_VAR_INSERT = "insertFlag";
+  /** 数据插入的类型，0，不插入数据，1，单个插入，2，批量插入 */
+  public static final String JUNIT_VAR_BATCH_INSERT = "insertType";
 
   /** 实例po的名称 */
   public static final String INSTANCE_NAME_PO = "operatorPo";
@@ -29,8 +26,20 @@ public class JavaVarName {
   /** 数据库操作的返回 */
   public static final String INVOKE_METHOD_OPERATOR_RSP = "operatorRsp";
 
+  /** 数据库修改操作的返回 */
+  public static final String INVOKE_METHOD_UPDATE_RSP = "updateRsp";
+
   /** 指定插入的数据定义 */
-  public static final String BATCH_INSERT_NAME = "insertBatchMax";
+  public static final String BATCH_INSERT_NAME = "insertBatchNum";
+
+  /** 全局定义的批量插入 */
+  public static final String FINAL_BATCH_INSERT_NUM = "INSERT_BATCH_NUM";
+
+  /** 操作返回对象名 */
+  public static final String INVOKE_METHOD_QUERY_RSP = "dataRsp";
+
+  /** 查询的临时参数名称 */
+  public static final String METHOD_PARAM_TEMP_NAME = "paramDataTmp";
 
   /** 删除方法返回的行数 */
   public static final String DELETE_METHOD_RSP = "deleteRsp";
@@ -38,6 +47,33 @@ public class JavaVarName {
   /** 数据信的名称 */
   public static final String LIST_NAME = "dataList";
 
+  /** 批量操作的集合 */
+  public static final String BATCH_LIST_NAME = "batchDataList";
+
+  /** 数据获取的临时变量 */
+  public static final String LIST_GET_NAME_TEMP_NAME = "dataItemTmp";
+
   /** 循环中的变量 */
   public static final String FOR_TEMP_INDEX = "i";
+
+  /** 集合名称后缀 */
+  public static final String NAME_LIST_SUFFIX = "List";
+
+  /** 数据集对比源名称 */
+  public static final String ASSERT_PARAM_SRC_LIST = "srcList";
+
+  /** 数据集对比目标名称 */
+  public static final String ASSERT_PARAM_TARGET_LIST = "targetList";
+
+  /** 目标数据获取 */
+  public static final String ASSERT_DATA_TARGET = "target";
+
+  /** 转换的map对象信息 */
+  public static final String PARSE_MAP_TEMP = "dataMapTmp";
+
+  /** 获取key的名称 */
+  public static final String GET_KEY_NAME = "key";
+
+  /** 源数据的名称 */
+  public static final String ASSERT_DATA_SRC = "src";
 }
