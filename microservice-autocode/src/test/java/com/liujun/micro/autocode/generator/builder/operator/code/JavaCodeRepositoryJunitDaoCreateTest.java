@@ -14,7 +14,7 @@ import org.junit.Test;
 public class JavaCodeRepositoryJunitDaoCreateTest {
 
   @Test
-  public void testOutPersistObject() {
+  public void testGenerate() {
 
     GenerateCodeContext context = CodeBaseUtils.getBase();
 

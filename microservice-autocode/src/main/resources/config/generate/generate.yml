@@ -17,6 +17,8 @@ generate:
   startErrorCode: -10000
   #是否修改错误码编号,默认为true，进行修改
   updateCode: true
+  #作者名称，即代码写在@author中的名称
+  author: liujun
   code:
     #单个插入方法
     - name: insert

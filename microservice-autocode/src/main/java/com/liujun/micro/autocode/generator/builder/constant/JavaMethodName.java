@@ -32,9 +32,7 @@ public class JavaMethodName {
   /** 方法名 */
   public static final String BEFORE_SET_DATA = "beforeSetData";
 
-  /**
-   * 方法完毕后的清理
-   */
+  /** 方法完毕后的清理 */
   public static final String AFTER_CLEAN = "afterCleanData";
 
   /** 临时的方法名 */
@@ -45,9 +43,6 @@ public class JavaMethodName {
 
   /** 设置其他值属性的方法 */
   public static final String SET_DATA_FIELD = "setDataField";
-
-  /** 生成批量数据的方法名 */
-  public static final String GET_DATA_LIST = "getDataList";
 
   /** 数据集对比 */
   public static final String ASSERT_DATA_LIST = "assertDataList";
@@ -60,4 +55,20 @@ public class JavaMethodName {
 
   /** 数据对比 */
   public static final String ASSERT_DATA = "assertData";
+
+  /** 将领域对象转换为存储实体对象的方法 */
+  public static final String ASSEMBLER_ENTITY_PERSIST_NAME = "toPersistObject";
+
+  /** 将存储实体转换为领域对象的方法 */
+  public static final String ASSEMBLER_PERSIST_ENTITY_NAME = "toDomainEntity";
+
+  /** 集合的判空方法 */
+  public static final String LIST_EMPTY = "isEmpty";
+
+
+  /** 将领域集合对象转换为存储集合实体对象的方法 */
+  public static final String ASSEMBLER_ENTITY_PERSIST_LIST_NAME = "toListPersistObject";
+
+  /** 将存储集合实体转换为领域集合对象的方法 */
+  public static final String ASSEMBLER_PERSIST_ENTITY_LIST_NAME = "toListDomainEntity";
 }

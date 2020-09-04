@@ -42,4 +42,7 @@ public class Generate {
 
   /** 公共文件和路径 */
   private String commonPath;
+
+  /** 作者名称 */
+  private String author;
 }

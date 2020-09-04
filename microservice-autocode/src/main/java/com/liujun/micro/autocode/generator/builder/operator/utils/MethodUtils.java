@@ -103,26 +103,5 @@ public class MethodUtils {
     return null;
   }
 
-  /**
-   * 方法是否存在多返回结果集的情况
-   *
-   * @param methodList 所有方法信息
-   * @return true 存在结果集返回，false 没有结果集返回
-   */
-  public static boolean checkResultList(List<MethodInfo> methodList) {
 
-    if (null == methodList || methodList.isEmpty()) {
-      return false;
-    }
-
-    for (MethodInfo methodInfo : methodList) {
-      // 检查返回类型是否存在集合
-      if (methodInfo.getReturns() != null
-          && methodInfo.getReturns().indexOf(JavaKeyWord.IMPORT_LIST) != -1) {
-        return true;
-      }
-    }
-
-    return false;
-  }
 }

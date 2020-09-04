@@ -10,14 +10,14 @@ import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
 import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaBean;
+import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.utils.MenuTreeProcessUtil;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
-import com.liujun.micro.autocode.utils.FileUtils;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -58,82 +58,41 @@ public class JavaCodeRepositoryObjectCreate implements GenerateCodeInf {
       MenuNode poNode = MenuTreePackagePath.getRepositoryObjectNode(menuTree);
       String javaPackageStr = MenuTreeProcessUtil.outJavaPackage(poNode);
 
+      // 注释
+      String docComment =
+          tableInfo.getTableComment()
+              + Symbol.BRACKET_LEFT
+              + tableInfo.getTableName()
+              + Symbol.BRACKET_RIGHT
+              + DOC_ANNOTATION;
+
       // 将当前包信息存入到上下文对象信息中
-      this.putPersistPackageInfo(
-          javaPackageStr, tableName, className, param.getPackageMap(), tableMap.size());
+      // 构建类路径及名称记录下
+      ImportPackageInfo packageInfo = new ImportPackageInfo(javaPackageStr, className, docComment);
+      // 将po记录到公共的上下文对象中
+      ImportPackageUtils.putPackageInfo(
+          tableName,
+          param.getPackageMap(),
+          GenerateCodeDomainKey.PERSIST_PO.getKey(),
+          packageInfo,
+          tableMap.size());
 
       // 进行存储层的bean代码生成
       StringBuilder persistBean =
           GenerateJavaBean.INSTANCE.generateJavaBean(
-              tableInfo,
-              className,
+              packageInfo,
               tableEntry.getValue(),
-              DOC_ANNOTATION,
-              javaPackageStr,
-              param.getGenerateConfig().getGenerate().getCode());
+              param.getGenerateConfig().getGenerate().getCode(),
+              param.getGenerateConfig().getGenerate().getAuthor());
 
-      // 定义mapper文件
+      // 定义项目内的完整目录结构
       MenuNode mapperNode = MenuTreeProjectPath.getSrcJavaNode(param.getProjectMenuTree());
       String baseJavaPath = MenuTreeProcessUtil.outPath(mapperNode);
       javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
 
-      // 将代码输出到文件中
-      this.outFile(persistBean, param.getFileBasePath(), className, javaPackageStr);
+      // 进行存储层的实体输出
+      GenerateOutFileUtils.outJavaFile(
+          persistBean, param.getFileBasePath(), javaPackageStr, className);
     }
-  }
-
-  /**
-   * 将当前数据库存储资源的包信息放入到流程的map中
-   *
-   * @param javaPackageStr 基础包信息
-   * @param tableName 表名
-   * @param className 类名
-   * @param packageMap 流程中的包路径容器
-   * @param initSize 初始化大小
-   */
-  private void putPersistPackageInfo(
-      String javaPackageStr,
-      String tableName,
-      String className,
-      Map<String, Map<String, ImportPackageInfo>> packageMap,
-      int initSize) {
-    // 将当前的类路径及名称记录下
-    ImportPackageInfo packageInfo = new ImportPackageInfo(javaPackageStr, className);
-
-    Map<String, ImportPackageInfo> packageMapInfo =
-        packageMap.get(GenerateCodeDomainKey.PERSIST_PO.getKey());
-
-    if (null == packageMapInfo) {
-      packageMapInfo = new HashMap<>(initSize);
-      packageMap.put(GenerateCodeDomainKey.PERSIST_PO.getKey(), packageMapInfo);
-    }
-    packageMapInfo.put(tableName, packageInfo);
-  }
-
-  /**
-   * 进行文件输出操作
-   *
-   * @param sb 输出字符
-   * @param path 路径
-   * @param className 类名
-   * @param definePackage 定义的输出目录
-   */
-  private void outFile(StringBuilder sb, String path, String className, String definePackage) {
-    // 获取源代码
-
-    // 获取以路径/进行输出
-    String javaPathStr = MenuTreeProcessUtil.outPath(definePackage);
-
-    StringBuilder outPath = new StringBuilder();
-    // 输出的基础路径
-    outPath.append(path);
-    outPath.append(Symbol.PATH);
-    outPath.append(javaPathStr);
-
-    // 文件名
-    String fileName = className + JavaKeyWord.FILE_SUFFIX;
-
-    // 文件输出操作
-    FileUtils.writeFile(outPath.toString(), fileName, sb);
   }
 }

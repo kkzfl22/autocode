@@ -5,6 +5,8 @@ import com.liujun.micro.autocode.entity.config.MethodInfo;
 import com.liujun.micro.autocode.entity.config.WhereInfo;
 import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
 import com.liujun.micro.autocode.generator.builder.constant.MyBatisOperatorFlag;
+import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
+import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.utils.TypeProcessUtils;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
@@ -12,9 +14,8 @@ import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * @author liujun
@@ -24,37 +25,55 @@ public class GenerateJavaBean {
 
   public static final GenerateJavaBean INSTANCE = new GenerateJavaBean();
 
+  private static final List<String> ANNOTATION_LIST =
+      Arrays.asList(JavaKeyWord.BEAN_USE_DATA, JavaKeyWord.BEAN_USE_TOSTRING);
+
   /**
    * 进行javaBean文件的生成操作
    *
-   * @param tableMsgBean 表信息
-   * @param className 类名
    * @param columnList 列信息
-   * @param comment 类注释
-   * @param outJavaPackage 输出路径信息
    * @param codeMethod 需要生成的方法
+   * @param author 作者
    * @return 生成的javabean对象
    */
   public StringBuilder generateJavaBean(
-      TableInfoDTO tableMsgBean,
-      String className,
+      ImportPackageInfo entityInfo,
       List<TableColumnDTO> columnList,
-      String comment,
-      String outJavaPackage,
-      List<MethodInfo> codeMethod) {
-    // 构建字符串对象
-    StringBuilder sb = new StringBuilder();
+      List<MethodInfo> codeMethod,
+      String author) {
+    // 类的定义
+    StringBuilder sb =
+        JavaClassCodeUtils.classDefine(
+            entityInfo, getImportList(codeMethod), ANNOTATION_LIST, author);
 
-    // 输出定义头信息
-    this.classDefine(sb, tableMsgBean, className, comment, outJavaPackage, codeMethod);
     // 作属性输出
     this.outProperties(columnList, sb);
     // in关键输的输出
     this.inCondition(codeMethod, columnList, sb);
     // 类结束
-    this.classFinish(sb);
+    JavaClassCodeUtils.classEnd(sb);
 
     return sb;
+  }
+
+  /**
+   * 获取导入的表信息
+   *
+   * @param codeMethod
+   * @return
+   */
+  private List<String> getImportList(List<MethodInfo> codeMethod) {
+    List<String> importList = new ArrayList<>();
+
+    importList.add(JavaKeyWord.BEAN_IMPORT_DATA);
+    importList.add(JavaKeyWord.BEAN_IMPORT_TOSTRING);
+
+    // 检查是否需要导入list包
+    Set<String> inCondition = this.getInCondition(codeMethod);
+    if (!inCondition.isEmpty()) {
+      importList.add(JavaKeyWord.IMPORT_LIST);
+    }
+    return importList;
   }
 
   /**
@@ -79,9 +98,7 @@ public class GenerateJavaBean {
    * @return 结果
    */
   private Set<String> getInCondition(List<MethodInfo> codeMethod) {
-
     Set<String> addWhereColumn = new HashSet<>();
-
     for (MethodInfo method : codeMethod) {
       for (WhereInfo whereIn : method.getWhereInfo()) {
         // 检查当前是否存在in关键字
@@ -104,7 +121,6 @@ public class GenerateJavaBean {
       Set<String> inCondition, List<TableColumnDTO> columnList, StringBuilder sb) {
     for (String inConditionItem : inCondition) {
       TableColumnDTO tableInfo = this.getColumn(columnList, inConditionItem);
-
       if (null == tableInfo) {
         continue;
       }
@@ -113,19 +129,14 @@ public class GenerateJavaBean {
       String javaDataType = TypeProcessUtils.getJavaType(tableInfo.getDataType());
       // 得到java输出的名称
       String javaName = NameProcess.INSTANCE.toFieldName(tableInfo.getColumnName());
-
       // 输出的类型
       javaDataType = JavaKeyWord.LIST_TYPE + javaDataType + JavaKeyWord.LIST_TYPE_END;
-
       // 输出的名称
       javaName = getInConditionName(javaName);
 
       // 属性输出
       this.outField(
-          sb,
-          javaDataType,
-          javaName,
-          tableInfo.getColumnMsg() + CodeComment.FIELD_CONDITION_LIST);
+          sb, javaDataType, javaName, tableInfo.getColumnMsg() + CodeComment.FIELD_CONDITION_LIST);
     }
   }
 
@@ -141,6 +152,13 @@ public class GenerateJavaBean {
     return outName;
   }
 
+  /**
+   * 获取指定的列
+   *
+   * @param columnList 列集合
+   * @param inConditionItem 作为in条件的列
+   * @return 列信息
+   */
   private TableColumnDTO getColumn(List<TableColumnDTO> columnList, String inConditionItem) {
     for (TableColumnDTO tableColumnItem : columnList) {
       // 如果能列名能匹配上
@@ -149,81 +167,7 @@ public class GenerateJavaBean {
       }
     }
 
-    return null;
-  }
-
-  /**
-   * 文件头信息定义
-   *
-   * @param sb 构建输出对象
-   * @param tableMsgBean 当前的数据文件描述
-   * @param className 类名
-   * @param classComment 类注释
-   * @param definePackage 定义的包路径
-   * @param methodList 方法列表
-   */
-  private void classDefine(
-      StringBuilder sb,
-      TableInfoDTO tableMsgBean,
-      String className,
-      String classComment,
-      String definePackage,
-      List<MethodInfo> methodList) {
-
-    // 定义包
-    sb.append(JavaKeyWord.PACKAGE)
-        .append(Symbol.SPACE)
-        .append(definePackage)
-        .append(Symbol.SEMICOLON)
-        .append(Symbol.ENTER_LINE);
-    sb.append(Symbol.ENTER_LINE);
-    sb.append(Symbol.ENTER_LINE);
-
-    // 1,导包
-    sb.append(JavaKeyWord.BEAN_IMPORT_DATA).append(Symbol.ENTER_LINE);
-    sb.append(JavaKeyWord.BEAN_IMPORT_TOSTRING).append(Symbol.ENTER_LINE);
-
-    // 检查是否需要导入list包
-    Set<String> inCondition = this.getInCondition(methodList);
-    if (!inCondition.isEmpty()) {
-      sb.append(JavaKeyWord.IMPORT)
-          .append(Symbol.SPACE)
-          .append(JavaKeyWord.IMPORT_LIST)
-          .append(Symbol.SEMICOLON);
-      sb.append(Symbol.ENTER_LINE);
-    }
-
-    sb.append(Symbol.ENTER_LINE);
-
-    // 添加类注释信息
-    sb.append(JavaKeyWord.ANNO_CLASS)
-        .append(Symbol.ENTER_LINE)
-        .append(JavaKeyWord.ANNO_CLASS_MID)
-        .append(Symbol.SPACE)
-        .append(tableMsgBean.getTableComment())
-        .append(Symbol.BRACKET_LEFT)
-        .append(tableMsgBean.getTableName())
-        .append(Symbol.BRACKET_RIGHT)
-        .append(classComment)
-        .append(Symbol.ENTER_LINE)
-        .append(JavaKeyWord.ANNO_CLASS_MID)
-        .append(Symbol.ENTER_LINE)
-        .append(JavaKeyWord.DOC_VERSION)
-        .append(Symbol.ENTER_LINE)
-        .append(JavaKeyWord.DOC_AUTH)
-        .append(Symbol.ENTER_LINE)
-        .append(JavaKeyWord.ANNO_OVER)
-        .append(Symbol.ENTER_LINE);
-    // 引入@data和@toString
-    sb.append(JavaKeyWord.BEAN_USE_DATA).append(Symbol.ENTER_LINE);
-    sb.append(JavaKeyWord.BEAN_USE_TOSTRING).append(Symbol.ENTER_LINE);
-    sb.append(JavaKeyWord.ClASS_START)
-        .append(className)
-        .append(Symbol.SPACE)
-        .append(Symbol.BRACE_LEFT);
-    sb.append(Symbol.ENTER_LINE);
-    sb.append(Symbol.ENTER_LINE);
-    sb.append(Symbol.ENTER_LINE);
+    throw new IllegalArgumentException("condition :" + inConditionItem + "not exists!");
   }
 
   /**
@@ -258,30 +202,13 @@ public class GenerateJavaBean {
   private void outField(StringBuilder sb, String javaDataType, String javaName, String comment) {
 
     sb.append(JavaFormat.appendTab(1)).append(JavaKeyWord.ANNO_CLASS).append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(1))
-        .append(JavaKeyWord.ANNO_CLASS_MID)
-        .append(Symbol.SPACE)
-        .append(comment)
-        .append(Symbol.ENTER_LINE);
+    sb.append(JavaFormat.appendTab(1)).append(JavaKeyWord.ANNO_CLASS_MID);
+    sb.append(Symbol.SPACE).append(comment).append(Symbol.ENTER_LINE);
     sb.append(JavaFormat.appendTab(1)).append(JavaKeyWord.ANNO_OVER).append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(1))
-        .append(JavaKeyWord.PRIVATE)
-        .append(Symbol.SPACE)
-        .append(javaDataType)
-        .append(Symbol.SPACE)
-        .append(javaName)
-        .append(Symbol.SEMICOLON);
+    sb.append(JavaFormat.appendTab(1)).append(JavaKeyWord.PRIVATE);
+    sb.append(Symbol.SPACE).append(javaDataType).append(Symbol.SPACE);
+    sb.append(javaName).append(Symbol.SEMICOLON);
     sb.append(Symbol.ENTER_LINE);
     sb.append(Symbol.ENTER_LINE);
-  }
-
-  /**
-   * class文件结束
-   *
-   * @param sb 字符信息
-   */
-  private void classFinish(StringBuilder sb) {
-    // 结束
-    sb.append(Symbol.BRACE_RIGHT);
   }
 }

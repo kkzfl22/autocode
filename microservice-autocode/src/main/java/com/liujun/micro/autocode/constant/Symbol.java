@@ -78,4 +78,9 @@ public class Symbol {
   /** 右尖括号 */
   public static final String ANGLE_BRACKETS_RIGHT = ">";
 
+  /** 空字符 */
+  public static final String EMPTY = "";
+
+
+
 }

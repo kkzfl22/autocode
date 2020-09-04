@@ -15,7 +15,7 @@ import org.junit.Test;
 public class JavaCodeRepositoryMyBatisMapperCreateTest {
 
   @Test
-  public void testOutPersistObject() {
+  public void testGenerate() {
 
     GenerateCodeContext context = CodeBaseUtils.getBase();
 

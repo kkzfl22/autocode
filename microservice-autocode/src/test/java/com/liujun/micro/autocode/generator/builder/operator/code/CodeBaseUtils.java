@@ -22,7 +22,7 @@ public class CodeBaseUtils {
     // 代码基础路径
     String basePkg = "com.paraview.security.pap.microservice.";
     // 表空间
-    String tableSpace = "autocode";
+    String tableSpace = "generate";
     // 模块名称
     String modelName = "attribute";
     // 文件输出代码路径

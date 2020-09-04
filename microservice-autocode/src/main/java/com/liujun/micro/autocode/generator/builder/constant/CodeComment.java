@@ -35,6 +35,9 @@ public class CodeComment {
   /** 数据准备方法 */
   public static final String JUNIT_BEFORE_COMMENT = "单元测试的数据准备";
 
+  /** 数据准备方法 */
+  public static final String JUNIT_GET_DATA_COMMENT = "单元测试的获取数据对象";
+
   /** 数据集对比 */
   public static final String JUNIT_ASSERT_LIST_COMMENT = "数据集对比方法";
 
@@ -46,6 +49,9 @@ public class CodeComment {
 
   /** 转换方法的注释 */
   public static final String JUNIT_PARSE_MAP_COMMENT = "将数据集合转换为map";
+
+  /** 提取数据集的主键key */
+  public static final String JUNIT_PARSE_KEY_COMMENT = "提取数据集的主键key";
 
   /** 数据转换的名称 */
   public static final String JUNIT_PARSE_KEY_PO_COMMENT = "实体信息";
@@ -64,4 +70,16 @@ public class CodeComment {
 
   /** 在执行完毕后的清理 */
   public static final String JUNIT_AFTER_CLEAN = "数据清理";
+
+  /** 领域对象与实体转换对象的方法 */
+  public static final String ASSEMBLER_ENTITY_PERSIST_COMMENT = "将领域对象转换为存储对象";
+
+  /** 将存储对象转换为领域对象的方法 */
+  public static final String ASSEMBLER_PERSIST_ENTITY_COMMENT = "将存储对象转换为领域对象";
+
+  /** 领域集合对象与实体集合转换对象的方法 */
+  public static final String ASSEMBLER_ENTITY_PERSIST_LIST_COMMENT = "将领域集合对象转换为存储集合对象";
+
+  /** 将存储集合对象转换为领域集合对象的方法 */
+  public static final String ASSEMBLER_PERSIST_ENTITY_LIST_COMMENT = "将存储集合对象转换为领域集合对象";
 }

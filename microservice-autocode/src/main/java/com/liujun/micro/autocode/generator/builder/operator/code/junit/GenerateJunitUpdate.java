@@ -4,6 +4,8 @@ import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.entity.config.MethodInfo;
 import com.liujun.micro.autocode.generator.builder.constant.*;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
+import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
+import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.WhereUtils;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
@@ -12,6 +14,7 @@ import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
+import javax.tools.JavaCompiler;
 import java.util.List;
 import java.util.Map;
 
@@ -21,9 +24,9 @@ import java.util.Map;
  * @author liujun
  * @version 0.0.1
  */
-public class GenerateJunitDaoUpdate {
+public class GenerateJunitUpdate {
 
-  public static final GenerateJunitDaoUpdate INSTANCE = new GenerateJunitDaoUpdate();
+  public static final GenerateJunitUpdate INSTANCE = new GenerateJunitUpdate();
 
   /**
    * 数据的操作方法
@@ -64,27 +67,32 @@ public class GenerateJunitDaoUpdate {
     String methodName = NameProcess.INSTANCE.toJavaNameFirstUpper(method.getName());
     int tabIndex = 1;
 
-    // 方法的注释
-    sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS);
-    sb.append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS_MID);
-    sb.append(Symbol.SPACE);
-    sb.append(method.getComment()).append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_OVER);
-    sb.append(Symbol.ENTER_LINE);
+    // 方法实体信息
+    JavaMethodEntity methodInfo =
+        JavaMethodEntity.builder()
+            // 注解符
+            .annotation(JunitKey.ANNO_TEST)
+            // 公共的访问修饰符
+            .visitMethod(JavaKeyWord.PUBLIC)
+            // 方法注释
+            .methodComment(method.getComment())
+            // 返回值
+            .returnType(JavaKeyWord.VOID)
+            // 方法名
+            .methodName(GenerateJunitDefine.JUNIT_METHOD_BEFORE + methodName)
+            .build();
 
-    // 添加insert方法的定义
-    sb.append(JavaFormat.appendTab(tabIndex)).append(JunitKey.ANNO_TEST).append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.PUBLIC).append(Symbol.SPACE);
-    sb.append(JavaKeyWord.VOID).append(Symbol.SPACE).append(GenerateJunitDao.JUNIT_METHOD_BEFORE);
-    sb.append(methodName).append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
-    sb.append(Symbol.BRACE_LEFT).append(Symbol.ENTER_LINE);
+    // 方法定义生成
+    JavaClassCodeUtils.methodDefine(sb, methodInfo);
+
+    // 方法开始
+    JavaClassCodeUtils.methodStart(sb);
 
     // 调用批量插入方法
     this.invokeBatchInsert(sb, tabIndex, methodList, poPackage);
 
-    sb.append(JavaFormat.appendTab(tabIndex)).append(Symbol.BRACE_RIGHT);
-    sb.append(Symbol.ENTER_LINE).append(Symbol.ENTER_LINE);
+    // 方法结束
+    JavaClassCodeUtils.methodEnd(sb);
   }
 
   /**
@@ -102,7 +110,7 @@ public class GenerateJunitDaoUpdate {
     this.invokeBatch(sb, tabIndex, methodList);
 
     // 进行标识的设置操作
-    GenerateJunitDao.INSTANCE.setBatchInsertFlag(
+    GenerateJunitDefine.INSTANCE.setBatchInsertFlag(
         sb, tabIndex - 1, JavaVarValue.INSERT_TYPE_BATCH_KEY);
   }
 
@@ -117,31 +125,32 @@ public class GenerateJunitDaoUpdate {
 
     int tabIndex = 0;
 
-    sb.append(JavaFormat.appendTab(tabIndex + 1))
-        .append(JavaKeyWord.ANNO_CLASS)
-        .append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.ANNO_CLASS_MID);
-    sb.append(Symbol.SPACE).append(method.getComment());
-    sb.append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex + 1))
-        .append(JavaKeyWord.ANNO_OVER)
-        .append(Symbol.ENTER_LINE);
+    // 方法实体信息
+    JavaMethodEntity methodInfo =
+        JavaMethodEntity.builder()
+            // 注解符
+            .annotation(JunitKey.ANNO_TEST)
+            // 公共的访问修饰符
+            .visitMethod(JavaKeyWord.PUBLIC)
+            // 方法注释
+            .methodComment(method.getComment())
+            // 返回值
+            .returnType(JavaKeyWord.VOID)
+            // 方法名
+            .methodName(GenerateJunitDefine.JUNIT_METHOD_BEFORE + methodName)
+            .build();
 
-    // 添加insert方法
-    sb.append(JavaFormat.appendTab(tabIndex + 1))
-        .append(JunitKey.ANNO_TEST)
-        .append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.PUBLIC);
-    sb.append(Symbol.SPACE).append(JavaKeyWord.VOID).append(Symbol.SPACE);
-    sb.append(GenerateJunitDao.JUNIT_METHOD_BEFORE).append(methodName);
-    sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
-    sb.append(Symbol.BRACE_LEFT).append(Symbol.ENTER_LINE);
+    // 方法定义生成
+    JavaClassCodeUtils.methodDefine(sb, methodInfo);
+
+    // 方法开始
+    JavaClassCodeUtils.methodStart(sb);
 
     // 调用添加方法
     insertInvokeMethod(sb, tabIndex, method);
 
     // 进行标识的设置操作
-    GenerateJunitDao.INSTANCE.setBatchInsertFlag(sb, tabIndex, JavaVarValue.INSERT_TYPE_ONE_KEY);
+    GenerateJunitDefine.INSTANCE.setBatchInsertFlag(sb, tabIndex, JavaVarValue.INSERT_TYPE_ONE_KEY);
 
     sb.append(JavaFormat.appendTab(tabIndex + 1)).append(Symbol.BRACE_RIGHT);
     sb.append(Symbol.ENTER_LINE).append(Symbol.ENTER_LINE);
@@ -208,30 +217,32 @@ public class GenerateJunitDaoUpdate {
 
     int tabIndex = 0;
 
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.ANNO_CLASS);
-    sb.append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.ANNO_CLASS_MID);
-    sb.append(Symbol.SPACE).append(updateMethod.getComment());
-    sb.append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex + 1))
-        .append(JavaKeyWord.ANNO_OVER)
-        .append(Symbol.ENTER_LINE);
+    // 方法实体信息
+    JavaMethodEntity methodInfo =
+        JavaMethodEntity.builder()
+            // 注解符
+            .annotation(JunitKey.ANNO_TEST)
+            // 公共的访问修饰符
+            .visitMethod(JavaKeyWord.PUBLIC)
+            // 方法注释
+            .methodComment(updateMethod.getComment())
+            // 返回值
+            .returnType(JavaKeyWord.VOID)
+            // 方法名
+            .methodName(GenerateJunitDefine.JUNIT_METHOD_BEFORE + methodName)
+            .build();
 
-    // 添加insert方法
-    sb.append(JavaFormat.appendTab(tabIndex + 1))
-        .append(JunitKey.ANNO_TEST)
-        .append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.PUBLIC);
-    sb.append(Symbol.SPACE).append(JavaKeyWord.VOID).append(Symbol.SPACE);
-    sb.append(GenerateJunitDao.JUNIT_METHOD_BEFORE).append(methodName);
-    sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
-    sb.append(Symbol.BRACE_LEFT).append(Symbol.ENTER_LINE);
+    // 方法定义生成
+    JavaClassCodeUtils.methodDefine(sb, methodInfo);
+
+    // 方法开始
+    JavaClassCodeUtils.methodStart(sb);
 
     // 调用添加方法
     insertInvokeMethod(sb, tabIndex, insertMethod);
 
     // 进行标识的设置操作
-    GenerateJunitDao.INSTANCE.setBatchInsertFlag(sb, tabIndex, JavaVarValue.INSERT_TYPE_ONE_KEY);
+    GenerateJunitDefine.INSTANCE.setBatchInsertFlag(sb, tabIndex, JavaVarValue.INSERT_TYPE_ONE_KEY);
 
     sb.append(Symbol.ENTER_LINE);
 
@@ -256,8 +267,8 @@ public class GenerateJunitDaoUpdate {
     sb.append(JavaVarName.INVOKE_METHOD_UPDATE_RSP);
     sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
 
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(Symbol.BRACE_RIGHT);
-    sb.append(Symbol.ENTER_LINE).append(Symbol.ENTER_LINE);
+    // 方法结束
+    JavaClassCodeUtils.methodEnd(sb);
   }
 
   /**
@@ -269,25 +280,26 @@ public class GenerateJunitDaoUpdate {
   public void deleteMethod(StringBuilder sb, MethodInfo deleteMethod, ImportPackageInfo poPackage) {
     int tabIndex = 0;
 
-    // 注释
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.ANNO_CLASS);
-    sb.append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.ANNO_CLASS_MID);
-    sb.append(Symbol.SPACE).append(CodeComment.JUNIT_AFTER_CLEAN);
-    sb.append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.ANNO_OVER);
-    sb.append(Symbol.ENTER_LINE);
+    // 方法实体信息
+    JavaMethodEntity methodInfo =
+        JavaMethodEntity.builder()
+            // 注解符
+            .annotation(JunitKey.ANNO_AFTER)
+            // 公共的访问修饰符
+            .visitMethod(JavaKeyWord.PUBLIC)
+            // 方法注释
+            .methodComment(CodeComment.JUNIT_AFTER_CLEAN)
+            // 返回值
+            .returnType(JavaKeyWord.VOID)
+            // 方法名
+            .methodName(JavaMethodName.AFTER_CLEAN)
+            .build();
 
-    // 注解标识
-    sb.append(JavaFormat.appendTab(tabIndex + 1));
-    sb.append(JunitKey.ANNO_AFTER).append(Symbol.ENTER_LINE);
+    // 方法定义生成
+    JavaClassCodeUtils.methodDefine(sb, methodInfo);
 
-    // 方法声明
-    sb.append(JavaFormat.appendTab(tabIndex + 1));
-    sb.append(JavaKeyWord.PUBLIC).append(Symbol.SPACE).append(JavaKeyWord.VOID);
-    sb.append(Symbol.SPACE).append(JavaMethodName.AFTER_CLEAN);
-    sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
-    sb.append(Symbol.BRACE_LEFT).append(Symbol.ENTER_LINE);
+    // 方法开始
+    JavaClassCodeUtils.methodStart(sb);
 
     // 检查并执行单个清理操作
     junitDeleteOne(sb, tabIndex, deleteMethod);
@@ -295,9 +307,8 @@ public class GenerateJunitDaoUpdate {
     // 检查并执行批量删除操作
     junitBatchDelete(sb, tabIndex, deleteMethod, poPackage);
 
-    // 方法声明结束
-    sb.append(JavaFormat.appendTab(tabIndex + 1));
-    sb.append(Symbol.BRACE_RIGHT).append(Symbol.ENTER_LINE);
+    // 方法结束
+    JavaClassCodeUtils.methodEnd(sb);
   }
 
   /**
@@ -423,16 +434,17 @@ public class GenerateJunitDaoUpdate {
     int tabIndex = 0;
 
     // 查询方法的定义
-    GenerateJunitDaoQuery.INSTANCE.queryMethodDefine(sb, tabIndex, queryMethod, methodName);
+    GenerateJunitQuery.INSTANCE.queryMethodDefine(sb, queryMethod, methodName);
 
     // 进行in的处理
-    GenerateJunitDaoQuery.INSTANCE.conditionIn(sb, queryMethod, tabIndex, poPackageInfo, columnMap);
+    GenerateJunitQuery.INSTANCE.conditionIn(sb, queryMethod, tabIndex, poPackageInfo, columnMap);
 
     // 调用批量添加方法
-    GenerateJunitDaoUpdate.INSTANCE.invokeBatch(sb, tabIndex + 1, methodList);
+    GenerateJunitUpdate.INSTANCE.invokeBatch(sb, tabIndex + 1, methodList);
 
     // 进行标识的设置操作,当前为批量删除方法，
-    GenerateJunitDao.INSTANCE.setBatchInsertFlag(sb, tabIndex, JavaVarValue.INSERT_TYPE_NONE_KEY);
+    GenerateJunitDefine.INSTANCE.setBatchInsertFlag(
+        sb, tabIndex, JavaVarValue.INSERT_TYPE_NONE_KEY);
 
     sb.append(Symbol.ENTER_LINE);
 
@@ -452,18 +464,18 @@ public class GenerateJunitDaoUpdate {
     // 如果存在in关键字，还需要进行集合条件的封装
     if (inCondition) {
       // 进行关联参数的定义
-      GenerateJunitDaoQuery.INSTANCE.conditionInDefine(
+      GenerateJunitQuery.INSTANCE.conditionInDefine(
           sb, queryMethod, columnMap, poPackageInfo, dbType, tabIndex, className);
     } else {
       // 如果当前存在where条件，则使用where条件
       if (queryMethod.getWhereInfo() != null && !queryMethod.getWhereInfo().isEmpty()) {
-        GenerateJunitDaoQuery.INSTANCE.setQueryField(sb, queryMethod, columnMap, tabIndex);
+        GenerateJunitQuery.INSTANCE.setQueryField(sb, queryMethod, columnMap, tabIndex);
       } else {
         // 当不存在where条件时，则使用主键作为条件
-        GenerateJunitDaoQuery.INSTANCE.setQueryFieldPrimary(sb, tabIndex, primaryList);
+        GenerateJunitQuery.INSTANCE.setQueryFieldPrimary(sb, tabIndex, primaryList);
       }
       // 单个查询的调用
-      GenerateJunitDaoQuery.INSTANCE.queryOneRsp(sb, tabIndex, className, queryMethod);
+      GenerateJunitQuery.INSTANCE.queryOneRsp(sb, tabIndex, className, queryMethod);
     }
     this.batchDeleteRspAssert(sb, tabIndex);
 

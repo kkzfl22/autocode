@@ -14,8 +14,17 @@ public enum GenerateCodeDomainKey {
   /** 数据库操作的接口 */
   PERSIST_DAO("persist_dao"),
 
+  /** 领域层与存储层的转换类 */
+  PERSIST_ASSEMBLER("persist_assembler"),
+
   /** mybatis的xml文件 */
   PERSIST_MYBATIS_MAPPER_XML("persist_mybatis_mapper_xml"),
+
+  /** 领域层的存储接口 */
+  PERSIST_FACADE("persist_facade"),
+
+  /** 领域层的实体对象 */
+  DOMAIN_DO("domain_object"),
   ;
 
   private String key;

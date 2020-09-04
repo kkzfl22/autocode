@@ -12,6 +12,7 @@ import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
 import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaInterface;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.JavaCommentUtil;
 import com.liujun.micro.autocode.generator.builder.utils.MenuTreeProcessUtil;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
@@ -23,15 +24,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * 生成数据库的相关操作接口
+ * 生成领域层与数据库的转换接口
  *
  * @author liujun
  * @version 1.0.0
  */
-public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
+public class JavaCodeRepositoryFacadeInfCreate implements GenerateCodeInf {
 
-  private static final String DAO_SUFFIX = "DAO";
-  private static final String DAO_COMMENT = "的数据库操作";
+  public static final String SUFFIX_NAME = "RepositoryInterface";
+  private static final String COMMENT = "的领域存储接口";
 
   @Override
   public void generateCode(GenerateCodeContext param) {
@@ -49,20 +50,15 @@ public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
 
       // 得到类名
       String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
-      String className = tableClassName + DAO_SUFFIX;
+      String className = tableClassName + SUFFIX_NAME;
 
       // 获取以java定义的package路径
       DomainMenuTree menuTree = param.getMenuTree();
-      MenuNode poNode = MenuTreePackagePath.getRepositoryDaoNode(menuTree);
-      String javaPackageStr = MenuTreeProcessUtil.outJavaPackage(poNode);
+      MenuNode domainRepositoryServiceNode = MenuTreePackagePath.getRepositoryFacadeNode(menuTree);
+      String javaPackageStr = MenuTreeProcessUtil.outJavaPackage(domainRepositoryServiceNode);
 
       // 注释
-      String docComment =
-          tableInfo.getTableComment()
-              + Symbol.BRACKET_LEFT
-              + tableInfo.getTableName()
-              + Symbol.BRACKET_RIGHT
-              + DAO_COMMENT;
+      String docComment = JavaCommentUtil.tableCommentProc(tableInfo.getTableComment()) + COMMENT;
 
       // 将dao信息进行储存至流程中
       ImportPackageInfo daoPackageInfo =
@@ -70,19 +66,19 @@ public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
       ImportPackageUtils.putPackageInfo(
           tableName,
           param.getPackageMap(),
-          GenerateCodeDomainKey.PERSIST_DAO.getKey(),
+          GenerateCodeDomainKey.PERSIST_FACADE.getKey(),
           daoPackageInfo,
           tableMap.size());
 
-      // 获取实体信息
-      ImportPackageInfo poPackageInfo =
+      // 获取领域实体信息
+      ImportPackageInfo domainEntityPackageInfo =
           ImportPackageUtils.getDefineClass(
-              param.getPackageMap(), GenerateCodeDomainKey.PERSIST_PO.getKey(), tableName);
+              param.getPackageMap(), GenerateCodeDomainKey.DOMAIN_DO.getKey(), tableName);
 
-      // 进行dao的相关方法的生成
+      // 进行领域方法的相关方法的生成
       StringBuilder sb =
           GenerateJavaInterface.INSTANCE.generateJavaInterface(
-              poPackageInfo,
+              domainEntityPackageInfo,
               daoPackageInfo,
               param.getGenerateConfig().getGenerate().getCode(),
               param.getGenerateConfig().getGenerate().getAuthor());

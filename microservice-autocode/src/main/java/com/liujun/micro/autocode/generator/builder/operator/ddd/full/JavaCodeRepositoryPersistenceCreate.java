@@ -15,32 +15,32 @@ import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageU
 import com.liujun.micro.autocode.generator.builder.utils.MenuTreeProcessUtil;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
+import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 
 /**
- * 生成数据库的相关操作接口
+ * 领域层存储接口的实现，实现与dao层的调用
  *
  * @author liujun
- * @version 1.0.0
+ * @version 0.0.1
  */
-public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
+public class JavaCodeRepositoryPersistenceCreate implements GenerateCodeInf {
 
-  private static final String DAO_SUFFIX = "DAO";
-  private static final String DAO_COMMENT = "的数据库操作";
+  private static final String NAME_SUFFIX = "RepositoryImpl";
+  private static final String CLASS_COMMENT = "的领域存储接口实现";
 
   @Override
   public void generateCode(GenerateCodeContext param) {
-
     Map<String, TableInfoDTO> tableMap = param.getTableMap();
     Map<String, List<TableColumnDTO>> map = param.getColumnMapList();
-    Iterator<Entry<String, List<TableColumnDTO>>> tableNameEntry = map.entrySet().iterator();
+    Iterator<Map.Entry<String, List<TableColumnDTO>>> tableNameEntry = map.entrySet().iterator();
     while (tableNameEntry.hasNext()) {
-      Entry<String, List<TableColumnDTO>> tableNameItem = tableNameEntry.next();
+      Map.Entry<String, List<TableColumnDTO>> tableNameItem = tableNameEntry.next();
       // 获取表信息
       TableInfoDTO tableInfo = param.getTableMap().get(tableNameItem.getKey());
 
@@ -49,7 +49,7 @@ public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
 
       // 得到类名
       String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
-      String className = tableClassName + DAO_SUFFIX;
+      String className = tableClassName + NAME_SUFFIX;
 
       // 获取以java定义的package路径
       DomainMenuTree menuTree = param.getMenuTree();
@@ -62,11 +62,12 @@ public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
               + Symbol.BRACKET_LEFT
               + tableInfo.getTableName()
               + Symbol.BRACKET_RIGHT
-              + DAO_COMMENT;
+              + CLASS_COMMENT;
 
       // 将dao信息进行储存至流程中
       ImportPackageInfo daoPackageInfo =
           new ImportPackageInfo(javaPackageStr, className, docComment);
+
       ImportPackageUtils.putPackageInfo(
           tableName,
           param.getPackageMap(),
@@ -79,21 +80,61 @@ public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
           ImportPackageUtils.getDefineClass(
               param.getPackageMap(), GenerateCodeDomainKey.PERSIST_PO.getKey(), tableName);
 
-      // 进行dao的相关方法的生成
-      StringBuilder sb =
-          GenerateJavaInterface.INSTANCE.generateJavaInterface(
-              poPackageInfo,
-              daoPackageInfo,
-              param.getGenerateConfig().getGenerate().getCode(),
-              param.getGenerateConfig().getGenerate().getAuthor());
-
       // 定义项目内的完整目录结构
       MenuNode mapperNode = MenuTreeProjectPath.getSrcJavaNode(param.getProjectMenuTree());
       String baseJavaPath = MenuTreeProcessUtil.outPath(mapperNode);
       javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
 
       // 进行存储层的接口输出
-      GenerateOutFileUtils.outJavaFile(sb, param.getFileBasePath(), javaPackageStr, className);
+     // GenerateOutFileUtils.outJavaFile(sb, param.getFileBasePath(), javaPackageStr, className);
     }
   }
+
+  // private StringBuilder persistenceDefine(
+  //    ImportPackageInfo persistClass,
+  //    ImportPackageInfo domainEntityPackage,
+  //    ImportPackageInfo poPackage,
+  //    String comment) {
+  //  StringBuilder classInfo = new StringBuilder();
+  //
+  //  // 定义包
+  //  classInfo
+  //      .append(JavaKeyWord.PACKAGE)
+  //      .append(Symbol.SPACE)
+  //      .append(persistClass.getPackagePath())
+  //      .append(Symbol.SEMICOLON)
+  //      .append(Symbol.ENTER_LINE);
+  //  classInfo.append(Symbol.ENTER_LINE);
+  //  classInfo.append(Symbol.ENTER_LINE);
+  //
+  //  // 1,导包
+  //  classInfo.append(JavaKeyWord.BEAN_IMPORT_DATA).append(Symbol.ENTER_LINE);
+  //  classInfo.append(JavaKeyWord.BEAN_IMPORT_TOSTRING).append(Symbol.ENTER_LINE);
+  //
+  //
+  //
+  //  classInfo.append(Symbol.ENTER_LINE);
+  //
+  //  // 添加类注释信息
+  //  classInfo
+  //      .append(JavaKeyWord.ANNO_CLASS)
+  //      .append(Symbol.ENTER_LINE)
+  //      .append(JavaKeyWord.ANNO_CLASS_MID);
+  //  classInfo.append(Symbol.SPACE).append(classComment).append(Symbol.ENTER_LINE);
+  //  classInfo
+  //      .append(JavaKeyWord.ANNO_CLASS_MID)
+  //      .append(Symbol.ENTER_LINE)
+  //      .append(JavaKeyWord.DOC_VERSION);
+  //  classInfo.append(Symbol.ENTER_LINE).append(JavaKeyWord.DOC_AUTH).append(author);
+  //  classInfo.append(Symbol.ENTER_LINE).append(JavaKeyWord.ANNO_OVER).append(Symbol.ENTER_LINE);
+  //
+  //  // 引入@data和@toString
+  //  classInfo.append(JavaKeyWord.BEAN_USE_DATA).append(Symbol.ENTER_LINE);
+  //  classInfo.append(JavaKeyWord.BEAN_USE_TOSTRING).append(Symbol.ENTER_LINE);
+  //  classInfo.append(JavaKeyWord.ClASS_START).append(className);
+  //  classInfo.append(Symbol.SPACE).append(Symbol.BRACE_LEFT);
+  //  classInfo.append(Symbol.ENTER_LINE);
+  //  classInfo.append(Symbol.ENTER_LINE);
+  //  classInfo.append(Symbol.ENTER_LINE);
+  // }
 }

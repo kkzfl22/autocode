@@ -19,8 +19,17 @@ public class ImportPackageInfo {
   /** 类文件名 */
   private String className;
 
-  public ImportPackageInfo(String packagePath, String className) {
+  /** 类的注释 */
+  private String classComment;
+
+  // public ImportPackageInfo(String packagePath, String className) {
+  //  this.packagePath = packagePath;
+  //  this.className = className;
+  // }
+
+  public ImportPackageInfo(String packagePath, String className, String classComment) {
     this.packagePath = packagePath;
     this.className = className;
+    this.classComment = classComment;
   }
 }

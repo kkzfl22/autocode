@@ -23,15 +23,8 @@ public class JavaVarValue {
   /** 加加 */
   public static final String ADD_ADD = "++";
 
-  /** 数据不操作 */
-  public static final int INSERT_TYPE_NONE = 0;
-
-  /** 单条插入 */
-  public static final int INSERT_TYPE_ONE = 1;
-
-  /** 批量插入 */
-  public static final int INSERT_TYPE_BATCH = 2;
-
+  /** 对象为null */
+  public static final String VALUE_NULL = "null";
 
   /** 不执行删除标识 */
   public static final String INSERT_TYPE_NONE_KEY = "InsertType.INSERT_TYPE_NONE";

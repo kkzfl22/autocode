@@ -7,6 +7,8 @@ import com.liujun.micro.autocode.entity.config.TypeInfo;
 import com.liujun.micro.autocode.entity.config.WhereInfo;
 import com.liujun.micro.autocode.generator.builder.constant.*;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
+import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
+import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.WhereUtils;
@@ -26,9 +28,9 @@ import java.util.Map;
  * @author liujun
  * @version 0.0.1
  */
-public class GenerateJunitDaoQuery {
+public class GenerateJunitQuery {
 
-  public static final GenerateJunitDaoQuery INSTANCE = new GenerateJunitDaoQuery();
+  public static final GenerateJunitQuery INSTANCE = new GenerateJunitQuery();
 
   /**
    * 数据查询方法
@@ -54,7 +56,7 @@ public class GenerateJunitDaoQuery {
     int tabIndex = 0;
 
     // 查询方法的定义
-    queryMethodDefine(sb, tabIndex, queryMethod, methodName);
+    queryMethodDefine(sb, queryMethod, methodName);
 
     // 给查询方法生成添加数据
     queryInsertInvokeMethod(sb, tabIndex, queryMethod, columnMap, poPackageInfo, methodList);
@@ -95,6 +97,9 @@ public class GenerateJunitDaoQuery {
 
     // 执行方法结果断言
     methodResponseAssert(sb, tabIndex, queryMethod);
+
+    // 方法结束
+    JavaClassCodeUtils.methodEnd(sb);
   }
 
   /**
@@ -126,9 +131,6 @@ public class GenerateJunitDaoQuery {
       sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
       sb.append(Symbol.ENTER_LINE);
     }
-
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(Symbol.BRACE_RIGHT);
-    sb.append(Symbol.ENTER_LINE).append(Symbol.ENTER_LINE);
   }
 
   /**
@@ -154,29 +156,31 @@ public class GenerateJunitDaoQuery {
    * 查询方法的定义
    *
    * @param sb 字符
-   * @param tabIndex tab数
    * @param queryMethod 查询方法
    * @param methodName 方法名
    */
-  public void queryMethodDefine(
-      StringBuilder sb, int tabIndex, MethodInfo queryMethod, String methodName) {
-    // 方法注释
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.ANNO_CLASS);
-    sb.append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.ANNO_CLASS_MID);
-    sb.append(Symbol.SPACE).append(queryMethod.getComment());
-    sb.append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.ANNO_OVER);
-    sb.append(Symbol.ENTER_LINE);
+  public void queryMethodDefine(StringBuilder sb, MethodInfo queryMethod, String methodName) {
 
-    // 方法名
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JunitKey.ANNO_TEST);
-    sb.append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.PUBLIC);
-    sb.append(Symbol.SPACE).append(JavaKeyWord.VOID).append(Symbol.SPACE);
-    sb.append(GenerateJunitDao.JUNIT_METHOD_BEFORE).append(methodName);
-    sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
-    sb.append(Symbol.BRACE_LEFT).append(Symbol.ENTER_LINE);
+    // 方法实体信息
+    JavaMethodEntity methodInfo =
+        JavaMethodEntity.builder()
+            // 注解符
+            .annotation(JunitKey.ANNO_TEST)
+            // 公共的访问修饰符
+            .visitMethod(JavaKeyWord.PUBLIC)
+            // 方法注释
+            .methodComment(queryMethod.getComment())
+            // 返回值
+            .returnType(JavaKeyWord.VOID)
+            // 方法名
+            .methodName(GenerateJunitDefine.JUNIT_METHOD_BEFORE + methodName)
+            .build();
+
+    // 方法定义生成
+    JavaClassCodeUtils.methodDefine(sb, methodInfo);
+
+    // 方法开始
+    JavaClassCodeUtils.methodStart(sb);
   }
 
   /**
@@ -415,10 +419,10 @@ public class GenerateJunitDaoQuery {
       conditionIn(sb, method, tabIndex, poPackage, columnMap);
 
       // 调用批量添加方法
-      GenerateJunitDaoUpdate.INSTANCE.invokeBatch(sb, tabIndex + 1, methodList);
+      GenerateJunitUpdate.INSTANCE.invokeBatch(sb, tabIndex + 1, methodList);
 
       // 进行标识的设置操作
-      GenerateJunitDao.INSTANCE.setBatchInsertFlag(
+      GenerateJunitDefine.INSTANCE.setBatchInsertFlag(
           sb, tabIndex, JavaVarValue.INSERT_TYPE_BATCH_KEY);
 
     }
@@ -427,10 +431,11 @@ public class GenerateJunitDaoQuery {
       // 单个添加的方法
       MethodInfo insertMethod = MethodUtils.getInsertMethod(methodList);
       // 调用添加方法
-      GenerateJunitDaoUpdate.INSTANCE.insertInvokeMethod(sb, tabIndex, insertMethod);
+      GenerateJunitUpdate.INSTANCE.insertInvokeMethod(sb, tabIndex, insertMethod);
 
       // 进行标识的设置操作
-      GenerateJunitDao.INSTANCE.setBatchInsertFlag(sb, tabIndex, JavaVarValue.INSERT_TYPE_ONE_KEY);
+      GenerateJunitDefine.INSTANCE.setBatchInsertFlag(
+          sb, tabIndex, JavaVarValue.INSERT_TYPE_ONE_KEY);
     }
   }
 

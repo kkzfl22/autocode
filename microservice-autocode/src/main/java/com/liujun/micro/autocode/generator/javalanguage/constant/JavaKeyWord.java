@@ -33,7 +33,10 @@ public class JavaKeyWord {
   public static final String INT_TYPE = "int";
 
   /** 接口 */
-  public static final String INTERFACE = "interface";
+  public static final String INTERFACE_KEY = "interface";
+
+  /** 类定义的关键字 */
+  public static final String CLASS_KEY = "class";
 
   /** private 关键字 */
   public static final String PRIVATE = "private";
@@ -50,9 +53,11 @@ public class JavaKeyWord {
   /** 继承关键字 */
   public static final String EXTEND = "extends";
 
+  /** 实现接口关键字 */
+  public static final String IMPLEMENTS = "implements";
+
   /** 判断 */
   public static final String IF = "if ";
-
 
   /** 判断 */
   public static final String ELSE_IF = "else if ";
@@ -73,16 +78,16 @@ public class JavaKeyWord {
   public static final String DOC_VERSION = " * @version 0.0.1";
 
   /** 作者 */
-  public static final String DOC_AUTH = " * @author liujun";
+  public static final String DOC_AUTH = " * @author ";
 
   /** 类开头 */
   public static final String ClASS_START = "public class ";
 
   /** 用来生成get和set方法 */
-  public static final String BEAN_IMPORT_DATA = "import lombok.Data;";
+  public static final String BEAN_IMPORT_DATA = "lombok.Data";
 
   /** 用来生成toString方法 */
-  public static final String BEAN_IMPORT_TOSTRING = "import lombok.ToString;";
+  public static final String BEAN_IMPORT_TOSTRING = "lombok.ToString";
 
   /** 用来注解data */
   public static final String BEAN_USE_DATA = "@Data";
@@ -120,6 +125,9 @@ public class JavaKeyWord {
   /** 导入集合的包 */
   public static final String IMPORT_LIST = "java.util.List";
 
+  /** 空集合包 */
+  public static final String IMPORT_COLLECTIONS = "java.util.Collections";
+
   /** 导入map的包 */
   public static final String IMPORT_MAP = "java.util.Map";
 
@@ -134,4 +142,16 @@ public class JavaKeyWord {
 
   /** java中的StringBuilder对象 */
   public static final String TYPE_STRING_BUILDER_NAME = "StringBuilder";
+
+  /** 行注释 */
+  public static final String LINE_ANNOTATION = "//";
+
+  /** 逻辑and关系 */
+  public static final String LOGIC_AND = "&&";
+
+  /** 逻辑或关系 */
+  public static final String LOGIC_OR = "||";
+
+  /** 默认的空集合 */
+  public static final String LIST_EMPTY_DEFAULT = "Collections.EMPTY_LIST";
 }
