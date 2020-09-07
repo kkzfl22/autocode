@@ -1,5 +1,6 @@
-package com.liujun.micro.autocode.config.menuTree;
+package com.liujun.micro.autocode.config.menutree;
 
+import com.liujun.micro.autocode.config.generate.GenerateConfig;
 import com.liujun.micro.autocode.constant.JavaDomainTreeKey;
 import com.liujun.micro.autocode.constant.Symbol;
 
@@ -13,6 +14,12 @@ public class DomainMenuTree {
 
   /** 顶层根节点 */
   private static final String ROOT = Symbol.PATH;
+
+  /** 实例信息 */
+  public static final DomainMenuTree INSTANCE =
+      new DomainMenuTree(
+          GenerateConfig.INSTANCE.getCfgEntity().getGenerate().getCodeMenuTree().getBaseMenu(),
+          GenerateConfig.INSTANCE.getCfgEntity().getGenerate().getCodeMenuTree().getModelName());
 
   /** 目录树结构的最顶层节点 */
   private MenuNode root = new MenuNode(ROOT);
@@ -102,15 +109,15 @@ public class DomainMenuTree {
     // 公共目录下的异常
     commonNode.addChildren(JavaDomainTreeKey.COMM_EXCEPTION);
     // 公共目录下的事件通道
-    MenuNode rabbitMQNode = commonNode.addChildren(JavaDomainTreeKey.COMM_RABBITMQ);
+    MenuNode rabbitQueueNode = commonNode.addChildren(JavaDomainTreeKey.COMM_RABBITMQ);
     // 事件通道下的转换目录
-    rabbitMQNode.addChildren(JavaDomainTreeKey.RABBITMQ_ASSEMBLER);
+    rabbitQueueNode.addChildren(JavaDomainTreeKey.RABBITMQ_ASSEMBLER);
     // 事件通道下的配制目录
-    rabbitMQNode.addChildren(JavaDomainTreeKey.RABBITMQ_CONFIG);
+    rabbitQueueNode.addChildren(JavaDomainTreeKey.RABBITMQ_CONFIG);
     // 事件通道下的实体目录
-    rabbitMQNode.addChildren(JavaDomainTreeKey.RABBITMQ_ENTITY);
+    rabbitQueueNode.addChildren(JavaDomainTreeKey.RABBITMQ_ENTITY);
     // 事件通道下的事件目录
-    rabbitMQNode.addChildren(JavaDomainTreeKey.RABBITMQ_EVENT);
+    rabbitQueueNode.addChildren(JavaDomainTreeKey.RABBITMQ_EVENT);
     // 公共类
     commonNode.addChildren(JavaDomainTreeKey.COMM_UTILS);
     // 静态常量
@@ -156,6 +163,4 @@ public class DomainMenuTree {
   public String getModelName() {
     return modelName;
   }
-
-
 }

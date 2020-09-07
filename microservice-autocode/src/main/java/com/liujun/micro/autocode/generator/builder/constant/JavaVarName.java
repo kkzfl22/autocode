@@ -11,6 +11,33 @@ public class JavaVarName {
   /** 用于定义参数的变量名称 */
   public static final String METHOD_PARAM_NAME = "param";
 
+  /** 转换后的数据信息名称 */
+  public static final String ASSEMBLER_PARSE_NAME = "parseData";
+
+  /** 分页请求参数 */
+  public static final String PAGE_REQUEST = "pageReq";
+
+  /** 分页查询响应 */
+  public static final String PAGE_RESPONSE = "pageRsp";
+
+  /** 分页查询对象 */
+  public static final String PAGE_RETURN_DATA = "pageResult";
+
+  /** 查询集合响应 */
+  public static final String QUERY_LIST_RESPONSE = "queryListRsp";
+
+  /** 查询集合对象 */
+  public static final String QUERY_LIST_RETURN_DATA = "queryListResult";
+
+  /** 分页查询的结果集转换后的名称 */
+  public static final String PAGE_RSP_ASSEMBLER_PARSE = "pageRspParse";
+
+  /** 普通查询返回对象 */
+  public static final String QUERY_RESPONSE_DATA = "queryRspData";
+
+  /** 查询最终返回 */
+  public static final String QUERY_RETURN_DATA = "queryReturn";
+
   /** 数据库实例的名称 */
   public static final String INSTANCE_NAME = "instDao";
 
@@ -28,9 +55,6 @@ public class JavaVarName {
 
   /** 数据库修改操作的返回 */
   public static final String INVOKE_METHOD_UPDATE_RSP = "updateRsp";
-
-  /** 指定插入的数据定义 */
-  public static final String BATCH_INSERT_NAME = "insertBatchNum";
 
   /** 全局定义的批量插入 */
   public static final String FINAL_BATCH_INSERT_NUM = "INSERT_BATCH_NUM";
@@ -76,4 +100,7 @@ public class JavaVarName {
 
   /** 源数据的名称 */
   public static final String ASSERT_DATA_SRC = "src";
+
+  /** 日志输出的对象 */
+  public static final String LOG = "log";
 }

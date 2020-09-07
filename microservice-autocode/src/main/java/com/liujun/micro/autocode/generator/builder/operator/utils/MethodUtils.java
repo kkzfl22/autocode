@@ -103,5 +103,26 @@ public class MethodUtils {
     return null;
   }
 
+  /**
+   * 检查当前是否存在分页查询
+   *
+   * @param methodList 配制的方法信息
+   * @return true 当前存在分页查询，false 当前不存在分页查询
+   */
+  public static boolean checkPageQuery(List<MethodInfo> methodList) {
+    if (null == methodList || methodList.isEmpty()) {
+      return false;
+    }
 
+    for (MethodInfo methodInfo : methodList) {
+      // 当前存在分页查询，则返回成功
+      if (MethodTypeEnum.QUERY.getType().equals(methodInfo.getOperator())
+          && methodInfo.getPageQueryFlag() != null
+          && methodInfo.getPageQueryFlag()) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }

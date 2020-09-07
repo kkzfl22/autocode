@@ -81,7 +81,7 @@ public class JavaKeyWord {
   public static final String DOC_AUTH = " * @author ";
 
   /** 类开头 */
-  public static final String ClASS_START = "public class ";
+  public static final String CLASS_START = "public class ";
 
   /** 用来生成get和set方法 */
   public static final String BEAN_IMPORT_DATA = "lombok.Data";

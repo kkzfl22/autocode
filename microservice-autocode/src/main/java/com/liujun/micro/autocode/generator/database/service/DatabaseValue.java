@@ -1,16 +1,11 @@
 package com.liujun.micro.autocode.generator.database.service;
 
-import com.liujun.micro.autocode.config.generate.GenerateConfig;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
-import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
-import com.liujun.micro.autocode.generator.database.service.tableInfo.DataParseInf;
-import com.liujun.micro.autocode.generator.database.service.tableInfo.DatabaseProcessInf;
-import com.liujun.micro.autocode.generator.database.service.tableInfo.mysql.DataParseMysqlParseImpl;
-import com.liujun.micro.autocode.generator.database.service.tableInfo.mysql.DatabaseMysqlProcessImpl;
+import com.liujun.micro.autocode.generator.database.service.table.DataParseInf;
+import com.liujun.micro.autocode.generator.database.service.table.mysql.DataParseMysqlParseImpl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

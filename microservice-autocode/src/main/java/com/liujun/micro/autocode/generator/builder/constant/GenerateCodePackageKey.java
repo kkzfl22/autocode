@@ -6,7 +6,7 @@ package com.liujun.micro.autocode.generator.builder.constant;
  * @author liujun
  * @version 0.0.1
  */
-public enum GenerateCodeDomainKey {
+public enum GenerateCodePackageKey {
 
   /** 存储层的资源实体 */
   PERSIST_PO("persist_object"),
@@ -23,13 +23,19 @@ public enum GenerateCodeDomainKey {
   /** 领域层的存储接口 */
   PERSIST_FACADE("persist_facade"),
 
+  /** 领域层的存储实现 */
+  PERSIST_PERSISTENCE("persist_persistence"),
+
   /** 领域层的实体对象 */
   DOMAIN_DO("domain_object"),
+
+
+
   ;
 
   private String key;
 
-  GenerateCodeDomainKey(String key) {
+  GenerateCodePackageKey(String key) {
     this.key = key;
   }
 

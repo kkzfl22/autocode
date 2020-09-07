@@ -11,10 +11,8 @@ import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
-import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
-import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -25,9 +23,9 @@ import java.util.*;
  * @author liujun
  * @version 0.0.1
  */
-public class GenerateJavaInterface {
+public class GenerateJavaDaoInterface {
 
-  public static final GenerateJavaInterface INSTANCE = new GenerateJavaInterface();
+  public static final GenerateJavaDaoInterface INSTANCE = new GenerateJavaDaoInterface();
 
   /**
    * 生成java的接口信息
@@ -47,7 +45,7 @@ public class GenerateJavaInterface {
     List<MethodInfo> methodList = codeMethod;
 
     // 1,方法头的定义
-    StringBuilder sb = defineClass(author, daoPackageInfo, poPackageInfo, methodList);
+    StringBuilder sb = defineClass(author, daoPackageInfo, poPackageInfo, null, methodList);
 
     for (MethodInfo methodItem : methodList) {
       // 方法执行修改操作,即所有的数据的，添加、修改、删除
@@ -77,17 +75,19 @@ public class GenerateJavaInterface {
    * @param author 作者
    * @param poPackageDefine 数据库实体
    * @param currPackageClass dao的包定义
+   * @param importPackage 导入包信息
    * @param methodItemList 方法列表
    * @return 生成的代码对象
    */
-  private StringBuilder defineClass(
+  public StringBuilder defineClass(
       String author,
       ImportPackageInfo currPackageClass,
       ImportPackageInfo poPackageDefine,
+      List<ImportPackageInfo> importPackage,
       List<MethodInfo> methodItemList) {
 
     // 导入包信息
-    List<String> importList = this.importMethodList(methodItemList, poPackageDefine);
+    List<String> importList = this.importMethodList(methodItemList, poPackageDefine, importPackage);
 
     // 生成接口的定义
     return JavaClassCodeUtils.interfaceDefine(currPackageClass, importList, author);
@@ -98,9 +98,12 @@ public class GenerateJavaInterface {
    *
    * @param methodList 方法列表
    * @param poPackageDefine 实体参数
+   * @param importPackage 公共导入包信息
    */
   private List<String> importMethodList(
-      List<MethodInfo> methodList, ImportPackageInfo poPackageDefine) {
+      List<MethodInfo> methodList,
+      ImportPackageInfo poPackageDefine,
+      List<ImportPackageInfo> importPackage) {
     Set<String> importSet = new HashSet<>();
     // 找出所有方法需要导入的对象
     for (MethodInfo methodItem : methodList) {
@@ -108,6 +111,13 @@ public class GenerateJavaInterface {
     }
     // 添加po的导入
     importSet.add(ImportPackageUtils.packageOut(poPackageDefine));
+
+    if (null != importPackage && !importPackage.isEmpty()) {
+      // 导入其他公共包
+      for (ImportPackageInfo importPkg : importPackage) {
+        importSet.add(ImportPackageUtils.packageOut(importPkg));
+      }
+    }
 
     List<String> resultDataList = new ArrayList<>(methodList.size());
 
@@ -173,14 +183,10 @@ public class GenerateJavaInterface {
         JavaMethodEntity.builder()
             // 方法注释
             .methodComment(methodItem.getComment())
-            // 访问修饰
-            .visitMethod(Symbol.EMPTY)
-            // 静态标识
-            .staticKey(Symbol.EMPTY)
             // 返回值
             .returnType(JavaKeyWord.INT_TYPE)
             // 返回值注释
-            .returnComment(CodeComment.METHOD_DAO_UPDATE_RETURN)
+            .returnComment(CodeComment.METHOD_DAO_UPDATE_INT_RETURN)
             // 方法名
             .methodName(methodItem.getName())
             // 参数
@@ -228,14 +234,10 @@ public class GenerateJavaInterface {
         JavaMethodEntity.builder()
             // 方法注释
             .methodComment(methodItem.getComment())
-            // 访问修饰
-            .visitMethod(Symbol.EMPTY)
-            // 静态标识
-            .staticKey(Symbol.EMPTY)
             // 返回值
-            .returnType(this.getTypeName(methodItem.getReturnType(), poClassName))
+            .returnType(JavaClassCodeUtils.getTypeName(methodItem.getReturnType(), poClassName))
             // 返回值注释
-            .returnComment(CodeComment.METHOD_QUERY_RESULT)
+            .returnComment(CodeComment.METHOD_DATABASE_QUERY_RESULT)
             // 方法名
             .methodName(methodItem.getName())
             // 参数
@@ -249,23 +251,6 @@ public class GenerateJavaInterface {
     sb.append(Symbol.SEMICOLON);
     sb.append(Symbol.ENTER_LINE);
     sb.append(Symbol.ENTER_LINE);
-  }
-
-  /**
-   * 获取类型名称
-   *
-   * @param typeInfo 方法选项
-   * @param poClassName 实体的类名
-   * @return
-   */
-  private String getTypeName(TypeInfo typeInfo, String poClassName) {
-    String className = typeInfo.getImportClassName();
-    // 执行类的泛型替换操作
-    if (className.indexOf(GenerateDefineFlag.TABLE_NAME.getDefineFlag()) != -1) {
-      className = className.replaceAll(GenerateDefineFlag.TABLE_NAME.getDefineFlag(), poClassName);
-    }
-
-    return className;
   }
 
   /**

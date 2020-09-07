@@ -230,8 +230,9 @@ public class GenerateJavaMybatisMapperXml {
         .append(Symbol.ENTER_LINE);
 
     String javaName = NameProcess.INSTANCE.toFieldName(columnName);
-    String typeName = TypeProcessUtils.dbTypeParseMyBatis(
-            tableMapper.getDataType(), tableMapper.getDataLength());;
+    String typeName =
+        TypeProcessUtils.dbTypeParseMyBatis(tableMapper.getDataType(), tableMapper.getDataLength());
+    ;
 
     // 添加条件的连接符
     sb.append(JavaFormat.appendTab(tabNum));
@@ -339,8 +340,9 @@ public class GenerateJavaMybatisMapperXml {
       column = columnList.get(i);
       String columnName = column.getColumnName();
       String javaName = NameProcess.INSTANCE.toFieldName(columnName);
-      String typeName = TypeProcessUtils.dbTypeParseMyBatis(
-              column.getDataType(), column.getDataLength());;
+      String typeName =
+          TypeProcessUtils.dbTypeParseMyBatis(column.getDataType(), column.getDataLength());
+      ;
 
       // 定义输出列注释
       sb.append(JavaFormat.appendTab(tabNum + 1))
@@ -472,7 +474,65 @@ public class GenerateJavaMybatisMapperXml {
         .append(MyBatisKey.END)
         .append(Symbol.ENTER_LINE);
 
-    List<TableColumnDTO> delKeyList = columnList;
+    List<TableColumnDTO> allColumnList = columnList;
+
+    // 进行主键列的输出
+    this.primaryProc(sb, primaryKeyList, allColumnList);
+
+    // 其他正常的列处理
+    this.normalColumnProc(sb, allColumnList);
+
+    // 结束
+    sb.append(JavaFormat.appendTab(1)).append(MyBatisKey.RESULT_MAP_END).append(Symbol.ENTER_LINE);
+  }
+
+  /**
+   * 普通的列处理
+   *
+   * @param sb 字符
+   * @param delKeyList 删除的列信息
+   */
+  private void normalColumnProc(StringBuilder sb, List<TableColumnDTO> delKeyList) {
+    // 定义查询列信息
+    for (int i = 0; i < delKeyList.size(); i++) {
+      // 输出注释
+      sb.append(JavaFormat.appendTab(2))
+          .append(MyBatisKey.DOC_START)
+          .append(delKeyList.get(i).getColumnMsg())
+          .append(MyBatisKey.DOC_END)
+          .append(Symbol.ENTER_LINE);
+
+      // 得到java输出的名称
+      String javaName = NameProcess.INSTANCE.toFieldName(delKeyList.get(i).getColumnName());
+
+      // 输出列信息
+      sb.append(JavaFormat.appendTab(2))
+          .append(MyBatisKey.RESULT)
+          .append(MyBatisKey.PROPERTY)
+          .append(Symbol.EQUAL)
+          .append(Symbol.QUOTE)
+          .append(javaName)
+          .append(Symbol.QUOTE)
+          .append(Symbol.SPACE)
+          .append(MyBatisKey.COLUMN)
+          .append(Symbol.EQUAL)
+          .append(Symbol.QUOTE)
+          .append(delKeyList.get(i).getColumnName())
+          .append(Symbol.QUOTE)
+          .append(MyBatisKey.OVER)
+          .append(Symbol.ENTER_LINE);
+    }
+  }
+
+  /**
+   * 主键输出
+   *
+   * @param sb 输出信息
+   * @param primaryKeyList 主键信息
+   * @param delKeyList 所有列信息
+   */
+  private void primaryProc(
+      StringBuilder sb, List<TableColumnDTO> primaryKeyList, List<TableColumnDTO> delKeyList) {
     // 定义主键信息
     for (TableColumnDTO tableColumn : primaryKeyList) {
 
@@ -509,39 +569,6 @@ public class GenerateJavaMybatisMapperXml {
         delKeyList.remove(tableColumn);
       }
     }
-
-    // 定义查询列信息
-    for (int i = 0; i < delKeyList.size(); i++) {
-      // 输出注释
-      sb.append(JavaFormat.appendTab(2))
-          .append(MyBatisKey.DOC_START)
-          .append(delKeyList.get(i).getColumnMsg())
-          .append(MyBatisKey.DOC_END)
-          .append(Symbol.ENTER_LINE);
-
-      // 得到java输出的名称
-      String javaName = NameProcess.INSTANCE.toFieldName(delKeyList.get(i).getColumnName());
-
-      // 输出列信息
-      sb.append(JavaFormat.appendTab(2))
-          .append(MyBatisKey.RESULT)
-          .append(MyBatisKey.PROPERTY)
-          .append(Symbol.EQUAL)
-          .append(Symbol.QUOTE)
-          .append(javaName)
-          .append(Symbol.QUOTE)
-          .append(Symbol.SPACE)
-          .append(MyBatisKey.COLUMN)
-          .append(Symbol.EQUAL)
-          .append(Symbol.QUOTE)
-          .append(delKeyList.get(i).getColumnName())
-          .append(Symbol.QUOTE)
-          .append(MyBatisKey.OVER)
-          .append(Symbol.ENTER_LINE);
-    }
-
-    // 结束
-    sb.append(JavaFormat.appendTab(1)).append(MyBatisKey.RESULT_MAP_END).append(Symbol.ENTER_LINE);
   }
 
   /**
@@ -761,47 +788,56 @@ public class GenerateJavaMybatisMapperXml {
     copyColumnList.removeAll(primaryKeyList);
 
     // 修改
-    sb.append(JavaFormat.appendTab(1))
-        .append(MyBatisKey.DOC_START)
-        .append(tableMsg.getTableComment())
-        .append(Symbol.BRACKET_LEFT)
-        .append(tableMsg.getTableName())
-        .append(Symbol.BRACKET_RIGHT)
-        .append(methodInfo.getComment())
-        .append(MyBatisKey.DOC_END)
-        .append(Symbol.ENTER_LINE);
+    sb.append(JavaFormat.appendTab(1)).append(MyBatisKey.DOC_START);
+    sb.append(tableMsg.getTableComment()).append(Symbol.BRACKET_LEFT);
+    sb.append(tableMsg.getTableName()).append(Symbol.BRACKET_RIGHT);
+    sb.append(methodInfo.getComment()).append(MyBatisKey.DOC_END).append(Symbol.ENTER_LINE);
 
     // po的类定义
     String poClassPath = ImportPackageUtils.packageOut(poPackageInfo);
-
-    sb.append(JavaFormat.appendTab(1))
-        .append(MyBatisKey.UPDATE_XML_START)
-        .append(methodInfo.getName())
-        .append(MyBatisKey.TYPE_XML)
-        .append(poClassPath)
-        .append(Symbol.QUOTE)
-        .append(MyBatisKey.END)
-        .append(Symbol.ENTER_LINE);
+    sb.append(JavaFormat.appendTab(1)).append(MyBatisKey.UPDATE_XML_START);
+    sb.append(methodInfo.getName()).append(MyBatisKey.TYPE_XML).append(poClassPath);
+    sb.append(Symbol.QUOTE).append(MyBatisKey.END).append(Symbol.ENTER_LINE);
 
     // update SQL信息
-    sb.append(JavaFormat.appendTab(2))
-        .append(MyBatisKey.UPDATE_SQL_START)
-        .append(Symbol.SPACE)
-        .append(tableMsg.getTableName())
-        .append(Symbol.ENTER_LINE);
+    sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.UPDATE_SQL_START);
+    sb.append(Symbol.SPACE).append(tableMsg.getTableName()).append(Symbol.ENTER_LINE);
     // 设置
     sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.UPDATE_SET).append(Symbol.ENTER_LINE);
+
+    // 列设置操作
+    this.updateSet(sb, copyColumnList);
+
+    sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.UPDATE_SET_END).append(Symbol.ENTER_LINE);
+    sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.WHERE_START).append(Symbol.ENTER_LINE);
+    // 选择条件
+    sb.append(this.addWhere(methodInfo.getWhereInfo(), columnMap, primaryKeyList, 2));
+
+    sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.WHERE_END).append(Symbol.ENTER_LINE);
+    sb.append(JavaFormat.appendTab(1)).append(MyBatisKey.UPDATE_XML_END).append(Symbol.ENTER_LINE);
+
+    sb.append(Symbol.ENTER_LINE);
+  }
+
+  /**
+   * 修改的列信息
+   *
+   * @param sb 字符
+   * @param copyColumnList 列信息
+   */
+  private void updateSet(StringBuilder sb, List<TableColumnDTO> copyColumnList) {
     // trim开始
-    sb.append(JavaFormat.appendTab(3))
-        .append(MyBatisKey.UPDATE_TRIM_START)
-        .append(Symbol.ENTER_LINE);
+    sb.append(JavaFormat.appendTab(3)).append(MyBatisKey.UPDATE_TRIM_START);
+    sb.append(Symbol.ENTER_LINE);
 
     for (int i = 0; i < copyColumnList.size(); i++) {
       TableColumnDTO tableMapper = copyColumnList.get(i);
       String columnName = tableMapper.getColumnName();
       String javaName = NameProcess.INSTANCE.toFieldName(tableMapper.getColumnName());
-      String typeName = TypeProcessUtils.dbTypeParseMyBatis(
-              tableMapper.getDataType(), tableMapper.getDataLength());;
+      String typeName =
+          TypeProcessUtils.dbTypeParseMyBatis(
+              tableMapper.getDataType(), tableMapper.getDataLength());
+
       // 添加列注释信息
       sb.append(JavaFormat.appendTab(4))
           .append(MyBatisKey.DOC_START)
@@ -838,15 +874,6 @@ public class GenerateJavaMybatisMapperXml {
       sb.append(JavaFormat.appendTab(4)).append(MyBatisKey.IF_END).append(Symbol.ENTER_LINE);
     }
     sb.append(JavaFormat.appendTab(3)).append(MyBatisKey.TRIM_XML_END).append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.UPDATE_SET_END).append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.WHERE_START).append(Symbol.ENTER_LINE);
-    // 选择条件
-    sb.append(this.addWhere(methodInfo.getWhereInfo(), columnMap, primaryKeyList, 2));
-
-    sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.WHERE_END).append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(1)).append(MyBatisKey.UPDATE_XML_END).append(Symbol.ENTER_LINE);
-
-    sb.append(Symbol.ENTER_LINE);
   }
 
   /**

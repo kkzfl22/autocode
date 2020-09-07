@@ -1,21 +1,15 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.full;
 
-import com.liujun.micro.autocode.config.menuTree.DomainMenuTree;
-import com.liujun.micro.autocode.config.menuTree.MenuNode;
-import com.liujun.micro.autocode.config.menuTree.MenuTreePackagePath;
-import com.liujun.micro.autocode.config.menuTree.MenuTreeProjectPath;
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.generator.builder.constant.GenerateCodeDomainKey;
+import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
 import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaBean;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
-import com.liujun.micro.autocode.generator.builder.utils.MenuTreeProcessUtil;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
-import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
 import java.util.Iterator;
@@ -54,9 +48,7 @@ public class JavaCodeRepositoryObjectCreate implements GenerateCodeInf {
       // 表信息
       TableInfoDTO tableInfo = tableMap.get(tableName);
       // 获取以java定义的package路径
-      DomainMenuTree menuTree = param.getMenuTree();
-      MenuNode poNode = MenuTreePackagePath.getRepositoryObjectNode(menuTree);
-      String javaPackageStr = MenuTreeProcessUtil.outJavaPackage(poNode);
+      String javaPackageStr = param.getJavaCodePackage().getRepositoryObjectNode().outJavaPackage();
 
       // 注释
       String docComment =
@@ -73,7 +65,7 @@ public class JavaCodeRepositoryObjectCreate implements GenerateCodeInf {
       ImportPackageUtils.putPackageInfo(
           tableName,
           param.getPackageMap(),
-          GenerateCodeDomainKey.PERSIST_PO.getKey(),
+          GenerateCodePackageKey.PERSIST_PO.getKey(),
           packageInfo,
           tableMap.size());
 
@@ -86,8 +78,8 @@ public class JavaCodeRepositoryObjectCreate implements GenerateCodeInf {
               param.getGenerateConfig().getGenerate().getAuthor());
 
       // 定义项目内的完整目录结构
-      MenuNode mapperNode = MenuTreeProjectPath.getSrcJavaNode(param.getProjectMenuTree());
-      String baseJavaPath = MenuTreeProcessUtil.outPath(mapperNode);
+      String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
+
       javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
 
       // 进行存储层的实体输出

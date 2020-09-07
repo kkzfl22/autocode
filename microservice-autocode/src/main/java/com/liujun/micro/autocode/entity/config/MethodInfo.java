@@ -40,6 +40,9 @@ public class MethodInfo implements Comparable<MethodInfo> {
   /** 标识当前是否为主键操作，一般用于删除时，主键删除 */
   private Boolean primaryFlag;
 
+  /** 分页查询标识 */
+  private Boolean pageQueryFlag;
+
   /** 返回类型信息 */
   private String returns;
 

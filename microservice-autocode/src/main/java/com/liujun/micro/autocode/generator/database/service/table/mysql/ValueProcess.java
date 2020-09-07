@@ -1,4 +1,4 @@
-package com.liujun.micro.autocode.generator.database.service.tableInfo.mysql;
+package com.liujun.micro.autocode.generator.database.service.table.mysql;
 
 /**
  * 数据值的处理

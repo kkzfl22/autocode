@@ -1,7 +1,7 @@
 package com.liujun.micro.autocode.generator.builder.entity;
 
-import com.liujun.micro.autocode.config.menuTree.DomainMenuTree;
-import com.liujun.micro.autocode.config.menuTree.ProjectMenuTree;
+import com.liujun.micro.autocode.config.menutree.MenuTreeCodePackage;
+import com.liujun.micro.autocode.config.menutree.MenuTreeProjectPath;
 import com.liujun.micro.autocode.entity.config.GenerateConfigEntity;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
@@ -56,11 +56,11 @@ public class GenerateCodeContext {
   /** 公共的临时参数 */
   private Map<String, Object> dataMap = new HashMap<>();
 
-  /** 代码目录树，纯代码目录 */
-  private DomainMenuTree menuTree;
+  /** java代码的路径包信息 */
+  private MenuTreeCodePackage javaCodePackage;
 
-  /** 项目目录树,最顶层 */
-  private ProjectMenuTree projectMenuTree;
+  /** 项目路径信息 */
+  private MenuTreeProjectPath projectPath;
 
   /** 用来存储需要导包的信息 */
   private Map<String, Map<String, ImportPackageInfo>> packageMap = new HashMap<>();
@@ -81,8 +81,8 @@ public class GenerateCodeContext {
     this.tableSpaceName = tableSpaceName;
     this.generateConfig = configEntity;
     // 构建代码的目录树
-    this.menuTree = new DomainMenuTree(this.javaPackage, modelName);
+    this.javaCodePackage = MenuTreeCodePackage.INSTANCE;
     // 构建项目目录树
-    this.projectMenuTree = new ProjectMenuTree(modelName);
+    this.projectPath = MenuTreeProjectPath.INSTANCE;
   }
 }

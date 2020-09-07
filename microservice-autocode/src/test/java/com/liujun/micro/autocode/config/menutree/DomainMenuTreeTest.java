@@ -1,7 +1,6 @@
-package com.liujun.micro.autocode.config.menuTree;
+package com.liujun.micro.autocode.config.menutree;
 
 import com.liujun.micro.autocode.constant.JavaDomainTreeKey;
-import com.liujun.micro.autocode.generator.builder.utils.MenuTreeProcessUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,6 +17,7 @@ public class DomainMenuTreeTest {
   @Test
   public void testTreeBuilder() {
     DomainMenuTree menuTree = new DomainMenuTree("com.liujun.test", "pap");
+    // DomainMenuTree menuTree = DomainMenuTree.INSTANCE;
     // 构建目录树
     MenuNode rootNode = menuTree.getDefineRoot();
     treeNodePrint(rootNode, 0);
@@ -27,14 +27,12 @@ public class DomainMenuTreeTest {
             .getChildren(JavaDomainTreeKey.INFRASTRUCTURE_ALGORITHM);
     System.out.println(node);
     Assert.assertNotNull(node);
-    String outJavaPackage = MenuTreeProcessUtil.outJavaPackage(node);
-    Assert.assertEquals("com.liujun.test.infrastructure.algorithm", outJavaPackage);
+
+    Assert.assertEquals("com.liujun.test.infrastructure.algorithm", node.outJavaPackage());
     // 使用java包转换为路径
-    Assert.assertEquals(
-        "com/liujun/test/infrastructure/algorithm", MenuTreeProcessUtil.outPath(outJavaPackage));
+    Assert.assertEquals("com/liujun/test/infrastructure/algorithm", node.outPath());
     // 使用节点树处理转换为路径
-    Assert.assertEquals(
-        "com/liujun/test/infrastructure/algorithm", MenuTreeProcessUtil.outPath(node));
+    Assert.assertEquals("com/liujun/test/infrastructure/algorithm", node.outPath());
   }
 
   /**
@@ -55,5 +53,12 @@ public class DomainMenuTreeTest {
     for (Map.Entry<String, MenuNode> nodeItem : node.getChildren().entrySet()) {
       treeNodePrint(nodeItem.getValue(), level + 1);
     }
+  }
+
+  @Test
+  public void testBooleanNull() {
+    Boolean value = null;
+    System.out.println(value != Boolean.TRUE);
+    System.out.println(value != true);
   }
 }

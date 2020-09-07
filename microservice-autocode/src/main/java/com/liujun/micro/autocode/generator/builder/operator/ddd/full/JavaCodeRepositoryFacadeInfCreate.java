@@ -1,19 +1,14 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.full;
 
-import com.liujun.micro.autocode.config.menuTree.DomainMenuTree;
-import com.liujun.micro.autocode.config.menuTree.MenuNode;
-import com.liujun.micro.autocode.config.menuTree.MenuTreePackagePath;
-import com.liujun.micro.autocode.config.menuTree.MenuTreeProjectPath;
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.generator.builder.constant.GenerateCodeDomainKey;
+import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
-import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaInterface;
+import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaFacadeInterface;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaCommentUtil;
-import com.liujun.micro.autocode.generator.builder.utils.MenuTreeProcessUtil;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
@@ -53,9 +48,7 @@ public class JavaCodeRepositoryFacadeInfCreate implements GenerateCodeInf {
       String className = tableClassName + SUFFIX_NAME;
 
       // 获取以java定义的package路径
-      DomainMenuTree menuTree = param.getMenuTree();
-      MenuNode domainRepositoryServiceNode = MenuTreePackagePath.getRepositoryFacadeNode(menuTree);
-      String javaPackageStr = MenuTreeProcessUtil.outJavaPackage(domainRepositoryServiceNode);
+      String javaPackageStr = param.getJavaCodePackage().getRepositoryFacadeNode().outJavaPackage();
 
       // 注释
       String docComment = JavaCommentUtil.tableCommentProc(tableInfo.getTableComment()) + COMMENT;
@@ -66,30 +59,36 @@ public class JavaCodeRepositoryFacadeInfCreate implements GenerateCodeInf {
       ImportPackageUtils.putPackageInfo(
           tableName,
           param.getPackageMap(),
-          GenerateCodeDomainKey.PERSIST_FACADE.getKey(),
+          GenerateCodePackageKey.PERSIST_FACADE.getKey(),
           daoPackageInfo,
           tableMap.size());
 
-      // 获取领域实体信息
-      ImportPackageInfo domainEntityPackageInfo =
+      // 存储层实体
+      ImportPackageInfo domainPackageInfo =
           ImportPackageUtils.getDefineClass(
-              param.getPackageMap(), GenerateCodeDomainKey.DOMAIN_DO.getKey(), tableName);
+              param.getPackageMap(), GenerateCodePackageKey.DOMAIN_DO.getKey(), tableName);
 
       // 进行领域方法的相关方法的生成
       StringBuilder sb =
-          GenerateJavaInterface.INSTANCE.generateJavaInterface(
-              domainEntityPackageInfo,
+          GenerateJavaFacadeInterface.INSTANCE.generateJavaInterface(
               daoPackageInfo,
+              domainPackageInfo,
               param.getGenerateConfig().getGenerate().getCode(),
               param.getGenerateConfig().getGenerate().getAuthor());
 
       // 定义项目内的完整目录结构
-      MenuNode mapperNode = MenuTreeProjectPath.getSrcJavaNode(param.getProjectMenuTree());
-      String baseJavaPath = MenuTreeProcessUtil.outPath(mapperNode);
+      String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
       javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
 
       // 进行存储层的接口输出
       GenerateOutFileUtils.outJavaFile(sb, param.getFileBasePath(), javaPackageStr, className);
     }
   }
+
+  /**
+   * 添加导入的包
+   *
+   * @param importMap 导入的map
+   */
+  private void addImportData(Map<String, ImportPackageInfo> importMap) {}
 }

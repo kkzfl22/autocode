@@ -5,8 +5,6 @@ import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeSourceE
 import com.liujun.micro.autocode.generator.database.entity.DatabaseTypeMsgBO;
 import com.liujun.micro.autocode.utils.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -67,11 +65,11 @@ public class DataTypeResource {
 
       DatabaseTypeEnum typeNum = DatabaseTypeEnum.getPropertiesDbType(fileName);
 
-      Map<DatabaseTypeSourceEnum, DatabaseTypeMsgBO> dbTypeBOKeyMap =
+      Map<DatabaseTypeSourceEnum, DatabaseTypeMsgBO> dbTypeKeyMap =
           TARGET_DBTYPE_CACHE_MAP.get(typeNum);
 
-      if (null == dbTypeBOKeyMap) {
-        dbTypeBOKeyMap = new HashMap<>(45);
+      if (null == dbTypeKeyMap) {
+        dbTypeKeyMap = new HashMap<>(45);
       }
 
       Map<Integer, DatabaseTypeMsgBO> srcTargerMap = SRCDB_TO_TARGERKEY_MAP.get(typeNum);
@@ -103,8 +101,8 @@ public class DataTypeResource {
         dbTypeItem = DatabaseTypeSourceEnum.getDataBaseType(dbTypeKeys);
 
         if (null != dbTypeItem) {
-          typeBo = DatabaseTypeMsgBO.Parse(dbTypeKeys, dbTypeValue);
-          dbTypeBOKeyMap.put(dbTypeItem, typeBo);
+          typeBo = DatabaseTypeMsgBO.parse(dbTypeKeys, dbTypeValue);
+          dbTypeKeyMap.put(dbTypeItem, typeBo);
 
           srcTargerMap.put(typeBo.getJdbcType(), typeBo);
         } else {
@@ -112,7 +110,7 @@ public class DataTypeResource {
         }
       }
 
-      TARGET_DBTYPE_CACHE_MAP.put(typeNum, dbTypeBOKeyMap);
+      TARGET_DBTYPE_CACHE_MAP.put(typeNum, dbTypeKeyMap);
       SRCDB_TO_TARGERKEY_MAP.put(typeNum, srcTargerMap);
 
       properties.clear();

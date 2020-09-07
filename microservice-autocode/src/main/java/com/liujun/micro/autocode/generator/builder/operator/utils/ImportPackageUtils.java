@@ -1,6 +1,7 @@
 package com.liujun.micro.autocode.generator.builder.operator.utils;
 
 import com.liujun.micro.autocode.constant.Symbol;
+import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 
 import java.util.HashMap;
@@ -27,13 +28,13 @@ public class ImportPackageUtils {
       String packageFlag,
       String tableName) {
 
-    Map<String, ImportPackageInfo> importPackage = packageMap.get(packageFlag);
+    Map<String, ImportPackageInfo> importPackage = packageMap.get(tableName);
 
     if (null == importPackage) {
       return null;
     }
 
-    ImportPackageInfo importBean = importPackage.get(tableName);
+    ImportPackageInfo importBean = importPackage.get(packageFlag);
 
     if (null == importBean) {
       return null;
@@ -68,12 +69,12 @@ public class ImportPackageUtils {
       String packageFlagKey,
       ImportPackageInfo packageInfo,
       int initSize) {
-    Map<String, ImportPackageInfo> packageMapInfo = packageMap.get(packageFlagKey);
+    Map<String, ImportPackageInfo> packageMapInfo = packageMap.get(tableName);
 
     if (null == packageMapInfo) {
       packageMapInfo = new HashMap<>(initSize);
-      packageMap.put(packageFlagKey, packageMapInfo);
+      packageMap.put(tableName, packageMapInfo);
     }
-    packageMapInfo.put(tableName, packageInfo);
+    packageMapInfo.put(packageFlagKey, packageInfo);
   }
 }

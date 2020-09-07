@@ -1,10 +1,9 @@
 package com.liujun.micro.autocode.generator.builder.operator.utils;
 
+import com.liujun.micro.autocode.constant.GenerateDefineFlag;
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
-import com.liujun.micro.autocode.generator.builder.entity.JavaClassEntity;
-import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
-import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
+import com.liujun.micro.autocode.entity.config.TypeInfo;
+import com.liujun.micro.autocode.generator.builder.entity.*;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import org.apache.commons.lang3.StringUtils;
@@ -198,31 +197,35 @@ public class JavaClassCodeUtils {
   public static void methodDefine(StringBuilder sb, JavaMethodEntity method) {
     int tabIndex = 1;
 
-    // 方法的注释
-    sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS);
-    sb.append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS_MID);
-    sb.append(Symbol.SPACE).append(method.getMethodComment()).append(Symbol.ENTER_LINE);
-    sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS_MID);
-    sb.append(Symbol.ENTER_LINE);
-
-    // 参数注释
-    if (method.getArguments() != null) {
-      for (JavaMethodArguments argument : method.getArguments()) {
-        sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS_MID);
-        sb.append(JavaKeyWord.METHOD_PARAM).append(argument.getName()).append(Symbol.SPACE);
-        sb.append(argument.getComment()).append(Symbol.ENTER_LINE);
-      }
-    }
-    // 返回类型注释
-    if (StringUtils.isNotEmpty(method.getReturnComment())) {
+    // 当配制了注释信息后才进行生成
+    if (StringUtils.isNotEmpty(method.getMethodComment())) {
+      // 方法的注释
+      sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS);
+      sb.append(Symbol.ENTER_LINE);
       sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS_MID);
-      sb.append(JavaKeyWord.METHOD_RETURN_COMMENT).append(method.getReturnComment());
+      sb.append(Symbol.SPACE).append(method.getMethodComment()).append(Symbol.ENTER_LINE);
+      sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS_MID);
+      sb.append(Symbol.ENTER_LINE);
+
+      // 参数注释
+      if (method.getArguments() != null) {
+        for (JavaMethodArguments argument : method.getArguments()) {
+          sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS_MID);
+          sb.append(JavaKeyWord.METHOD_PARAM).append(argument.getName()).append(Symbol.SPACE);
+          sb.append(argument.getComment()).append(Symbol.ENTER_LINE);
+        }
+      }
+
+      // 返回类型注释
+      if (StringUtils.isNotEmpty(method.getReturnComment())) {
+        sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS_MID);
+        sb.append(JavaKeyWord.METHOD_RETURN_COMMENT).append(method.getReturnComment());
+        sb.append(Symbol.ENTER_LINE);
+      }
+
+      sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_OVER);
       sb.append(Symbol.ENTER_LINE);
     }
-
-    sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_OVER);
-    sb.append(Symbol.ENTER_LINE);
 
     // 检查当前是否存在注解
     if (StringUtils.isNotEmpty(method.getAnnotation())) {
@@ -309,4 +312,58 @@ public class JavaClassCodeUtils {
 
     return dataList.toString();
   }
+
+  /**
+   * 获取类的属性
+   *
+   * @param classField
+   * @return
+   */
+  public static String getClassField(JavaClassFieldEntity classField) {
+    StringBuilder outField = new StringBuilder();
+
+    int tabIndex = 1;
+
+    // 方法的注释
+    outField.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS);
+    outField.append(Symbol.ENTER_LINE);
+    outField.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS_MID);
+    outField.append(Symbol.SPACE).append(classField.getComment()).append(Symbol.ENTER_LINE);
+    outField.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_OVER);
+    outField.append(Symbol.ENTER_LINE);
+
+    // 注解检查
+    if (StringUtils.isNotEmpty(classField.getAnnotation())) {
+      outField.append(JavaFormat.appendTab(tabIndex)).append(classField.getAnnotation());
+      outField.append(Symbol.ENTER_LINE);
+    }
+
+    // 属性的声明
+    outField.append(JavaFormat.appendTab(tabIndex)).append(classField.getVisit());
+    outField.append(Symbol.SPACE).append(classField.getType()).append(Symbol.SPACE);
+    outField.append(classField.getName()).append(Symbol.SEMICOLON);
+    outField.append(Symbol.ENTER_LINE);
+    outField.append(Symbol.ENTER_LINE);
+
+    return outField.toString();
+  }
+
+
+  /**
+   * 获取类型名称
+   *
+   * @param typeInfo 方法选项
+   * @param poClassName 实体的类名
+   * @return
+   */
+  public static String getTypeName(TypeInfo typeInfo, String poClassName) {
+    String className = typeInfo.getImportClassName();
+    // 执行类的泛型替换操作
+    if (className.indexOf(GenerateDefineFlag.TABLE_NAME.getDefineFlag()) != -1) {
+      className = className.replaceAll(GenerateDefineFlag.TABLE_NAME.getDefineFlag(), poClassName);
+    }
+
+    return className;
+  }
+
 }

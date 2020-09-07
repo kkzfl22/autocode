@@ -1,11 +1,11 @@
-package com.liujun.micro.autocode.generator.database.service.tableInfo.mysql;
+package com.liujun.micro.autocode.generator.database.service.table.mysql;
 
 import com.liujun.micro.autocode.generator.builder.utils.TypeProcessUtils;
 import com.liujun.micro.autocode.generator.database.constant.JavaDataTypeGenerateValueEnum;
 import com.liujun.micro.autocode.generator.database.constant.MysqlDataTypeEnum;
 import com.liujun.micro.autocode.generator.database.constant.StandardTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
-import com.liujun.micro.autocode.generator.database.service.tableInfo.DataParseInf;
+import com.liujun.micro.autocode.generator.database.service.table.DataParseInf;
 
 /**
  * mysql的数据库类型转换查询

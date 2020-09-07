@@ -14,7 +14,7 @@ public class JavaFormat {
    * 进行制表符的输出
    *
    * @param num 输出\t的数量
-   * @return @创建日期 2016年10月12日
+   * @return 追加tab
    */
   public static String appendTab(int num) {
 

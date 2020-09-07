@@ -1,9 +1,5 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.full;
 
-import com.liujun.micro.autocode.config.menuTree.DomainMenuTree;
-import com.liujun.micro.autocode.config.menuTree.MenuNode;
-import com.liujun.micro.autocode.config.menuTree.MenuTreePackagePath;
-import com.liujun.micro.autocode.config.menuTree.MenuTreeProjectPath;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.entity.config.MethodInfo;
 import com.liujun.micro.autocode.generator.builder.constant.*;
@@ -11,12 +7,9 @@ import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitDefine;
-import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitQuery;
-import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitUpdate;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
-import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.TableColumnUtils;
-import com.liujun.micro.autocode.generator.builder.utils.MenuTreeProcessUtil;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
@@ -59,11 +52,13 @@ public class JavaCodeRepositoryJunitDaoCreate implements GenerateCodeInf {
 
       // 获取po的完整路径
       ImportPackageInfo poPackage =
-          param.getPackageMap().get(GenerateCodeDomainKey.PERSIST_PO.getKey()).get(tableName);
+          ImportPackageUtils.getDefineClass(
+              param.getPackageMap(), GenerateCodePackageKey.PERSIST_PO.getKey(), tableName);
 
       // 获取dao的完整路径
       ImportPackageInfo daoPackage =
-          param.getPackageMap().get(GenerateCodeDomainKey.PERSIST_DAO.getKey()).get(tableName);
+          ImportPackageUtils.getDefineClass(
+              param.getPackageMap(), GenerateCodePackageKey.PERSIST_DAO.getKey(), tableName);
 
       // 首字母大写
       String className =
@@ -71,33 +66,35 @@ public class JavaCodeRepositoryJunitDaoCreate implements GenerateCodeInf {
               + NameProcess.INSTANCE.toJavaNameFirstUpper(daoPackage.getClassName());
 
       // 获取以java定义的package路径
-      DomainMenuTree menuTree = param.getMenuTree();
-      MenuNode daoNode = MenuTreePackagePath.getRepositoryDaoNode(menuTree);
-      String javaDaoPackageStr = MenuTreeProcessUtil.outJavaPackage(daoNode);
+      String javaDaoPackageStr = param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage();
 
       // 定义项目内的完整目录结构
-      MenuNode mapperNode = MenuTreeProjectPath.getTestJavaNode(param.getProjectMenuTree());
-      String baseJavaPath = MenuTreeProcessUtil.outPath(mapperNode);
+      String baseJavaPath = param.getProjectPath().getTestJavaNode().outPath();
       javaDaoPackageStr = baseJavaPath + Symbol.PATH + javaDaoPackageStr;
 
       // 单元测试的路径
-      MenuNode poNode = MenuTreePackagePath.getRepositoryDaoNode(menuTree);
-      String junitDaoPackageStr = MenuTreeProcessUtil.outJavaPackage(poNode);
+      String junitDaoPackageStr =
+          param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage();
 
       // 包信息
       ImportPackageInfo packageInfo =
           new ImportPackageInfo(junitDaoPackageStr, className, DATABASE_DOC);
 
+      // 单元测试的父类的路径
+      String junitParentPackageStr = param.getJavaCodePackage().getPkgRoot().outJavaPackage();
+
+      // 包信息
+      ImportPackageInfo junitParent =
+          new ImportPackageInfo(
+              junitParentPackageStr, GenerateCommImport.JUNIT_PARENT_NAME, Symbol.EMPTY);
+
       // 方法信息
       List<MethodInfo> methodList = param.getGenerateConfig().getGenerate().getCode();
-
-      // 公共需要导入的数据包信息
-      List<String> importList =
-          (List<String>) param.getDataMap().get(ContextCfgEnum.CONTEXT_JUNIT_IMPORT.getKey());
 
       // 进行单元测试代码的生成
       StringBuilder sb =
           GenerateJunitDefine.INSTANCE.generateJunit(
+              junitParent,
               poPackage,
               daoPackage,
               packageInfo,
@@ -106,7 +103,7 @@ public class JavaCodeRepositoryJunitDaoCreate implements GenerateCodeInf {
               primaryKeyList,
               methodList,
               tableColumnMap,
-              importList,
+              null,
               param.getGenerateConfig().getGenerate().getAuthor());
 
       // 将数据库存储的文件输出

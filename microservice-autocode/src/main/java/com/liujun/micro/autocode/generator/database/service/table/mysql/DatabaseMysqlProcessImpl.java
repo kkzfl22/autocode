@@ -1,9 +1,9 @@
-package com.liujun.micro.autocode.generator.database.service.tableInfo.mysql;
+package com.liujun.micro.autocode.generator.database.service.table.mysql;
 
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
-import com.liujun.micro.autocode.generator.database.service.tableInfo.DatabaseProcessInf;
+import com.liujun.micro.autocode.generator.database.service.table.DatabaseProcessInf;
 import com.liujun.micro.autocode.utils.DataBaseUtils;
 import lombok.extern.slf4j.Slf4j;
 

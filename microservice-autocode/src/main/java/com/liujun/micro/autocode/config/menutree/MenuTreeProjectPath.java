@@ -1,4 +1,4 @@
-package com.liujun.micro.autocode.config.menuTree;
+package com.liujun.micro.autocode.config.menutree;
 
 import com.liujun.micro.autocode.constant.ProjectMenuTreeKey;
 
@@ -10,13 +10,22 @@ import com.liujun.micro.autocode.constant.ProjectMenuTreeKey;
  */
 public class MenuTreeProjectPath {
 
+  /** 实例信息 */
+  public static final MenuTreeProjectPath INSTANCE =
+      new MenuTreeProjectPath(ProjectMenuTree.INSTANCE);
+
+  private final ProjectMenuTree projectMenuTree;
+
+  public MenuTreeProjectPath(ProjectMenuTree projectMenuTree) {
+    this.projectMenuTree = projectMenuTree;
+  }
+
   /**
    * 获取mybatis的目录节点
    *
-   * @param projectMenuTree 树形结构
    * @return 模块名称
    */
-  public static MenuNode getRepositoryMybatisMapperNode(ProjectMenuTree projectMenuTree) {
+  public MenuNode getRepositoryMybatisMapperNode() {
     MenuNode mapperNode =
         projectMenuTree
             .getRoot()
@@ -32,10 +41,9 @@ public class MenuTreeProjectPath {
   /**
    * 获取java的源代码目录
    *
-   * @param projectMenuTree 树形结构
    * @return 模块名称
    */
-  public static MenuNode getSrcJavaNode(ProjectMenuTree projectMenuTree) {
+  public MenuNode getSrcJavaNode() {
     MenuNode javaNode =
         projectMenuTree
             .getRoot()
@@ -45,21 +53,18 @@ public class MenuTreeProjectPath {
     return javaNode;
   }
 
-
   /**
    * 获取java的源代码目录
    *
-   * @param projectMenuTree 树形结构
    * @return 模块名称
    */
-  public static MenuNode getTestJavaNode(ProjectMenuTree projectMenuTree) {
+  public MenuNode getTestJavaNode() {
     MenuNode javaNode =
-            projectMenuTree
-                    .getRoot()
-                    .getChildren(ProjectMenuTreeKey.SRC.getKey())
-                    .getChildren(ProjectMenuTreeKey.SRC_TEST.getKey())
-                    .getChildren(ProjectMenuTreeKey.MAIN_JAVA.getKey());
+        projectMenuTree
+            .getRoot()
+            .getChildren(ProjectMenuTreeKey.SRC.getKey())
+            .getChildren(ProjectMenuTreeKey.SRC_TEST.getKey())
+            .getChildren(ProjectMenuTreeKey.MAIN_JAVA.getKey());
     return javaNode;
   }
-
 }

@@ -72,6 +72,8 @@ generate:
       operator: query
       #方法的注释
       comment: 分页查询
+      #分页查询标识
+      pageQueryFlag: true
       #返回值类型信息
       returns: java.util.List<table_name>
       #排序

@@ -21,22 +21,22 @@ public class DatabaseTypeMsgBO {
   private String type;
 
   /** jdbc typeinfo */
-  private int jdbcType;
+  private Integer jdbcType;
 
   /** database type */
   private String dbType;
 
   /** precision min */
-  private long precisionMin;
+  private Long precisionMin;
 
   /** precision max */
-  private long precisionMax;
+  private Long precisionMax;
 
   /** scale min */
-  private int scaleMin;
+  private Integer scaleMin;
 
   /** scale max */
-  private int scaleMax;
+  private Integer scaleMax;
 
   /** defalut value */
   private String defValueStr;
@@ -46,7 +46,7 @@ public class DatabaseTypeMsgBO {
 
   private Object defValue;
 
-  public static DatabaseTypeMsgBO Parse(String key, String proValue) {
+  public static DatabaseTypeMsgBO parse(String key, String proValue) {
 
     if (proValue.indexOf(ParseJavaTypeLength.UNION_FLAG) != -1) {
       String[] provalues = proValue.split(Symbol.COMMA);

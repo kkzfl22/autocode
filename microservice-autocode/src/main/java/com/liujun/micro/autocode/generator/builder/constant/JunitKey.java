@@ -8,9 +8,6 @@ package com.liujun.micro.autocode.generator.builder.constant;
  */
 public class JunitKey {
 
-  /** 测试你父类 */
-  public static final String TEST_PARENT = "TestParent";
-
   /** 注入标识 */
   public static final String AUTOWIRED = "@Autowired";
 

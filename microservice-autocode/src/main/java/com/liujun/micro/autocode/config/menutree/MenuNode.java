@@ -1,11 +1,10 @@
-package com.liujun.micro.autocode.config.menuTree;
+package com.liujun.micro.autocode.config.menutree;
 
 import com.liujun.micro.autocode.constant.JavaDomainTreeKey;
+import com.liujun.micro.autocode.constant.Symbol;
 import lombok.Getter;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 目录树节点
@@ -102,19 +101,46 @@ public class MenuNode {
     return sb.toString();
   }
 
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    MenuNode menuNode = (MenuNode) o;
-    return Objects.equals(code, menuNode.code) &&
-            Objects.equals(path, menuNode.path) &&
-            Objects.equals(parent, menuNode.parent);
+  /**
+   * 按java的包路径进行输出
+   *
+   * @return
+   */
+  public String outJavaPackage() {
+    return outPath(this, Symbol.POINT);
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(code, path, parent);
+  /**
+   * 按路径进行输出操作
+   *
+   * @return
+   */
+  public String outPath() {
+    return outPath(this, Symbol.PATH);
+  }
+
+  /**
+   * 输出路径
+   *
+   * @param outNode 当前节点信息
+   * @param symbolInfo 分隔符
+   * @return 输出路径
+   */
+  private String outPath(MenuNode outNode, String symbolInfo) {
+    List<String> javaPackage = new ArrayList<>();
+
+    do {
+      String outPath = outNode.getPath() + symbolInfo;
+      javaPackage.add(outPath);
+      outNode = outNode.getParent();
+    } while (outNode != null && outNode.getParent() != null);
+
+    StringBuilder outJavaPackageBuilder = new StringBuilder();
+    for (int i = javaPackage.size() - 1; i >= 0; i--) {
+      outJavaPackageBuilder.append(javaPackage.get(i));
+    }
+    outJavaPackageBuilder.deleteCharAt(outJavaPackageBuilder.length() - 1);
+
+    return outJavaPackageBuilder.toString();
   }
 }

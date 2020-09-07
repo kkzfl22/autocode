@@ -24,7 +24,7 @@ public class CodeBaseUtils {
     // 表空间
     String tableSpace = "generate";
     // 模块名称
-    String modelName = "attribute";
+    String modelName = "user";
     // 文件输出代码路径
     String filePath = "D:/java/workspace/selfwork/autocode/generateCode/";
 

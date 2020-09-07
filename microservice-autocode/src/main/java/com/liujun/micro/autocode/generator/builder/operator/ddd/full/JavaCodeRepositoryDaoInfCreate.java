@@ -1,18 +1,13 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.full;
 
-import com.liujun.micro.autocode.config.menuTree.DomainMenuTree;
-import com.liujun.micro.autocode.config.menuTree.MenuNode;
-import com.liujun.micro.autocode.config.menuTree.MenuTreePackagePath;
-import com.liujun.micro.autocode.config.menuTree.MenuTreeProjectPath;
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.generator.builder.constant.GenerateCodeDomainKey;
+import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
-import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaInterface;
+import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaDaoInterface;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
-import com.liujun.micro.autocode.generator.builder.utils.MenuTreeProcessUtil;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
@@ -52,9 +47,7 @@ public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
       String className = tableClassName + DAO_SUFFIX;
 
       // 获取以java定义的package路径
-      DomainMenuTree menuTree = param.getMenuTree();
-      MenuNode poNode = MenuTreePackagePath.getRepositoryDaoNode(menuTree);
-      String javaPackageStr = MenuTreeProcessUtil.outJavaPackage(poNode);
+      String javaPackageStr = param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage();
 
       // 注释
       String docComment =
@@ -70,26 +63,25 @@ public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
       ImportPackageUtils.putPackageInfo(
           tableName,
           param.getPackageMap(),
-          GenerateCodeDomainKey.PERSIST_DAO.getKey(),
+          GenerateCodePackageKey.PERSIST_DAO.getKey(),
           daoPackageInfo,
           tableMap.size());
 
       // 获取实体信息
       ImportPackageInfo poPackageInfo =
           ImportPackageUtils.getDefineClass(
-              param.getPackageMap(), GenerateCodeDomainKey.PERSIST_PO.getKey(), tableName);
+              param.getPackageMap(), GenerateCodePackageKey.PERSIST_PO.getKey(), tableName);
 
       // 进行dao的相关方法的生成
       StringBuilder sb =
-          GenerateJavaInterface.INSTANCE.generateJavaInterface(
+          GenerateJavaDaoInterface.INSTANCE.generateJavaInterface(
               poPackageInfo,
               daoPackageInfo,
               param.getGenerateConfig().getGenerate().getCode(),
               param.getGenerateConfig().getGenerate().getAuthor());
 
       // 定义项目内的完整目录结构
-      MenuNode mapperNode = MenuTreeProjectPath.getSrcJavaNode(param.getProjectMenuTree());
-      String baseJavaPath = MenuTreeProcessUtil.outPath(mapperNode);
+      String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
       javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
 
       // 进行存储层的接口输出

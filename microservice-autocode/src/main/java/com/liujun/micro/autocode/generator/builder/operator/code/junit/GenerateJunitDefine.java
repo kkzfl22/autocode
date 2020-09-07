@@ -42,9 +42,7 @@ public class GenerateJunitDefine {
         JavaKeyWord.IMPORT_LIST,
         JavaKeyWord.IMPORT_ARRAYLIST,
         JavaKeyWord.IMPORT_MAP,
-        // 临时测试添加
-        "com.paraview.security.pap.microservice.InsertType",
-        "com.paraview.security.pap.microservice.TestParent",
+        "com.comomon.constant.InsertType",
         "java.util.HashMap",
         "org.springframework.beans.factory.annotation.Autowired"
       };
@@ -52,15 +50,13 @@ public class GenerateJunitDefine {
   /** 测试方法的前缀 */
   public static final String JUNIT_METHOD_BEFORE = "test";
 
-  /** 单元测试的父类 */
-  public static final String JUNIT_PARENT_NAME = "TestParent";
-
   /** 进行构建操作 */
   public static final GenerateJunitDefine INSTANCE = new GenerateJunitDefine();
 
   /**
    * 生成单元测试的类信息
    *
+   * @param junitParentPkg 单元测试的你类
    * @param entityPackage 实体的包定义
    * @param interfacePackage 接口的定义
    * @param junitPackage 单元测试的代码路径
@@ -74,6 +70,7 @@ public class GenerateJunitDefine {
    * @return 构建的单元测试代码
    */
   public StringBuilder generateJunit(
+      ImportPackageInfo junitParentPkg,
       ImportPackageInfo entityPackage,
       ImportPackageInfo interfacePackage,
       ImportPackageInfo junitPackage,
@@ -87,7 +84,7 @@ public class GenerateJunitDefine {
     // 文件头定义
     StringBuilder sb =
         GenerateJunitDefine.INSTANCE.defineHead(
-            entityPackage, junitPackage, importPackageList, author);
+            junitParentPkg, entityPackage, junitPackage, importPackageList, author);
 
     // 操作数据之前的初始化相关的工作
     GenerateJunitDefine.INSTANCE.beforeMethod(
@@ -110,7 +107,7 @@ public class GenerateJunitDefine {
       }
       // 非主键的删除方法
       else if (MethodTypeEnum.DELETE.getType().equals(methodItem.getOperator())
-          && (methodItem.getPrimaryFlag() == null || !methodItem.getPrimaryFlag())) {
+          && !Boolean.TRUE.equals(methodItem.getPrimaryFlag())) {
         GenerateJunitUpdate.INSTANCE.batchDelete(
             sb, methodItem, entityPackage, tableColumnMap, methodList, type, primaryKeyList);
       }
@@ -136,12 +133,14 @@ public class GenerateJunitDefine {
   /**
    * 文件头定义
    *
+   * @param junitParentPkg 单元测试父类
    * @param poPackage 数据库实体
    * @param defineImportClass 定义的其他需要导入的类信息
    * @param author 作者
    * @return 输出文件的定义信息
    */
   public StringBuilder defineHead(
+      ImportPackageInfo junitParentPkg,
       ImportPackageInfo poPackage,
       ImportPackageInfo junitPackage,
       List<String> defineImportClass,
@@ -162,6 +161,7 @@ public class GenerateJunitDefine {
 
     // 导入po包
     importList.add(ImportPackageUtils.packageOut(poPackage));
+    importList.add(ImportPackageUtils.packageOut(junitParentPkg));
 
     JavaClassEntity classEntityInfo =
         JavaClassEntity.builder()
@@ -178,7 +178,7 @@ public class GenerateJunitDefine {
             // 作者
             .author(author)
             // 继承的类
-            .extendClass(JUNIT_PARENT_NAME)
+            .extendClass(junitParentPkg.getClassName())
             .build();
 
     // 生成接口的定义

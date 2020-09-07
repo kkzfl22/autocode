@@ -65,10 +65,30 @@ public class JavaMethodName {
   /** 集合的判空方法 */
   public static final String LIST_EMPTY = "isEmpty";
 
-
   /** 将领域集合对象转换为存储集合实体对象的方法 */
   public static final String ASSEMBLER_ENTITY_PERSIST_LIST_NAME = "toListPersistObject";
 
   /** 将存储集合实体转换为领域集合对象的方法 */
   public static final String ASSEMBLER_PERSIST_ENTITY_LIST_NAME = "toListDomainEntity";
+
+  /** 进行日志的debug输出 */
+  public static final String LOG_DEBUG = "debug";
+
+  /** 返回分页参数的构建器 */
+  public static final String PAGE_BUILDER = "builder";
+
+  /** 当前页 */
+  public static final String PAGE_NUM = "pageNum";
+
+  /** 总条数 */
+  public static final String PAGE_TOTAL_SIZE = "total";
+
+  /** 每页显示条数 */
+  public static final String PAGE_SIZE = "pageSize";
+
+  /** 查询的数据 */
+  public static final String PAGE_DATA = "queryData";
+
+  /** 返回对象的构建方法 */
+  public static final String PAGE_BUILD = "build";
 }

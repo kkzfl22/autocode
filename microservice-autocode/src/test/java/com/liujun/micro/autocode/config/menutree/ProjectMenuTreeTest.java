@@ -1,8 +1,6 @@
-package com.liujun.micro.autocode.config.menuTree;
+package com.liujun.micro.autocode.config.menutree;
 
-import com.liujun.micro.autocode.constant.JavaDomainTreeKey;
 import com.liujun.micro.autocode.constant.ProjectMenuTreeKey;
-import com.liujun.micro.autocode.generator.builder.utils.MenuTreeProcessUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,7 +31,6 @@ public class ProjectMenuTreeTest {
     Assert.assertNotNull(node);
 
     // 使用节点树处理转换为路径
-    Assert.assertEquals(
-        "src/main/resources/mapper/pap/repository", MenuTreeProcessUtil.outPath(node));
+    Assert.assertEquals("src/main/resources/mapper/pap/repository", node.outPath());
   }
 }

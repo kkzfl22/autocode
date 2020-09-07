@@ -217,6 +217,22 @@ public class GenerateJavaAssembler {
 
     int tabIndex = 1;
 
+    // 对查询的对象进行空的检查，当为空时，不能进行转换
+    sb.append(JavaFormat.appendTab(tabIndex + 1));
+    sb.append(JavaKeyWord.IF).append(Symbol.SPACE);
+    sb.append(Symbol.BRACKET_LEFT).append(JavaVarValue.VALUE_NULL).append(Symbol.SPACE);
+    sb.append(Symbol.EQUALS).append(Symbol.SPACE).append(JavaVarName.ASSERT_DATA_SRC);
+    sb.append(Symbol.BRACKET_RIGHT).append(Symbol.BRACE_LEFT).append(Symbol.ENTER_LINE);
+
+    // 返回语句
+    sb.append(JavaFormat.appendTab(tabIndex + 2));
+    sb.append(JavaKeyWord.RETURN).append(Symbol.SPACE);
+    sb.append(JavaVarValue.VALUE_NULL).append(Symbol.SEMICOLON);
+    sb.append(Symbol.ENTER_LINE);
+
+    sb.append(JavaFormat.appendTab(tabIndex + 1));
+    sb.append(Symbol.BRACE_RIGHT).append(Symbol.ENTER_LINE);
+
     // 返回对象的声明
     sb.append(JavaFormat.appendTab(tabIndex + 1));
     sb.append(entityPackageTarget.getClassName()).append(Symbol.SPACE);

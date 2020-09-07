@@ -1,13 +1,9 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.full;
 
-import com.liujun.micro.autocode.config.menuTree.DomainMenuTree;
-import com.liujun.micro.autocode.config.menuTree.MenuNode;
-import com.liujun.micro.autocode.config.menuTree.MenuTreePackagePath;
-import com.liujun.micro.autocode.config.menuTree.MenuTreeProjectPath;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.entity.config.MethodInfo;
 import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
-import com.liujun.micro.autocode.generator.builder.constant.GenerateCodeDomainKey;
+import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.JavaMethodName;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
@@ -17,7 +13,6 @@ import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFil
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
-import com.liujun.micro.autocode.generator.builder.utils.MenuTreeProcessUtil;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
@@ -55,9 +50,8 @@ public class JavaCodeRepositoryAssemblerCreate implements GenerateCodeInf {
       String className = tableClassName + NAME_SUFFIX;
 
       // 获取以java定义的package路径
-      DomainMenuTree menuTree = param.getMenuTree();
-      MenuNode poNode = MenuTreePackagePath.getRepositoryAssemblerNode(menuTree);
-      String javaPackageStr = MenuTreeProcessUtil.outJavaPackage(poNode);
+      String javaPackageStr =
+          param.getJavaCodePackage().getRepositoryAssemblerNode().outJavaPackage();
 
       // 将dao信息进行储存至流程中
       ImportPackageInfo persistAssemblerPkg =
@@ -65,19 +59,19 @@ public class JavaCodeRepositoryAssemblerCreate implements GenerateCodeInf {
       ImportPackageUtils.putPackageInfo(
           tableName,
           param.getPackageMap(),
-          GenerateCodeDomainKey.PERSIST_ASSEMBLER.getKey(),
+          GenerateCodePackageKey.PERSIST_ASSEMBLER.getKey(),
           persistAssemblerPkg,
           tableMap.size());
 
       // 获取实体信息
       ImportPackageInfo poPackageInfo =
           ImportPackageUtils.getDefineClass(
-              param.getPackageMap(), GenerateCodeDomainKey.PERSIST_PO.getKey(), tableName);
+              param.getPackageMap(), GenerateCodePackageKey.PERSIST_PO.getKey(), tableName);
 
       // 获取实体信息
       ImportPackageInfo domainPackageInfo =
           ImportPackageUtils.getDefineClass(
-              param.getPackageMap(), GenerateCodeDomainKey.DOMAIN_DO.getKey(), tableName);
+              param.getPackageMap(), GenerateCodePackageKey.DOMAIN_DO.getKey(), tableName);
 
       // 进行转换方法的生成
       StringBuilder sb =
@@ -90,8 +84,8 @@ public class JavaCodeRepositoryAssemblerCreate implements GenerateCodeInf {
               param.getGenerateConfig().getGenerate().getAuthor());
 
       // 定义项目内的完整目录结构
-      MenuNode mapperNode = MenuTreeProjectPath.getSrcJavaNode(param.getProjectMenuTree());
-      String baseJavaPath = MenuTreeProcessUtil.outPath(mapperNode);
+      String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
+
       javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
 
       // 进行存储层的接口输出

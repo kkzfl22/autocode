@@ -1,5 +1,6 @@
-package com.liujun.micro.autocode.config.menuTree;
+package com.liujun.micro.autocode.config.menutree;
 
+import com.liujun.micro.autocode.config.generate.GenerateConfig;
 import com.liujun.micro.autocode.constant.ProjectMenuTreeKey;
 import com.liujun.micro.autocode.constant.Symbol;
 
@@ -13,6 +14,11 @@ public class ProjectMenuTree {
 
   /** 顶层根节点 */
   private static final String ROOT = Symbol.PATH;
+
+  /** 实例信息 */
+  public static final ProjectMenuTree INSTANCE =
+      new ProjectMenuTree(
+          GenerateConfig.INSTANCE.getCfgEntity().getGenerate().getCodeMenuTree().getModelName());
 
   /** 目录树结构的最顶层节点 */
   private MenuNode root = new MenuNode(ROOT);
@@ -53,12 +59,12 @@ public class ProjectMenuTree {
     // resource目录
     MenuNode testResourceNode = srcTestNode.addChildren(ProjectMenuTreeKey.MAIN_RESOURCES.getKey());
     // 添加mapper的目录
-    MenuNode testMapperNode = testResourceNode.addChildren(ProjectMenuTreeKey.RESOURCES_MAPPER.getKey());
+    MenuNode testMapperNode =
+        testResourceNode.addChildren(ProjectMenuTreeKey.RESOURCES_MAPPER.getKey());
     // 在mapper添加模块
     MenuNode testModelNode = testMapperNode.addChildren(modelName);
     // 模块下添加repository目录
     testModelNode.addChildren(ProjectMenuTreeKey.RESOURCES_REPOSITORY.getKey());
-
 
     return root;
   }

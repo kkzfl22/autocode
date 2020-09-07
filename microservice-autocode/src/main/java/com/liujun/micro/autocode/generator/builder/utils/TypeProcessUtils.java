@@ -18,7 +18,7 @@ public class TypeProcessUtils {
    * 得到java的数据类型 方法描述
    *
    * @param databaseType typeinfo
-   * @return @创建日期 2016年10月9日
+   * @return java的类型信息
    */
   public static String getJavaType(String databaseType) {
 
