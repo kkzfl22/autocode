@@ -140,10 +140,9 @@ public class MenuTreeCodePackage {
   /**
    * 获取领域服务的节点信息
    *
-   * @param menuTree 树形结构
    * @return 模块名称
    */
-  public MenuNode getDomainServiceNode(DomainMenuTree menuTree) {
+  public MenuNode getDomainServiceNode() {
     MenuNode poNode =
         menuTree
             .getDefineRoot()

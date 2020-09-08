@@ -3,26 +3,19 @@ package com.liujun.micro.autocode.generator.builder.operator.code.junit;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.entity.config.MethodInfo;
 import com.liujun.micro.autocode.generator.builder.constant.*;
-import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
-import com.liujun.micro.autocode.generator.builder.entity.JavaClassEntity;
-import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
-import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
+import com.liujun.micro.autocode.generator.builder.entity.*;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
-import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
 import com.liujun.micro.autocode.generator.database.service.DatabaseValue;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author liujun
@@ -31,10 +24,10 @@ import java.util.Map;
 public class GenerateJunitDefine {
 
   /** 测试的标识 */
-  public static final String DAO_TEST_NAME = "Test";
+  public static final String TEST_SUFFIX_NAME = "Test";
 
   /** 需要导入的包 */
-  private static final String[] IMPORT_PKG =
+  public static final String[] IMPORT_PKG =
       new String[] {
         "org.junit.*",
         "org.apache.commons.lang3.RandomStringUtils",
@@ -54,88 +47,10 @@ public class GenerateJunitDefine {
   public static final GenerateJunitDefine INSTANCE = new GenerateJunitDefine();
 
   /**
-   * 生成单元测试的类信息
-   *
-   * @param junitParentPkg 单元测试的你类
-   * @param entityPackage 实体的包定义
-   * @param interfacePackage 接口的定义
-   * @param junitPackage 单元测试的代码路径
-   * @param type 类型
-   * @param columnList 列信息
-   * @param primaryKeyList 主键列信息
-   * @param methodList 配制的方法信息
-   * @param tableColumnMap 以map结构的表信息
-   * @param importPackageList 导入的包
-   * @param author 作者
-   * @return 构建的单元测试代码
-   */
-  public StringBuilder generateJunit(
-      ImportPackageInfo junitParentPkg,
-      ImportPackageInfo entityPackage,
-      ImportPackageInfo interfacePackage,
-      ImportPackageInfo junitPackage,
-      DatabaseTypeEnum type,
-      List<TableColumnDTO> columnList,
-      List<TableColumnDTO> primaryKeyList,
-      List<MethodInfo> methodList,
-      Map<String, TableColumnDTO> tableColumnMap,
-      List<String> importPackageList,
-      String author) {
-    // 文件头定义
-    StringBuilder sb =
-        GenerateJunitDefine.INSTANCE.defineHead(
-            junitParentPkg, entityPackage, junitPackage, importPackageList, author);
-
-    // 操作数据之前的初始化相关的工作
-    GenerateJunitDefine.INSTANCE.beforeMethod(
-        sb, entityPackage, interfacePackage, type, columnList, primaryKeyList);
-
-    // 公共的数据对比方法
-    GenerateJunitDefine.INSTANCE.queryResponseAssert(
-        sb, columnList, entityPackage, methodList, primaryKeyList);
-
-    for (MethodInfo methodItem : methodList) {
-      // 添加方法
-      if (MethodTypeEnum.INSERT.getType().equals(methodItem.getOperator())) {
-        GenerateJunitUpdate.INSTANCE.insertMethod(sb, methodItem, entityPackage, methodList);
-      }
-      // 修改方法
-      else if (MethodTypeEnum.UPDATE.getType().equals(methodItem.getOperator())) {
-        // 插入方法
-        MethodInfo insertMethod = MethodUtils.getInsertMethod(methodList);
-        GenerateJunitUpdate.INSTANCE.oneUpdateMethod(sb, methodItem, insertMethod);
-      }
-      // 非主键的删除方法
-      else if (MethodTypeEnum.DELETE.getType().equals(methodItem.getOperator())
-          && !Boolean.TRUE.equals(methodItem.getPrimaryFlag())) {
-        GenerateJunitUpdate.INSTANCE.batchDelete(
-            sb, methodItem, entityPackage, tableColumnMap, methodList, type, primaryKeyList);
-      }
-      // 数据查询
-      else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
-        GenerateJunitQuery.INSTANCE.queryMethod(
-            sb, methodItem, entityPackage, tableColumnMap, methodList, type, primaryKeyList);
-      }
-    }
-
-    // 最后执执行after的清理方法，调用主键删除
-    MethodInfo methodItem = MethodUtils.getPrimaryDeleteMethod(methodList);
-    if (null != methodItem) {
-      GenerateJunitUpdate.INSTANCE.deleteMethod(sb, methodItem, entityPackage);
-    }
-
-    // 结束
-    sb.append(Symbol.BRACE_RIGHT);
-
-    return sb;
-  }
-
-  /**
    * 文件头定义
    *
    * @param junitParentPkg 单元测试父类
    * @param poPackage 数据库实体
-   * @param defineImportClass 定义的其他需要导入的类信息
    * @param author 作者
    * @return 输出文件的定义信息
    */
@@ -143,20 +58,12 @@ public class GenerateJunitDefine {
       ImportPackageInfo junitParentPkg,
       ImportPackageInfo poPackage,
       ImportPackageInfo junitPackage,
-      List<String> defineImportClass,
       String author) {
 
     List<String> importList = new ArrayList<>();
 
     for (String importPackage : IMPORT_PKG) {
       importList.add(importPackage);
-    }
-
-    // 导入定义需要导入的包
-    if (null != defineImportClass && defineImportClass.isEmpty()) {
-      for (String packageImg : defineImportClass) {
-        importList.add(packageImg);
-      }
     }
 
     // 导入po包
@@ -206,9 +113,9 @@ public class GenerateJunitDefine {
     // bore的设置操作
     junitBefore(sb, daoPackage, poPackage);
     // 1,调用设置主键属性
-    setPrimaryFieldMethod(sb, poPackage, typeEnum, primaryList, 0);
+    setPrimaryFieldMethod(sb, poPackage, typeEnum, primaryList);
     // 2,调用设置其他属性
-    setDataFieldMethod(sb, poPackage, typeEnum, columnList, primaryList, 0);
+    setDataFieldMethod(sb, poPackage, typeEnum, columnList, primaryList);
   }
 
   /**
@@ -223,20 +130,19 @@ public class GenerateJunitDefine {
       StringBuilder sb,
       ImportPackageInfo poPackage,
       DatabaseTypeEnum typeEnum,
-      List<TableColumnDTO> primaryList,
-      int tabNum) {
+      List<TableColumnDTO> primaryList) {
 
     // 方法实体信息
     JavaMethodEntity methodInfo =
         JavaMethodEntity.builder()
             // 公共的访问修饰符
-            .visitMethod(JavaKeyWord.PRIVATE)
+            .visit(JavaKeyWord.PRIVATE)
             // 方法注释
-            .methodComment(CodeComment.SET_PRIMARY_FIELD_COMMENT)
+            .comment(CodeComment.SET_PRIMARY_FIELD_COMMENT)
             // 返回值
-            .returnType(JavaKeyWord.VOID)
+            .type(JavaKeyWord.VOID)
             // 方法名
-            .methodName(JavaMethodName.SET_PRIMARY_FIELD)
+            .name(JavaMethodName.SET_PRIMARY_FIELD)
             // 参数
             .arguments(
                 Arrays.asList(
@@ -273,8 +179,7 @@ public class GenerateJunitDefine {
       ImportPackageInfo poPackage,
       DatabaseTypeEnum typeEnum,
       List<TableColumnDTO> columnList,
-      List<TableColumnDTO> primaryList,
-      int tabNum) {
+      List<TableColumnDTO> primaryList) {
 
     // 1,通过数据需在排除掉集合数据
     List<TableColumnDTO> dataList = new ArrayList<>(columnList);
@@ -285,13 +190,13 @@ public class GenerateJunitDefine {
     JavaMethodEntity methodInfo =
         JavaMethodEntity.builder()
             // 公共的访问修饰符
-            .visitMethod(JavaKeyWord.PRIVATE)
+            .visit(JavaKeyWord.PRIVATE)
             // 方法注释
-            .methodComment(CodeComment.SET_DATA_FIELD_COMMENT)
+            .comment(CodeComment.SET_DATA_FIELD_COMMENT)
             // 返回值
-            .returnType(JavaKeyWord.VOID)
+            .type(JavaKeyWord.VOID)
             // 方法名
-            .methodName(JavaMethodName.SET_DATA_FIELD)
+            .name(JavaMethodName.SET_DATA_FIELD)
             // 参数
             .arguments(
                 Arrays.asList(
@@ -327,7 +232,7 @@ public class GenerateJunitDefine {
     int tabIndex = 0;
 
     // 类属性的定义
-    this.classFieldDefine(sb, tabIndex, poPackage, daoPackage);
+    this.classFieldDefine(sb, poPackage, daoPackage);
 
     // 调用数据准备方法
     this.junitBeforeMethod(sb, tabIndex);
@@ -340,59 +245,69 @@ public class GenerateJunitDefine {
    * 类属性的定义
    *
    * @param sb
-   * @param tabIndex 索引
-   * @param poPackage po的类信息
-   * @param daoPackage dao包信息
+   * @param entityPackage 实体的类信息
+   * @param targetPackage 目标调用包信息
    */
   private void classFieldDefine(
-      StringBuilder sb, int tabIndex, ImportPackageInfo poPackage, ImportPackageInfo daoPackage) {
+      StringBuilder sb, ImportPackageInfo entityPackage, ImportPackageInfo targetPackage) {
+
     // 静态常量
-    sb.append(JavaFormat.appendTab(tabIndex + 1));
-    sb.append(JavaKeyWord.PRIVATE).append(Symbol.SPACE);
-    sb.append(JavaKeyWord.STATIC).append(Symbol.SPACE);
-    sb.append(JavaKeyWord.FINAL).append(Symbol.SPACE);
-    sb.append(JavaKeyWord.INT_TYPE).append(Symbol.SPACE);
-    sb.append(JavaVarName.FINAL_BATCH_INSERT_NUM).append(Symbol.SPACE);
-    sb.append(Symbol.EQUAL).append(Symbol.SPACE);
-    sb.append(JavaVarValue.BATCH_NUM).append(Symbol.SEMICOLON);
-    sb.append(Symbol.ENTER_LINE);
+    // 声明批量添加属性
+    JavaClassFieldEntity field =
+        JavaClassFieldEntity.getPrivateStaticFinalField(
+            JavaKeyWord.INT_TYPE,
+            JavaVarName.FINAL_BATCH_INSERT_NUM,
+            CodeComment.FINAL_BATCH_INSERT_NUM_COMMENT,
+            JavaVarValue.BATCH_NUM);
+    sb.append(JavaClassCodeUtils.getClassField(field));
+
     sb.append(Symbol.ENTER_LINE);
 
-    // 添加前置方法
-    sb.append(JavaFormat.appendTab(tabIndex + 1));
-    sb.append(JunitKey.AUTOWIRED);
-    sb.append(Symbol.ENTER_LINE);
-    // 实体的spring注入
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.PRIVATE);
-    sb.append(Symbol.SPACE).append(daoPackage.getClassName());
-    sb.append(Symbol.SPACE);
-    sb.append(JavaVarName.INSTANCE_NAME).append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
+    // spring属性的注入操作,
+    JavaClassFieldEntity fieldDomainService =
+        JavaClassFieldEntity.getPrivateAutowiredField(
+            targetPackage.getClassName(),
+            targetPackage.getVarName(),
+            targetPackage.getClassComment());
+    sb.append(JavaClassCodeUtils.getClassField(fieldDomainService));
+
     sb.append(Symbol.ENTER_LINE);
 
     // 定义批量操作的集合对象
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.PRIVATE);
-    sb.append(Symbol.SPACE).append(JavaKeyWord.LIST_TYPE);
-    sb.append(poPackage.getClassName()).append(JavaKeyWord.LIST_TYPE_END);
-    sb.append(Symbol.SPACE).append(JavaVarName.BATCH_LIST_NAME);
-    sb.append(Symbol.SPACE).append(Symbol.EQUAL).append(Symbol.SPACE);
-    sb.append(JavaKeyWord.NEW).append(Symbol.SPACE);
-    sb.append(JavaKeyWord.LIST_TYPE_ARRAYLIST).append(Symbol.BRACKET_LEFT);
-    sb.append(JavaVarName.FINAL_BATCH_INSERT_NUM).append(Symbol.BRACKET_RIGHT);
-    sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
+    String dataType =
+        JavaKeyWord.LIST_TYPE + entityPackage.getClassName() + JavaKeyWord.LIST_TYPE_END;
+    String newList =
+        JavaKeyWord.NEW
+            + Symbol.SPACE
+            + JavaKeyWord.LIST_TYPE_ARRAYLIST
+            + Symbol.BRACKET_LEFT
+            + JavaVarName.FINAL_BATCH_INSERT_NUM
+            + Symbol.BRACKET_RIGHT;
+    JavaClassFieldEntity batchList =
+        JavaClassFieldEntity.getPrivateField(
+            dataType, JavaVarName.BATCH_LIST_NAME, CodeComment.FIELD_BATCH_LIST_COMMENT, newList);
+    sb.append(JavaClassCodeUtils.getClassField(batchList));
+
     sb.append(Symbol.ENTER_LINE);
 
-    // 定义属性的类型
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.PRIVATE);
-    sb.append(Symbol.SPACE).append(poPackage.getClassName());
-    sb.append(Symbol.SPACE).append(JavaVarName.INSTANCE_NAME_PO);
-    sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
+    // 单个插入的属性的定义
+    JavaClassFieldEntity fieldEntity =
+        JavaClassFieldEntity.getPrivateField(
+            entityPackage.getClassName(),
+            entityPackage.getVarName(),
+            entityPackage.getClassComment());
+    sb.append(JavaClassCodeUtils.getClassField(fieldEntity));
+
     sb.append(Symbol.ENTER_LINE);
 
     // 添加数据执行的类型,标识当前为单插入，批量插入，或者不插入数据
-    sb.append(JavaFormat.appendTab(tabIndex + 1)).append(JavaKeyWord.PRIVATE);
-    sb.append(Symbol.SPACE).append(JavaKeyWord.INT_TYPE);
-    sb.append(Symbol.SPACE).append(JavaVarName.JUNIT_VAR_BATCH_INSERT);
-    sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
+    JavaClassFieldEntity operatorType =
+        JavaClassFieldEntity.getPrivateField(
+            JavaKeyWord.INT_TYPE,
+            JavaVarName.JUNIT_VAR_BATCH_INSERT,
+            CodeComment.FIELD_OPERATOR_TYPE_COMMENT);
+    sb.append(JavaClassCodeUtils.getClassField(operatorType));
+
     sb.append(Symbol.ENTER_LINE);
   }
 
@@ -409,13 +324,13 @@ public class GenerateJunitDefine {
     JavaMethodEntity methodInfo =
         JavaMethodEntity.builder()
             // 公共的访问修饰符
-            .visitMethod(JavaKeyWord.PUBLIC)
+            .visit(JavaKeyWord.PUBLIC)
             // 方法注释
-            .methodComment(CodeComment.JUNIT_GET_DATA_COMMENT)
+            .comment(CodeComment.JUNIT_GET_DATA_COMMENT)
             // 返回值
-            .returnType(poPackage.getClassName())
+            .type(poPackage.getClassName())
             // 方法名
-            .methodName(JavaMethodName.GET_DATA_METHOD)
+            .name(JavaMethodName.GET_DATA_METHOD)
             .build();
     // 方法定义生成
     JavaClassCodeUtils.methodDefine(sb, methodInfo);
@@ -464,13 +379,13 @@ public class GenerateJunitDefine {
             // 注解符
             .annotation(JunitKey.JUNIT_BEFORE)
             // 公共的访问修饰符
-            .visitMethod(JavaKeyWord.PUBLIC)
+            .visit(JavaKeyWord.PUBLIC)
             // 方法注释
-            .methodComment(CodeComment.JUNIT_BEFORE_COMMENT)
+            .comment(CodeComment.JUNIT_BEFORE_COMMENT)
             // 返回值
-            .returnType(JavaKeyWord.VOID)
+            .type(JavaKeyWord.VOID)
             // 方法名
-            .methodName(JavaMethodName.BEFORE_SET_DATA)
+            .name(JavaMethodName.BEFORE_SET_DATA)
             .build();
 
     // 方法定义生成
@@ -504,7 +419,7 @@ public class GenerateJunitDefine {
     sb.append(Symbol.ENTER_LINE);
 
     // 为单个对象属性赋值
-    sb.append(JavaFormat.appendTab(tabIndex + 2)).append(JavaVarName.INSTANCE_NAME_PO);
+    sb.append(JavaFormat.appendTab(tabIndex + 2)).append(JavaVarName.INSTANCE_NAME_ENTITY);
     sb.append(Symbol.SPACE).append(Symbol.EQUAL).append(Symbol.SPACE);
     sb.append(JavaVarName.BATCH_LIST_NAME).append(Symbol.POINT).append(JavaMethodName.GET);
     sb.append(Symbol.BRACKET_LEFT).append(JavaVarValue.FOR_INDEX_START);
@@ -626,13 +541,13 @@ public class GenerateJunitDefine {
     JavaMethodEntity methodInfo =
         JavaMethodEntity.builder()
             // 公共的访问修饰符
-            .visitMethod(JavaKeyWord.PRIVATE)
+            .visit(JavaKeyWord.PRIVATE)
             // 方法注释
-            .methodComment(CodeComment.JUNIT_ASSERT_LIST_COMMENT)
+            .comment(CodeComment.JUNIT_ASSERT_LIST_COMMENT)
             // 返回值
-            .returnType(JavaKeyWord.VOID)
+            .type(JavaKeyWord.VOID)
             // 方法名
-            .methodName(JavaMethodName.ASSERT_DATA_LIST)
+            .name(JavaMethodName.ASSERT_DATA_LIST)
             // 参数
             .arguments(argumentList)
             .build();
@@ -722,13 +637,13 @@ public class GenerateJunitDefine {
     JavaMethodEntity methodInfo =
         JavaMethodEntity.builder()
             // 公共的访问修饰符
-            .visitMethod(JavaKeyWord.PRIVATE)
+            .visit(JavaKeyWord.PRIVATE)
             // 方法注释
-            .methodComment(CodeComment.JUNIT_PARSE_MAP_COMMENT)
+            .comment(CodeComment.JUNIT_PARSE_MAP_COMMENT)
             // 返回值
-            .returnType(JavaClassCodeUtils.mapStringKey(poPackage.getClassName()))
+            .type(JavaClassCodeUtils.mapStringKey(poPackage.getClassName()))
             // 方法名
-            .methodName(JavaMethodName.PARSE_MAP)
+            .name(JavaMethodName.PARSE_MAP)
             // 参数
             .arguments(argumentList)
             .build();
@@ -807,13 +722,13 @@ public class GenerateJunitDefine {
     JavaMethodEntity methodInfo =
         JavaMethodEntity.builder()
             // 公共的访问修饰符
-            .visitMethod(JavaKeyWord.PRIVATE)
+            .visit(JavaKeyWord.PRIVATE)
             // 方法注释
-            .methodComment(CodeComment.JUNIT_PARSE_KEY_COMMENT)
+            .comment(CodeComment.JUNIT_PARSE_KEY_COMMENT)
             // 返回值
-            .returnType(JavaKeyWord.TYPE_STRING)
+            .type(JavaKeyWord.TYPE_STRING)
             // 方法名
-            .methodName(JavaMethodName.PARSE_MAP_KEY)
+            .name(JavaMethodName.PARSE_MAP_KEY)
             // 参数
             .arguments(
                 Arrays.asList(
@@ -894,13 +809,13 @@ public class GenerateJunitDefine {
     JavaMethodEntity methodInfo =
         JavaMethodEntity.builder()
             // 公共的访问修饰符
-            .visitMethod(JavaKeyWord.PRIVATE)
+            .visit(JavaKeyWord.PRIVATE)
             // 方法注释
-            .methodComment(CodeComment.JUNIT_ASSERT_DATA_VALUE)
+            .comment(CodeComment.JUNIT_ASSERT_DATA_VALUE)
             // 返回值
-            .returnType(JavaKeyWord.VOID)
+            .type(JavaKeyWord.VOID)
             // 方法名
-            .methodName(JavaMethodName.ASSERT_DATA)
+            .name(JavaMethodName.ASSERT_DATA)
             // 参数
             .arguments(Arrays.asList(srcArguments, targetArguments))
             .build();

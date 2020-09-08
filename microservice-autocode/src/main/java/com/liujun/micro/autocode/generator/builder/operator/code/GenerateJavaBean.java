@@ -7,6 +7,8 @@ import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
 import com.liujun.micro.autocode.generator.builder.constant.MyBatisOperatorFlag;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.TableColumnUtils;
 import com.liujun.micro.autocode.generator.builder.utils.TypeProcessUtils;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
@@ -69,7 +71,7 @@ public class GenerateJavaBean {
     importList.add(JavaKeyWord.BEAN_IMPORT_TOSTRING);
 
     // 检查是否需要导入list包
-    Set<String> inCondition = this.getInCondition(codeMethod);
+    Set<String> inCondition = MethodUtils.getInCondition(codeMethod);
     if (!inCondition.isEmpty()) {
       importList.add(JavaKeyWord.IMPORT_LIST);
     }
@@ -86,28 +88,9 @@ public class GenerateJavaBean {
   private void inCondition(
       List<MethodInfo> codeMethod, List<TableColumnDTO> columnList, StringBuilder sb) {
     // 进行条件的输出
-    Set<String> conditionList = this.getInCondition(codeMethod);
+    Set<String> conditionList = MethodUtils.getInCondition(codeMethod);
     // 作为属性输出
     this.outInCondition(conditionList, columnList, sb);
-  }
-
-  /**
-   * 获取所有带in的条件件信息
-   *
-   * @param codeMethod 方法信息
-   * @return 结果
-   */
-  private Set<String> getInCondition(List<MethodInfo> codeMethod) {
-    Set<String> addWhereColumn = new HashSet<>();
-    for (MethodInfo method : codeMethod) {
-      for (WhereInfo whereIn : method.getWhereInfo()) {
-        // 检查当前是否存在in关键字
-        if (MyBatisOperatorFlag.IN.equals(whereIn.getOperatorFlag())) {
-          addWhereColumn.add(whereIn.getSqlColumn());
-        }
-      }
-    }
-    return addWhereColumn;
   }
 
   /**
@@ -120,7 +103,7 @@ public class GenerateJavaBean {
   private void outInCondition(
       Set<String> inCondition, List<TableColumnDTO> columnList, StringBuilder sb) {
     for (String inConditionItem : inCondition) {
-      TableColumnDTO tableInfo = this.getColumn(columnList, inConditionItem);
+      TableColumnDTO tableInfo = TableColumnUtils.getColumn(columnList, inConditionItem);
       if (null == tableInfo) {
         continue;
       }
@@ -152,23 +135,7 @@ public class GenerateJavaBean {
     return outName;
   }
 
-  /**
-   * 获取指定的列
-   *
-   * @param columnList 列集合
-   * @param inConditionItem 作为in条件的列
-   * @return 列信息
-   */
-  private TableColumnDTO getColumn(List<TableColumnDTO> columnList, String inConditionItem) {
-    for (TableColumnDTO tableColumnItem : columnList) {
-      // 如果能列名能匹配上
-      if (tableColumnItem.getColumnName().equalsIgnoreCase(inConditionItem)) {
-        return tableColumnItem;
-      }
-    }
 
-    throw new IllegalArgumentException("condition :" + inConditionItem + "not exists!");
-  }
 
   /**
    * 属性输出

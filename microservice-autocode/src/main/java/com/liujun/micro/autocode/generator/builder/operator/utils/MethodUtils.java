@@ -2,10 +2,14 @@ package com.liujun.micro.autocode.generator.builder.operator.utils;
 
 import com.liujun.micro.autocode.entity.config.MethodInfo;
 import com.liujun.micro.autocode.entity.config.TypeInfo;
+import com.liujun.micro.autocode.entity.config.WhereInfo;
 import com.liujun.micro.autocode.generator.builder.constant.MethodTypeEnum;
+import com.liujun.micro.autocode.generator.builder.constant.MyBatisOperatorFlag;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 公共的方法
@@ -124,5 +128,24 @@ public class MethodUtils {
     }
 
     return false;
+  }
+
+  /**
+   * 获取所有带in的条件件信息
+   *
+   * @param codeMethod 方法信息
+   * @return 结果
+   */
+  public static Set<String> getInCondition(List<MethodInfo> codeMethod) {
+    Set<String> addWhereColumn = new HashSet<>();
+    for (MethodInfo method : codeMethod) {
+      for (WhereInfo whereIn : method.getWhereInfo()) {
+        // 检查当前是否存在in关键字
+        if (MyBatisOperatorFlag.IN.equals(whereIn.getOperatorFlag())) {
+          addWhereColumn.add(whereIn.getSqlColumn());
+        }
+      }
+    }
+    return addWhereColumn;
   }
 }

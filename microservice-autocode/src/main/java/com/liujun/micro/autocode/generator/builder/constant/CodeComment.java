@@ -29,20 +29,26 @@ public class CodeComment {
   /** 查询的注释 */
   public static final String METHOD_QUERY_RESULT = "数询结果集";
 
+  /** 用来存储批量操作的容器 */
+  public static final String FIELD_BATCH_LIST_COMMENT = "批量操作的数据存储容器";
+
+  /** 数据操作的类型 */
+  public static final String FIELD_OPERATOR_TYPE_COMMENT = "数据操作类型，1，单个插入，2批量插入，其他不操作";
+
   /** 执行修改的返回参数 */
   public static final String METHOD_SERVICE_UPDATE_RETURN = "执行的结果 true/false";
 
   /** 属性条件列表 */
   public static final String FIELD_CONDITION_LIST = "查询条件列表";
 
-  /** 批量添加的数据生成 */
-  public static final String DATA_LIST_GENERATE = "批量添加的数据生成";
-
   /** 普通属性的值设置方法的注释 */
   public static final String SET_DATA_FIELD_COMMENT = "设置普通属性值";
 
   /** 设置主键列属性的注释 */
   public static final String SET_PRIMARY_FIELD_COMMENT = "设置主键属性";
+
+  /** 批量添加的数量 */
+  public static final String FINAL_BATCH_INSERT_NUM_COMMENT = "当前批量添加的个数";
 
   /** 数据准备方法 */
   public static final String JUNIT_BEFORE_COMMENT = "单元测试的数据准备";
@@ -94,4 +100,7 @@ public class CodeComment {
 
   /** 将存储集合对象转换为领域集合对象的方法 */
   public static final String ASSEMBLER_PERSIST_ENTITY_LIST_COMMENT = "将存储集合对象转换为领域集合对象";
+
+  /** 操作方法的返回结果 */
+  public static final String DOMAIN_UPDATE_COMMENT = "true 操作成功,false 操作失败";
 }

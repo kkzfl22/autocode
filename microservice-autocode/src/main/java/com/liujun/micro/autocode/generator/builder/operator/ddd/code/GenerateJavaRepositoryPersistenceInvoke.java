@@ -1,4 +1,4 @@
-package com.liujun.micro.autocode.generator.builder.operator.code;
+package com.liujun.micro.autocode.generator.builder.operator.ddd.code;
 
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.entity.config.MethodInfo;
@@ -20,10 +20,11 @@ import java.util.Map;
  * @author liujun
  * @version 0.0.1
  */
-public class GenerateJavaRepositoryInvoke {
+public class GenerateJavaRepositoryPersistenceInvoke {
 
   /** 实例对象 */
-  public static final GenerateJavaRepositoryInvoke INSTANCE = new GenerateJavaRepositoryInvoke();
+  public static final GenerateJavaRepositoryPersistenceInvoke INSTANCE =
+      new GenerateJavaRepositoryPersistenceInvoke();
 
   /** 导入的包信息 */
   private static final List<String> IMPORT_PKG =
@@ -81,7 +82,7 @@ public class GenerateJavaRepositoryInvoke {
 
     // 领域的存储接口
     ImportPackageInfo persistFacadePackageInfo =
-        packageMap.get(GenerateCodePackageKey.PERSIST_FACADE.getKey());
+        packageMap.get(GenerateCodePackageKey.DOMAIN_PERSIST_FACADE.getKey());
 
     // 领域的存储接口
     ImportPackageInfo repositoryPersistencePackage =
@@ -175,11 +176,11 @@ public class GenerateJavaRepositoryInvoke {
     JavaMethodEntity methodEntity =
         JavaMethodEntity.builder()
             // 访问修饰符
-            .visitMethod(JavaKeyWord.PUBLIC)
+            .visit(JavaKeyWord.PUBLIC)
             // 返回值
-            .returnType(JavaKeyWord.TYPE_BOOLEAN)
+            .type(JavaKeyWord.TYPE_BOOLEAN)
             // 方法名
-            .methodName(method.getName())
+            .name(method.getName())
             // 重写标识
             .annotation(CodeAnnotation.OVERRIDE)
             // 参数
@@ -444,12 +445,12 @@ public class GenerateJavaRepositoryInvoke {
     JavaMethodEntity methodEntity =
         JavaMethodEntity.builder()
             // 访问修饰符
-            .visitMethod(JavaKeyWord.PUBLIC)
+            .visit(JavaKeyWord.PUBLIC)
             // 返回值
-            .returnType(
+            .type(
                 JavaClassCodeUtils.getTypeName(method.getReturnType(), domainPkg.getClassName()))
             // 方法名
-            .methodName(method.getName())
+            .name(method.getName())
             // 重写标识
             .annotation(CodeAnnotation.OVERRIDE)
             // 参数
@@ -515,11 +516,11 @@ public class GenerateJavaRepositoryInvoke {
     JavaMethodEntity methodEntity =
         JavaMethodEntity.builder()
             // 访问修饰符
-            .visitMethod(JavaKeyWord.PUBLIC)
+            .visit(JavaKeyWord.PUBLIC)
             // 返回值
-            .returnType(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getClassName())
+            .type(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getClassName())
             // 方法名
-            .methodName(method.getName())
+            .name(method.getName())
             // 重写标识
             .annotation(CodeAnnotation.OVERRIDE)
             // 参数
@@ -702,7 +703,7 @@ public class GenerateJavaRepositoryInvoke {
       ImportPackageInfo poPackage,
       List<MethodInfo> methodList,
       String author) {
-    List<String> importList = new ArrayList<>(4);
+    List<String> importList = new ArrayList<>(16);
 
     // 集合
     importList.addAll(IMPORT_PKG);

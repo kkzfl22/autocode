@@ -124,7 +124,9 @@ public class JavaCodeRepositoryAssemblerCreate implements GenerateCodeInf {
         domainPackage,
         poPackage,
         columnList,
-        sb);
+        sb,
+        methodList,
+        true);
 
     // 将存储层的对象转换为领域层的对象
     GenerateJavaAssembler.INSTANCE.assemblerMethod(
@@ -133,7 +135,9 @@ public class JavaCodeRepositoryAssemblerCreate implements GenerateCodeInf {
         poPackage,
         domainPackage,
         columnList,
-        sb);
+        sb,
+        methodList,
+        false);
 
     // 检查当前是否需要有集合的转换
     boolean listFlag = ReturnUtils.checkList(methodList);

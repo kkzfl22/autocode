@@ -198,12 +198,12 @@ public class JavaClassCodeUtils {
     int tabIndex = 1;
 
     // 当配制了注释信息后才进行生成
-    if (StringUtils.isNotEmpty(method.getMethodComment())) {
+    if (StringUtils.isNotEmpty(method.getComment())) {
       // 方法的注释
       sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS);
       sb.append(Symbol.ENTER_LINE);
       sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS_MID);
-      sb.append(Symbol.SPACE).append(method.getMethodComment()).append(Symbol.ENTER_LINE);
+      sb.append(Symbol.SPACE).append(method.getComment()).append(Symbol.ENTER_LINE);
       sb.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS_MID);
       sb.append(Symbol.ENTER_LINE);
 
@@ -236,15 +236,15 @@ public class JavaClassCodeUtils {
     // 方法的声明
     sb.append(JavaFormat.appendTab(tabIndex));
     // 访问修饰符的检查
-    if (StringUtils.isNotEmpty(method.getVisitMethod())) {
-      sb.append(method.getVisitMethod()).append(Symbol.SPACE);
+    if (StringUtils.isNotEmpty(method.getVisit())) {
+      sb.append(method.getVisit()).append(Symbol.SPACE);
     }
     // 静态字段检查
-    if (StringUtils.isNotEmpty(method.getStaticKey())) {
-      sb.append(method.getStaticKey()).append(Symbol.SPACE);
+    if (StringUtils.isNotEmpty(method.getStaticFlag())) {
+      sb.append(method.getStaticFlag()).append(Symbol.SPACE);
     }
 
-    sb.append(method.getReturnType()).append(Symbol.SPACE).append(method.getMethodName());
+    sb.append(method.getType()).append(Symbol.SPACE).append(method.getName());
     sb.append(Symbol.BRACKET_LEFT);
 
     // 方法的参数声明
@@ -324,13 +324,15 @@ public class JavaClassCodeUtils {
 
     int tabIndex = 1;
 
-    // 方法的注释
-    outField.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS);
-    outField.append(Symbol.ENTER_LINE);
-    outField.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS_MID);
-    outField.append(Symbol.SPACE).append(classField.getComment()).append(Symbol.ENTER_LINE);
-    outField.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_OVER);
-    outField.append(Symbol.ENTER_LINE);
+    if (StringUtils.isNotEmpty(classField.getComment())) {
+      // 方法的注释
+      outField.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS);
+      outField.append(Symbol.ENTER_LINE);
+      outField.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS_MID);
+      outField.append(Symbol.SPACE).append(classField.getComment()).append(Symbol.ENTER_LINE);
+      outField.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_OVER);
+      outField.append(Symbol.ENTER_LINE);
+    }
 
     // 注解检查
     if (StringUtils.isNotEmpty(classField.getAnnotation())) {
@@ -338,16 +340,34 @@ public class JavaClassCodeUtils {
       outField.append(Symbol.ENTER_LINE);
     }
 
-    // 属性的声明
+    // 属性的访问修饰符
     outField.append(JavaFormat.appendTab(tabIndex)).append(classField.getVisit());
-    outField.append(Symbol.SPACE).append(classField.getType()).append(Symbol.SPACE);
-    outField.append(classField.getName()).append(Symbol.SEMICOLON);
-    outField.append(Symbol.ENTER_LINE);
+
+    // 静态关键字
+    if (StringUtils.isNotEmpty(classField.getStaticFlag())) {
+      outField.append(Symbol.SPACE).append(classField.getStaticFlag());
+    }
+
+    // final关键字
+    if (StringUtils.isNotEmpty(classField.getFinalFlag())) {
+      outField.append(Symbol.SPACE).append(classField.getFinalFlag());
+    }
+
+    // 类型
+    outField.append(Symbol.SPACE).append(classField.getType());
+    outField.append(Symbol.SPACE).append(classField.getName());
+
+    // 检查是否存在值
+    if (StringUtils.isNotEmpty(classField.getValue())) {
+      outField.append(Symbol.SPACE).append(Symbol.EQUAL);
+      outField.append(Symbol.SPACE).append(classField.getValue());
+    }
+
+    outField.append(Symbol.SEMICOLON);
     outField.append(Symbol.ENTER_LINE);
 
     return outField.toString();
   }
-
 
   /**
    * 获取类型名称
@@ -365,5 +385,4 @@ public class JavaClassCodeUtils {
 
     return className;
   }
-
 }

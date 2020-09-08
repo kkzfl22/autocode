@@ -2,6 +2,7 @@ package com.liujun.micro.autocode.generator.builder.operator.ddd.full;
 
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
@@ -59,7 +60,7 @@ public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
 
       // 将dao信息进行储存至流程中
       ImportPackageInfo daoPackageInfo =
-          new ImportPackageInfo(javaPackageStr, className, docComment);
+          new ImportPackageInfo(javaPackageStr, className, docComment, JavaVarName.INSTANCE_NAME);
       ImportPackageUtils.putPackageInfo(
           tableName,
           param.getPackageMap(),

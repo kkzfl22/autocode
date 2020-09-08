@@ -11,6 +11,9 @@ public class CodeAnnotation {
   /** 存储层的标识 */
   public static final String REPOSITORY = "@Repository";
 
+  /** 服务层注解 */
+  public static final String SERVICE = "@Service";
+
   /** 日志 */
   public static final String SL4J = "@Slf4j";
 

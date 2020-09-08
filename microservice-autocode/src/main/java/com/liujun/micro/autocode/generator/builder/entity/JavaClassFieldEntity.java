@@ -2,11 +2,8 @@ package com.liujun.micro.autocode.generator.builder.entity;
 
 import com.liujun.micro.autocode.generator.builder.constant.CodeAnnotation;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
-import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
-
-import java.util.List;
 
 /**
  * java的类属性定义
@@ -16,22 +13,10 @@ import java.util.List;
  */
 @Data
 @ToString
-public class JavaClassFieldEntity {
+public class JavaClassFieldEntity extends JavaClassElement {
 
-  /** 访问修饰符 */
-  private String visit;
-
-  /** 注解 */
-  private String annotation;
-
-  /** 类型 */
-  private String type;
-
-  /** 名称 */
-  private String name;
-
-  /** 注释 */
-  private String comment;
+  /** 值信息 */
+  private String value;
 
   /**
    * 获取spring注解的私有的属性构建对象
@@ -48,6 +33,64 @@ public class JavaClassFieldEntity {
     instance.type = type;
     instance.name = name;
     instance.comment = comment;
+
+    return instance;
+  }
+
+  /**
+   * 获取spring注解的私有的属性构建对象
+   *
+   * @param type 类型信息
+   * @param name 名称
+   * @param comment 注释
+   * @param value 值信息
+   */
+  public static JavaClassFieldEntity getPrivateField(
+      String type, String name, String comment, String value) {
+    JavaClassFieldEntity instance = new JavaClassFieldEntity();
+    instance.visit = JavaKeyWord.PRIVATE;
+    instance.type = type;
+    instance.name = name;
+    instance.comment = comment;
+    instance.value = value;
+
+    return instance;
+  }
+
+  /**
+   * 获取spring注解的私有的属性构建对象
+   *
+   * @param type 类型信息
+   * @param name 名称
+   * @param comment 注释
+   */
+  public static JavaClassFieldEntity getPrivateField(String type, String name, String comment) {
+    JavaClassFieldEntity instance = new JavaClassFieldEntity();
+    instance.visit = JavaKeyWord.PRIVATE;
+    instance.type = type;
+    instance.name = name;
+    instance.comment = comment;
+
+    return instance;
+  }
+
+  /**
+   * 私有静态属性
+   *
+   * @param type 类型信息
+   * @param name 名称
+   * @param comment 注释
+   */
+  public static JavaClassFieldEntity getPrivateStaticFinalField(
+      String type, String name, String comment, String value) {
+    JavaClassFieldEntity instance = new JavaClassFieldEntity();
+    instance.visit = JavaKeyWord.PRIVATE;
+    instance.staticFlag = JavaKeyWord.STATIC;
+    instance.finalFlag = JavaKeyWord.FINAL;
+    instance.type = type;
+    instance.name = name;
+    instance.comment = comment;
+    instance.value = value;
 
     return instance;
   }

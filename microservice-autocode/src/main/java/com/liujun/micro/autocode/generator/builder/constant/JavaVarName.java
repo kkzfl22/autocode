@@ -39,7 +39,11 @@ public class JavaVarName {
   public static final String QUERY_RETURN_DATA = "queryReturn";
 
   /** 数据库实例的名称 */
-  public static final String INSTANCE_NAME = "instDao";
+  public static final String INSTANCE_NAME = "serviceBean";
+
+  /** facade的实例对象 */
+  public static final String FACADE_INSTANCE_NAME = "instanceFacade";
+
 
   /** 临时变量名 */
   public static final String PARAM_BEAN = "paramBean";
@@ -47,8 +51,8 @@ public class JavaVarName {
   /** 数据插入的类型，0，不插入数据，1，单个插入，2，批量插入 */
   public static final String JUNIT_VAR_BATCH_INSERT = "insertType";
 
-  /** 实例po的名称 */
-  public static final String INSTANCE_NAME_PO = "operatorPo";
+  /** 实例的名称的名称 */
+  public static final String INSTANCE_NAME_ENTITY = "oneData";
 
   /** 数据库操作的返回 */
   public static final String INVOKE_METHOD_OPERATOR_RSP = "operatorRsp";

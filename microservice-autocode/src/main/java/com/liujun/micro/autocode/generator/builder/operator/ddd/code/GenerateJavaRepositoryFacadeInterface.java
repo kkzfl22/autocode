@@ -1,4 +1,4 @@
-package com.liujun.micro.autocode.generator.builder.operator.code;
+package com.liujun.micro.autocode.generator.builder.operator.ddd.code;
 
 import com.liujun.micro.autocode.constant.GenerateDefineFlag;
 import com.liujun.micro.autocode.constant.Symbol;
@@ -8,6 +8,7 @@ import com.liujun.micro.autocode.generator.builder.constant.*;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
+import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaDaoInterface;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
@@ -20,9 +21,9 @@ import java.util.*;
  * @author liujun
  * @version 0.0.1
  */
-public class GenerateJavaFacadeInterface {
+public class GenerateJavaRepositoryFacadeInterface {
 
-  public static final GenerateJavaFacadeInterface INSTANCE = new GenerateJavaFacadeInterface();
+  public static final GenerateJavaRepositoryFacadeInterface INSTANCE = new GenerateJavaRepositoryFacadeInterface();
 
   /**
    * 生成java的接口信息
@@ -114,13 +115,13 @@ public class GenerateJavaFacadeInterface {
     JavaMethodEntity methodInfo =
         JavaMethodEntity.builder()
             // 方法注释
-            .methodComment(methodItem.getComment())
+            .comment(methodItem.getComment())
             // 返回值
-            .returnType(JavaKeyWord.TYPE_BOOLEAN)
+            .type(JavaKeyWord.TYPE_BOOLEAN)
             // 返回值注释
             .returnComment(CodeComment.METHOD_DAO_UPDATE_BOOLEAN_RETURN)
             // 方法名
-            .methodName(methodItem.getName())
+            .name(methodItem.getName())
             // 参数
             .arguments(argumentsList)
             .build();
@@ -172,13 +173,13 @@ public class GenerateJavaFacadeInterface {
       methodInfo =
           JavaMethodEntity.builder()
               // 方法注释
-              .methodComment(methodItem.getComment())
+              .comment(methodItem.getComment())
               // 返回值
-              .returnType(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getClassName())
+              .type(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getClassName())
               // 返回值注释
               .returnComment(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getClassComment())
               // 方法名
-              .methodName(methodItem.getName())
+              .name(methodItem.getName())
               // 参数
               .arguments(argumentsList)
               .build();
@@ -190,13 +191,13 @@ public class GenerateJavaFacadeInterface {
       methodInfo =
           JavaMethodEntity.builder()
               // 方法注释
-              .methodComment(methodItem.getComment())
+              .comment(methodItem.getComment())
               // 返回值
-              .returnType(JavaClassCodeUtils.getTypeName(methodItem.getReturnType(), poClassName))
+              .type(JavaClassCodeUtils.getTypeName(methodItem.getReturnType(), poClassName))
               // 返回值注释
               .returnComment(CodeComment.METHOD_QUERY_RESULT)
               // 方法名
-              .methodName(methodItem.getName())
+              .name(methodItem.getName())
               // 参数
               .arguments(argumentsList)
               .build();

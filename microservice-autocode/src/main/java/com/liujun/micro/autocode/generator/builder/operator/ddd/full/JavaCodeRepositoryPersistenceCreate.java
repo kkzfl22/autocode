@@ -5,7 +5,7 @@ import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageK
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
-import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaRepositoryInvoke;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.code.GenerateJavaRepositoryPersistenceInvoke;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaCommentUtil;
@@ -70,7 +70,7 @@ public class JavaCodeRepositoryPersistenceCreate implements GenerateCodeInf {
 
       // 调用存储接口
       StringBuilder sb =
-          GenerateJavaRepositoryInvoke.INSTANCE.generateRepository(
+          GenerateJavaRepositoryPersistenceInvoke.INSTANCE.generateRepository(
               packageMap,
               param.getGenerateConfig().getGenerate().getCode(),
               param.getGenerateConfig().getGenerate().getAuthor());

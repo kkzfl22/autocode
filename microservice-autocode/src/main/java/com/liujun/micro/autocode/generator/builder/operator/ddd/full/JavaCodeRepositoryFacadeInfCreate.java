@@ -5,7 +5,7 @@ import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageK
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
-import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaFacadeInterface;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.code.GenerateJavaRepositoryFacadeInterface;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaCommentUtil;
@@ -59,7 +59,7 @@ public class JavaCodeRepositoryFacadeInfCreate implements GenerateCodeInf {
       ImportPackageUtils.putPackageInfo(
           tableName,
           param.getPackageMap(),
-          GenerateCodePackageKey.PERSIST_FACADE.getKey(),
+          GenerateCodePackageKey.DOMAIN_PERSIST_FACADE.getKey(),
           daoPackageInfo,
           tableMap.size());
 
@@ -70,7 +70,7 @@ public class JavaCodeRepositoryFacadeInfCreate implements GenerateCodeInf {
 
       // 进行领域方法的相关方法的生成
       StringBuilder sb =
-          GenerateJavaFacadeInterface.INSTANCE.generateJavaInterface(
+          GenerateJavaRepositoryFacadeInterface.INSTANCE.generateJavaInterface(
               daoPackageInfo,
               domainPackageInfo,
               param.getGenerateConfig().getGenerate().getCode(),

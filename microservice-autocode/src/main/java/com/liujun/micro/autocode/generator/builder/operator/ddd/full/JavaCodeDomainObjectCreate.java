@@ -2,6 +2,7 @@ package com.liujun.micro.autocode.generator.builder.operator.ddd.full;
 
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
@@ -57,7 +58,9 @@ public class JavaCodeDomainObjectCreate implements GenerateCodeInf {
 
       // 将当前包信息存入到上下文对象信息中
       // 构建类路径及名称记录下
-      ImportPackageInfo packageInfo = new ImportPackageInfo(javaPackageStr, className, docComment);
+      ImportPackageInfo packageInfo =
+          new ImportPackageInfo(
+              javaPackageStr, className, docComment, JavaVarName.INSTANCE_NAME_ENTITY);
       // 将领域对象记录到公共的上下文对象中，领域层的实体对象
       ImportPackageUtils.putPackageInfo(
           tableName,

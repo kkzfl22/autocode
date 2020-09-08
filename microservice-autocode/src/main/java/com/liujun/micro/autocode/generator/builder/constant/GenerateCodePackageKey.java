@@ -20,17 +20,17 @@ public enum GenerateCodePackageKey {
   /** mybatis的xml文件 */
   PERSIST_MYBATIS_MAPPER_XML("persist_mybatis_mapper_xml"),
 
-  /** 领域层的存储接口 */
-  PERSIST_FACADE("persist_facade"),
-
   /** 领域层的存储实现 */
   PERSIST_PERSISTENCE("persist_persistence"),
 
   /** 领域层的实体对象 */
   DOMAIN_DO("domain_object"),
 
+  /** 领域层的存储接口 */
+  DOMAIN_PERSIST_FACADE("persist_facade"),
 
-
+  /** 领域服务 */
+  DOMAIN_SERVICE("domain_service"),
   ;
 
   private String key;

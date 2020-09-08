@@ -33,33 +33,25 @@ public class GenerateJunitQuery {
   public static final GenerateJunitQuery INSTANCE = new GenerateJunitQuery();
 
   /**
-   * 数据查询方法
+   * 单元测试中的查询部分
    *
-   * @param sb 添加的对象
-   * @param queryMethod 方法
-   * @param poPackageInfo 导入的实体
-   * @param columnMap 列集合
-   * @param methodList 方法
-   * @param dbType 类型信息
-   * @param primaryList 主键列
+   * @param sb
+   * @param queryMethod
+   * @param poPackageInfo
+   * @param columnMap
+   * @param tabIndex
+   * @param dbType
+   * @param primaryList
    */
-  public void queryMethod(
+  public void junitQueryMethod(
       StringBuilder sb,
       MethodInfo queryMethod,
       ImportPackageInfo poPackageInfo,
       Map<String, TableColumnDTO> columnMap,
-      List<MethodInfo> methodList,
+      int tabIndex,
       DatabaseTypeEnum dbType,
       List<TableColumnDTO> primaryList) {
-    String methodName = NameProcess.INSTANCE.toJavaNameFirstUpper(queryMethod.getName());
 
-    int tabIndex = 0;
-
-    // 查询方法的定义
-    queryMethodDefine(sb, queryMethod, methodName);
-
-    // 给查询方法生成添加数据
-    queryInsertInvokeMethod(sb, tabIndex, queryMethod, columnMap, poPackageInfo, methodList);
     sb.append(Symbol.ENTER_LINE);
 
     TypeInfo resultType = queryMethod.getReturnType();
@@ -126,7 +118,7 @@ public class GenerateJunitQuery {
       sb.append(JavaFormat.appendTab(tabIndex + 2));
       sb.append(JavaKeyWord.THIS).append(Symbol.POINT);
       sb.append(JavaMethodName.ASSERT_DATA);
-      sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.INSTANCE_NAME_PO);
+      sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.INSTANCE_NAME_ENTITY);
       sb.append(Symbol.COMMA).append(Symbol.SPACE).append(JavaVarName.INVOKE_METHOD_QUERY_RSP);
       sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
       sb.append(Symbol.ENTER_LINE);
@@ -167,13 +159,13 @@ public class GenerateJunitQuery {
             // 注解符
             .annotation(JunitKey.ANNO_TEST)
             // 公共的访问修饰符
-            .visitMethod(JavaKeyWord.PUBLIC)
+            .visit(JavaKeyWord.PUBLIC)
             // 方法注释
-            .methodComment(queryMethod.getComment())
+            .comment(queryMethod.getComment())
             // 返回值
-            .returnType(JavaKeyWord.VOID)
+            .type(JavaKeyWord.VOID)
             // 方法名
-            .methodName(GenerateJunitDefine.JUNIT_METHOD_BEFORE + methodName)
+            .name(GenerateJunitDefine.JUNIT_METHOD_BEFORE + methodName)
             .build();
 
     // 方法定义生成
@@ -233,7 +225,7 @@ public class GenerateJunitQuery {
       sb.append(JavaFormat.appendTab(tabIndex + 2));
       sb.append(JavaVarName.METHOD_PARAM_TEMP_NAME);
       sb.append(Symbol.POINT).append(JavaMethodName.SET).append(setName);
-      sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.INSTANCE_NAME_PO);
+      sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.INSTANCE_NAME_ENTITY);
       sb.append(Symbol.POINT).append(JavaMethodName.GET).append(setName);
       sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
       sb.append(Symbol.BRACKET_RIGHT);
@@ -265,7 +257,7 @@ public class GenerateJunitQuery {
       sb.append(JavaFormat.appendTab(tabIndex + 2));
       sb.append(JavaVarName.METHOD_PARAM_TEMP_NAME);
       sb.append(Symbol.POINT).append(JavaMethodName.SET).append(setName);
-      sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.INSTANCE_NAME_PO);
+      sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.INSTANCE_NAME_ENTITY);
       sb.append(Symbol.POINT).append(JavaMethodName.GET).append(setName);
       sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
       sb.append(Symbol.BRACKET_RIGHT);
@@ -389,7 +381,7 @@ public class GenerateJunitQuery {
         sb.append(JavaFormat.appendTab(tabIndex + 2));
         sb.append(JavaVarName.METHOD_PARAM_TEMP_NAME);
         sb.append(Symbol.POINT).append(JavaMethodName.SET).append(setName);
-        sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.INSTANCE_NAME_PO);
+        sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.INSTANCE_NAME_ENTITY);
         sb.append(Symbol.POINT).append(JavaMethodName.GET).append(setName);
         sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
         sb.append(Symbol.BRACKET_RIGHT);
@@ -399,53 +391,12 @@ public class GenerateJunitQuery {
   }
 
   /**
-   * 构建查询的插入数据
-   *
-   * @param sb 字符
-   * @param tabIndex tab字符索引
-   * @param method 方法
-   */
-  public void queryInsertInvokeMethod(
-      StringBuilder sb,
-      int tabIndex,
-      MethodInfo method,
-      Map<String, TableColumnDTO> columnMap,
-      ImportPackageInfo poPackage,
-      List<MethodInfo> methodList) {
-    // 1,检查当前方法是否结果为结果集,如果为结果集需要执行批量插入
-    // 或者当前的请求条件中带有in条件，也需要批量插入
-    if (batchFlag(method)) {
-      // 进行in的处理
-      conditionIn(sb, method, tabIndex, poPackage, columnMap);
-
-      // 调用批量添加方法
-      GenerateJunitUpdate.INSTANCE.invokeBatch(sb, tabIndex + 1, methodList);
-
-      // 进行标识的设置操作
-      GenerateJunitDefine.INSTANCE.setBatchInsertFlag(
-          sb, tabIndex, JavaVarValue.INSERT_TYPE_BATCH_KEY);
-
-    }
-    // 再执行单个添加操作
-    else {
-      // 单个添加的方法
-      MethodInfo insertMethod = MethodUtils.getInsertMethod(methodList);
-      // 调用添加方法
-      GenerateJunitUpdate.INSTANCE.insertInvokeMethod(sb, tabIndex, insertMethod);
-
-      // 进行标识的设置操作
-      GenerateJunitDefine.INSTANCE.setBatchInsertFlag(
-          sb, tabIndex, JavaVarValue.INSERT_TYPE_ONE_KEY);
-    }
-  }
-
-  /**
    * 检查当前是否为批量操作的检查
    *
    * @param method
    * @return
    */
-  private boolean batchFlag(MethodInfo method) {
+  public boolean batchFlag(MethodInfo method) {
 
     // 1,如果当前存在in关键字，则为批量操作
     if (WhereUtils.checkInCondition(method.getWhereInfo())) {
@@ -520,7 +471,7 @@ public class GenerateJunitQuery {
         sb.append(JavaFormat.appendTab(tabIndex + 3));
         sb.append(JavaVarName.LIST_GET_NAME_TEMP_NAME);
         sb.append(Symbol.POINT).append(JavaMethodName.SET).append(setName);
-        sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.INSTANCE_NAME_PO);
+        sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.INSTANCE_NAME_ENTITY);
         sb.append(Symbol.POINT).append(JavaMethodName.GET).append(setName);
         sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
         sb.append(Symbol.BRACKET_RIGHT);

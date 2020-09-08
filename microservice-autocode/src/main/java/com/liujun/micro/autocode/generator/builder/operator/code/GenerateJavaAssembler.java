@@ -1,6 +1,8 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.constant.Symbol;
+import com.liujun.micro.autocode.entity.config.MethodInfo;
+import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
 import com.liujun.micro.autocode.generator.builder.constant.JavaMethodName;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarValue;
@@ -9,7 +11,9 @@ import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
-import com.liujun.micro.autocode.generator.builder.operator.utils.JavaCommentUtil;
+import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.TableColumnUtils;
+import com.liujun.micro.autocode.generator.builder.utils.TypeProcessUtils;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
@@ -18,6 +22,7 @@ import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 生成java实体转换的接口
@@ -57,12 +62,12 @@ public class GenerateJavaAssembler {
     // 构建方法实体信息
     JavaMethodEntity methodInfo =
         JavaMethodEntity.builder()
-            .methodComment(methodComment)
-            .visitMethod(JavaKeyWord.PUBLIC)
-            .staticKey(JavaKeyWord.STATIC)
-            .returnType(JavaClassCodeUtils.listType(entityPackageTarget.getClassName()))
+            .comment(methodComment)
+            .visit(JavaKeyWord.PUBLIC)
+            .staticFlag(JavaKeyWord.STATIC)
+            .type(JavaClassCodeUtils.listType(entityPackageTarget.getClassName()))
             .returnComment(entityPackageTarget.getClassComment())
-            .methodName(methodName)
+            .name(methodName)
             .arguments(
                 Arrays.asList(
                     JavaMethodArguments.parsePackageList(
@@ -177,6 +182,8 @@ public class GenerateJavaAssembler {
    * @param entityPackageTarget 实体2
    * @param columnList 列集合
    * @param sb 字符信息
+   * @param codeMethod 方法列表
+   * @param setParamFlag 设置参数标识, true 当前进行设置，false则不设置
    */
   public void assemblerMethod(
       String methodName,
@@ -184,23 +191,25 @@ public class GenerateJavaAssembler {
       ImportPackageInfo entityPackageSrc,
       ImportPackageInfo entityPackageTarget,
       List<TableColumnDTO> columnList,
-      StringBuilder sb) {
+      StringBuilder sb,
+      List<MethodInfo> codeMethod,
+      boolean setParamFlag) {
 
     // 方法实体信息
     JavaMethodEntity methodInfo =
         JavaMethodEntity.builder()
             // 方法注释
-            .methodComment(methodComment)
+            .comment(methodComment)
             // 访问修饰
-            .visitMethod(JavaKeyWord.PUBLIC)
+            .visit(JavaKeyWord.PUBLIC)
             // 静态标识
-            .staticKey(JavaKeyWord.STATIC)
+            .staticFlag(JavaKeyWord.STATIC)
             // 返回值
-            .returnType(entityPackageTarget.getClassName())
+            .type(entityPackageTarget.getClassName())
             // 返回值注释
             .returnComment(entityPackageTarget.getClassComment())
             // 方法名
-            .methodName(methodName)
+            .name(methodName)
             // 参数
             .arguments(
                 Arrays.asList(
@@ -217,21 +226,8 @@ public class GenerateJavaAssembler {
 
     int tabIndex = 1;
 
-    // 对查询的对象进行空的检查，当为空时，不能进行转换
-    sb.append(JavaFormat.appendTab(tabIndex + 1));
-    sb.append(JavaKeyWord.IF).append(Symbol.SPACE);
-    sb.append(Symbol.BRACKET_LEFT).append(JavaVarValue.VALUE_NULL).append(Symbol.SPACE);
-    sb.append(Symbol.EQUALS).append(Symbol.SPACE).append(JavaVarName.ASSERT_DATA_SRC);
-    sb.append(Symbol.BRACKET_RIGHT).append(Symbol.BRACE_LEFT).append(Symbol.ENTER_LINE);
-
-    // 返回语句
-    sb.append(JavaFormat.appendTab(tabIndex + 2));
-    sb.append(JavaKeyWord.RETURN).append(Symbol.SPACE);
-    sb.append(JavaVarValue.VALUE_NULL).append(Symbol.SEMICOLON);
-    sb.append(Symbol.ENTER_LINE);
-
-    sb.append(JavaFormat.appendTab(tabIndex + 1));
-    sb.append(Symbol.BRACE_RIGHT).append(Symbol.ENTER_LINE);
+    // 数据项的检查
+    ifDataCheck(sb, tabIndex);
 
     // 返回对象的声明
     sb.append(JavaFormat.appendTab(tabIndex + 1));
@@ -245,6 +241,19 @@ public class GenerateJavaAssembler {
     setProperties(
         columnList, JavaVarName.ASSERT_DATA_SRC, JavaVarName.ASSERT_DATA_TARGET, sb, tabIndex);
 
+    // 当前如果为参数设置，则进行条件的设置操作
+    if (setParamFlag) {
+      // 进行条件的输出
+      Set<String> conditionList = MethodUtils.getInCondition(codeMethod);
+      // 作为属性输出
+      this.outInCondition(
+          conditionList,
+          columnList,
+          sb,
+          JavaVarName.ASSERT_DATA_SRC,
+          JavaVarName.ASSERT_DATA_TARGET);
+    }
+
     // 返回语句
     sb.append(JavaFormat.appendTab(tabIndex + 1));
     sb.append(JavaKeyWord.RETURN).append(Symbol.SPACE);
@@ -253,6 +262,62 @@ public class GenerateJavaAssembler {
 
     // 方法的结束
     JavaClassCodeUtils.methodEnd(sb);
+  }
+
+  /**
+   * 数据项的检查操作
+   *
+   * @param sb
+   * @param tabIndex
+   */
+  private void ifDataCheck(StringBuilder sb, int tabIndex) {
+    // 对查询的对象进行空的检查，当为空时，不能进行转换
+    sb.append(JavaFormat.appendTab(tabIndex + 1));
+    sb.append(JavaKeyWord.IF).append(Symbol.SPACE);
+    sb.append(Symbol.BRACKET_LEFT).append(JavaVarValue.VALUE_NULL).append(Symbol.SPACE);
+    sb.append(Symbol.EQUALS).append(Symbol.SPACE).append(JavaVarName.ASSERT_DATA_SRC);
+    sb.append(Symbol.BRACKET_RIGHT).append(Symbol.BRACE_LEFT).append(Symbol.ENTER_LINE);
+
+    // 返回语句
+    sb.append(JavaFormat.appendTab(tabIndex + 2));
+    sb.append(JavaKeyWord.RETURN).append(Symbol.SPACE);
+    sb.append(JavaVarValue.VALUE_NULL).append(Symbol.SEMICOLON);
+    sb.append(Symbol.ENTER_LINE);
+
+    // 判断结束
+    sb.append(JavaFormat.appendTab(tabIndex + 1));
+    sb.append(Symbol.BRACE_RIGHT).append(Symbol.ENTER_LINE);
+  }
+
+  /**
+   * 进行属性的输出操作
+   *
+   * @param inCondition 条件
+   * @param columnList 列
+   * @param sb 输出
+   */
+  private void outInCondition(
+      Set<String> inCondition,
+      List<TableColumnDTO> columnList,
+      StringBuilder sb,
+      String srcName,
+      String targetName) {
+    for (String inConditionItem : inCondition) {
+      TableColumnDTO tableInfo = TableColumnUtils.getColumn(columnList, inConditionItem);
+      if (null == tableInfo) {
+        continue;
+      }
+
+      // 得到java输出的名称
+      String javaName = NameProcess.INSTANCE.toFieldName(tableInfo.getColumnName());
+      javaName = NameProcess.INSTANCE.toJavaNameFirstUpper(javaName);
+
+      // 输出的名称
+      javaName = javaName + JavaKeyWord.FIELD_SUFFIX_NAME;
+
+      // 进行其他属性的设置操作
+      setField(sb, javaName, srcName, targetName, tableInfo.getColumnMsg(), 1);
+    }
   }
 
   /**

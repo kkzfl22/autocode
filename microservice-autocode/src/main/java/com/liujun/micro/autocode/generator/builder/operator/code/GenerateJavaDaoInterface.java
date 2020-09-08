@@ -182,13 +182,13 @@ public class GenerateJavaDaoInterface {
     JavaMethodEntity methodInfo =
         JavaMethodEntity.builder()
             // 方法注释
-            .methodComment(methodItem.getComment())
+            .comment(methodItem.getComment())
             // 返回值
-            .returnType(JavaKeyWord.INT_TYPE)
+            .type(JavaKeyWord.INT_TYPE)
             // 返回值注释
             .returnComment(CodeComment.METHOD_DAO_UPDATE_INT_RETURN)
             // 方法名
-            .methodName(methodItem.getName())
+            .name(methodItem.getName())
             // 参数
             .arguments(argumentsList)
             .build();
@@ -233,13 +233,13 @@ public class GenerateJavaDaoInterface {
     JavaMethodEntity methodInfo =
         JavaMethodEntity.builder()
             // 方法注释
-            .methodComment(methodItem.getComment())
+            .comment(methodItem.getComment())
             // 返回值
-            .returnType(JavaClassCodeUtils.getTypeName(methodItem.getReturnType(), poClassName))
+            .type(JavaClassCodeUtils.getTypeName(methodItem.getReturnType(), poClassName))
             // 返回值注释
             .returnComment(CodeComment.METHOD_DATABASE_QUERY_RESULT)
             // 方法名
-            .methodName(methodItem.getName())
+            .name(methodItem.getName())
             // 参数
             .arguments(argumentsList)
             .build();

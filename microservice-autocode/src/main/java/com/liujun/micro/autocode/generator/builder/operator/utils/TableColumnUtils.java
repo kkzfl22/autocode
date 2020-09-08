@@ -58,4 +58,22 @@ public class TableColumnUtils {
 
     return result;
   }
+
+  /**
+   * 获取指定的列
+   *
+   * @param columnList 列集合
+   * @param inConditionItem 作为in条件的列
+   * @return 列信息
+   */
+  public static TableColumnDTO getColumn(List<TableColumnDTO> columnList, String inConditionItem) {
+    for (TableColumnDTO tableColumnItem : columnList) {
+      // 如果能列名能匹配上
+      if (tableColumnItem.getColumnName().equalsIgnoreCase(inConditionItem)) {
+        return tableColumnItem;
+      }
+    }
+
+    throw new IllegalArgumentException("condition :" + inConditionItem + "not exists!");
+  }
 }
