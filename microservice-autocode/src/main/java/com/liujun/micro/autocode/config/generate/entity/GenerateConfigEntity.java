@@ -1,4 +1,4 @@
-package com.liujun.micro.autocode.entity.config;
+package com.liujun.micro.autocode.config.generate.entity;
 
 import lombok.Data;
 import lombok.ToString;

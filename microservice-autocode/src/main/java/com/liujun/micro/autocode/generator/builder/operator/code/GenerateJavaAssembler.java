@@ -1,8 +1,7 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.entity.config.MethodInfo;
-import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
 import com.liujun.micro.autocode.generator.builder.constant.JavaMethodName;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarValue;
@@ -13,7 +12,6 @@ import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageU
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.TableColumnUtils;
-import com.liujun.micro.autocode.generator.builder.utils.TypeProcessUtils;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
@@ -391,8 +389,7 @@ public class GenerateJavaAssembler {
     // 导包的信息
     List<String> importList = this.importClass(entityPackageInfo1, entityPackageInfo2);
     // 类的定义
-    StringBuilder sb = JavaClassCodeUtils.classDefine(assemblerPackage, importList, author);
-    return sb;
+      return JavaClassCodeUtils.classDefine(assemblerPackage, importList, author);
   }
 
   /**

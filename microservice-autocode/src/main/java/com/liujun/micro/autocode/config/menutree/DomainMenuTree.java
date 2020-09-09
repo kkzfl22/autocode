@@ -1,6 +1,6 @@
 package com.liujun.micro.autocode.config.menutree;
 
-import com.liujun.micro.autocode.config.generate.GenerateConfig;
+import com.liujun.micro.autocode.config.generate.GenerateConfigProcess;
 import com.liujun.micro.autocode.constant.JavaDomainTreeKey;
 import com.liujun.micro.autocode.constant.Symbol;
 
@@ -18,11 +18,11 @@ public class DomainMenuTree {
   /** 实例信息 */
   public static final DomainMenuTree INSTANCE =
       new DomainMenuTree(
-          GenerateConfig.INSTANCE.getCfgEntity().getGenerate().getCodeMenuTree().getBaseMenu(),
-          GenerateConfig.INSTANCE.getCfgEntity().getGenerate().getCodeMenuTree().getModelName());
+          GenerateConfigProcess.INSTANCE.getCfgEntity().getGenerate().getCodeMenuTree().getBaseMenu(),
+          GenerateConfigProcess.INSTANCE.getCfgEntity().getGenerate().getCodeMenuTree().getModelName());
 
   /** 目录树结构的最顶层节点 */
-  private MenuNode root = new MenuNode(ROOT);
+  private final MenuNode root = new MenuNode(ROOT);
 
   /** 逻辑根节点 */
   private MenuNode defineRoot = root;

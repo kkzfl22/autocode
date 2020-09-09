@@ -23,6 +23,9 @@ public enum ConfigEnum {
   /** 初始连接 */
   CONN_INIT("initialSize"),
 
+  /** 最大连接数 */
+  MAX_ACTIVE("maxActive"),
+
   /** 最小连接池数量 */
   CONN_IDLE("minIdle"),
 
@@ -34,7 +37,7 @@ public enum ConfigEnum {
   ;
 
   /** 配制的key */
-  private String key;
+  private final String key;
 
   ConfigEnum(String key) {
     this.key = key;

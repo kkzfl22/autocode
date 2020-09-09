@@ -1,4 +1,4 @@
-package com.liujun.micro.autocode.generator.builder.constant;
+package com.liujun.micro.autocode.constant;
 
 /**
  * 方法的类型
@@ -20,7 +20,7 @@ public enum MethodTypeEnum {
   QUERY("query");
 
   /** 类型信息 */
-  private String type;
+  private final String type;
 
   MethodTypeEnum(String type) {
     this.type = type;

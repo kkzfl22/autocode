@@ -16,13 +16,13 @@ import java.util.*;
 public class MenuNode {
 
   /** 编号 */
-  private String code;
+  private final String code;
 
   /** 路径 */
-  private String path;
+  private final String path;
 
   /** 子级目录树 */
-  private Map<String, MenuNode> children = new HashMap<>();
+  private final Map<String, MenuNode> children = new HashMap<>();
 
   /** 记录下父节点，用于路径的输出操作 */
   private MenuNode parent;

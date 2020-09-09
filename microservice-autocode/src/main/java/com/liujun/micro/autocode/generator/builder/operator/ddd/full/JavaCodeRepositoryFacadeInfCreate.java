@@ -84,11 +84,4 @@ public class JavaCodeRepositoryFacadeInfCreate implements GenerateCodeInf {
       GenerateOutFileUtils.outJavaFile(sb, param.getFileBasePath(), javaPackageStr, className);
     }
   }
-
-  /**
-   * 添加导入的包
-   *
-   * @param importMap 导入的map
-   */
-  private void addImportData(Map<String, ImportPackageInfo> importMap) {}
 }

@@ -1,10 +1,23 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.code;
 
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.constant.MethodTypeEnum;
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.entity.config.MethodInfo;
-import com.liujun.micro.autocode.generator.builder.constant.*;
-import com.liujun.micro.autocode.generator.builder.entity.*;
-import com.liujun.micro.autocode.generator.builder.operator.utils.*;
+import com.liujun.micro.autocode.generator.builder.constant.CodeAnnotation;
+import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
+import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
+import com.liujun.micro.autocode.generator.builder.constant.JavaMethodName;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarValue;
+import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
+import com.liujun.micro.autocode.generator.builder.entity.JavaClassEntity;
+import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
+import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
+import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
+import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
@@ -191,6 +204,30 @@ public class GenerateJavaRepositoryPersistenceInvoke {
     // 方法开始
     JavaClassCodeUtils.methodStart(sb);
 
+    // 数据插入方法的调用
+    this.dataInsert(sb, method, checkBatchFlag, assemblerPkg, poPkg);
+
+    // 数据添加、修改、删除相关的调用
+    this.dataUpdateInvoke(sb, method);
+    // 方法结束
+    JavaClassCodeUtils.methodEnd(sb);
+  }
+
+  /**
+   * 数据插入方法的调用
+   *
+   * @param sb
+   * @param method 方法信息
+   * @param checkBatchFlag 批量插入操作
+   * @param assemblerPkg 转换的实体
+   * @param poPkg 实体类
+   */
+  private void dataInsert(
+      StringBuilder sb,
+      MethodInfo method,
+      boolean checkBatchFlag,
+      ImportPackageInfo assemblerPkg,
+      ImportPackageInfo poPkg) {
     // 记录进入方法的的日志
     sb.append(JavaFormat.appendTab(2));
     sb.append(JavaVarName.LOG).append(Symbol.POINT).append(JavaMethodName.LOG_DEBUG);
@@ -225,11 +262,6 @@ public class GenerateJavaRepositoryPersistenceInvoke {
       sb.append(JavaVarName.METHOD_PARAM_NAME).append(Symbol.BRACKET_RIGHT);
       sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
     }
-
-    // 数据添加、修改、删除相关的调用
-    this.dataUpdateInvoke(sb, method);
-    // 方法结束
-    JavaClassCodeUtils.methodEnd(sb);
   }
 
   /**
@@ -447,8 +479,7 @@ public class GenerateJavaRepositoryPersistenceInvoke {
             // 访问修饰符
             .visit(JavaKeyWord.PUBLIC)
             // 返回值
-            .type(
-                JavaClassCodeUtils.getTypeName(method.getReturnType(), domainPkg.getClassName()))
+            .type(JavaClassCodeUtils.getTypeName(method.getReturnType(), domainPkg.getClassName()))
             // 方法名
             .name(method.getName())
             // 重写标识

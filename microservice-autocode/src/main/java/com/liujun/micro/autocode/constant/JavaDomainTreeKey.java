@@ -104,7 +104,7 @@ public enum JavaDomainTreeKey {
   INTERFACE_FACADE("facade"),
   ;
 
-  private String key;
+  private final String key;
 
   JavaDomainTreeKey(String key) {
     this.key = key;

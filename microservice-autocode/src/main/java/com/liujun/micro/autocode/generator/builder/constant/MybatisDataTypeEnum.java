@@ -94,10 +94,10 @@ public enum MybatisDataTypeEnum {
   ;
 
   /** 标准的key */
-  private StandardTypeEnum standKey;
+  private final StandardTypeEnum standKey;
 
   /** mysql中的类型名称 */
-  private String mybatisType;
+  private final String mybatisType;
 
   /**
    * 指明标准的key，与mysql的类型

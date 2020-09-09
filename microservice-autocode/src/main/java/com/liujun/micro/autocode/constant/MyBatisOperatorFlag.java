@@ -1,4 +1,4 @@
-package com.liujun.micro.autocode.generator.builder.constant;
+package com.liujun.micro.autocode.constant;
 
 /**
  * mybatis的操作符
@@ -16,7 +16,7 @@ public enum MyBatisOperatorFlag {
   ;
 
   /** 操作符 */
-  private String operator;
+  private final String operator;
 
   MyBatisOperatorFlag(String operator) {
     this.operator = operator;

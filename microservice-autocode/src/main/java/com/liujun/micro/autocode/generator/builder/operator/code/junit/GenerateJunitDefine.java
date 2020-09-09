@@ -1,12 +1,19 @@
 package com.liujun.micro.autocode.generator.builder.operator.code.junit;
 
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.entity.config.MethodInfo;
-import com.liujun.micro.autocode.generator.builder.constant.*;
-import com.liujun.micro.autocode.generator.builder.entity.*;
+import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
+import com.liujun.micro.autocode.generator.builder.constant.JavaMethodName;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarValue;
+import com.liujun.micro.autocode.generator.builder.constant.JunitKey;
+import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
+import com.liujun.micro.autocode.generator.builder.entity.JavaClassEntity;
+import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
+import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
+import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
-import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
@@ -15,7 +22,9 @@ import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author liujun
@@ -27,7 +36,7 @@ public class GenerateJunitDefine {
   public static final String TEST_SUFFIX_NAME = "Test";
 
   /** 需要导入的包 */
-  public static final String[] IMPORT_PKG =
+  private static final String[] IMPORT_PKG =
       new String[] {
         "org.junit.*",
         "org.apache.commons.lang3.RandomStringUtils",
@@ -558,6 +567,22 @@ public class GenerateJunitDefine {
     // 方法开始
     JavaClassCodeUtils.methodStart(sb);
 
+    // 数据集对比
+    this.assertListData(sb, tabIndex, poPackage);
+
+    // 结束
+    // 方法开始
+    JavaClassCodeUtils.methodEnd(sb);
+  }
+
+  /**
+   * 数据集对比
+   *
+   * @param sb
+   * @param tabIndex 1
+   * @param poPackage 导入的包
+   */
+  private void assertListData(StringBuilder sb, int tabIndex, ImportPackageInfo poPackage) {
     // 1,调用转换map方法，将目标转换为map
     sb.append(JavaFormat.appendTab(tabIndex + 2)).append(JavaKeyWord.MAP_TYPE);
     sb.append(Symbol.ANGLE_BRACKETS_LEFT).append(JavaKeyWord.TYPE_STRING);
@@ -608,10 +633,6 @@ public class GenerateJunitDefine {
     // 循环结束
     sb.append(JavaFormat.appendTab(tabIndex + 2)).append(Symbol.BRACE_RIGHT);
     sb.append(Symbol.ENTER_LINE);
-
-    // 结束
-    // 方法开始
-    JavaClassCodeUtils.methodEnd(sb);
   }
 
   /**
@@ -654,6 +675,21 @@ public class GenerateJunitDefine {
     // 方法开始
     JavaClassCodeUtils.methodStart(sb);
 
+    // 将数据转换为map
+    this.assertParseMap(sb, tabIndex, poPackage);
+
+    // 方法的结束
+    JavaClassCodeUtils.methodEnd(sb);
+  }
+
+  /**
+   * 将数据转换为map
+   *
+   * @param sb
+   * @param tabIndex
+   * @param poPackage
+   */
+  private void assertParseMap(StringBuilder sb, int tabIndex, ImportPackageInfo poPackage) {
     // map的定义
     sb.append(JavaFormat.appendTab(tabIndex + 2)).append(JavaKeyWord.MAP_TYPE);
     sb.append(Symbol.ANGLE_BRACKETS_LEFT).append(JavaKeyWord.TYPE_STRING);
@@ -700,9 +736,6 @@ public class GenerateJunitDefine {
     sb.append(JavaFormat.appendTab(tabIndex + 2)).append(JavaKeyWord.RETURN);
     sb.append(Symbol.SPACE).append(JavaVarName.PARSE_MAP_TEMP).append(Symbol.SEMICOLON);
     sb.append(Symbol.ENTER_LINE);
-
-    // 方法的结束
-    JavaClassCodeUtils.methodEnd(sb);
   }
 
   /**

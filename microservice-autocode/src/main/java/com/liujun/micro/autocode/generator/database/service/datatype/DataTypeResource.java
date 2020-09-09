@@ -106,7 +106,7 @@ public class DataTypeResource {
 
           srcTargerMap.put(typeBo.getJdbcType(), typeBo);
         } else {
-          throw new RuntimeException("curr dbtype config exception ,key:" + dbTypeKeys);
+          throw new IllegalArgumentException("curr dbtype config exception ,key:" + dbTypeKeys);
         }
       }
 
@@ -115,7 +115,6 @@ public class DataTypeResource {
 
       properties.clear();
     } catch (IOException e) {
-      e.printStackTrace();
       log.error("IOException", e);
     } finally {
       StreamUtils.close(input);
@@ -134,6 +133,7 @@ public class DataTypeResource {
     }
     // 此处只捕获异常不处理，外部文件可能不存在，并非错误，使用内部文件即可
     catch (FileNotFoundException e) {
+      log.info("out file not exists :" + outFileName);
     }
 
     return null;
@@ -200,9 +200,6 @@ public class DataTypeResource {
 
     DatabaseTypeMsgBO srcTypeMsg = this.getSrcTypeinfo(srcDbType, collumnType);
 
-    DatabaseTypeMsgBO targetMsg =
-        this.getTargetTypeinfo(targetDbType, srcTypeMsg.getDataTypeEnum());
-
-    return targetMsg;
+    return this.getTargetTypeinfo(targetDbType, srcTypeMsg.getDataTypeEnum());
   }
 }

@@ -21,7 +21,6 @@ public class DataBaseUtils {
       try {
         close.close();
       } catch (Exception e) {
-        e.printStackTrace();
         log.error("close exception:", e);
       }
     }

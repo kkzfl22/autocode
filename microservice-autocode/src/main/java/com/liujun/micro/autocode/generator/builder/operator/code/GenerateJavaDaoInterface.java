@@ -2,10 +2,10 @@ package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.constant.GenerateDefineFlag;
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.entity.config.MethodInfo;
-import com.liujun.micro.autocode.entity.config.TypeInfo;
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.config.generate.entity.TypeInfo;
 import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
-import com.liujun.micro.autocode.generator.builder.constant.MethodTypeEnum;
+import com.liujun.micro.autocode.constant.MethodTypeEnum;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
@@ -42,12 +42,11 @@ public class GenerateJavaDaoInterface {
       String author) {
 
     // 获得当前配制的方法
-    List<MethodInfo> methodList = codeMethod;
 
-    // 1,方法头的定义
-    StringBuilder sb = defineClass(author, daoPackageInfo, poPackageInfo, null, methodList);
+      // 1,方法头的定义
+    StringBuilder sb = defineClass(author, daoPackageInfo, poPackageInfo, null, codeMethod);
 
-    for (MethodInfo methodItem : methodList) {
+    for (MethodInfo methodItem : codeMethod) {
       // 方法执行修改操作,即所有的数据的，添加、修改、删除
       if (MethodTypeEnum.UPDATE.getType().equals(methodItem.getOperator())
           || MethodTypeEnum.INSERT.getType().equals(methodItem.getOperator())

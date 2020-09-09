@@ -23,9 +23,7 @@ public class DataParseMysqlParseImpl implements DataParseInf {
     // 1,得到标准的类型
     StandardTypeEnum standType = MysqlDataTypeEnum.databaseToStandKey(bean.getDataType());
 
-    String outGenerate = JavaDataTypeGenerateValueEnum.getGenerateFun(standType, bean.getDataLength());
-
-    return outGenerate;
+      return JavaDataTypeGenerateValueEnum.getGenerateFun(standType, bean.getDataLength());
   }
 
   @Override

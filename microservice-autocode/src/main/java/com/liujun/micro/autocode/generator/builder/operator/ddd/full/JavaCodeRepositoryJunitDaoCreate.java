@@ -1,8 +1,9 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.full;
 
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.entity.config.MethodInfo;
-import com.liujun.micro.autocode.generator.builder.constant.*;
+import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
+import com.liujun.micro.autocode.generator.builder.constant.GenerateCommImport;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
@@ -12,7 +13,6 @@ import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFil
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.TableColumnUtils;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
-import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
 import java.util.Iterator;
@@ -44,9 +44,6 @@ public class JavaCodeRepositoryJunitDaoCreate implements GenerateCodeInf {
 
       // 获取当前主键列表
       List<TableColumnDTO> primaryKeyList = TableColumnUtils.getPrimaryKey(columnList);
-
-      // 获取表信息
-      TableInfoDTO tableInfo = param.getTableMap().get(entry.getKey());
 
       // 获取所有列的信息
       Map<String, TableColumnDTO> tableColumnMap = param.getColumnMapMap().get(entry.getKey());

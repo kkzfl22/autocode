@@ -1,6 +1,6 @@
-package com.liujun.micro.autocode.entity.config;
+package com.liujun.micro.autocode.config.generate.entity;
 
-import com.liujun.micro.autocode.generator.builder.constant.MyBatisOperatorFlag;
+import com.liujun.micro.autocode.constant.MyBatisOperatorFlag;
 import lombok.Data;
 import lombok.ToString;
 

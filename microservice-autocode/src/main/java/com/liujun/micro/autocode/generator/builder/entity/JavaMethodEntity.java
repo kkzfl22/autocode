@@ -1,6 +1,5 @@
 package com.liujun.micro.autocode.generator.builder.entity;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 

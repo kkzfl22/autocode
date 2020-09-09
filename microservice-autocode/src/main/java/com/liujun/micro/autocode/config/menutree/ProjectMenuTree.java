@@ -1,6 +1,6 @@
 package com.liujun.micro.autocode.config.menutree;
 
-import com.liujun.micro.autocode.config.generate.GenerateConfig;
+import com.liujun.micro.autocode.config.generate.GenerateConfigProcess;
 import com.liujun.micro.autocode.constant.ProjectMenuTreeKey;
 import com.liujun.micro.autocode.constant.Symbol;
 
@@ -18,10 +18,10 @@ public class ProjectMenuTree {
   /** 实例信息 */
   public static final ProjectMenuTree INSTANCE =
       new ProjectMenuTree(
-          GenerateConfig.INSTANCE.getCfgEntity().getGenerate().getCodeMenuTree().getModelName());
+          GenerateConfigProcess.INSTANCE.getCfgEntity().getGenerate().getCodeMenuTree().getModelName());
 
   /** 目录树结构的最顶层节点 */
-  private MenuNode root = new MenuNode(ROOT);
+  private final MenuNode root = new MenuNode(ROOT);
 
   /** 模块名称 */
   private final String modelName;

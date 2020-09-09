@@ -19,7 +19,7 @@ import java.util.Map;
 public class AutoCodeBeanBuilder {
 
   /** 添加集合接入 autoList */
-  private List<GenerateCodeInf> autoList = new LinkedList<>();
+  private final List<GenerateCodeInf> autoList = new LinkedList<>();
 
   private final GenerateCodeContext paramInfo;
 

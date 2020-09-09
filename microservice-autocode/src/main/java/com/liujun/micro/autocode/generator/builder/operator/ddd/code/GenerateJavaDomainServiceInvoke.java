@@ -1,9 +1,18 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.code;
 
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.constant.MethodTypeEnum;
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.entity.config.MethodInfo;
-import com.liujun.micro.autocode.generator.builder.constant.*;
-import com.liujun.micro.autocode.generator.builder.entity.*;
+import com.liujun.micro.autocode.generator.builder.constant.CodeAnnotation;
+import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
+import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
+import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
+import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
+import com.liujun.micro.autocode.generator.builder.entity.JavaClassEntity;
+import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
+import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
+import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
@@ -343,7 +352,7 @@ public class GenerateJavaDomainServiceInvoke {
     JavaClassCodeUtils.methodStart(sb);
 
     // 调用方法进行分页的方法构建
-    pageMethodBuilder(sb, method, domainPkg);
+    pageMethodBuilder(sb, method);
 
     // 方法结束
     JavaClassCodeUtils.methodEnd(sb);
@@ -354,9 +363,9 @@ public class GenerateJavaDomainServiceInvoke {
    *
    * @param sb
    * @param method 方法
-   * @param domainPkg 领域对象
+
    */
-  private void pageMethodBuilder(StringBuilder sb, MethodInfo method, ImportPackageInfo domainPkg) {
+  private void pageMethodBuilder(StringBuilder sb, MethodInfo method) {
 
     // 执行数据的分页查询
     sb.append(JavaFormat.appendTab(2));

@@ -1,6 +1,6 @@
 package com.liujun.micro.autocode.generator.builder.entity;
 
-import com.liujun.micro.autocode.generator.builder.constant.MethodTypeEnum;
+import com.liujun.micro.autocode.constant.MethodTypeEnum;
 import lombok.Data;
 import lombok.ToString;
 

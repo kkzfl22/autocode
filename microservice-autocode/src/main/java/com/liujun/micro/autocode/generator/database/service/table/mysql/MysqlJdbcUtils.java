@@ -24,8 +24,8 @@ public class MysqlJdbcUtils {
    *
    * @return 配制信息
    */
-  private static Map getDruidDataSource() {
-    Map cfg = new HashMap(ConfigEnum.values().length);
+  private static Map<String, String> getDruidDataSource() {
+    Map<String, String> cfg = new HashMap<>(ConfigEnum.values().length);
     for (ConfigEnum cfgEnum : ConfigEnum.values()) {
       cfg.put(cfgEnum.getKey(), ConfigProperties.getInstance().getValue(cfgEnum));
     }
@@ -43,8 +43,7 @@ public class MysqlJdbcUtils {
       // 初始化数据源信息
       dataSource = DruidDataSourceFactory.createDataSource(getDruidDataSource());
     } catch (Exception e) {
-      e.printStackTrace();
-      throw new IllegalArgumentException("curr DruidDataSourceFactory error");
+      throw new IllegalArgumentException("curr DruidDataSourceFactory error", e);
     }
 
     return dataSource;

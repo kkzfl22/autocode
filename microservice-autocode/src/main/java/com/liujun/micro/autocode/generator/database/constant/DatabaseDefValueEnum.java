@@ -18,9 +18,9 @@ public enum DatabaseDefValueEnum {
   /** empty value */
   VALUE_EMPTY("EMPTY", "");
 
-  private String strVal;
+  private final String strVal;
 
-  private Object setVal;
+  private final Object setVal;
 
   DatabaseDefValueEnum(String strVal, Object setVal) {
     this.strVal = strVal;

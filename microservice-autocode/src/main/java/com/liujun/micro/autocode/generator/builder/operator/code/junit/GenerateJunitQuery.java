@@ -1,15 +1,18 @@
 package com.liujun.micro.autocode.generator.builder.operator.code.junit;
 
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.config.generate.entity.TypeInfo;
+import com.liujun.micro.autocode.config.generate.entity.WhereInfo;
 import com.liujun.micro.autocode.constant.GenerateDefineFlag;
+import com.liujun.micro.autocode.constant.MyBatisOperatorFlag;
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.entity.config.MethodInfo;
-import com.liujun.micro.autocode.entity.config.TypeInfo;
-import com.liujun.micro.autocode.entity.config.WhereInfo;
-import com.liujun.micro.autocode.generator.builder.constant.*;
+import com.liujun.micro.autocode.generator.builder.constant.JavaMethodName;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarValue;
+import com.liujun.micro.autocode.generator.builder.constant.JunitKey;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
-import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.WhereUtils;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
@@ -409,11 +412,7 @@ public class GenerateJunitQuery {
     }
 
     // 其他情况，则检查返回类型，为集合说明为批量操作
-    if (method.getReturns() != null && method.getReturns().indexOf(JavaKeyWord.IMPORT_LIST) != -1) {
-      return true;
-    }
-
-    return false;
+    return method.getReturns() != null && method.getReturns().indexOf(JavaKeyWord.IMPORT_LIST) != -1;
   }
 
   /**

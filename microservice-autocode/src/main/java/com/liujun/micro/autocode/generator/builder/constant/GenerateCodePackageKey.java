@@ -33,7 +33,7 @@ public enum GenerateCodePackageKey {
   DOMAIN_SERVICE("domain_service"),
   ;
 
-  private String key;
+  private final String key;
 
   GenerateCodePackageKey(String key) {
     this.key = key;

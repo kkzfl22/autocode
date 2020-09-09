@@ -27,7 +27,7 @@ public enum ImportCodePackageKey {
   ;
 
   /** 包定义信息 */
-  private ImportPackageInfo packageInfo;
+  private final ImportPackageInfo packageInfo;
 
   ImportCodePackageKey(ImportPackageInfo packageInfo) {
     this.packageInfo = packageInfo;

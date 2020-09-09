@@ -34,10 +34,10 @@ public enum MethodFixEnum {
   ;
 
   /** 方法的操作定义的key */
-  private String key;
+  private final String key;
 
   /** 方法描述 */
-  private String comment;
+  private final String comment;
 
   MethodFixEnum(String key, String comment) {
     this.key = key;

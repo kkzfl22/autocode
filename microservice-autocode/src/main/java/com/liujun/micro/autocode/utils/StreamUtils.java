@@ -1,5 +1,7 @@
 package com.liujun.micro.autocode.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.Closeable;
 import java.io.IOException;
 
@@ -9,6 +11,7 @@ import java.io.IOException;
  * @author liujun
  * @version 0.0.1
  */
+@Slf4j
 public class StreamUtils {
   /**
    * 关闭流
@@ -20,7 +23,7 @@ public class StreamUtils {
       try {
         stream.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        log.error("StreamUtils close IOException: ", e);
       }
     }
   }

@@ -21,9 +21,8 @@ public class MenuTreeCodePackage {
   }
 
   public MenuNode getPkgRoot() {
-    MenuNode rootNode = menuTree.getDefineRoot();
 
-    return rootNode;
+    return menuTree.getDefineRoot();
   }
 
   /**
@@ -32,14 +31,12 @@ public class MenuTreeCodePackage {
    * @return 模块名称
    */
   public MenuNode getRepositoryObjectNode() {
-    MenuNode poNode =
-        menuTree
-            .getDefineRoot()
-            .getChildren(JavaDomainTreeKey.DOMAIN)
-            .getChildren(menuTree.getModelName())
-            .getChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY)
-            .getChildren(JavaDomainTreeKey.REPOSITORY_PO);
-    return poNode;
+    return menuTree
+        .getDefineRoot()
+        .getChildren(JavaDomainTreeKey.DOMAIN)
+        .getChildren(menuTree.getModelName())
+        .getChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY)
+        .getChildren(JavaDomainTreeKey.REPOSITORY_PO);
   }
 
   /**
@@ -48,14 +45,12 @@ public class MenuTreeCodePackage {
    * @return 模块名称
    */
   public MenuNode getRepositoryDaoNode() {
-    MenuNode poNode =
-        menuTree
-            .getDefineRoot()
-            .getChildren(JavaDomainTreeKey.DOMAIN)
-            .getChildren(menuTree.getModelName())
-            .getChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY)
-            .getChildren(JavaDomainTreeKey.REPOSITORY_MAPPER);
-    return poNode;
+    return menuTree
+        .getDefineRoot()
+        .getChildren(JavaDomainTreeKey.DOMAIN)
+        .getChildren(menuTree.getModelName())
+        .getChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY)
+        .getChildren(JavaDomainTreeKey.REPOSITORY_MAPPER);
   }
 
   /**
@@ -64,14 +59,12 @@ public class MenuTreeCodePackage {
    * @return 模块名称
    */
   public MenuNode getRepositoryFacadeNode() {
-    MenuNode poNode =
-        menuTree
-            .getDefineRoot()
-            .getChildren(JavaDomainTreeKey.DOMAIN)
-            .getChildren(menuTree.getModelName())
-            .getChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY)
-            .getChildren(JavaDomainTreeKey.REPOSITORY_FACADE);
-    return poNode;
+    return menuTree
+        .getDefineRoot()
+        .getChildren(JavaDomainTreeKey.DOMAIN)
+        .getChildren(menuTree.getModelName())
+        .getChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY)
+        .getChildren(JavaDomainTreeKey.REPOSITORY_FACADE);
   }
 
   /**
@@ -80,14 +73,12 @@ public class MenuTreeCodePackage {
    * @return 模块信息
    */
   public MenuNode getRepositoryAssemblerNode() {
-    MenuNode poNode =
-        menuTree
-            .getDefineRoot()
-            .getChildren(JavaDomainTreeKey.DOMAIN)
-            .getChildren(menuTree.getModelName())
-            .getChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY)
-            .getChildren(JavaDomainTreeKey.REPOSITORY_ASSEMBLER);
-    return poNode;
+    return menuTree
+        .getDefineRoot()
+        .getChildren(JavaDomainTreeKey.DOMAIN)
+        .getChildren(menuTree.getModelName())
+        .getChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY)
+        .getChildren(JavaDomainTreeKey.REPOSITORY_ASSEMBLER);
   }
 
   /**
@@ -96,14 +87,12 @@ public class MenuTreeCodePackage {
    * @return 模块信息
    */
   public MenuNode getRepositoryPersistenceNode() {
-    MenuNode poNode =
-        menuTree
-            .getDefineRoot()
-            .getChildren(JavaDomainTreeKey.DOMAIN)
-            .getChildren(menuTree.getModelName())
-            .getChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY)
-            .getChildren(JavaDomainTreeKey.REPOSITORY_PERSISTENCE);
-    return poNode;
+    return menuTree
+        .getDefineRoot()
+        .getChildren(JavaDomainTreeKey.DOMAIN)
+        .getChildren(menuTree.getModelName())
+        .getChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY)
+        .getChildren(JavaDomainTreeKey.REPOSITORY_PERSISTENCE);
   }
 
   /**
@@ -112,14 +101,12 @@ public class MenuTreeCodePackage {
    * @return 模块名称
    */
   public MenuNode getDomainObjectNode() {
-    MenuNode domainNode =
-        menuTree
-            .getDefineRoot()
-            .getChildren(JavaDomainTreeKey.DOMAIN)
-            .getChildren(menuTree.getModelName())
-            .getChildren(JavaDomainTreeKey.DOMAIN_ENTITY);
 
-    return domainNode;
+    return menuTree
+        .getDefineRoot()
+        .getChildren(JavaDomainTreeKey.DOMAIN)
+        .getChildren(menuTree.getModelName())
+        .getChildren(JavaDomainTreeKey.DOMAIN_ENTITY);
   }
 
   /**
@@ -128,13 +115,11 @@ public class MenuTreeCodePackage {
    * @return 菜单实体
    */
   public MenuNode getInfrastructureEntity() {
-    MenuNode getNode =
-        menuTree
-            .getDefineRoot()
-            .getChildren(JavaDomainTreeKey.INFRASTRUCTURE)
-            .getChildren(JavaDomainTreeKey.INFRASTRUCTURE_ENTITY);
 
-    return getNode;
+    return menuTree
+        .getDefineRoot()
+        .getChildren(JavaDomainTreeKey.INFRASTRUCTURE)
+        .getChildren(JavaDomainTreeKey.INFRASTRUCTURE_ENTITY);
   }
 
   /**
@@ -143,12 +128,10 @@ public class MenuTreeCodePackage {
    * @return 模块名称
    */
   public MenuNode getDomainServiceNode() {
-    MenuNode poNode =
-        menuTree
-            .getDefineRoot()
-            .getChildren(JavaDomainTreeKey.DOMAIN)
-            .getChildren(menuTree.getModelName())
-            .getChildren(JavaDomainTreeKey.DOMAIN_SERVICE);
-    return poNode;
+    return menuTree
+        .getDefineRoot()
+        .getChildren(JavaDomainTreeKey.DOMAIN)
+        .getChildren(menuTree.getModelName())
+        .getChildren(JavaDomainTreeKey.DOMAIN_SERVICE);
   }
 }

@@ -2,7 +2,7 @@ package com.liujun.micro.autocode.generator.builder.entity;
 
 import com.liujun.micro.autocode.config.menutree.MenuTreeCodePackage;
 import com.liujun.micro.autocode.config.menutree.MenuTreeProjectPath;
-import com.liujun.micro.autocode.entity.config.GenerateConfigEntity;
+import com.liujun.micro.autocode.config.generate.entity.GenerateConfigEntity;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;

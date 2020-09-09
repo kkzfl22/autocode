@@ -1,10 +1,10 @@
 package com.liujun.micro.autocode.generator.builder.operator.utils;
 
-import com.liujun.micro.autocode.entity.config.MethodInfo;
-import com.liujun.micro.autocode.entity.config.TypeInfo;
-import com.liujun.micro.autocode.entity.config.WhereInfo;
-import com.liujun.micro.autocode.generator.builder.constant.MethodTypeEnum;
-import com.liujun.micro.autocode.generator.builder.constant.MyBatisOperatorFlag;
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.config.generate.entity.TypeInfo;
+import com.liujun.micro.autocode.config.generate.entity.WhereInfo;
+import com.liujun.micro.autocode.constant.MethodTypeEnum;
+import com.liujun.micro.autocode.constant.MyBatisOperatorFlag;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 
 import java.util.HashSet;

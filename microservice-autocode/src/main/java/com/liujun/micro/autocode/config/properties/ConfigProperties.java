@@ -63,10 +63,7 @@ public class ConfigProperties {
 
       dataPutMap(prop);
     } catch (IOException e) {
-      e.printStackTrace();
       log.error(PRO_FILE + " loader error ", e);
-      // 错误相关的输出
-      execptionOut();
     } finally {
       StreamUtils.close(in);
     }
@@ -81,11 +78,11 @@ public class ConfigProperties {
   private InputStream getOutFile() {
     try {
       // 优先使用外部文件加载
-      InputStream in = new FileInputStream(PRO_FILE);
-      return in;
+      return new FileInputStream(PRO_FILE);
     }
     // 此处只捕获异常不处理，外部文件可能不存在，并非错误，使用内部文件即可
     catch (FileNotFoundException e) {
+      log.info("out file not exists :" + PRO_FILE);
     }
 
     return null;
@@ -111,18 +108,5 @@ public class ConfigProperties {
    */
   public String getValue(ConfigEnum key) {
     return CFG_MAP.get(key);
-  }
-
-  /** 异常信息输出 */
-  private void execptionOut() {
-
-    // 错误提示输出
-    System.err.println(PRO_FILE + " loader error ");
-
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
   }
 }

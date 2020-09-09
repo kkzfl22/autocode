@@ -61,7 +61,6 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
         map.put(tableInfo.getTableName(), tableInfo);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
       log.error("getTableInfo ", e);
     } finally {
       DataBaseUtils.close(rs);
@@ -119,10 +118,8 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
         tempList.add(tableColumnInfo);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
       log.error("SQLException ", e);
     } catch (Exception e) {
-      e.printStackTrace();
       log.error("Exception ", e);
     } finally {
       DataBaseUtils.close(rs);
@@ -158,8 +155,8 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
 
     columnName = columnName.toLowerCase();
 
-    boolean priKey = "PRI".equals(primaryKey) ? true : false;
-    boolean nullFlag = "YES".equals(isNullAble) ? true : false;
+    boolean priKey = "PRI".equals(primaryKey);
+    boolean nullFlag = "YES".equals(isNullAble);
     TableColumnDTO bean =
         new TableColumnDTO(columnName, columnMsg, dataType, priKey, nullFlag, columnDefault);
     if (null != precision) {
@@ -177,7 +174,7 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
     if (null != scale) {
       bean.setDataScale(Integer.parseInt(scale));
     }
-    bean.setAutoIncrement("auto_increment".equals(extra) ? true : false);
+    bean.setAutoIncrement("auto_increment".equals(extra));
     bean.setTableName(tableName);
     bean.setSqlColumnType(columnType);
 

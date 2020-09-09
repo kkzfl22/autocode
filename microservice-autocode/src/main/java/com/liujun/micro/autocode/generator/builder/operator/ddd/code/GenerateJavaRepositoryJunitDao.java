@@ -1,10 +1,10 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.code;
 
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.entity.config.MethodInfo;
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarValue;
-import com.liujun.micro.autocode.generator.builder.constant.MethodTypeEnum;
+import com.liujun.micro.autocode.constant.MethodTypeEnum;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitDefine;
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitQuery;

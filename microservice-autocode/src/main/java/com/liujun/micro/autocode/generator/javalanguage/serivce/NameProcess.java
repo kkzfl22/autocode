@@ -32,7 +32,7 @@ public class NameProcess {
 
       // 检查首字母是否为单字符
       if (i == 0) {
-        firstOne = string.length() == 1 ? true : false;
+        firstOne = string.length() == 1;
       }
 
       // 首字母大写

@@ -1,10 +1,13 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.code;
 
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.config.generate.entity.TypeInfo;
 import com.liujun.micro.autocode.constant.GenerateDefineFlag;
+import com.liujun.micro.autocode.constant.MethodTypeEnum;
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.entity.config.MethodInfo;
-import com.liujun.micro.autocode.entity.config.TypeInfo;
-import com.liujun.micro.autocode.generator.builder.constant.*;
+import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
+import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
@@ -13,7 +16,8 @@ import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeU
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 生成java的接口
@@ -40,9 +44,8 @@ public class GenerateJavaRepositoryFacadeInterface {
       String author) {
 
     // 获得当前配制的方法
-    List<MethodInfo> methodList = codeMethod;
 
-    // 检查当前是否存在分页查询
+      // 检查当前是否存在分页查询
     boolean checkPage = MethodUtils.checkPageQuery(codeMethod);
 
     List<ImportPackageInfo> importPackage = null;
@@ -59,9 +62,9 @@ public class GenerateJavaRepositoryFacadeInterface {
     // 1,方法头的定义
     StringBuilder sb =
         GenerateJavaDaoInterface.INSTANCE.defineClass(
-            author, facadePackageInfo, poPackageInfo, importPackage, methodList);
+            author, facadePackageInfo, poPackageInfo, importPackage, codeMethod);
 
-    for (MethodInfo methodItem : methodList) {
+    for (MethodInfo methodItem : codeMethod) {
       // 方法执行修改操作,即所有的数据的，添加、修改、删除
       if (MethodTypeEnum.UPDATE.getType().equals(methodItem.getOperator())
           || MethodTypeEnum.INSERT.getType().equals(methodItem.getOperator())

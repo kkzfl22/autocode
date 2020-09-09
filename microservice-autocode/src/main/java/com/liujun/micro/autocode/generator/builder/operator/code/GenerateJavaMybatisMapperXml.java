@@ -1,11 +1,11 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.entity.config.MethodInfo;
-import com.liujun.micro.autocode.entity.config.WhereInfo;
-import com.liujun.micro.autocode.generator.builder.constant.MethodTypeEnum;
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.config.generate.entity.WhereInfo;
+import com.liujun.micro.autocode.constant.MethodTypeEnum;
 import com.liujun.micro.autocode.generator.builder.constant.MyBatisKey;
-import com.liujun.micro.autocode.generator.builder.constant.MyBatisOperatorFlag;
+import com.liujun.micro.autocode.constant.MyBatisOperatorFlag;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
@@ -190,7 +190,7 @@ public class GenerateJavaMybatisMapperXml {
       String javaName = NameProcess.INSTANCE.toFieldName(columnName);
 
       // 仅首次不添加and，其他都 需要添加and
-      boolean addAndFlag = i == 0 ? false : true;
+      boolean addAndFlag = i == 0;
 
       // 如果当前为判断相等
       if (MyBatisOperatorFlag.EQUAL.equals(column.getOperatorFlag())) {
@@ -232,7 +232,6 @@ public class GenerateJavaMybatisMapperXml {
     String javaName = NameProcess.INSTANCE.toFieldName(columnName);
     String typeName =
         TypeProcessUtils.dbTypeParseMyBatis(tableMapper.getDataType(), tableMapper.getDataLength());
-    ;
 
     // 添加条件的连接符
     sb.append(JavaFormat.appendTab(tabNum));
@@ -342,7 +341,6 @@ public class GenerateJavaMybatisMapperXml {
       String javaName = NameProcess.INSTANCE.toFieldName(columnName);
       String typeName =
           TypeProcessUtils.dbTypeParseMyBatis(column.getDataType(), column.getDataLength());
-      ;
 
       // 定义输出列注释
       sb.append(JavaFormat.appendTab(tabNum + 1))
@@ -388,24 +386,21 @@ public class GenerateJavaMybatisMapperXml {
         DataTypeResource.INSTANCE.getTargetTypeinfo(
             DatabaseTypeEnum.MYSQL, DatabaseTypeSourceEnum.DATABASE_TYPE_VARCHAR);
 
-    boolean varcharFlag =
-        typeBo.getDbType().equalsIgnoreCase(tableMapper.getDataType()) ? true : false;
+    boolean varcharFlag = typeBo.getDbType().equalsIgnoreCase(tableMapper.getDataType());
 
     // 检查类型是否为timestamp类型
     DatabaseTypeMsgBO timestampBo =
         DataTypeResource.INSTANCE.getTargetTypeinfo(
             DatabaseTypeEnum.MYSQL, DatabaseTypeSourceEnum.DATABASE_TYPE_TIMESTAMP);
 
-    boolean timestampFlag =
-        timestampBo.getDbType().equalsIgnoreCase(tableMapper.getDataType()) ? true : false;
+    boolean timestampFlag = timestampBo.getDbType().equalsIgnoreCase(tableMapper.getDataType());
 
     // 检查char类型
     DatabaseTypeMsgBO charBo =
         DataTypeResource.INSTANCE.getTargetTypeinfo(
             DatabaseTypeEnum.MYSQL, DatabaseTypeSourceEnum.DATABASE_TYPE_CHAR);
 
-    boolean charFlag =
-        charBo.getDbType().equalsIgnoreCase(tableMapper.getDataType()) ? true : false;
+    boolean charFlag = charBo.getDbType().equalsIgnoreCase(tableMapper.getDataType());
 
     if (varcharFlag || timestampFlag || charFlag) {
       switchStr =
@@ -474,13 +469,11 @@ public class GenerateJavaMybatisMapperXml {
         .append(MyBatisKey.END)
         .append(Symbol.ENTER_LINE);
 
-    List<TableColumnDTO> allColumnList = columnList;
-
     // 进行主键列的输出
-    this.primaryProc(sb, primaryKeyList, allColumnList);
+    this.primaryProc(sb, primaryKeyList, columnList);
 
     // 其他正常的列处理
-    this.normalColumnProc(sb, allColumnList);
+    this.normalColumnProc(sb, columnList);
 
     // 结束
     sb.append(JavaFormat.appendTab(1)).append(MyBatisKey.RESULT_MAP_END).append(Symbol.ENTER_LINE);

@@ -2,19 +2,14 @@ package com.liujun.micro.autocode.config.generate;
 
 import com.liujun.micro.autocode.constant.GenerateDefineFlag;
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.entity.config.GenerateConfigEntity;
-import com.liujun.micro.autocode.entity.config.MethodInfo;
-import com.liujun.micro.autocode.entity.config.TypeInfo;
-import com.liujun.micro.autocode.entity.config.WhereInfo;
-import com.liujun.micro.autocode.generator.builder.constant.MethodTypeEnum;
+import com.liujun.micro.autocode.config.generate.entity.GenerateConfigEntity;
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.config.generate.entity.TypeInfo;
+import com.liujun.micro.autocode.config.generate.entity.WhereInfo;
+import com.liujun.micro.autocode.constant.MethodTypeEnum;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
-import com.liujun.micro.autocode.utils.StreamUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,19 +22,14 @@ import java.util.List;
  * @version 0.0.1
  * @date 2019/09/10
  */
-public class GenerateConfig {
+public class GenerateConfigProcess {
 
-  /** 配制的文件路径 */
-  private static final String LOAD_CONFIG = "config/generate/generate.yml";
-
-  public static final GenerateConfig INSTANCE = new GenerateConfig();
+  public static final GenerateConfigProcess INSTANCE = new GenerateConfigProcess();
 
   /** 数据加载操作 */
-  private final GenerateConfigEntity cfgEntity;
+  private final GenerateConfigEntity cfgEntity = GenerateConfigLoader.INSTANCE.getCfgEntity();
 
-  private GenerateConfig() {
-    cfgEntity = loadCfg();
-
+  private GenerateConfigProcess() {
     // 执行数据处理
     process(cfgEntity.getGenerate().getCode());
   }
@@ -109,7 +99,7 @@ public class GenerateConfig {
    */
   private List<TypeInfo> getTypeInfo(String paramTypeStr) {
     if (StringUtils.isEmpty(paramTypeStr)) {
-      return Collections.EMPTY_LIST;
+      return new ArrayList<>(0);
     }
 
     String[] dataInfo = paramTypeStr.split(Symbol.COMMA);
@@ -143,16 +133,14 @@ public class GenerateConfig {
       subIndex = subIndex == -1 ? 0 : subIndex + 1;
       String className = dataItem.substring(subIndex);
 
-      TypeInfo type = new TypeInfo(name, className);
-      return type;
+      return new TypeInfo(name, className);
     }
 
     // 检查当前是否存在.的情况，带路径，需要导入
     int indexPoint = dataItem.indexOf(Symbol.COMMA);
     if (indexPoint != -1) {
       String className = dataItem.substring(indexPoint);
-      TypeInfo type = new TypeInfo(dataItem, className);
-      return type;
+      return new TypeInfo(dataItem, className);
     }
 
     // 当其他情况都不匹配，说当前不需要导入包
@@ -161,7 +149,7 @@ public class GenerateConfig {
 
   private List<WhereInfo> getWhereInfo(String whereStr) {
     if (StringUtils.isEmpty(whereStr)) {
-      return Collections.EMPTY_LIST;
+      return new ArrayList<>(0);
     }
 
     String[] dataInfo = whereStr.split(Symbol.COMMA);
@@ -183,53 +171,6 @@ public class GenerateConfig {
       }
     }
     return dataList;
-  }
-
-  /**
-   * 载加配制信息
-   *
-   * @return
-   */
-  private static GenerateConfigEntity loadCfg() {
-    Yaml yaml = new Yaml();
-    InputStream input = null;
-    GenerateConfigEntity config = null;
-
-    try {
-      // 优先加载外部配制文件
-      input = getOutFileStream(LOAD_CONFIG);
-      if (null == input) {
-        // 当外部文件不存时，则使用内部配制文件
-        input = GenerateConfig.class.getClassLoader().getResourceAsStream(LOAD_CONFIG);
-      }
-      if (null == input) {
-        throw new IllegalArgumentException(LOAD_CONFIG + " load error");
-      }
-      config = yaml.loadAs(input, GenerateConfigEntity.class);
-    } finally {
-      StreamUtils.close(input);
-    }
-
-    return config;
-  }
-
-  /**
-   * 获取外部文件的流
-   *
-   * @param path 外部文件路径
-   * @return 文件流
-   */
-  private static InputStream getOutFileStream(String path) {
-    InputStream outFileStream = null;
-
-    try {
-      outFileStream = new FileInputStream(path);
-    }
-    // 当外部文件不存在时，会报出文件不存在异常，此异常需忽略，后续加载内置文件即可
-    catch (FileNotFoundException e) {
-    }
-
-    return outFileStream;
   }
 
   /**

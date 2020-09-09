@@ -58,7 +58,6 @@ public class DomainMenuTreeTest {
   @Test
   public void testBooleanNull() {
     Boolean value = null;
-    System.out.println(value != Boolean.TRUE);
-    System.out.println(value != true);
+    Assert.assertNotEquals(Boolean.TRUE, value);
   }
 }

@@ -1,7 +1,6 @@
 package com.liujun.micro.autocode.generator.builder.operator.utils;
 
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 
 import java.util.HashMap;
@@ -34,13 +33,7 @@ public class ImportPackageUtils {
       return null;
     }
 
-    ImportPackageInfo importBean = importPackage.get(packageFlag);
-
-    if (null == importBean) {
-      return null;
-    }
-
-    return importBean;
+    return importPackage.get(packageFlag);
   }
 
   /**

@@ -33,17 +33,14 @@ public class JavaMethodArguments {
    */
   public static JavaMethodArguments parsePackage(ImportPackageInfo packageInfo, String name) {
 
-    JavaMethodArguments argument =
-        JavaMethodArguments.builder()
-            // 参数的类型
-            .type(packageInfo.getClassName())
-            // 名称
-            .name(name)
-            // 注释
-            .comment(packageInfo.getClassComment())
-            .build();
-
-    return argument;
+      return JavaMethodArguments.builder()
+          // 参数的类型
+          .type(packageInfo.getClassName())
+          // 名称
+          .name(name)
+          // 注释
+          .comment(packageInfo.getClassComment())
+          .build();
   }
 
   /**
@@ -54,16 +51,13 @@ public class JavaMethodArguments {
    */
   public static JavaMethodArguments parsePackageList(ImportPackageInfo packageInfo, String name) {
 
-    JavaMethodArguments argument =
-        JavaMethodArguments.builder()
-            // 集合类型参数
-            .type(JavaClassCodeUtils.listType(packageInfo.getClassName()))
-            // 名称
-            .name(name)
-            // 注释
-            .comment(packageInfo.getClassComment())
-            .build();
-
-    return argument;
+      return JavaMethodArguments.builder()
+          // 集合类型参数
+          .type(JavaClassCodeUtils.listType(packageInfo.getClassName()))
+          // 名称
+          .name(name)
+          // 注释
+          .comment(packageInfo.getClassComment())
+          .build();
   }
 }

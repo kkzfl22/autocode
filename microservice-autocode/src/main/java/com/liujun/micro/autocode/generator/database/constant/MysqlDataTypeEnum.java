@@ -92,10 +92,10 @@ public enum MysqlDataTypeEnum {
   ;
 
   /** 标准的key */
-  private StandardTypeEnum standKey;
+  private final StandardTypeEnum standKey;
 
   /** mysql中的类型名称 */
-  private String mysqlType;
+  private final String mysqlType;
 
   /** 长度定义范围的开始 */
   private Long lengthStart;

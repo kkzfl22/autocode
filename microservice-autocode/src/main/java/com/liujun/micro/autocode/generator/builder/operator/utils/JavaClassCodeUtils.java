@@ -1,9 +1,13 @@
 package com.liujun.micro.autocode.generator.builder.operator.utils;
 
+import com.liujun.micro.autocode.config.generate.entity.TypeInfo;
 import com.liujun.micro.autocode.constant.GenerateDefineFlag;
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.entity.config.TypeInfo;
-import com.liujun.micro.autocode.generator.builder.entity.*;
+import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
+import com.liujun.micro.autocode.generator.builder.entity.JavaClassEntity;
+import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
+import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
+import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import org.apache.commons.lang3.StringUtils;

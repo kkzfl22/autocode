@@ -1,7 +1,5 @@
 package com.liujun.micro.autocode.generator.database.constant;
 
-import org.apache.commons.lang3.RandomUtils;
-
 /**
  * java的数据类型枚举信息
  *
@@ -12,16 +10,16 @@ import org.apache.commons.lang3.RandomUtils;
 public enum JavaDataTypeGenerateValueEnum {
 
   /** byte类型 */
-  TINYINT(StandardTypeEnum.TINYINT, "RandomUtils.nextInt(0,1<<#length#)"),
+  TINYINT(StandardTypeEnum.TINYINT, JavaGenerateValueKey.GENERATE_INT_VALUE),
 
   /** 对应java中的short类型 */
-  SMALLINT(StandardTypeEnum.SMALLINT, "RandomUtils.nextInt(0,1<<#length#)"),
+  SMALLINT(StandardTypeEnum.SMALLINT, JavaGenerateValueKey.GENERATE_INT_VALUE),
 
   /** MEDIUMINT 3 字节 (-8 388 608，8 388 607) (0，16 777 215) 大整数值 */
-  MEDIUMINT(StandardTypeEnum.MEDIUMINT, "RandomUtils.nextInt(0,1<<#length#)"),
+  MEDIUMINT(StandardTypeEnum.MEDIUMINT, JavaGenerateValueKey.GENERATE_INT_VALUE),
 
   /** java中的Integer类型 */
-  INTEGER(StandardTypeEnum.INTEGER, "RandomUtils.nextInt(0,1<<#length#)"),
+  INTEGER(StandardTypeEnum.INTEGER, JavaGenerateValueKey.GENERATE_INT_VALUE),
 
   /** 对应java中的long类型 */
   BIGINT(StandardTypeEnum.BIGINT, "RandomUtils.nextLong(0,1<<#length#)"),
@@ -43,10 +41,10 @@ public enum JavaDataTypeGenerateValueEnum {
   DECIMAL(StandardTypeEnum.DECIMAL, "BigDecimal.valueOf(RandomUtils.nextDouble(0d,1<<#length#))"),
 
   /** 字符串类型 */
-  CHAR(StandardTypeEnum.CHAR, "RandomStringUtils.randomAlphabetic(#length#)"),
+  CHAR(StandardTypeEnum.CHAR, JavaGenerateValueKey.GENERATE_ALPHABETIC_VALUE),
 
   /** 字符串类型 */
-  VARCHAR(StandardTypeEnum.VARCHAR, "RandomStringUtils.randomAlphabetic(#length#)"),
+  VARCHAR(StandardTypeEnum.VARCHAR, JavaGenerateValueKey.GENERATE_ALPHABETIC_VALUE),
 
   /** 日期对象 */
   DATE(StandardTypeEnum.DATE, "LocalDate.now().toString()"),
@@ -68,35 +66,35 @@ public enum JavaDataTypeGenerateValueEnum {
       "LocalDateTime.now().format(DateTimeFormatter.ofPattern(\"yyyy-MM-dd hh:mm:ss.0\"))"),
 
   /** TINYBLOB 0-255字节 不超过 255 个字符的二进制字符串 */
-  TINYBLOB(StandardTypeEnum.TINYBLOB, "RandomStringUtils.randomAlphabetic(#length#)"),
+  TINYBLOB(StandardTypeEnum.TINYBLOB, JavaGenerateValueKey.GENERATE_ALPHABETIC_VALUE),
 
   /** tinytext 0-255字节 短文本字符串 */
-  TINYTEXT(StandardTypeEnum.TINYTEXT, "RandomStringUtils.randomAlphabetic(#length#)"),
+  TINYTEXT(StandardTypeEnum.TINYTEXT, JavaGenerateValueKey.GENERATE_ALPHABETIC_VALUE),
 
   /** BLOB 0-65 535字节 二进制形式的长文本数据 */
-  BLOB(StandardTypeEnum.BLOB, "RandomStringUtils.randomAlphabetic(#length#)"),
+  BLOB(StandardTypeEnum.BLOB, JavaGenerateValueKey.GENERATE_ALPHABETIC_VALUE),
 
   /** TEXT 0-65 535字节 长文本数据 */
-  TEXT(StandardTypeEnum.TEXT, "RandomStringUtils.randomAlphabetic(#length#)"),
+  TEXT(StandardTypeEnum.TEXT, JavaGenerateValueKey.GENERATE_ALPHABETIC_VALUE),
 
   /** MEDIUMBLOB 0-16 777 215字节 二进制形式的中等长度文本数据 */
-  MEDIUMBLOB(StandardTypeEnum.MEDIUMBLOB, "RandomStringUtils.randomAlphabetic(#length#)"),
+  MEDIUMBLOB(StandardTypeEnum.MEDIUMBLOB, JavaGenerateValueKey.GENERATE_ALPHABETIC_VALUE),
 
   /** MEDIUMTEXT 0-16 777 215字节 中等长度文本数据 */
-  MEDIUMTEXT(StandardTypeEnum.MEDIUMTEXT, "RandomStringUtils.randomAlphabetic(#length#)"),
+  MEDIUMTEXT(StandardTypeEnum.MEDIUMTEXT, JavaGenerateValueKey.GENERATE_ALPHABETIC_VALUE),
 
   /** longblob 0-4 294 967 295字节 二进制形式的极大文本数据 */
-  LONGBLOB(StandardTypeEnum.LONGBLOB, "RandomStringUtils.randomAlphabetic(#length#)"),
+  LONGBLOB(StandardTypeEnum.LONGBLOB, JavaGenerateValueKey.GENERATE_ALPHABETIC_VALUE),
 
   /** longtext 0-4 294 967 295字节 极大文本数据 */
-  LONGTEXT(StandardTypeEnum.LONGTEXT, "RandomStringUtils.randomAlphabetic(#length#)"),
+  LONGTEXT(StandardTypeEnum.LONGTEXT, JavaGenerateValueKey.GENERATE_ALPHABETIC_VALUE),
   ;
 
   /** 类型的key */
-  private StandardTypeEnum key;
+  private final StandardTypeEnum key;
 
   /** 运行的方法 */
-  private String runFunction;
+  private final String runFunction;
 
   /** 长度信息 */
   private static final String LENGTH_KEY = "#length#";

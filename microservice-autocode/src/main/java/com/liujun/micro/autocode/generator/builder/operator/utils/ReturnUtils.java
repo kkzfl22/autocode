@@ -1,8 +1,7 @@
 package com.liujun.micro.autocode.generator.builder.operator.utils;
 
 import com.liujun.micro.autocode.constant.GenerateDefineFlag;
-import com.liujun.micro.autocode.entity.config.MethodInfo;
-import com.liujun.micro.autocode.generator.builder.constant.MyBatisOperatorFlag;
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,11 +27,7 @@ public class ReturnUtils {
       return false;
     }
 
-    if (returnInfo.indexOf(JavaKeyWord.IMPORT_LIST) != -1) {
-      return true;
-    }
-
-    return false;
+    return returnInfo.indexOf(JavaKeyWord.IMPORT_LIST) != -1;
   }
 
   /**
@@ -56,11 +51,7 @@ public class ReturnUtils {
       return false;
     }
 
-    if (returnInfo.indexOf(GenerateDefineFlag.TABLE_NAME.getDefineFlag()) != -1) {
-      return true;
-    }
-
-    return false;
+    return returnInfo.indexOf(GenerateDefineFlag.TABLE_NAME.getDefineFlag()) != -1;
   }
 
   /**

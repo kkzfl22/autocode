@@ -1,22 +1,18 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.entity.config.MethodInfo;
-import com.liujun.micro.autocode.entity.config.WhereInfo;
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
 import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
-import com.liujun.micro.autocode.generator.builder.constant.MyBatisOperatorFlag;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.TableColumnUtils;
 import com.liujun.micro.autocode.generator.builder.utils.TypeProcessUtils;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
-import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -130,9 +126,8 @@ public class GenerateJavaBean {
    * @return 获取名称
    */
   public static String getInConditionName(String name) {
-    String outName = name + JavaKeyWord.FIELD_SUFFIX_NAME;
 
-    return outName;
+      return name + JavaKeyWord.FIELD_SUFFIX_NAME;
   }
 
 

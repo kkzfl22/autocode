@@ -13,7 +13,7 @@ public enum GenerateDefineFlag {
   ;
 
   /** 定义的占位符信息 */
-  private String defineFlag;
+  private final String defineFlag;
 
   GenerateDefineFlag(String defineFlag) {
     this.defineFlag = defineFlag;

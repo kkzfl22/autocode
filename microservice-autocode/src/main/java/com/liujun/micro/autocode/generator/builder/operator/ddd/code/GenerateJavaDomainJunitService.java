@@ -1,24 +1,21 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.code;
 
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.constant.MethodTypeEnum;
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.entity.config.MethodInfo;
-import com.liujun.micro.autocode.generator.builder.constant.*;
-import com.liujun.micro.autocode.generator.builder.entity.*;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarValue;
+import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitDefine;
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitQuery;
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitUpdate;
-import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
-import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
-import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
-import com.liujun.micro.autocode.generator.database.service.DatabaseValue;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
-import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 领域的单元测试服务

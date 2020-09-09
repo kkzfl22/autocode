@@ -19,7 +19,7 @@ public class JavaCommentUtil {
    * @param tableComment
    * @return
    */
-  public static final String tableCommentProc(String tableComment) {
+  public static String tableCommentProc(String tableComment) {
     if (StringUtils.isEmpty(tableComment)) {
       return Symbol.EMPTY;
     }

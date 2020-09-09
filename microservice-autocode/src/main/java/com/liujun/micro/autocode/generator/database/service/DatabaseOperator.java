@@ -1,6 +1,6 @@
 package com.liujun.micro.autocode.generator.database.service;
 
-import com.liujun.micro.autocode.config.generate.GenerateConfig;
+import com.liujun.micro.autocode.config.generate.GenerateConfigProcess;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
@@ -37,7 +37,7 @@ public class DatabaseOperator {
    * @return
    */
   public Map<String, TableInfoDTO> getTableInfo(String tableSpace) {
-    String dbType = GenerateConfig.INSTANCE.getCfgEntity().getGenerate().getDatabaseType();
+    String dbType = GenerateConfigProcess.INSTANCE.getCfgEntity().getGenerate().getDatabaseType();
     DatabaseProcessInf tableInfo = DATABASE_PROC_MAP.get(dbType);
     if (null == tableInfo) {
       throw new IllegalArgumentException(dbType + " type not exists");
@@ -52,7 +52,7 @@ public class DatabaseOperator {
    * @return
    */
   public Map<String, List<TableColumnDTO>> getColumnInfo(String tableSpace) {
-    String dbType = GenerateConfig.INSTANCE.getCfgEntity().getGenerate().getDatabaseType();
+    String dbType = GenerateConfigProcess.INSTANCE.getCfgEntity().getGenerate().getDatabaseType();
     DatabaseProcessInf tableInfo = DATABASE_PROC_MAP.get(dbType);
     if (null == tableInfo) {
       throw new IllegalArgumentException(dbType + " type not exists");

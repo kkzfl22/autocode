@@ -21,7 +21,6 @@ public class MenuTreeProcessUtil {
       return javaDefinePackage;
     }
 
-    String outValue = javaDefinePackage.replaceAll(Symbol.SPIT_POINT, Symbol.PATH);
-    return outValue;
+      return javaDefinePackage.replaceAll(Symbol.SPIT_POINT, Symbol.PATH);
   }
 }

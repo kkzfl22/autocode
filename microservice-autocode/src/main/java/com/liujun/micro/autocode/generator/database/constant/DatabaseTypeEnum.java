@@ -17,7 +17,7 @@ public enum DatabaseTypeEnum {
   ;
 
   /** 数据库类型 */
-  private String databaseType;
+  private final String databaseType;
 
   DatabaseTypeEnum(String databaseType) {
     this.databaseType = databaseType;

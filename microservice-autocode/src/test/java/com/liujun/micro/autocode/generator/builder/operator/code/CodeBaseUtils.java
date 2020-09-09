@@ -1,6 +1,6 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
-import com.liujun.micro.autocode.config.generate.GenerateConfig;
+import com.liujun.micro.autocode.config.generate.GenerateConfigProcess;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.service.AutoCodeBeanBuilder;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
@@ -35,7 +35,7 @@ public class CodeBaseUtils {
             modelName,
             DatabaseTypeEnum.MYSQL,
             tableSpace,
-            GenerateConfig.INSTANCE.getCfgEntity());
+            GenerateConfigProcess.INSTANCE.getCfgEntity());
 
     AutoCodeBeanBuilder builder = new AutoCodeBeanBuilder(param);
 

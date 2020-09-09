@@ -1,10 +1,9 @@
-package com.liujun.micro.autocode.entity.config;
+package com.liujun.micro.autocode.config.generate.entity;
 
 import lombok.Data;
 import lombok.ToString;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 数据生成对象的相关配制

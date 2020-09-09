@@ -30,7 +30,10 @@ public class FileUtils {
       File outPathCheck = new File(filePath);
       // 当文件夹不存在，则执行创建操作
       if (!outPathCheck.exists()) {
-        outPathCheck.mkdirs();
+        boolean mkRsp = outPathCheck.mkdirs();
+        if (!mkRsp) {
+          throw new IllegalArgumentException("path error:" + outPathCheck);
+        }
       }
 
       File outFile = new File(filePath, fileName);
@@ -40,7 +43,6 @@ public class FileUtils {
       buffOut = new BufferedWriter(outStreamWriter);
       buffOut.write(data.toString());
     } catch (IOException e) {
-      e.printStackTrace();
       log.error("FileUtils IOException", e);
     } finally {
       StreamUtils.close(buffOut);

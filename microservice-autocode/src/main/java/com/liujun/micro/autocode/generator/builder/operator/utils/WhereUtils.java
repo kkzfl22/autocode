@@ -1,7 +1,7 @@
 package com.liujun.micro.autocode.generator.builder.operator.utils;
 
-import com.liujun.micro.autocode.entity.config.WhereInfo;
-import com.liujun.micro.autocode.generator.builder.constant.MyBatisOperatorFlag;
+import com.liujun.micro.autocode.config.generate.entity.WhereInfo;
+import com.liujun.micro.autocode.constant.MyBatisOperatorFlag;
 
 import java.util.List;
 
@@ -32,10 +32,7 @@ public class WhereUtils {
     boolean inFlag = checkInCondition(whereList);
 
     // 当where条件中使用了in，并且字段超过了1个，则说明需要修改字段
-    if (inFlag && whereList.size() > WHERE_CHECK_NUM) {
-      return true;
-    }
-    return false;
+    return inFlag && whereList.size() > WHERE_CHECK_NUM;
   }
 
   /**

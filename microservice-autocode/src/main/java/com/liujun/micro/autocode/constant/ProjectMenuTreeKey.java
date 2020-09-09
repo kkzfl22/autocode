@@ -38,7 +38,7 @@ public enum ProjectMenuTreeKey {
 
   ;
 
-  private String key;
+  private final String key;
 
   ProjectMenuTreeKey(String key) {
     this.key = key;
