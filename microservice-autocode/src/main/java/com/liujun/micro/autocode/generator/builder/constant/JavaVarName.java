@@ -44,6 +44,11 @@ public class JavaVarName {
   /** facade的实例对象 */
   public static final String FACADE_INSTANCE_NAME = "instanceFacade";
 
+  /** domain的实例对象 */
+  public static final String DOMAIN_INSTANCE_NAME = "instanceDomain";
+
+  /** 应用服务 */
+  public static final String APPLICATION_INSTANCE_NAME = "instanceApplication";
 
   /** 临时变量名 */
   public static final String PARAM_BEAN = "paramBean";

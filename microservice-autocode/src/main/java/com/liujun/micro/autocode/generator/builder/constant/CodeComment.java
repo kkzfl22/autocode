@@ -103,4 +103,16 @@ public class CodeComment {
 
   /** 操作方法的返回结果 */
   public static final String DOMAIN_UPDATE_COMMENT = "true 操作成功,false 操作失败";
+
+  /** 将传输对象转换为领域对象 */
+  public static final String ASSEMBLER_TRANSFER_DOMAIN_COMMENT = "将传输对象转换为领域对象";
+
+  /** 将领域对象转换为传输对象 */
+  public static final String ASSEMBLER_DOMAIN_TRANSFER_COMMENT = "将领域对象转换为传输对象";
+
+  /** 将传输对象集合转换为传输对象集合 */
+  public static final String ASSEMBLER_TRANSFER_DOMAIN_LIST_COMMENT = "将传输对象集合转换为传输对象集合";
+
+  /** 将传输对象集合转换为领域对象集合 */
+  public static final String ASSEMBLER_DOMAIN_TRANSFER_LIST_COMMENT = "将传输对象集合转换为领域对象集合";
 }

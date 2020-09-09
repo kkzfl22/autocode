@@ -369,6 +369,7 @@ public class JavaClassCodeUtils {
 
     outField.append(Symbol.SEMICOLON);
     outField.append(Symbol.ENTER_LINE);
+    outField.append(Symbol.ENTER_LINE);
 
     return outField.toString();
   }

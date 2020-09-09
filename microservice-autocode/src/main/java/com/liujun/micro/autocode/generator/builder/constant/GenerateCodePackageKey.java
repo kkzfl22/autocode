@@ -31,6 +31,18 @@ public enum GenerateCodePackageKey {
 
   /** 领域服务 */
   DOMAIN_SERVICE("domain_service"),
+
+  /** 应用服务 */
+  APPLICATION_SERVICE("application_service"),
+
+  /** 对外的ＡＰＩ对象 */
+  INTERFACE_FACADE("interface_facade"),
+
+  /** api层的传输对象 */
+  INTERFACE_OBJECT("interface_dto"),
+
+  /** api与领域对象的转换 */
+  INTERFACE_ASSEMBLER("interface_assembler"),
   ;
 
   private final String key;

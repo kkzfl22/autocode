@@ -134,4 +134,49 @@ public class MenuTreeCodePackage {
         .getChildren(menuTree.getModelName())
         .getChildren(JavaDomainTreeKey.DOMAIN_SERVICE);
   }
+
+  /**
+   * 获取应用服务的信息
+   *
+   * @return 模块名称
+   */
+  public MenuNode getApplicationServiceNode() {
+    return menuTree.getDefineRoot().getChildren(JavaDomainTreeKey.APPLICATION);
+  }
+
+  /**
+   * 获取对外的API
+   *
+   * @return 模块名称
+   */
+  public MenuNode getInterfaceFacadeNode() {
+    return menuTree
+        .getDefineRoot()
+        .getChildren(JavaDomainTreeKey.INTERFACE)
+        .getChildren(JavaDomainTreeKey.INTERFACE_FACADE);
+  }
+
+  /**
+   * 获取API的对象
+   *
+   * @return 模块名称
+   */
+  public MenuNode getInterfaceObjectNode() {
+    return menuTree
+        .getDefineRoot()
+        .getChildren(JavaDomainTreeKey.INTERFACE)
+        .getChildren(JavaDomainTreeKey.INTERFACE_DTO);
+  }
+
+  /**
+   * 获取转换的对象
+   *
+   * @return 模块名称
+   */
+  public MenuNode getInterfaceAssemblerNode() {
+    return menuTree
+        .getDefineRoot()
+        .getChildren(JavaDomainTreeKey.INTERFACE)
+        .getChildren(JavaDomainTreeKey.INTERFACE_ASSEMBLER);
+  }
 }

@@ -71,6 +71,18 @@ public class JavaMethodName {
   /** 将存储集合实体转换为领域集合对象的方法 */
   public static final String ASSEMBLER_PERSIST_ENTITY_LIST_NAME = "toListDomainEntity";
 
+  /** 将传输对象转换为领域对象 */
+  public static final String ASSEMBLER_TRANSFER_DOMAIN_NAME = "toDomainEntity";
+
+  /** 将领域对象转换为传输对象 */
+  public static final String ASSEMBLER_DOMAIN_TRANSFER_NAME = "toTransferObject";
+
+  /** 将传输对象集合转换为领域对象集合 */
+  public static final String ASSEMBLER_TRANSFER_DOMAIN_LIST_NAME = "toListDomainEntity";
+
+  /** 将领域对象集合转换为传输对象集合 */
+  public static final String ASSEMBLER_DOMAIN_TRANSFER_LIST_NAME = "toListTransferObject";
+
   /** 进行日志的debug输出 */
   public static final String LOG_DEBUG = "debug";
 

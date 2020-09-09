@@ -94,17 +94,17 @@ public class GenerateJavaDomainServiceInvoke {
       if (MethodTypeEnum.INSERT.getType().equals(methodItem.getOperator())
           || MethodTypeEnum.UPDATE.getType().equals(methodItem.getOperator())
           || MethodTypeEnum.DELETE.getType().equals(methodItem.getOperator())) {
-        this.updateMethod(sb, methodItem, domainPackageInfo);
+        this.updateMethod(sb, methodItem, domainPackageInfo, JavaVarName.FACADE_INSTANCE_NAME);
       }
       // 如果当前为查询分页操作
       else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())
           && methodItem.getPageQueryFlag() != null
           && methodItem.getPageQueryFlag()) {
-        this.pageQueryMethod(sb, methodItem, domainPackageInfo);
+        this.pageQueryMethod(sb, methodItem, domainPackageInfo, JavaVarName.FACADE_INSTANCE_NAME);
       }
       // 如果当前为查询则进行查询调用操作
       else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
-        this.queryMethod(sb, methodItem, domainPackageInfo);
+        this.queryMethod(sb, methodItem, domainPackageInfo, JavaVarName.FACADE_INSTANCE_NAME);
       }
     }
 
@@ -119,8 +119,10 @@ public class GenerateJavaDomainServiceInvoke {
    * @param sb
    * @param method 方法信息
    * @param domainPkg 领域包信息
+   * @param instanceName 实例对象的调用名称
    */
-  private void updateMethod(StringBuilder sb, MethodInfo method, ImportPackageInfo domainPkg) {
+  public void updateMethod(
+      StringBuilder sb, MethodInfo method, ImportPackageInfo domainPkg, String instanceName) {
     // 检查当前参数是否为集合
     boolean checkBatchFlag = MethodUtils.checkBatch(method.getParamType());
 
@@ -168,7 +170,7 @@ public class GenerateJavaDomainServiceInvoke {
     JavaClassCodeUtils.methodStart(sb);
 
     // 数据添加、修改、删除相关的调用
-    this.dataUpdateInvoke(sb, method);
+    this.dataUpdateInvoke(sb, method, instanceName);
     // 方法结束
     JavaClassCodeUtils.methodEnd(sb);
   }
@@ -179,12 +181,12 @@ public class GenerateJavaDomainServiceInvoke {
    * @param sb
    * @param method 方法信息
    */
-  private void dataUpdateInvoke(StringBuilder sb, MethodInfo method) {
+  private void dataUpdateInvoke(StringBuilder sb, MethodInfo method, String instanceName) {
     // 执行数据的插入操作
     sb.append(JavaFormat.appendTab(2)).append(JavaKeyWord.TYPE_BOOLEAN);
     sb.append(Symbol.SPACE).append(JavaVarName.INVOKE_METHOD_UPDATE_RSP);
     sb.append(Symbol.SPACE).append(Symbol.EQUAL);
-    sb.append(Symbol.SPACE).append(JavaVarName.FACADE_INSTANCE_NAME);
+    sb.append(Symbol.SPACE).append(instanceName);
     sb.append(Symbol.POINT).append(method.getName()).append(Symbol.BRACKET_LEFT);
     sb.append(JavaVarName.METHOD_PARAM_NAME).append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
@@ -204,16 +206,16 @@ public class GenerateJavaDomainServiceInvoke {
    * @param domainPkg 领域对象
    */
   private void dataNormalQueryInvoke(
-      StringBuilder sb, MethodInfo method, ImportPackageInfo domainPkg) {
+      StringBuilder sb, MethodInfo method, ImportPackageInfo domainPkg, String instanceName) {
 
     // 检查结果是单对象还是结果集
     boolean rspListFlag = ReturnUtils.checkReturnList(method.getReturns());
 
     // 如果当前返回多结果集，则调用相关的多结果集方法
     if (rspListFlag) {
-      this.queryList(sb, method, domainPkg);
+      this.queryList(sb, method, domainPkg, instanceName);
     } else {
-      this.queryRspOne(sb, method, domainPkg);
+      this.queryRspOne(sb, method, domainPkg, instanceName);
     }
   }
 
@@ -224,7 +226,8 @@ public class GenerateJavaDomainServiceInvoke {
    * @param method
    * @param domainPkg
    */
-  private void queryList(StringBuilder sb, MethodInfo method, ImportPackageInfo domainPkg) {
+  private void queryList(
+      StringBuilder sb, MethodInfo method, ImportPackageInfo domainPkg, String instanceName) {
     // 执行数据的分页查询
     sb.append(JavaFormat.appendTab(2));
     sb.append(JavaKeyWord.LIST_TYPE)
@@ -232,7 +235,7 @@ public class GenerateJavaDomainServiceInvoke {
         .append(JavaKeyWord.LIST_TYPE_END);
     sb.append(Symbol.SPACE).append(JavaVarName.QUERY_LIST_RETURN_DATA);
     sb.append(Symbol.SPACE).append(Symbol.EQUAL);
-    sb.append(Symbol.SPACE).append(JavaVarName.FACADE_INSTANCE_NAME);
+    sb.append(Symbol.SPACE).append(instanceName);
     sb.append(Symbol.POINT).append(method.getName()).append(Symbol.BRACKET_LEFT);
     sb.append(JavaVarName.METHOD_PARAM_NAME).append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
@@ -250,12 +253,13 @@ public class GenerateJavaDomainServiceInvoke {
    * @param method
    * @param poPkg
    */
-  private void queryRspOne(StringBuilder sb, MethodInfo method, ImportPackageInfo poPkg) {
+  private void queryRspOne(
+      StringBuilder sb, MethodInfo method, ImportPackageInfo poPkg, String instanceName) {
     // 执行数据的分页查询
     sb.append(JavaFormat.appendTab(2));
     sb.append(poPkg.getClassName()).append(Symbol.SPACE).append(JavaVarName.QUERY_RETURN_DATA);
     sb.append(Symbol.SPACE).append(Symbol.EQUAL);
-    sb.append(Symbol.SPACE).append(JavaVarName.FACADE_INSTANCE_NAME);
+    sb.append(Symbol.SPACE).append(instanceName);
     sb.append(Symbol.POINT).append(method.getName()).append(Symbol.BRACKET_LEFT);
     sb.append(JavaVarName.METHOD_PARAM_NAME).append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
@@ -273,7 +277,8 @@ public class GenerateJavaDomainServiceInvoke {
    * @param method 方法信息
    * @param domainPkg 领域包信息
    */
-  private void queryMethod(StringBuilder sb, MethodInfo method, ImportPackageInfo domainPkg) {
+  public void queryMethod(
+      StringBuilder sb, MethodInfo method, ImportPackageInfo domainPkg, String instanceName) {
 
     List<JavaMethodArguments> argumentsList =
         Arrays.asList(
@@ -290,8 +295,7 @@ public class GenerateJavaDomainServiceInvoke {
             // 返回注释
             .comment(method.getComment())
             // 返回值
-            .type(
-                JavaClassCodeUtils.getTypeName(method.getReturnType(), domainPkg.getClassName()))
+            .type(JavaClassCodeUtils.getTypeName(method.getReturnType(), domainPkg.getClassName()))
             // 返回注释
             .returnComment(CodeComment.JUNIT_PARSE_LIST_COMMENT)
             // 方法名
@@ -306,7 +310,7 @@ public class GenerateJavaDomainServiceInvoke {
     JavaClassCodeUtils.methodStart(sb);
 
     // 数据查询相关的调用
-    this.dataNormalQueryInvoke(sb, method, domainPkg);
+    this.dataNormalQueryInvoke(sb, method, domainPkg, instanceName);
     // 方法结束
     JavaClassCodeUtils.methodEnd(sb);
   }
@@ -318,7 +322,8 @@ public class GenerateJavaDomainServiceInvoke {
    * @param method 方法信息
    * @param domainPkg 领域包信息
    */
-  private void pageQueryMethod(StringBuilder sb, MethodInfo method, ImportPackageInfo domainPkg) {
+  public void pageQueryMethod(
+      StringBuilder sb, MethodInfo method, ImportPackageInfo domainPkg, String instanceName) {
 
     List<JavaMethodArguments> argumentsList =
         Arrays.asList(
@@ -352,7 +357,7 @@ public class GenerateJavaDomainServiceInvoke {
     JavaClassCodeUtils.methodStart(sb);
 
     // 调用方法进行分页的方法构建
-    pageMethodBuilder(sb, method);
+    pageMethodBuilder(sb, method, instanceName);
 
     // 方法结束
     JavaClassCodeUtils.methodEnd(sb);
@@ -363,16 +368,15 @@ public class GenerateJavaDomainServiceInvoke {
    *
    * @param sb
    * @param method 方法
-
    */
-  private void pageMethodBuilder(StringBuilder sb, MethodInfo method) {
+  private void pageMethodBuilder(StringBuilder sb, MethodInfo method, String instanceName) {
 
     // 执行数据的分页查询
     sb.append(JavaFormat.appendTab(2));
     sb.append(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getClassName());
     sb.append(Symbol.SPACE).append(JavaVarName.PAGE_RETURN_DATA);
     sb.append(Symbol.SPACE).append(Symbol.EQUAL);
-    sb.append(Symbol.SPACE).append(JavaVarName.FACADE_INSTANCE_NAME);
+    sb.append(Symbol.SPACE).append(instanceName);
     sb.append(Symbol.POINT).append(method.getName()).append(Symbol.BRACKET_LEFT);
     sb.append(JavaVarName.METHOD_PARAM_NAME).append(Symbol.COMMA);
     sb.append(JavaVarName.PAGE_REQUEST).append(Symbol.BRACKET_RIGHT);
@@ -394,7 +398,7 @@ public class GenerateJavaDomainServiceInvoke {
    * @param author 作者
    * @return 构建的类头
    */
-  private StringBuilder domainServiceDefine(
+  public StringBuilder domainServiceDefine(
       ImportPackageInfo repositoryFacade,
       ImportPackageInfo domainEntityPackage,
       ImportPackageInfo domainService,
