@@ -6,6 +6,7 @@ import com.liujun.micro.autocode.config.generate.entity.WhereInfo;
 import com.liujun.micro.autocode.constant.GenerateDefineFlag;
 import com.liujun.micro.autocode.constant.MyBatisOperatorFlag;
 import com.liujun.micro.autocode.constant.Symbol;
+import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.JavaMethodName;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarValue;
@@ -13,6 +14,7 @@ import com.liujun.micro.autocode.generator.builder.constant.JunitKey;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.WhereUtils;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
@@ -63,6 +65,72 @@ public class GenerateJunitQuery {
         className.replaceAll(
             GenerateDefineFlag.TABLE_NAME.getDefineFlag(), poPackageInfo.getClassName());
 
+    // 进行条件的设置
+    this.methodQueryConditionSet(sb, queryMethod, poPackageInfo, columnMap, dbType, primaryList);
+
+    // 调用查询方法
+    this.invokeQueryMethodData(sb, tabIndex, queryMethod, className);
+
+    // 执行方法结果断言
+    methodResponseAssert(sb, tabIndex, queryMethod);
+  }
+
+  /**
+   * 单元测试中的分页查询部分
+   *
+   * @param sb
+   * @param queryMethod
+   * @param poPackageInfo
+   * @param columnMap
+   * @param tabIndex
+   * @param dbType
+   * @param primaryList
+   */
+  public void junitPageQueryMethod(
+      StringBuilder sb,
+      MethodInfo queryMethod,
+      ImportPackageInfo poPackageInfo,
+      Map<String, TableColumnDTO> columnMap,
+      int tabIndex,
+      DatabaseTypeEnum dbType,
+      List<TableColumnDTO> primaryList) {
+
+    sb.append(Symbol.ENTER_LINE);
+
+    TypeInfo resultType = queryMethod.getReturnType();
+    String className = resultType.getImportClassName();
+    className =
+        className.replaceAll(
+            GenerateDefineFlag.TABLE_NAME.getDefineFlag(), poPackageInfo.getClassName());
+
+    // 进行条件的设置
+    this.methodQueryConditionSet(sb, queryMethod, poPackageInfo, columnMap, dbType, primaryList);
+
+    // 调用分页查询方法
+    this.invokePageQueryMethod(sb, queryMethod, className);
+
+    // 执行方法结果断言
+    methodPageResponseAssert(sb, poPackageInfo);
+  }
+
+  /**
+   * 查询的条件的设置
+   *
+   * @param sb
+   * @param queryMethod 查询方法
+   * @param poPackageInfo po实体信息
+   * @param columnMap 列信息
+   * @param dbType 类型
+   * @param primaryList 主键
+   */
+  private void methodQueryConditionSet(
+      StringBuilder sb,
+      MethodInfo queryMethod,
+      ImportPackageInfo poPackageInfo,
+      Map<String, TableColumnDTO> columnMap,
+      DatabaseTypeEnum dbType,
+      List<TableColumnDTO> primaryList) {
+    int tabIndex = 0;
     // 进行查询条件的封装
     sb.append(JavaFormat.appendTab(tabIndex + 2)).append(poPackageInfo.getClassName());
     sb.append(Symbol.SPACE).append(JavaVarName.METHOD_PARAM_TEMP_NAME).append(Symbol.SPACE);
@@ -77,7 +145,7 @@ public class GenerateJunitQuery {
     // 如果存在in关键字，还需要进行集合条件的封装
     if (inCondition) {
       // 进行关联参数的定义
-      conditionInDefine(sb, queryMethod, columnMap, poPackageInfo, dbType, tabIndex, className);
+      conditionInDefine(sb, queryMethod, columnMap, poPackageInfo, dbType, tabIndex);
     } else {
       // 如果当前存在where条件，则使用where条件
       if (queryMethod.getWhereInfo() != null && !queryMethod.getWhereInfo().isEmpty()) {
@@ -86,15 +154,32 @@ public class GenerateJunitQuery {
         // 当不存在where条件时，则使用主键作为条件
         setQueryFieldPrimary(sb, tabIndex, primaryList);
       }
-      // 单个查询的调用
-      queryOneRsp(sb, tabIndex, className, queryMethod);
     }
+  }
 
-    // 执行方法结果断言
-    methodResponseAssert(sb, tabIndex, queryMethod);
-
-    // 方法结束
-    JavaClassCodeUtils.methodEnd(sb);
+  /**
+   * 查询方法结果断言操作
+   *
+   * @param sb
+   * @param poPackage 实体信息
+   */
+  private void methodPageResponseAssert(StringBuilder sb, ImportPackageInfo poPackage) {
+    int tabIndex = 0;
+    // 如果当前返回结果为结果集，则使用使用集合断言
+    sb.append(JavaFormat.appendTab(tabIndex + 2));
+    sb.append(JavaKeyWord.THIS).append(Symbol.POINT);
+    sb.append(JavaMethodName.ASSERT_DATA_LIST);
+    sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.BATCH_LIST_NAME);
+    sb.append(Symbol.COMMA).append(Symbol.SPACE);
+    sb.append(Symbol.BRACKET_LEFT).append(JavaKeyWord.LIST_TYPE);
+    sb.append(poPackage.getClassName());
+    sb.append(JavaKeyWord.LIST_TYPE_END).append(Symbol.BRACKET_RIGHT);
+    sb.append(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getVarName());
+    sb.append(Symbol.POINT).append(JavaMethodName.GET);
+    sb.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_DATA));
+    sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
+    sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
+    sb.append(Symbol.ENTER_LINE);
   }
 
   /**
@@ -126,25 +211,6 @@ public class GenerateJunitQuery {
       sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
       sb.append(Symbol.ENTER_LINE);
     }
-  }
-
-  /**
-   * 查询一个方法的响应
-   *
-   * @param sb 结果
-   * @param tabIndex tab数
-   * @param className 类名
-   * @param queryMethod 查询方法
-   */
-  public void queryOneRsp(
-      StringBuilder sb, int tabIndex, String className, MethodInfo queryMethod) {
-    // 方法调用
-    sb.append(JavaFormat.appendTab(tabIndex + 2)).append(className).append(Symbol.SPACE);
-    sb.append(JavaVarName.INVOKE_METHOD_QUERY_RSP).append(Symbol.SPACE);
-    sb.append(Symbol.EQUAL).append(Symbol.SPACE).append(JavaVarName.INSTANCE_NAME);
-    sb.append(Symbol.POINT).append(queryMethod.getName()).append(Symbol.BRACKET_LEFT);
-    sb.append(JavaVarName.METHOD_PARAM_TEMP_NAME).append(Symbol.BRACKET_RIGHT);
-    sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
   }
 
   /**
@@ -312,7 +378,6 @@ public class GenerateJunitQuery {
    * @param poPackageInfo 包信息
    * @param dbType 类型
    * @param tabIndex tab数量
-   * @param importClass 导入的类信息
    */
   public void conditionInDefine(
       StringBuilder sb,
@@ -320,8 +385,7 @@ public class GenerateJunitQuery {
       Map<String, TableColumnDTO> columnMap,
       ImportPackageInfo poPackageInfo,
       DatabaseTypeEnum dbType,
-      int tabIndex,
-      String importClass) {
+      int tabIndex) {
 
     // 属性的相关定义
     defineField(sb, queryMethod, columnMap, dbType, tabIndex);
@@ -337,9 +401,6 @@ public class GenerateJunitQuery {
 
     // 将in字段设置到请求的查询条件中
     setQueryFieldIn(sb, queryMethod, tabIndex, columnMap);
-
-    // 进行结果集的对比
-    invokeMethodData(sb, tabIndex, queryMethod, importClass);
   }
 
   /**
@@ -412,7 +473,8 @@ public class GenerateJunitQuery {
     }
 
     // 其他情况，则检查返回类型，为集合说明为批量操作
-    return method.getReturns() != null && method.getReturns().indexOf(JavaKeyWord.IMPORT_LIST) != -1;
+    return method.getReturns() != null
+        && method.getReturns().indexOf(JavaKeyWord.IMPORT_LIST) != -1;
   }
 
   /**
@@ -514,24 +576,12 @@ public class GenerateJunitQuery {
   }
 
   /**
-   * 循环输出的结束
-   *
-   * @param sb 字符往上
-   * @param tabIndex tab的个数
-   */
-  private void foreachFinish(StringBuilder sb, int tabIndex) {
-    // 循环结束
-    sb.append(JavaFormat.appendTab(tabIndex + 2)).append(Symbol.BRACE_RIGHT);
-    sb.append(Symbol.ENTER_LINE);
-  }
-
-  /**
-   * 调用方法以执行数据
+   * 调用查询方法
    *
    * @param sb
    * @param tabIndex tab符号
    */
-  private void invokeMethodData(
+  public void invokeQueryMethodData(
       StringBuilder sb, int tabIndex, MethodInfo queryMethod, String classInfo) {
 
     // 方法调用
@@ -541,5 +591,56 @@ public class GenerateJunitQuery {
     sb.append(Symbol.POINT).append(queryMethod.getName()).append(Symbol.BRACKET_LEFT);
     sb.append(JavaVarName.METHOD_PARAM_TEMP_NAME).append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
+  }
+
+  /**
+   * 调用分页的方法
+   *
+   * @param sb
+   */
+  public void invokePageQueryMethod(StringBuilder sb, MethodInfo queryMethod, String classInfo) {
+
+    int tabIndex = 0;
+    // 声明分页的对象信息
+    sb.append(JavaFormat.appendTab(tabIndex + 2));
+    sb.append(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getClassName());
+    sb.append(Symbol.SPACE).append(JavaVarName.QUERY_PAGE_PARAM_VAR).append(Symbol.SPACE);
+    sb.append(Symbol.EQUAL).append(Symbol.SPACE);
+    sb.append(ImportCodePackageKey.PAGE_PARAM.getPackageInfo().getClassName());
+    sb.append(Symbol.POINT).append(JavaMethodName.PAGE_BUILDER);
+    sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
+    sb.append(Symbol.POINT).append(JavaMethodName.PAGE_SIZE);
+    sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.FINAL_BATCH_INSERT_NUM);
+    sb.append(Symbol.BRACKET_RIGHT);
+    sb.append(Symbol.POINT).append(JavaMethodName.PAGE_NUM);
+    sb.append(Symbol.BRACKET_LEFT).append(JavaVarValue.ZORE);
+    sb.append(Symbol.BRACKET_RIGHT);
+    sb.append(Symbol.POINT).append(JavaMethodName.PAGE_BUILD);
+    sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
+    sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
+
+    // 方法调用
+    sb.append(JavaFormat.appendTab(tabIndex + 2));
+    sb.append(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getClassName());
+    sb.append(Symbol.SPACE).append(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getVarName());
+    sb.append(Symbol.SPACE);
+    sb.append(Symbol.EQUAL).append(Symbol.SPACE).append(JavaVarName.INSTANCE_NAME);
+    sb.append(Symbol.POINT).append(queryMethod.getName()).append(Symbol.BRACKET_LEFT);
+    sb.append(JavaVarName.METHOD_PARAM_TEMP_NAME);
+    sb.append(Symbol.COMMA).append(Symbol.SPACE).append(JavaVarName.QUERY_PAGE_PARAM_VAR);
+    sb.append(Symbol.BRACKET_RIGHT);
+    sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
+  }
+
+  /**
+   * 循环输出的结束
+   *
+   * @param sb 字符往上
+   * @param tabIndex tab的个数
+   */
+  private void foreachFinish(StringBuilder sb, int tabIndex) {
+    // 循环结束
+    sb.append(JavaFormat.appendTab(tabIndex + 2)).append(Symbol.BRACE_RIGHT);
+    sb.append(Symbol.ENTER_LINE);
   }
 }

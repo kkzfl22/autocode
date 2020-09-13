@@ -1,5 +1,6 @@
 package com.liujun.micro.autocode.generator.builder.entity;
 
+import com.liujun.micro.autocode.constant.Symbol;
 import lombok.Data;
 import lombok.ToString;
 
@@ -50,5 +51,14 @@ public class ImportPackageInfo {
       String packagePath, String className, String classComment, String varName) {
     this(packagePath, className, classComment);
     this.varName = varName;
+  }
+
+  /**
+   * 进行package信息的输出操作
+   *
+   * @return 包路径信息，以点分隔
+   */
+  public String packageOut() {
+    return this.getPackagePath() + Symbol.POINT + this.getClassName();
   }
 }

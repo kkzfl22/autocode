@@ -53,8 +53,8 @@ public class GenerateJavaRepositoryPersistenceInvoke {
           "com.github.pagehelper.Page",
           "com.github.pagehelper.PageHelper",
           "com.github.pagehelper.PageInfo",
-          ImportPackageUtils.packageOut(ImportCodePackageKey.PAGE_PARAM.getPackageInfo()),
-          ImportPackageUtils.packageOut(ImportCodePackageKey.PAGE_RESULT.getPackageInfo()));
+          ImportCodePackageKey.PAGE_PARAM.getPackageInfo().packageOut(),
+          ImportCodePackageKey.PAGE_RESULT.getPackageInfo().packageOut());
 
   /** 分页查询的响应名称 */
   private static final String METHOD_PAGE_RSP_NAME = "pageSet";
@@ -744,14 +744,14 @@ public class GenerateJavaRepositoryPersistenceInvoke {
       importList.addAll(PAGE_IMPORT_PKG);
     }
     // 导入实体
-    importList.add(ImportPackageUtils.packageOut(domainEntityPackage));
-    importList.add(ImportPackageUtils.packageOut(poPackage));
+    importList.add(domainEntityPackage.packageOut());
+    importList.add(poPackage.packageOut());
     // 转换类
-    importList.add(ImportPackageUtils.packageOut(persistAssemblerPackage));
+    importList.add(persistAssemblerPackage.packageOut());
     // 导入数据库的dao
-    importList.add(ImportPackageUtils.packageOut(daoClass));
+    importList.add(daoClass.packageOut());
     // 导入接口
-    importList.add(ImportPackageUtils.packageOut(repositoryFacade));
+    importList.add(repositoryFacade.packageOut());
 
     JavaClassEntity classEntityInfo =
         JavaClassEntity.builder()

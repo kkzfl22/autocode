@@ -112,4 +112,7 @@ public class JavaVarName {
 
   /** 日志输出的对象 */
   public static final String LOG = "log";
+
+  /** 分页的信息 */
+  public static final String QUERY_PAGE_PARAM_VAR = "pageData";
 }

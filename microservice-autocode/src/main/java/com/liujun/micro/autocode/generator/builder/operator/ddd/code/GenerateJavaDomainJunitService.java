@@ -8,6 +8,7 @@ import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitDefine;
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitQuery;
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitUpdate;
+import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
@@ -59,7 +60,7 @@ public class GenerateJavaDomainJunitService {
     // 文件头定义
     StringBuilder sb =
         GenerateJunitDefine.INSTANCE.defineHead(
-            junitParentPkg, entityPackage, junitPackage, author);
+            junitParentPkg, entityPackage, junitPackage, methodList, author);
 
     // 操作数据之前的初始化相关的工作
     GenerateJunitDefine.INSTANCE.beforeMethod(
@@ -94,6 +95,13 @@ public class GenerateJavaDomainJunitService {
             primaryKeyList,
             JavaKeyWord.TYPE_BOOLEAN,
             Boolean.TRUE.toString());
+      }
+      // 分页查询方法
+      else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())
+          && null != methodItem.getPageQueryFlag()
+          && methodItem.getPageQueryFlag()) {
+        this.pageQueryMethod(
+            sb, methodItem, entityPackage, tableColumnMap, methodList, type, primaryKeyList);
       }
       // 数据查询
       else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
@@ -162,6 +170,71 @@ public class GenerateJavaDomainJunitService {
     // 查询方法的定义
     GenerateJunitQuery.INSTANCE.queryMethodDefine(sb, queryMethod, methodName);
 
+    // 查询方法的前的插入方法
+    this.queryInsert(sb, queryMethod, tabIndex, poPackageInfo, columnMap, methodList);
+
+    // 添加查询的代码
+    GenerateJunitQuery.INSTANCE.junitQueryMethod(
+        sb, queryMethod, poPackageInfo, columnMap, tabIndex, dbType, primaryList);
+
+    // 方法结束
+    JavaClassCodeUtils.methodEnd(sb);
+  }
+
+  /**
+   * 分页查询
+   *
+   * @param sb 添加的对象
+   * @param queryMethod 方法
+   * @param poPackageInfo 导入的实体
+   * @param columnMap 列集合
+   * @param methodList 方法
+   * @param dbType 类型信息
+   * @param primaryList 主键列
+   */
+  public void pageQueryMethod(
+      StringBuilder sb,
+      MethodInfo queryMethod,
+      ImportPackageInfo poPackageInfo,
+      Map<String, TableColumnDTO> columnMap,
+      List<MethodInfo> methodList,
+      DatabaseTypeEnum dbType,
+      List<TableColumnDTO> primaryList) {
+    String methodName = NameProcess.INSTANCE.toJavaNameFirstUpper(queryMethod.getName());
+
+    int tabIndex = 0;
+
+    // 查询方法的定义
+    GenerateJunitQuery.INSTANCE.queryMethodDefine(sb, queryMethod, methodName);
+
+    // 查询方法的前的插入方法
+    this.queryInsert(sb, queryMethod, tabIndex, poPackageInfo, columnMap, methodList);
+
+    // 分页查询的代码
+    GenerateJunitQuery.INSTANCE.junitPageQueryMethod(
+        sb, queryMethod, poPackageInfo, columnMap, tabIndex, dbType, primaryList);
+
+    // 方法结束
+    JavaClassCodeUtils.methodEnd(sb);
+  }
+
+  /**
+   * 查询的数据插入操作
+   *
+   * @param sb
+   * @param queryMethod 方法信息
+   * @param tabIndex 索引号
+   * @param poPackageInfo 实体
+   * @param columnMap 列信息
+   * @param methodList 列
+   */
+  public void queryInsert(
+      StringBuilder sb,
+      MethodInfo queryMethod,
+      int tabIndex,
+      ImportPackageInfo poPackageInfo,
+      Map<String, TableColumnDTO> columnMap,
+      List<MethodInfo> methodList) {
     // 给查询方法生成添加数据
     // 1,检查当前方法是否结果为结果集,如果为结果集需要执行批量插入
     // 或者当前的请求条件中带有in条件，也需要批量插入
@@ -190,9 +263,5 @@ public class GenerateJavaDomainJunitService {
       GenerateJunitDefine.INSTANCE.setBatchInsertFlag(
           sb, tabIndex, JavaVarValue.INSERT_TYPE_ONE_KEY);
     }
-
-    // 添加查询的代码
-    GenerateJunitQuery.INSTANCE.junitQueryMethod(
-        sb, queryMethod, poPackageInfo, columnMap, tabIndex, dbType, primaryList);
   }
 }

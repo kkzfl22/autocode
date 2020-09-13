@@ -9,6 +9,7 @@ import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitDefine;
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitQuery;
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitUpdate;
+import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
@@ -60,7 +61,7 @@ public class GenerateJavaRepositoryJunitDao {
     // 文件头定义
     StringBuilder sb =
         GenerateJunitDefine.INSTANCE.defineHead(
-            junitParentPkg, entityPackage, junitPackage, author);
+            junitParentPkg, entityPackage, junitPackage, methodList, author);
 
     // 操作数据之前的初始化相关的工作
     GenerateJunitDefine.INSTANCE.beforeMethod(
@@ -107,7 +108,7 @@ public class GenerateJavaRepositoryJunitDao {
     MethodInfo methodItem = MethodUtils.getPrimaryDeleteMethod(methodList);
     if (null != methodItem) {
       GenerateJunitUpdate.INSTANCE.deleteMethod(
-          sb, methodItem, entityPackage, JavaKeyWord.INT_TYPE, JavaVarName.FINAL_BATCH_INSERT_NUM);
+          sb, methodItem, entityPackage, JavaKeyWord.INT_TYPE, JavaVarValue.DEFAULT_ADD_RSP);
     }
 
     // 结束
@@ -163,6 +164,33 @@ public class GenerateJavaRepositoryJunitDao {
     // 查询方法的定义
     GenerateJunitQuery.INSTANCE.queryMethodDefine(sb, queryMethod, methodName);
 
+    // 数据查询前的插入
+    this.queryInsert(sb, queryMethod, poPackageInfo, columnMap, methodList);
+
+    // 添加查询的代码
+    GenerateJunitQuery.INSTANCE.junitQueryMethod(
+        sb, queryMethod, poPackageInfo, columnMap, tabIndex, dbType, primaryList);
+
+    // 方法结束
+    JavaClassCodeUtils.methodEnd(sb);
+  }
+
+  /**
+   * 数据查询前的插入
+   *
+   * @param sb
+   * @param queryMethod 查询方法
+   * @param poPackageInfo 实体信息
+   * @param columnMap 类
+   * @param methodList 方法集
+   */
+  private void queryInsert(
+      StringBuilder sb,
+      MethodInfo queryMethod,
+      ImportPackageInfo poPackageInfo,
+      Map<String, TableColumnDTO> columnMap,
+      List<MethodInfo> methodList) {
+    int tabIndex = 0;
     // 给查询方法生成添加数据
     // 1,检查当前方法是否结果为结果集,如果为结果集需要执行批量插入
     // 或者当前的请求条件中带有in条件，也需要批量插入
@@ -191,9 +219,5 @@ public class GenerateJavaRepositoryJunitDao {
       GenerateJunitDefine.INSTANCE.setBatchInsertFlag(
           sb, tabIndex, JavaVarValue.INSERT_TYPE_ONE_KEY);
     }
-
-    // 添加查询的代码
-    GenerateJunitQuery.INSTANCE.junitQueryMethod(
-        sb, queryMethod, poPackageInfo, columnMap, tabIndex, dbType, primaryList);
   }
 }

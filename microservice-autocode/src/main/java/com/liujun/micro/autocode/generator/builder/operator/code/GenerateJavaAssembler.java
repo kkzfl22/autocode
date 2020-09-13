@@ -389,7 +389,7 @@ public class GenerateJavaAssembler {
     // 导包的信息
     List<String> importList = this.importClass(entityPackageInfo1, entityPackageInfo2);
     // 类的定义
-      return JavaClassCodeUtils.classDefine(assemblerPackage, importList, author);
+    return JavaClassCodeUtils.classDefine(assemblerPackage, importList, author);
   }
 
   /**
@@ -406,8 +406,8 @@ public class GenerateJavaAssembler {
       dataList.add(entityItem);
     }
     // 导入实体包
-    dataList.add(ImportPackageUtils.packageOut(entityPackageInfo1));
-    dataList.add(ImportPackageUtils.packageOut(entityPackageInfo2));
+    dataList.add(entityPackageInfo1.packageOut());
+    dataList.add(entityPackageInfo2.packageOut());
 
     return dataList;
   }

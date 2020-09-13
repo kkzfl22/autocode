@@ -51,8 +51,8 @@ public class GenerateJavaDomainServiceInvoke {
           "com.github.pagehelper.Page",
           "com.github.pagehelper.PageHelper",
           "com.github.pagehelper.PageInfo",
-          ImportPackageUtils.packageOut(ImportCodePackageKey.PAGE_PARAM.getPackageInfo()),
-          ImportPackageUtils.packageOut(ImportCodePackageKey.PAGE_RESULT.getPackageInfo()));
+          ImportCodePackageKey.PAGE_PARAM.getPackageInfo().packageOut(),
+          ImportCodePackageKey.PAGE_RESULT.getPackageInfo().packageOut());
 
   /**
    * 生成领域服务方法
@@ -414,14 +414,14 @@ public class GenerateJavaDomainServiceInvoke {
       importList.addAll(PAGE_IMPORT_PKG);
     }
     // 导入实体
-    importList.add(ImportPackageUtils.packageOut(domainEntityPackage));
+    importList.add(domainEntityPackage.packageOut());
     // 领域存储
-    importList.add(ImportPackageUtils.packageOut(repositoryFacade));
+    importList.add(repositoryFacade.packageOut());
     // 领域实体
-    importList.add(ImportPackageUtils.packageOut(domainEntityPackage));
+    importList.add(domainEntityPackage.packageOut());
 
     // 导入接口
-    importList.add(ImportPackageUtils.packageOut(repositoryFacade));
+    importList.add(repositoryFacade.packageOut());
 
     JavaClassEntity classEntityInfo =
         JavaClassEntity.builder()

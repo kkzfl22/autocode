@@ -36,16 +36,7 @@ public class ImportPackageUtils {
     return importPackage.get(packageFlag);
   }
 
-  /**
-   * 进行package信息的输出操作
-   *
-   * @param packageInfo 包信息
-   * @return 路径信息
-   */
-  public static String packageOut(ImportPackageInfo packageInfo) {
 
-    return packageInfo.getPackagePath() + Symbol.POINT + packageInfo.getClassName();
-  }
 
   /**
    * 将当前文件信息放入到流程的map中

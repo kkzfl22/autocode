@@ -109,12 +109,12 @@ public class GenerateJavaDaoInterface {
       getImportMethod(methodItem, importSet);
     }
     // 添加po的导入
-    importSet.add(ImportPackageUtils.packageOut(poPackageDefine));
+    importSet.add(poPackageDefine.packageOut());
 
     if (null != importPackage && !importPackage.isEmpty()) {
       // 导入其他公共包
       for (ImportPackageInfo importPkg : importPackage) {
-        importSet.add(ImportPackageUtils.packageOut(importPkg));
+        importSet.add(importPkg.packageOut());
       }
     }
 

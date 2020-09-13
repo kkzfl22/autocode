@@ -14,16 +14,18 @@ public enum ImportCodePackageKey {
   /** 查询分页参数 */
   PAGE_PARAM(
       new ImportPackageInfo(
-          MenuTreeCodePackage.INSTANCE.getInfrastructureEntity().outJavaPackage(),
-          "PageDO",
-          CodeComment.PAGE_REQUEST_COMMENT)),
+          "com.common.entity",
+          "PageDataInfo",
+          CodeComment.PAGE_REQUEST_COMMENT,
+          JavaVarName.PAGE_REQUEST)),
 
   /** 查询分页结果集 */
   PAGE_RESULT(
       new ImportPackageInfo(
-          MenuTreeCodePackage.INSTANCE.getInfrastructureEntity().outJavaPackage(),
-          "PageResult",
-          CodeComment.PAGE_RESPONSE_COMMENT)),
+          "com.common.entity",
+          "PageDataInfo",
+          CodeComment.PAGE_RESPONSE_COMMENT,
+          JavaVarName.PAGE_RESPONSE)),
   ;
 
   /** 包定义信息 */

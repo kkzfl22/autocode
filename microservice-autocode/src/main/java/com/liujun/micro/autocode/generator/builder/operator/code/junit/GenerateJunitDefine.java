@@ -3,6 +3,7 @@ package com.liujun.micro.autocode.generator.builder.operator.code.junit;
 import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
+import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.JavaMethodName;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarValue;
@@ -14,6 +15,7 @@ import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
@@ -60,6 +62,7 @@ public class GenerateJunitDefine {
    *
    * @param junitParentPkg 单元测试父类
    * @param poPackage 数据库实体
+   * @param methodList 方法集
    * @param author 作者
    * @return 输出文件的定义信息
    */
@@ -67,6 +70,7 @@ public class GenerateJunitDefine {
       ImportPackageInfo junitParentPkg,
       ImportPackageInfo poPackage,
       ImportPackageInfo junitPackage,
+      List<MethodInfo> methodList,
       String author) {
 
     List<String> importList = new ArrayList<>();
@@ -76,8 +80,13 @@ public class GenerateJunitDefine {
     }
 
     // 导入po包
-    importList.add(ImportPackageUtils.packageOut(poPackage));
-    importList.add(ImportPackageUtils.packageOut(junitParentPkg));
+    importList.add(poPackage.packageOut());
+    importList.add(junitParentPkg.packageOut());
+    // 如果存在分页方法，则需要导入分页查询的包
+    boolean queryFlag = MethodUtils.checkPageQuery(methodList);
+    if (queryFlag) {
+      importList.add(ImportCodePackageKey.PAGE_PARAM.getPackageInfo().packageOut());
+    }
 
     JavaClassEntity classEntityInfo =
         JavaClassEntity.builder()

@@ -17,6 +17,9 @@ public class JavaVarValue {
   /** 当前从1开始的遍历 */
   public static final int FOR_INDEX_START_1 = 1;
 
+  /** 数据值 0 */
+  public static final String ZORE = "0";
+
   /** 默认插入的行数 */
   public static final String DEFAULT_ADD_RSP = "1";
 

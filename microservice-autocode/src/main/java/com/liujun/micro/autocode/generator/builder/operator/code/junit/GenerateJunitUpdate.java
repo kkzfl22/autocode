@@ -471,7 +471,9 @@ public class GenerateJunitUpdate {
     GenerateJunitQuery.INSTANCE.queryMethodDefine(sb, queryMethod, methodName);
 
     // 进行in的处理
-    GenerateJunitQuery.INSTANCE.conditionIn(sb, queryMethod, tabIndex, poPackageInfo, columnMap);
+    // 查询方法的前的插入方法
+    GenerateJunitQuery.INSTANCE.conditionIn(
+        sb, queryMethod, tabIndex, poPackageInfo, columnMap);
 
     // 调用批量添加方法
     GenerateJunitUpdate.INSTANCE.invokeBatch(
@@ -498,7 +500,7 @@ public class GenerateJunitUpdate {
     if (inCondition) {
       // 进行关联参数的定义
       GenerateJunitQuery.INSTANCE.conditionInDefine(
-          sb, queryMethod, columnMap, poPackageInfo, dbType, tabIndex, insertReturnType);
+          sb, queryMethod, columnMap, poPackageInfo, dbType, tabIndex);
     } else {
       // 如果当前存在where条件，则使用where条件
       if (queryMethod.getWhereInfo() != null && !queryMethod.getWhereInfo().isEmpty()) {
@@ -507,9 +509,10 @@ public class GenerateJunitUpdate {
         // 当不存在where条件时，则使用主键作为条件
         GenerateJunitQuery.INSTANCE.setQueryFieldPrimary(sb, tabIndex, primaryList);
       }
-      // 单个查询的调用
-      GenerateJunitQuery.INSTANCE.queryOneRsp(sb, tabIndex, insertReturnType, queryMethod);
     }
+
+    // 调用查询方法
+    GenerateJunitQuery.INSTANCE.invokeQueryMethodData(sb, tabIndex, queryMethod, insertReturnType);
 
     this.batchDeleteRspAssert(sb, tabIndex, insertSuccessValue);
 

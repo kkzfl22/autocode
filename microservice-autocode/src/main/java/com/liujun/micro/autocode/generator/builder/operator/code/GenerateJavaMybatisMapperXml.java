@@ -135,7 +135,7 @@ public class GenerateJavaMybatisMapperXml {
 
     // 定义命名空间
     sb.append(MyBatisKey.NAMESPACE_START)
-        .append(ImportPackageUtils.packageOut(daoPackageInfo))
+        .append(daoPackageInfo.packageOut())
         .append(Symbol.QUOTE)
         .append(MyBatisKey.END)
         .append(Symbol.ENTER_LINE);
@@ -190,7 +190,7 @@ public class GenerateJavaMybatisMapperXml {
       String javaName = NameProcess.INSTANCE.toFieldName(columnName);
 
       // 仅首次不添加and，其他都 需要添加and
-      boolean addAndFlag = i == 0;
+      boolean addAndFlag = i != 0;
 
       // 如果当前为判断相等
       if (MyBatisOperatorFlag.EQUAL.equals(column.getOperatorFlag())) {
@@ -455,19 +455,12 @@ public class GenerateJavaMybatisMapperXml {
     }
 
     // 定义resultmap信息
-    sb.append(JavaFormat.appendTab(1))
-        .append(MyBatisKey.RESULT_MAP)
-        // 输出实体信息
-        .append(ImportPackageUtils.packageOut(poPackageInfo))
-        .append(Symbol.QUOTE)
-        .append(Symbol.SPACE)
-        .append(MyBatisKey.ID)
-        .append(Symbol.EQUAL)
-        .append(Symbol.QUOTE)
-        .append(resultMapId)
-        .append(Symbol.QUOTE)
-        .append(MyBatisKey.END)
-        .append(Symbol.ENTER_LINE);
+    sb.append(JavaFormat.appendTab(1)).append(MyBatisKey.RESULT_MAP);
+    // 输出实体信息
+    sb.append(poPackageInfo.packageOut()).append(Symbol.QUOTE);
+    sb.append(Symbol.SPACE).append(MyBatisKey.ID).append(Symbol.EQUAL);
+    sb.append(Symbol.QUOTE).append(resultMapId);
+    sb.append(Symbol.QUOTE).append(MyBatisKey.END).append(Symbol.ENTER_LINE);
 
     // 进行主键列的输出
     this.primaryProc(sb, primaryKeyList, columnList);
@@ -610,7 +603,7 @@ public class GenerateJavaMybatisMapperXml {
         .append(MyBatisKey.DOC_END)
         .append(Symbol.ENTER_LINE);
 
-    String poClassPath = ImportPackageUtils.packageOut(poPackageInfo);
+    String poClassPath = poPackageInfo.packageOut();
 
     // 插入的开始语句
     sb.append(JavaFormat.appendTab(1))
@@ -787,7 +780,7 @@ public class GenerateJavaMybatisMapperXml {
     sb.append(methodInfo.getComment()).append(MyBatisKey.DOC_END).append(Symbol.ENTER_LINE);
 
     // po的类定义
-    String poClassPath = ImportPackageUtils.packageOut(poPackageInfo);
+    String poClassPath = poPackageInfo.packageOut();
     sb.append(JavaFormat.appendTab(1)).append(MyBatisKey.UPDATE_XML_START);
     sb.append(methodInfo.getName()).append(MyBatisKey.TYPE_XML).append(poClassPath);
     sb.append(Symbol.QUOTE).append(MyBatisKey.END).append(Symbol.ENTER_LINE);
@@ -899,7 +892,7 @@ public class GenerateJavaMybatisMapperXml {
         .append(Symbol.ENTER_LINE);
 
     // po的类定义
-    String poClassPath = ImportPackageUtils.packageOut(poPackageInfo);
+    String poClassPath = poPackageInfo.packageOut();
 
     // 删除的xml文件的开始
     sb.append(JavaFormat.appendTab(1))
@@ -955,7 +948,7 @@ public class GenerateJavaMybatisMapperXml {
         .append(Symbol.ENTER_LINE);
 
     // po的类定义
-    String poClassPath = ImportPackageUtils.packageOut(poPackageInfo);
+    String poClassPath = poPackageInfo.packageOut();
 
     // 查询开始
     sb.append(JavaFormat.appendTab(1))
