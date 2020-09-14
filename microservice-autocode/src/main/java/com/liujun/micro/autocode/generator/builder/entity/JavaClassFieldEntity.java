@@ -1,9 +1,13 @@
 package com.liujun.micro.autocode.generator.builder.entity;
 
 import com.liujun.micro.autocode.generator.builder.constant.CodeAnnotation;
+import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import lombok.Data;
 import lombok.ToString;
+
+import java.util.List;
 
 /**
  * java的类属性定义
@@ -27,71 +31,113 @@ public class JavaClassFieldEntity extends JavaClassElement {
    */
   public static JavaClassFieldEntity getPrivateAutowiredField(
       String type, String name, String comment) {
-    JavaClassFieldEntity instance = new JavaClassFieldEntity();
-    instance.visit = JavaKeyWord.PRIVATE;
-    instance.annotation = CodeAnnotation.AUTOWIRED;
-    instance.type = type;
-    instance.name = name;
-    instance.comment = comment;
+    JavaClassFieldEntity instance =
+        JavaClassFieldEntity.builder()
+            // 访问修饰符
+            .visit(JavaKeyWord.PRIVATE)
+            // 注解
+            .annotation(CodeAnnotation.AUTOWIRED)
+            // 类型
+            .type(type)
+            // 名称
+            .name(name)
+            // 注释
+            .comment(comment)
+            // 构建
+            .build();
 
     return instance;
   }
 
   /**
-   * 获取spring注解的私有的属性构建对象
+   * 用来进行作为参数的build类
    *
-   * @param type 类型信息
-   * @param name 名称
-   * @param comment 注释
-   * @param value 值信息
+   * @author liujun
+   * @vsersion 0.0.1
    */
-  public static JavaClassFieldEntity getPrivateField(
-      String type, String name, String comment, String value) {
-    JavaClassFieldEntity instance = new JavaClassFieldEntity();
-    instance.visit = JavaKeyWord.PRIVATE;
-    instance.type = type;
-    instance.name = name;
-    instance.comment = comment;
-    instance.value = value;
+  public static class Builder {
 
-    return instance;
+    /** 方法的注释 */
+    private String comment;
+
+    /** 方法注解 */
+    private String annotation;
+
+    /** 方法访问修饰符 */
+    private String visit;
+
+    /** 静态标识 */
+    private String staticFlag;
+
+    /** final标识 */
+    private String finalFlag;
+
+    /** 类型信息 */
+    private String type;
+
+    /** 名称 */
+    private String name;
+
+    /** 值信息 */
+    private String value;
+
+    public Builder comment(String comment) {
+      this.comment = comment;
+      return this;
+    }
+
+    public Builder annotation(String annotation) {
+      this.annotation = annotation;
+      return this;
+    }
+
+    public Builder visit(String visit) {
+      this.visit = visit;
+      return this;
+    }
+
+    public Builder staticFlag(String staticFlag) {
+      this.staticFlag = staticFlag;
+      return this;
+    }
+
+    public Builder finalFlag(String finalFlag) {
+      this.finalFlag = finalFlag;
+      return this;
+    }
+
+    public Builder type(String type) {
+      this.type = type;
+      return this;
+    }
+
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder value(String value) {
+      this.value = value;
+      return this;
+    }
+
+    public JavaClassFieldEntity build() {
+      return new JavaClassFieldEntity(this);
+    }
   }
 
-  /**
-   * 获取spring注解的私有的属性构建对象
-   *
-   * @param type 类型信息
-   * @param name 名称
-   * @param comment 注释
-   */
-  public static JavaClassFieldEntity getPrivateField(String type, String name, String comment) {
-    JavaClassFieldEntity instance = new JavaClassFieldEntity();
-    instance.visit = JavaKeyWord.PRIVATE;
-    instance.type = type;
-    instance.name = name;
-    instance.comment = comment;
-
-    return instance;
+  public JavaClassFieldEntity(Builder builder) {
+    this.comment = builder.comment;
+    this.annotation = builder.annotation;
+    this.visit = builder.visit;
+    this.staticFlag = builder.staticFlag;
+    this.finalFlag = builder.finalFlag;
+    this.type = builder.type;
+    this.name = builder.name;
+    this.value = builder.value;
   }
 
-  /**
-   * 私有静态属性
-   *
-   * @param type 类型信息
-   * @param name 名称
-   * @param comment 注释
-   */
-  public static JavaClassFieldEntity getPrivateStaticFinalField(
-      String type, String name, String comment, String value) {
-    JavaClassFieldEntity instance = new JavaClassFieldEntity();
-    instance.visit = JavaKeyWord.PRIVATE;
-    instance.staticFlag = JavaKeyWord.STATIC;
-    instance.finalFlag = JavaKeyWord.FINAL;
-    instance.type = type;
-    instance.name = name;
-    instance.comment = comment;
-    instance.value = value;
-
-    return instance;
+  public static Builder builder() {
+    return new Builder();
   }
 }

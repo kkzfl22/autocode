@@ -46,7 +46,7 @@ public class GenerateJunitDefine {
         JavaKeyWord.IMPORT_LIST,
         JavaKeyWord.IMPORT_ARRAYLIST,
         JavaKeyWord.IMPORT_MAP,
-        "com.comomon.constant.InsertType",
+        "com.common.constant.InsertType",
         "java.util.HashMap",
         "org.springframework.beans.factory.annotation.Autowired"
       };
@@ -272,11 +272,24 @@ public class GenerateJunitDefine {
     // 静态常量
     // 声明批量添加属性
     JavaClassFieldEntity field =
-        JavaClassFieldEntity.getPrivateStaticFinalField(
-            JavaKeyWord.INT_TYPE,
-            JavaVarName.FINAL_BATCH_INSERT_NUM,
-            CodeComment.FINAL_BATCH_INSERT_NUM_COMMENT,
-            JavaVarValue.BATCH_NUM);
+        JavaClassFieldEntity.builder()
+            // 访问修饰符
+            .visit(JavaKeyWord.PRIVATE)
+            // 静态标识
+            .staticFlag(JavaKeyWord.STATIC)
+            // final标识
+            .finalFlag(JavaKeyWord.FINAL)
+            // 类型
+            .type(JavaKeyWord.INT_TYPE)
+            // 名称
+            .name(JavaVarName.FINAL_BATCH_INSERT_NUM)
+            // 注释
+            .comment(CodeComment.FINAL_BATCH_INSERT_NUM_COMMENT)
+            // 值
+            .value(JavaVarValue.BATCH_NUM)
+            // 构建
+            .build();
+
     sb.append(JavaClassCodeUtils.getClassField(field));
 
     sb.append(Symbol.ENTER_LINE);
@@ -301,29 +314,58 @@ public class GenerateJunitDefine {
             + Symbol.BRACKET_LEFT
             + JavaVarName.FINAL_BATCH_INSERT_NUM
             + Symbol.BRACKET_RIGHT;
+
     JavaClassFieldEntity batchList =
-        JavaClassFieldEntity.getPrivateField(
-            dataType, JavaVarName.BATCH_LIST_NAME, CodeComment.FIELD_BATCH_LIST_COMMENT, newList);
+        JavaClassFieldEntity.builder()
+            // 访问修饰符
+            .visit(JavaKeyWord.PRIVATE)
+            // 类型
+            .type(dataType)
+            // 名称
+            .name(JavaVarName.BATCH_LIST_NAME)
+            // 注释
+            .comment(CodeComment.FIELD_BATCH_LIST_COMMENT)
+            // 值
+            .value(newList)
+            // 构建
+            .build();
+
     sb.append(JavaClassCodeUtils.getClassField(batchList));
 
     sb.append(Symbol.ENTER_LINE);
 
     // 单个插入的属性的定义
     JavaClassFieldEntity fieldEntity =
-        JavaClassFieldEntity.getPrivateField(
-            entityPackage.getClassName(),
-            entityPackage.getVarName(),
-            entityPackage.getClassComment());
+        JavaClassFieldEntity.builder()
+            // 访问修饰符
+            .visit(JavaKeyWord.PRIVATE)
+            // 类型
+            .type(entityPackage.getClassName())
+            // 名称
+            .name(entityPackage.getVarName())
+            // 注释
+            .comment(entityPackage.getClassComment())
+            // 构建
+            .build();
+
     sb.append(JavaClassCodeUtils.getClassField(fieldEntity));
 
     sb.append(Symbol.ENTER_LINE);
 
     // 添加数据执行的类型,标识当前为单插入，批量插入，或者不插入数据
     JavaClassFieldEntity operatorType =
-        JavaClassFieldEntity.getPrivateField(
-            JavaKeyWord.INT_TYPE,
-            JavaVarName.JUNIT_VAR_BATCH_INSERT,
-            CodeComment.FIELD_OPERATOR_TYPE_COMMENT);
+        JavaClassFieldEntity.builder()
+            // 访问修饰符
+            .visit(JavaKeyWord.PRIVATE)
+            // 类型
+            .type(JavaKeyWord.INT_TYPE)
+            // 名称
+            .name(JavaVarName.JUNIT_VAR_BATCH_INSERT)
+            // 注释
+            .comment(CodeComment.FIELD_OPERATOR_TYPE_COMMENT)
+            // 构建
+            .build();
+
     sb.append(JavaClassCodeUtils.getClassField(operatorType));
 
     sb.append(Symbol.ENTER_LINE);

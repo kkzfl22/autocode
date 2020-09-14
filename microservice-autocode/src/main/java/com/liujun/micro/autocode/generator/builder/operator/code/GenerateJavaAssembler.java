@@ -19,6 +19,8 @@ import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -119,6 +121,8 @@ public class GenerateJavaAssembler {
     sb.append(JavaFormat.appendTab(tabIndex + 2)).append(JavaKeyWord.RETURN);
     sb.append(Symbol.SPACE).append(JavaKeyWord.LIST_EMPTY_DEFAULT).append(Symbol.SEMICOLON);
     sb.append(Symbol.ENTER_LINE);
+
+
 
     // 方法声明检查结束
     sb.append(JavaFormat.appendTab(tabIndex + 1)).append(Symbol.BRACE_RIGHT);

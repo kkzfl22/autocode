@@ -6,7 +6,7 @@ import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
-import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaBean;
+import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaSwaggerBean;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaCommentUtil;
@@ -71,7 +71,7 @@ public class JavaCodeInterfaceObjectCreate implements GenerateCodeInf {
 
       // 进行存储层的bean代码生成
       StringBuilder persistBean =
-          GenerateJavaBean.INSTANCE.generateJavaBean(
+              GenerateJavaSwaggerBean.INSTANCE.generateJavaBean(
               packageInfo,
               tableEntry.getValue(),
               param.getGenerateConfig().getGenerate().getCode(),

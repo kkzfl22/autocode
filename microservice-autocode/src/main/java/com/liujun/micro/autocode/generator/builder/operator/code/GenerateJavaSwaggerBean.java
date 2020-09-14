@@ -1,7 +1,9 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
+import com.liujun.micro.autocode.generator.builder.entity.JavaAnnotation;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
@@ -17,15 +19,22 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * 生成带有swagger的标识的类信息
+ *
  * @author liujun
  * @version 0.0.1
  */
-public class GenerateJavaBean {
+public class GenerateJavaSwaggerBean {
 
-  public static final GenerateJavaBean INSTANCE = new GenerateJavaBean();
+  public static final GenerateJavaSwaggerBean INSTANCE = new GenerateJavaSwaggerBean();
 
+  /** 注解的相关信息 */
   private static final List<String> ANNOTATION_LIST =
       Arrays.asList(JavaKeyWord.BEAN_USE_DATA, JavaKeyWord.BEAN_USE_TOSTRING);
+
+  /** 导包信息 */
+  private static final List<String> ANNOTATION_IMPORT =
+      Arrays.asList(JavaKeyWord.SWAGGER_IMPORT_MODEL, JavaKeyWord.SWAGGER_IMPORT_PROPERTY);
 
   /**
    * 进行javaBean文件的生成操作
@@ -43,7 +52,7 @@ public class GenerateJavaBean {
     // 类的定义
     StringBuilder sb =
         JavaClassCodeUtils.classDefine(
-            entityInfo, getImportList(codeMethod), ANNOTATION_LIST, author);
+            entityInfo, getImportList(codeMethod), getAnnotationList(entityInfo), author);
 
     // 作属性输出
     this.outProperties(columnList, sb);
@@ -61,18 +70,40 @@ public class GenerateJavaBean {
    * @param codeMethod
    * @return
    */
-  public List<String> getImportList(List<MethodInfo> codeMethod) {
-    List<String> importList = new ArrayList<>();
+  private List<String> getImportList(List<MethodInfo> codeMethod) {
 
-    importList.add(JavaKeyWord.BEAN_IMPORT_DATA);
-    importList.add(JavaKeyWord.BEAN_IMPORT_TOSTRING);
+    // 获取实体需导入的基础包
+    List<String> dataList = GenerateJavaBean.INSTANCE.getImportList(codeMethod);
 
-    // 检查是否需要导入list包
-    Set<String> inCondition = MethodUtils.getInCondition(codeMethod);
-    if (!inCondition.isEmpty()) {
-      importList.add(JavaKeyWord.IMPORT_LIST);
-    }
-    return importList;
+    // 添加swagger的相关包
+    dataList.addAll(ANNOTATION_IMPORT);
+
+    return dataList;
+  }
+
+  /**
+   * 获取导入的包的注解
+   *
+   * @return
+   */
+  private List<String> getAnnotationList(ImportPackageInfo entityInfo) {
+
+    // 获取实体需导入的基础包
+    List<String> dataList = new ArrayList<>(ANNOTATION_LIST.size() + 2);
+
+    // 添加数据操作的注解
+    dataList.addAll(ANNOTATION_LIST);
+
+    // 添加swagger的注解
+    String annotationAdd =
+        JavaAnnotation.builder()
+            .annotation(JavaKeyWord.SWAGGER_APIMODEL)
+            .value(entityInfo.getClassComment())
+            .build()
+            .outAnnotation();
+    dataList.add(annotationAdd);
+
+    return dataList;
   }
 
   /**
@@ -112,10 +143,17 @@ public class GenerateJavaBean {
       // 输出的类型
       javaDataType = JavaKeyWord.LIST_TYPE + javaDataType + JavaKeyWord.LIST_TYPE_END;
       // 输出的名称
-      javaName = getInConditionName(javaName);
+      javaName = GenerateJavaBean.getInConditionName(javaName);
 
       JavaClassFieldEntity field =
           JavaClassFieldEntity.builder()
+              // 注解
+              .annotation(
+                  JavaAnnotation.builder()
+                      .value(tableInfo.getColumnMsg() + CodeComment.JUNIT_PARSE_LIST_COMMENT)
+                      .annotation(JavaKeyWord.SWAGGER_APIMODELPROPERTY)
+                      .build()
+                      .outAnnotation())
               // 访问修饰符
               .visit(JavaKeyWord.PRIVATE)
               // 数据类型
@@ -123,22 +161,11 @@ public class GenerateJavaBean {
               // 名称
               .name(javaName)
               // 注释
-              .comment(tableInfo.getColumnMsg())
+              .comment(tableInfo.getColumnMsg() + CodeComment.JUNIT_PARSE_LIST_COMMENT)
               .build();
 
       sb.append(JavaClassCodeUtils.getClassField(field));
     }
-  }
-
-  /**
-   * 获取in关键字作为属性的名称
-   *
-   * @param name 名称
-   * @return 获取名称
-   */
-  public static String getInConditionName(String name) {
-
-    return name + JavaKeyWord.FIELD_SUFFIX_NAME;
   }
 
   /**
@@ -159,6 +186,13 @@ public class GenerateJavaBean {
 
       JavaClassFieldEntity field =
           JavaClassFieldEntity.builder()
+              // 注解
+              .annotation(
+                  JavaAnnotation.builder()
+                      .value(tableBean.getColumnMsg())
+                      .annotation(JavaKeyWord.SWAGGER_APIMODELPROPERTY)
+                      .build()
+                      .outAnnotation())
               // 访问修饰符
               .visit(JavaKeyWord.PRIVATE)
               // 数据类型
