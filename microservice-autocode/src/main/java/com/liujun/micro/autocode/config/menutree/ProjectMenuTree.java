@@ -18,7 +18,11 @@ public class ProjectMenuTree {
   /** 实例信息 */
   public static final ProjectMenuTree INSTANCE =
       new ProjectMenuTree(
-          GenerateConfigProcess.INSTANCE.getCfgEntity().getGenerate().getCodeMenuTree().getModelName());
+          GenerateConfigProcess.INSTANCE
+              .getCfgEntity()
+              .getGenerate()
+              .getCodeMenuTree()
+              .getModelName());
 
   /** 目录树结构的最顶层节点 */
   private final MenuNode root = new MenuNode(ROOT);
@@ -44,6 +48,13 @@ public class ProjectMenuTree {
     MenuNode resourceNode = srcMainNode.addChildren(ProjectMenuTreeKey.MAIN_RESOURCES.getKey());
     // 添加mapper的目录
     MenuNode mapperNode = resourceNode.addChildren(ProjectMenuTreeKey.RESOURCES_MAPPER.getKey());
+    // 国际化资源目标
+    MenuNode i18nResourceNode = resourceNode.addChildren(ProjectMenuTreeKey.RESOURCE_I18N.getKey());
+    MenuNode i18nModuleNode =
+        i18nResourceNode.addChildren(ProjectMenuTreeKey.I18N_RESOURCE.getKey());
+    // 模块
+    i18nModuleNode.addChildren(modelName);
+
     // 在mapper添加模块
     MenuNode modelNode = mapperNode.addChildren(modelName);
     // 模块下添加repository目录

@@ -150,7 +150,9 @@ public class GenerateJavaSwaggerBean {
               // 注解
               .annotation(
                   JavaAnnotation.builder()
+                      // 注解中的值信息
                       .value(tableInfo.getColumnMsg() + CodeComment.JUNIT_PARSE_LIST_COMMENT)
+                      // 注解符
                       .annotation(JavaKeyWord.SWAGGER_APIMODELPROPERTY)
                       .build()
                       .outAnnotation())

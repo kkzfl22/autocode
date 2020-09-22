@@ -298,9 +298,7 @@ public enum DatabaseTypeSourceEnum {
     return proKey;
   }
 
-  public void setProKey(String proKey) {
-    this.proKey = proKey;
-  }
+
 
   public static DatabaseTypeSourceEnum getDataBaseType(String key) {
     for (DatabaseTypeSourceEnum dbtype : values()) {

@@ -14,7 +14,6 @@ import com.liujun.micro.autocode.generator.builder.entity.JavaClassEntity;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
-import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
@@ -118,7 +117,7 @@ public class GenerateJavaRepositoryPersistenceInvoke {
         JavaClassCodeUtils.getClassField(
             JavaClassFieldEntity.getPrivateAutowiredField(
                 daoPackageInfo.getClassName(),
-                JavaVarName.INSTANCE_NAME,
+                JavaVarName.SPRING_INSTANCE_NAME,
                 daoPackageInfo.getClassComment())));
 
     for (MethodInfo methodItem : methodList) {
@@ -275,7 +274,7 @@ public class GenerateJavaRepositoryPersistenceInvoke {
     sb.append(JavaFormat.appendTab(2)).append(JavaKeyWord.INT_TYPE);
     sb.append(Symbol.SPACE).append(JavaVarName.INVOKE_METHOD_UPDATE_RSP);
     sb.append(Symbol.SPACE).append(Symbol.EQUAL);
-    sb.append(Symbol.SPACE).append(JavaVarName.INSTANCE_NAME);
+    sb.append(Symbol.SPACE).append(JavaVarName.SPRING_INSTANCE_NAME);
     sb.append(Symbol.POINT).append(method.getName()).append(Symbol.BRACKET_LEFT);
     sb.append(JavaVarName.ASSEMBLER_PARSE_NAME).append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
@@ -360,7 +359,7 @@ public class GenerateJavaRepositoryPersistenceInvoke {
     sb.append(JavaKeyWord.LIST_TYPE).append(poPkg.getClassName()).append(JavaKeyWord.LIST_TYPE_END);
     sb.append(Symbol.SPACE).append(JavaVarName.QUERY_LIST_RESPONSE);
     sb.append(Symbol.SPACE).append(Symbol.EQUAL);
-    sb.append(Symbol.SPACE).append(JavaVarName.INSTANCE_NAME);
+    sb.append(Symbol.SPACE).append(JavaVarName.SPRING_INSTANCE_NAME);
     sb.append(Symbol.POINT).append(method.getName()).append(Symbol.BRACKET_LEFT);
     sb.append(JavaVarName.ASSEMBLER_PARSE_NAME).append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
@@ -416,7 +415,7 @@ public class GenerateJavaRepositoryPersistenceInvoke {
     sb.append(JavaFormat.appendTab(2));
     sb.append(poPkg.getClassName()).append(Symbol.SPACE).append(JavaVarName.QUERY_RESPONSE_DATA);
     sb.append(Symbol.SPACE).append(Symbol.EQUAL);
-    sb.append(Symbol.SPACE).append(JavaVarName.INSTANCE_NAME);
+    sb.append(Symbol.SPACE).append(JavaVarName.SPRING_INSTANCE_NAME);
     sb.append(Symbol.POINT).append(method.getName()).append(Symbol.BRACKET_LEFT);
     sb.append(JavaVarName.ASSEMBLER_PARSE_NAME).append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
@@ -615,7 +614,7 @@ public class GenerateJavaRepositoryPersistenceInvoke {
     sb.append(JavaKeyWord.LIST_TYPE).append(poPkg.getClassName()).append(JavaKeyWord.LIST_TYPE_END);
     sb.append(Symbol.SPACE).append(JavaVarName.PAGE_RESPONSE);
     sb.append(Symbol.SPACE).append(Symbol.EQUAL);
-    sb.append(Symbol.SPACE).append(JavaVarName.INSTANCE_NAME);
+    sb.append(Symbol.SPACE).append(JavaVarName.SPRING_INSTANCE_NAME);
     sb.append(Symbol.POINT).append(method.getName()).append(Symbol.BRACKET_LEFT);
     sb.append(JavaVarName.ASSEMBLER_PARSE_NAME).append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);

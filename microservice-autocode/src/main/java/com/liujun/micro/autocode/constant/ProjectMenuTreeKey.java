@@ -20,6 +20,12 @@ public enum ProjectMenuTreeKey {
   /** 资源文件目录 */
   MAIN_RESOURCES("resources"),
 
+  /** 国际化资源文件 */
+  RESOURCE_I18N("i18n"),
+
+  /** 国际化资源文件路径 */
+  I18N_RESOURCE("resource"),
+
   /** 数据库操作的资源文件目录 */
   RESOURCES_MAPPER("mapper"),
 
@@ -34,8 +40,6 @@ public enum ProjectMenuTreeKey {
 
   /** 测试的资源目录 */
   TEST_RESOURCES("resources"),
-
-
   ;
 
   private final String key;

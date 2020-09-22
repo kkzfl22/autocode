@@ -14,7 +14,6 @@ import com.liujun.micro.autocode.generator.builder.constant.JunitKey;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
-import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.WhereUtils;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
@@ -587,7 +586,7 @@ public class GenerateJunitQuery {
     // 方法调用
     sb.append(JavaFormat.appendTab(tabIndex + 2)).append(classInfo).append(Symbol.SPACE);
     sb.append(JavaVarName.INVOKE_METHOD_QUERY_RSP).append(Symbol.SPACE);
-    sb.append(Symbol.EQUAL).append(Symbol.SPACE).append(JavaVarName.INSTANCE_NAME);
+    sb.append(Symbol.EQUAL).append(Symbol.SPACE).append(JavaVarName.SPRING_INSTANCE_NAME);
     sb.append(Symbol.POINT).append(queryMethod.getName()).append(Symbol.BRACKET_LEFT);
     sb.append(JavaVarName.METHOD_PARAM_TEMP_NAME).append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
@@ -624,7 +623,7 @@ public class GenerateJunitQuery {
     sb.append(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getClassName());
     sb.append(Symbol.SPACE).append(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getVarName());
     sb.append(Symbol.SPACE);
-    sb.append(Symbol.EQUAL).append(Symbol.SPACE).append(JavaVarName.INSTANCE_NAME);
+    sb.append(Symbol.EQUAL).append(Symbol.SPACE).append(JavaVarName.SPRING_INSTANCE_NAME);
     sb.append(Symbol.POINT).append(queryMethod.getName()).append(Symbol.BRACKET_LEFT);
     sb.append(JavaVarName.METHOD_PARAM_TEMP_NAME);
     sb.append(Symbol.COMMA).append(Symbol.SPACE).append(JavaVarName.QUERY_PAGE_PARAM_VAR);

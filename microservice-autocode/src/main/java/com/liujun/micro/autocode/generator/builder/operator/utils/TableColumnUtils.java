@@ -4,7 +4,10 @@ import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 表列信息的公共处理
@@ -24,11 +27,11 @@ public class TableColumnUtils {
    */
   public static List<TableColumnDTO> getPrimaryKey(List<TableColumnDTO> list) {
 
-    List<TableColumnDTO> primaryKey = new ArrayList<>();
-
     if (list == null || list.isEmpty()) {
-      return primaryKey;
+      return Collections.emptyList();
     }
+
+    List<TableColumnDTO> primaryKey = new ArrayList<>();
 
     for (TableColumnDTO tableBean : list) {
       if (tableBean.getPrimaryKey()) {
@@ -42,6 +45,27 @@ public class TableColumnUtils {
     }
 
     return primaryKey;
+  }
+
+  /**
+   * 将数据集转换为map
+   *
+   * @param list 数据集信息
+   * @return
+   */
+  public static Map<String, TableColumnDTO> parseToMap(List<TableColumnDTO> list) {
+
+    if (null == list || list.isEmpty()) {
+      return Collections.emptyMap();
+    }
+
+    Map<String, TableColumnDTO> parseMap = new HashMap<>(list.size());
+
+    for (TableColumnDTO columnInfo : list) {
+      parseMap.put(columnInfo.getColumnName(), columnInfo);
+    }
+
+    return parseMap;
   }
 
   /**

@@ -6,6 +6,7 @@ import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassEntity;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
+import com.liujun.micro.autocode.generator.builder.entity.JavaEnumFieldEntity;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
@@ -315,6 +316,44 @@ public class JavaClassCodeUtils {
     dataList.append(type).append(JavaKeyWord.LIST_TYPE_END);
 
     return dataList.toString();
+  }
+
+  /**
+   * 枚举的属性
+   *
+   * @param classField
+   * @return
+   */
+  public static String getEnumField(JavaEnumFieldEntity classField) {
+    StringBuilder outField = new StringBuilder();
+
+    int tabIndex = 1;
+
+    if (StringUtils.isNotEmpty(classField.getComment())) {
+      // 枚举的注释
+      outField.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS);
+      outField.append(Symbol.ENTER_LINE);
+      outField.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_CLASS_MID);
+      outField.append(Symbol.SPACE).append(classField.getComment()).append(Symbol.ENTER_LINE);
+      outField.append(JavaFormat.appendTab(tabIndex)).append(JavaKeyWord.ANNO_OVER);
+      outField.append(Symbol.ENTER_LINE);
+    }
+
+    outField.append(JavaFormat.appendTab(tabIndex));
+    outField.append(Symbol.SPACE).append(classField.getName());
+
+    // 枚举值的输出
+    if (StringUtils.isNotEmpty(classField.getValue())) {
+      outField.append(Symbol.BRACKET_LEFT);
+      outField.append(classField.getValue());
+      outField.append(Symbol.BRACKET_RIGHT);
+    }
+
+    outField.append(Symbol.COMMA);
+    outField.append(Symbol.ENTER_LINE);
+    outField.append(Symbol.ENTER_LINE);
+
+    return outField.toString();
   }
 
   /**

@@ -168,7 +168,7 @@ public class GenerateJunitUpdate {
     sb.append(JavaFormat.appendTab(tabIndex + 1)).append(insertReturnType);
     sb.append(Symbol.SPACE).append(JavaVarName.INVOKE_METHOD_OPERATOR_RSP);
     sb.append(Symbol.SPACE).append(Symbol.EQUAL).append(Symbol.SPACE);
-    sb.append(JavaVarName.INSTANCE_NAME).append(Symbol.POINT).append(batchInsert.getName());
+    sb.append(JavaVarName.SPRING_INSTANCE_NAME).append(Symbol.POINT).append(batchInsert.getName());
     sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.BATCH_LIST_NAME);
     sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
 
@@ -197,7 +197,7 @@ public class GenerateJunitUpdate {
     // 方法调用
     sb.append(JavaFormat.appendTab(tabIndex + 2)).append(insertReturnType).append(Symbol.SPACE);
     sb.append(JavaVarName.INVOKE_METHOD_OPERATOR_RSP).append(Symbol.SPACE);
-    sb.append(Symbol.EQUAL).append(Symbol.SPACE).append(JavaVarName.INSTANCE_NAME);
+    sb.append(Symbol.EQUAL).append(Symbol.SPACE).append(JavaVarName.SPRING_INSTANCE_NAME);
     sb.append(Symbol.POINT).append(method.getName()).append(Symbol.BRACKET_LEFT);
     sb.append(JavaVarName.INSTANCE_NAME_ENTITY)
         .append(Symbol.BRACKET_RIGHT)
@@ -269,7 +269,7 @@ public class GenerateJunitUpdate {
     // 方法调用
     sb.append(JavaFormat.appendTab(tabIndex + 2)).append(insertReturnType).append(Symbol.SPACE);
     sb.append(JavaVarName.INVOKE_METHOD_UPDATE_RSP).append(Symbol.SPACE);
-    sb.append(Symbol.EQUAL).append(Symbol.SPACE).append(JavaVarName.INSTANCE_NAME);
+    sb.append(Symbol.EQUAL).append(Symbol.SPACE).append(JavaVarName.SPRING_INSTANCE_NAME);
     sb.append(Symbol.POINT).append(updateMethod.getName()).append(Symbol.BRACKET_LEFT);
     sb.append(JavaVarName.INSTANCE_NAME_ENTITY)
         .append(Symbol.BRACKET_RIGHT)
@@ -355,7 +355,7 @@ public class GenerateJunitUpdate {
     sb.append(JavaFormat.appendTab(tabIndex + 3));
     sb.append(insertReturnType).append(Symbol.SPACE).append(JavaVarName.DELETE_METHOD_RSP);
     sb.append(Symbol.SPACE).append(Symbol.EQUAL).append(Symbol.SPACE);
-    sb.append(JavaVarName.INSTANCE_NAME).append(Symbol.POINT).append(deleteMethod.getName());
+    sb.append(JavaVarName.SPRING_INSTANCE_NAME).append(Symbol.POINT).append(deleteMethod.getName());
     sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.INSTANCE_NAME_ENTITY);
     sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
     sb.append(Symbol.ENTER_LINE);
@@ -419,7 +419,7 @@ public class GenerateJunitUpdate {
     sb.append(JavaFormat.appendTab(tabIndex + 4));
     sb.append(insertReturnType).append(Symbol.SPACE).append(JavaVarName.DELETE_METHOD_RSP);
     sb.append(Symbol.SPACE).append(Symbol.EQUAL).append(Symbol.SPACE);
-    sb.append(JavaVarName.INSTANCE_NAME).append(Symbol.POINT).append(deleteMethod.getName());
+    sb.append(JavaVarName.SPRING_INSTANCE_NAME).append(Symbol.POINT).append(deleteMethod.getName());
     sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.LIST_GET_NAME_TEMP_NAME);
     sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
     sb.append(Symbol.ENTER_LINE);

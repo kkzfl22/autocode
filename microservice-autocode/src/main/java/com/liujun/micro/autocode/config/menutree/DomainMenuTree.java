@@ -18,8 +18,16 @@ public class DomainMenuTree {
   /** 实例信息 */
   public static final DomainMenuTree INSTANCE =
       new DomainMenuTree(
-          GenerateConfigProcess.INSTANCE.getCfgEntity().getGenerate().getCodeMenuTree().getBaseMenu(),
-          GenerateConfigProcess.INSTANCE.getCfgEntity().getGenerate().getCodeMenuTree().getModelName());
+          GenerateConfigProcess.INSTANCE
+              .getCfgEntity()
+              .getGenerate()
+              .getCodeMenuTree()
+              .getBaseMenu(),
+          GenerateConfigProcess.INSTANCE
+              .getCfgEntity()
+              .getGenerate()
+              .getCodeMenuTree()
+              .getModelName());
 
   /** 目录树结构的最顶层节点 */
   private final MenuNode root = new MenuNode(ROOT);
@@ -140,6 +148,8 @@ public class DomainMenuTree {
     interfaceNode.addChildren(JavaDomainTreeKey.INTERFACE_DTO);
     // 对外的接口服务
     interfaceNode.addChildren(JavaDomainTreeKey.INTERFACE_FACADE);
+    // 添加错误码文件
+    interfaceNode.addChildren(JavaDomainTreeKey.INTERFACE_ERROR_CODE);
   }
 
   /**

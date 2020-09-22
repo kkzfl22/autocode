@@ -179,4 +179,28 @@ public class MenuTreeCodePackage {
         .getChildren(JavaDomainTreeKey.INTERFACE)
         .getChildren(JavaDomainTreeKey.INTERFACE_ASSEMBLER);
   }
+
+  /**
+   * 错误码包
+   *
+   * @return 模块名称
+   */
+  public MenuNode getInterfaceErrorCodeNode() {
+    return menuTree
+        .getDefineRoot()
+        .getChildren(JavaDomainTreeKey.INTERFACE)
+        .getChildren(JavaDomainTreeKey.INTERFACE_ERROR_CODE);
+  }
+
+  /**
+   * 前端参数的验证
+   *
+   * @return 模块名称
+   */
+  public MenuNode getApiCheckParamNode() {
+    return menuTree
+        .getDefineRoot()
+        .getChildren(JavaDomainTreeKey.INTERFACE)
+        .getChildren(JavaDomainTreeKey.INTERFACE_CHECK);
+  }
 }

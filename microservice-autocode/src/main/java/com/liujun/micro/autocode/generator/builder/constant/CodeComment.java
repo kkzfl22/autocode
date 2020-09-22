@@ -115,4 +115,13 @@ public class CodeComment {
 
   /** 将传输对象集合转换为领域对象集合 */
   public static final String ASSEMBLER_DOMAIN_TRANSFER_LIST_COMMENT = "将传输对象集合转换为领域对象集合";
+
+  /** 模块名称的注释 */
+  public static final String MODULE_NAME_COMMENT = "模块名称";
+
+
+  /**
+   * 错误码加载至容器的方法
+   */
+  public static final String ERROR_CODE_LOADER_COMMENT = "错误码加载至容器的方法";
 }

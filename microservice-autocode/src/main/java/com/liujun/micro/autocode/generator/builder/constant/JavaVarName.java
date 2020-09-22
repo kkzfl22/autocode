@@ -39,7 +39,7 @@ public class JavaVarName {
   public static final String QUERY_RETURN_DATA = "queryReturn";
 
   /** 数据库实例的名称 */
-  public static final String INSTANCE_NAME = "serviceBean";
+  public static final String SPRING_INSTANCE_NAME = "serviceBean";
 
   /** facade的实例对象 */
   public static final String FACADE_INSTANCE_NAME = "instanceFacade";
@@ -115,4 +115,13 @@ public class JavaVarName {
 
   /** 分页的信息 */
   public static final String QUERY_PAGE_PARAM_VAR = "pageData";
+
+  /** 遍历的临时变量 */
+  public static final String LOOP_TEMP = "loopTempItem";
+
+  /** 模块名称的变量名 */
+  public static final String MODULE_NAME_VAR = "MODULE_NAME";
+
+  /** 实例名称 */
+  public static final String INSTANCE_NAME = "INSTANCE";
 }

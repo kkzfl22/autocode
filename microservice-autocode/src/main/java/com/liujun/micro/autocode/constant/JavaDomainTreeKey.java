@@ -102,6 +102,9 @@ public enum JavaDomainTreeKey {
 
   /** 对外服务接口 */
   INTERFACE_FACADE("facade"),
+
+  /** 统一的错误码 */
+  INTERFACE_ERROR_CODE("errorCode"),
   ;
 
   private final String key;

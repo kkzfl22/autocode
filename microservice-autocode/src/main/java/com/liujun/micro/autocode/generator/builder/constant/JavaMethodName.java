@@ -103,4 +103,22 @@ public class JavaMethodName {
 
   /** 返回对象的构建方法 */
   public static final String PAGE_BUILD = "build";
+
+  /** 枚举值的方法 */
+  public static final String ENUM_METHOD_VALUES = "values";
+
+  /** 添加错误码至错误容器的方法 */
+  public static final String ERROR_ADD_CODE = "addCode";
+
+  /** 错误码加载方法 */
+  public static final String ERROR_CODE_LOADER = "loader";
+
+  /** 属性 */
+  public static final String ARRAY_LENGTH = "length";
+
+  /** 错误码的初始化方法,用用指定初始化函数,进行统一的初始化操作 */
+  public static final String CODE_METHOD_INIT = "init";
+
+  /** 添加错误码 */
+  public static final String ADD_ERROR_CODE = "addErrorCode";
 }

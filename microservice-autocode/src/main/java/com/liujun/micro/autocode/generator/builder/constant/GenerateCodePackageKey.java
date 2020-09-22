@@ -43,6 +43,12 @@ public enum GenerateCodePackageKey {
 
   /** api与领域对象的转换 */
   INTERFACE_ASSEMBLER("interface_assembler"),
+
+  /** 错误前端错误码对象信息 */
+  INTERFACE_ERROR_CODE("interface_errorCode"),
+
+  /** 参数的检查 */
+  INTERFACE_CHECK_PARAM("interface_check_param"),
   ;
 
   private final String key;

@@ -38,6 +38,9 @@ public class JavaKeyWord {
   /** 类定义的关键字 */
   public static final String CLASS_KEY = "class";
 
+  /** 枚举关键字 */
+  public static final String ENUM_KEY = "enum";
+
   /** private 关键字 */
   public static final String PRIVATE = "private";
 

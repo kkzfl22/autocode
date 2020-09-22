@@ -2,11 +2,10 @@ package com.liujun.micro.autocode.generator.builder.operator.ddd.full;
 
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
-import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
-import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaDaoInterface;
+import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaErrorCode;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
@@ -19,15 +18,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * 生成数据库的相关操作接口
+ * 生成接口层的错误码
  *
  * @author liujun
  * @version 1.0.0
  */
-public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
+public class JavaCodeInterfaceErrorCodeCreate implements GenerateCodeInf {
 
-  private static final String DAO_SUFFIX = "DAO";
-  private static final String DAO_COMMENT = "的数据库操作";
+  /** 错误码后缀 */
+  private static final String NAME_SUFFIX = "ErrorCodeEnum";
+
+  private static final String NAME_COMMENT = "错误码";
 
   @Override
   public void generateCode(GenerateCodeContext param) {
@@ -37,52 +38,38 @@ public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
     Iterator<Entry<String, List<TableColumnDTO>>> tableNameEntry = map.entrySet().iterator();
     while (tableNameEntry.hasNext()) {
       Entry<String, List<TableColumnDTO>> tableNameItem = tableNameEntry.next();
-      // 获取表信息
-      TableInfoDTO tableInfo = param.getTableMap().get(tableNameItem.getKey());
 
       // 表名
       String tableName = tableNameItem.getKey();
 
       // 得到类名
       String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
-      String className = tableClassName + DAO_SUFFIX;
+      String className = tableClassName + NAME_SUFFIX;
 
-      // 获取以java定义的package路径
-      String javaPackageStr = param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage();
-
-      // 注释
-      String docComment =
-          tableInfo.getTableComment()
-              + Symbol.BRACKET_LEFT
-              + tableInfo.getTableName()
-              + Symbol.BRACKET_RIGHT
-              + DAO_COMMENT;
+      // 获取以错误码包的路径
+      String javaPackageStr =
+          param.getJavaCodePackage().getInterfaceErrorCodeNode().outJavaPackage();
 
       // 将dao信息进行储存至流程中
-      ImportPackageInfo daoPackageInfo =
-          new ImportPackageInfo(javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
+      ImportPackageInfo errorCodeAssemblerPkg =
+          new ImportPackageInfo(javaPackageStr, className, NAME_COMMENT);
       ImportPackageUtils.putPackageInfo(
           tableName,
           param.getPackageMap(),
-          GenerateCodePackageKey.PERSIST_DAO.getKey(),
-          daoPackageInfo,
+          GenerateCodePackageKey.INTERFACE_ERROR_CODE.getKey(),
+          errorCodeAssemblerPkg,
           tableMap.size());
 
-      // 获取实体信息
-      ImportPackageInfo poPackageInfo =
-          ImportPackageUtils.getDefineClass(
-              param.getPackageMap(), GenerateCodePackageKey.PERSIST_PO.getKey(), tableName);
-
-      // 进行dao的相关方法的生成
+      // 代码的生成操作
       StringBuilder sb =
-          GenerateJavaDaoInterface.INSTANCE.generateJavaInterface(
-              poPackageInfo,
-              daoPackageInfo,
-              param.getGenerateConfig().getGenerate().getCode(),
+          GenerateJavaErrorCode.INSTANCE.generateErrorCode(
+              errorCodeAssemblerPkg,
+              tableNameItem.getValue(),
               param.getGenerateConfig().getGenerate().getAuthor());
 
       // 定义项目内的完整目录结构
       String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
+
       javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
 
       // 进行存储层的接口输出

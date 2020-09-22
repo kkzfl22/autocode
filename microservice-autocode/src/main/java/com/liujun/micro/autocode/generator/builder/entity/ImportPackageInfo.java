@@ -31,11 +31,21 @@ public class ImportPackageInfo {
    *
    * @param packagePath 包的路径
    * @param className 文件类名
+   */
+  public ImportPackageInfo(String packagePath, String className) {
+    this.packagePath = packagePath;
+    this.className = className;
+  }
+
+  /**
+   * 仅声明文件类名
+   *
+   * @param packagePath 包的路径
+   * @param className 文件类名
    * @param classComment 类的注释
    */
   public ImportPackageInfo(String packagePath, String className, String classComment) {
-    this.packagePath = packagePath;
-    this.className = className;
+    this(packagePath, className);
     this.classComment = classComment;
   }
 

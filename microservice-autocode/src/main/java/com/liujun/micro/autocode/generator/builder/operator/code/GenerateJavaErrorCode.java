@@ -1,0 +1,669 @@
+package com.liujun.micro.autocode.generator.builder.operator.code;
+
+import com.liujun.micro.autocode.config.generate.GenerateConfigProcess;
+import com.liujun.micro.autocode.config.generate.GenerateErrorCodeProcess;
+import com.liujun.micro.autocode.constant.Symbol;
+import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
+import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
+import com.liujun.micro.autocode.generator.builder.constant.JavaMethodName;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
+import com.liujun.micro.autocode.generator.builder.entity.ErrorCodeGenerate;
+import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
+import com.liujun.micro.autocode.generator.builder.entity.JavaClassEntity;
+import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
+import com.liujun.micro.autocode.generator.builder.entity.JavaEnumFieldEntity;
+import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
+import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
+import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
+import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
+import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
+import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
+
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * 错误码信息
+ *
+ * @author liujun
+ * @version 0.0.1
+ */
+public class GenerateJavaErrorCode {
+
+  public static final GenerateJavaErrorCode INSTANCE = new GenerateJavaErrorCode();
+
+  /** 导入包信息 */
+  private static final List<String> IMPORT_LIST =
+      Arrays.asList(
+          // 错误对象
+          ImportCodePackageKey.ERROR_DATA.getPackageInfo().packageOut(),
+          // 错误容器对象
+          ImportCodePackageKey.ERROR_COLLECT.getPackageInfo().packageOut(),
+          // list
+          JavaKeyWord.IMPORT_LIST,
+          // 集合
+          JavaKeyWord.IMPORT_ARRAYLIST,
+          // 集合加载容器
+          ImportCodePackageKey.ERROR_LOADER_COLLECT.getPackageInfo().packageOut());
+
+  /** 以错误类型为前缀，当前表示为空 */
+  private static final String NULL_PREFIX = "NULL_";
+
+  /** 空错误的前缀 */
+  private static final String NULL_KEY_PREFIX = "null";
+
+  /** 注释 */
+  private static final String NULL_COMMENT = "为空的错误码";
+
+  /** 超过最大长度的错误的前缀 */
+  private static final String MAX_PREFIX = "MAX_";
+
+  /** 超过最大值的前缀 */
+  private static final String MAX_KEY_PREFIX = "max";
+
+  /** 注释 */
+  private static final String MAX_COMMENT = "超过最大长度的错误码";
+
+  /** 获取的方法 */
+  private static final String GET_COMMENT = "获取错误码对象";
+
+  /** 数据初始化方法 */
+  private static final String DATA_INIT_COMMENT = "数据初始化方法";
+
+  /**
+   * 生成错误码
+   *
+   * @param errorCodePackage 错误码包
+   * @param tableColumnList 表列的信息
+   * @param author 作者
+   * @return 生成的代码
+   */
+  public StringBuilder generateErrorCode(
+      ImportPackageInfo errorCodePackage, List<TableColumnDTO> tableColumnList, String author) {
+
+    // 类的定义
+    StringBuilder sb = new StringBuilder();
+    // 枚举文件的定义
+    sb.append(this.enumDefine(errorCodePackage, author));
+
+    // 错误码定义
+    sb.append(errorCodeDefine(tableColumnList));
+
+    // 属性的定义
+    sb.append(enumFieldDefine());
+
+    // 定义模块名称的定义
+    sb.append(moduleName());
+
+    // 枚举的构建函数
+    sb.append(this.enumFieldConstructor(errorCodePackage));
+
+    // 获取值的方法
+    sb.append(this.getValueMethod());
+
+    // 错误码加载方法
+    sb.append(this.errorLoaderMethod(errorCodePackage));
+
+    // 错误码init方法
+    sb.append(this.dataInit(errorCodePackage));
+
+    // 类的结束
+    JavaClassCodeUtils.classEnd(sb);
+
+    return sb;
+  }
+
+  /**
+   * 生成模块的名称
+   *
+   * @return 模块的定义
+   */
+  private String moduleName() {
+    String moduleName =
+        GenerateConfigProcess.INSTANCE
+            .getCfgEntity()
+            .getGenerate()
+            .getCodeMenuTree()
+            .getModelName();
+    String moduleNameOutValue = Symbol.QUOTE + moduleName + Symbol.QUOTE;
+
+    JavaClassFieldEntity fieldEntity =
+        JavaClassFieldEntity.builder()
+            // 访问修饰符
+            .visit(JavaKeyWord.PUBLIC)
+            // 静态
+            .staticFlag(JavaKeyWord.STATIC)
+            // final标识
+            .finalFlag(JavaKeyWord.FINAL)
+            // 类型
+            .type(JavaKeyWord.TYPE_STRING)
+            // 名称
+            .name(JavaVarName.MODULE_NAME_VAR)
+            // 模块名
+            .value(moduleNameOutValue)
+            // 模块名称的注释
+            .comment(CodeComment.MODULE_NAME_COMMENT)
+            .build();
+
+    return JavaClassCodeUtils.getClassField(fieldEntity);
+  }
+
+  /**
+   * 获取值的方法
+   *
+   * @return 获取值
+   */
+  private String getValueMethod() {
+
+    String methodName =
+        NameProcess.INSTANCE.toJavaNameFirstUpper(
+            ImportCodePackageKey.ERROR_DATA.getPackageInfo().getVarName());
+    methodName = JavaMethodName.GET + methodName;
+
+    JavaMethodEntity methodEntity =
+        JavaMethodEntity.builder()
+            // 获取值的方法
+            .visit(JavaKeyWord.PUBLIC)
+            // 返回值
+            .type(ImportCodePackageKey.ERROR_DATA.getPackageInfo().getClassName())
+            // 方法名
+            .name(methodName)
+            // 注释
+            .comment(GET_COMMENT)
+            .build();
+
+    StringBuilder dataInfo = new StringBuilder();
+
+    // 方法开始
+    JavaClassCodeUtils.methodDefine(dataInfo, methodEntity);
+    JavaClassCodeUtils.methodStart(dataInfo);
+
+    // 返回
+    dataInfo.append(JavaFormat.appendTab(2));
+    dataInfo.append(JavaKeyWord.RETURN).append(Symbol.SPACE);
+    dataInfo.append(ImportCodePackageKey.ERROR_DATA.getPackageInfo().getVarName());
+    dataInfo.append(Symbol.SEMICOLON);
+    dataInfo.append(Symbol.ENTER_LINE);
+
+    // 方法结束
+    JavaClassCodeUtils.methodEnd(dataInfo);
+
+    return dataInfo.toString();
+  }
+
+  /**
+   * 枚举的构建函数
+   *
+   * @return
+   */
+  private String enumFieldConstructor(ImportPackageInfo checkPackage) {
+    StringBuilder out = new StringBuilder();
+
+    // 枚举的构建函数开始
+    out.append(JavaFormat.appendTab(1));
+    out.append(checkPackage.getClassName());
+    out.append(Symbol.BRACKET_LEFT);
+    out.append(ImportCodePackageKey.ERROR_DATA.getPackageInfo().getClassName());
+    out.append(Symbol.SPACE);
+    out.append(ImportCodePackageKey.ERROR_DATA.getPackageInfo().getVarName());
+    out.append(Symbol.BRACKET_RIGHT).append(Symbol.BRACE_LEFT);
+    out.append(Symbol.ENTER_LINE);
+
+    // 构建函数赋值
+    out.append(JavaFormat.appendTab(2));
+    out.append(JavaKeyWord.THIS).append(Symbol.POINT);
+    out.append(ImportCodePackageKey.ERROR_DATA.getPackageInfo().getVarName());
+    out.append(Symbol.SPACE).append(Symbol.EQUAL).append(Symbol.SPACE);
+    out.append(ImportCodePackageKey.ERROR_DATA.getPackageInfo().getVarName());
+    out.append(Symbol.SEMICOLON);
+    out.append(Symbol.ENTER_LINE);
+
+    // 枚举的构建函数结束
+    out.append(JavaFormat.appendTab(1));
+    out.append(Symbol.BRACE_RIGHT);
+    out.append(Symbol.ENTER_LINE);
+    out.append(Symbol.ENTER_LINE);
+
+    return out.toString();
+  }
+
+  /**
+   * 错误码的加载方法
+   *
+   * @return
+   */
+  private String errorLoaderMethod(ImportPackageInfo errorCodePackage) {
+
+    // 类的定义
+    JavaMethodEntity loaderMethod =
+        JavaMethodEntity.builder()
+            // 访问修饰符
+            .visit(JavaKeyWord.PUBLIC)
+            // static标识
+            .staticFlag(JavaKeyWord.STATIC)
+            // 返回类型void
+            .type(JavaKeyWord.VOID)
+            // 名称加载方法
+            .name(JavaMethodName.ERROR_CODE_LOADER)
+            // 注释
+            .comment(CodeComment.ERROR_CODE_LOADER_COMMENT)
+            .build();
+
+    StringBuilder loaderMethodStr = new StringBuilder();
+
+    // 方法的定义
+    JavaClassCodeUtils.methodDefine(loaderMethodStr, loaderMethod);
+
+    // 方法的开始
+    JavaClassCodeUtils.methodStart(loaderMethodStr);
+
+    // 循环添加到错误容器中
+    loaderMethodStr.append(forAddCode(errorCodePackage));
+
+    // 方法的结束
+    JavaClassCodeUtils.methodEnd(loaderMethodStr);
+
+    return loaderMethodStr.toString();
+  }
+
+  /**
+   * 初始化方法的生成
+   *
+   * @return 生成的代码信息
+   */
+  private String dataInit(ImportPackageInfo errorCodePackage) {
+    StringBuilder sb = new StringBuilder();
+
+    JavaMethodEntity methodEntity =
+        JavaMethodEntity.builder()
+            // 访问修饰符
+            .visit(JavaKeyWord.PUBLIC)
+            // 静态标识
+            .staticFlag(JavaKeyWord.STATIC)
+            // 返回类型
+            .type(JavaKeyWord.VOID)
+            // 方法名
+            .name(JavaMethodName.CODE_METHOD_INIT)
+            // 初始化方法
+            .comment(DATA_INIT_COMMENT)
+            .build();
+
+    JavaClassCodeUtils.methodDefine(sb, methodEntity);
+
+    // 方法开始
+    JavaClassCodeUtils.methodStart(sb);
+
+    // 添加至容器中
+    sb.append(JavaFormat.appendTab(2));
+    sb.append(ImportCodePackageKey.ERROR_LOADER_COLLECT.getPackageInfo().getClassName());
+    sb.append(Symbol.POINT);
+    sb.append(JavaMethodName.ADD_ERROR_CODE).append(Symbol.BRACKET_LEFT);
+    sb.append(JavaVarName.MODULE_NAME_VAR).append(Symbol.COMMA);
+    sb.append(errorCodePackage.getClassName()).append(Symbol.COLON).append(Symbol.COLON);
+    sb.append(JavaMethodName.ERROR_CODE_LOADER).append(Symbol.BRACKET_RIGHT);
+    sb.append(Symbol.SEMICOLON);
+    sb.append(Symbol.ENTER_LINE);
+
+    // 方法结束
+    JavaClassCodeUtils.methodEnd(sb);
+
+    return sb.toString();
+  }
+
+  /**
+   * 循环的添加到错误容器中的代码生成
+   *
+   * @return 生成的代码信息
+   */
+  private String forAddCode(ImportPackageInfo errorCodePackage) {
+    StringBuilder sb = new StringBuilder();
+
+    // 方法名
+    String methodName =
+        NameProcess.INSTANCE.toJavaNameFirstUpper(
+            ImportCodePackageKey.ERROR_DATA.getPackageInfo().getVarName());
+    methodName = JavaMethodName.GET + methodName;
+
+    // 将错误码加入到容器中
+    sb.append(addErrorCodeCollect(errorCodePackage, methodName));
+
+    return sb.toString();
+  }
+
+  /**
+   * 将错误码加载到容器中
+   *
+   * @param errorCodePackage 错误码包的信息
+   * @param methodName 方法名
+   * @return 返回的代码
+   */
+  private String addErrorCodeCollect(ImportPackageInfo errorCodePackage, String methodName) {
+    StringBuilder sb = new StringBuilder();
+
+    // 定义变量
+    sb.append(JavaFormat.appendTab(2));
+    sb.append(JavaKeyWord.LIST_TYPE);
+    sb.append(ImportCodePackageKey.ERROR_DATA.getPackageInfo().getClassName());
+    sb.append(JavaKeyWord.LIST_TYPE_END).append(Symbol.SPACE);
+    sb.append(JavaVarName.LIST_NAME).append(Symbol.SPACE);
+    sb.append(Symbol.EQUAL).append(Symbol.SPACE);
+    sb.append(JavaKeyWord.NEW).append(Symbol.SPACE);
+    sb.append(JavaKeyWord.LIST_TYPE_ARRAYLIST).append(Symbol.BRACKET_LEFT);
+    sb.append(JavaMethodName.ENUM_METHOD_VALUES).append(Symbol.BRACKET_LEFT);
+    sb.append(Symbol.BRACKET_RIGHT).append(Symbol.POINT);
+    sb.append(JavaMethodName.ARRAY_LENGTH);
+    sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
+    sb.append(Symbol.ENTER_LINE);
+
+    // 循环将数据加入到错误容器集合中
+    sb.append(this.forEachOperator(errorCodePackage, methodName));
+
+    // 将数据加入到错误码容器中
+    sb.append(JavaFormat.appendTab(2));
+    sb.append(ImportCodePackageKey.ERROR_COLLECT.getPackageInfo().getClassName());
+    sb.append(Symbol.POINT).append(JavaVarName.INSTANCE_NAME);
+    sb.append(Symbol.POINT).append(JavaMethodName.ERROR_ADD_CODE);
+    sb.append(Symbol.BRACKET_LEFT);
+    sb.append(JavaVarName.MODULE_NAME_VAR).append(Symbol.COMMA);
+    sb.append(JavaVarName.LIST_NAME);
+    sb.append(Symbol.BRACKET_RIGHT);
+    sb.append(Symbol.SEMICOLON);
+    sb.append(Symbol.ENTER_LINE);
+    return sb.toString();
+  }
+
+  /**
+   * 循环将数据加入集合
+   *
+   * @param errorCodePackage
+   * @param methodName
+   * @return
+   */
+  private String forEachOperator(ImportPackageInfo errorCodePackage, String methodName) {
+    StringBuilder sb = new StringBuilder();
+    // 遍历开始
+    sb.append(JavaFormat.appendTab(2));
+    sb.append(JavaKeyWord.FOR_KEY).append(Symbol.BRACKET_LEFT);
+    sb.append(errorCodePackage.getClassName());
+    sb.append(Symbol.SPACE).append(JavaVarName.LOOP_TEMP);
+    sb.append(Symbol.SPACE).append(Symbol.COLON).append(Symbol.SPACE);
+    sb.append(JavaMethodName.ENUM_METHOD_VALUES).append(Symbol.BRACKET_LEFT);
+    sb.append(Symbol.BRACKET_RIGHT).append(Symbol.BRACKET_RIGHT);
+    sb.append(Symbol.BRACE_LEFT).append(Symbol.ENTER_LINE);
+
+    // 调用方法添加到错误码容器中
+    sb.append(JavaFormat.appendTab(3));
+    sb.append(JavaVarName.LIST_NAME);
+    sb.append(Symbol.POINT).append(JavaMethodName.LIST_ADD);
+    sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.LOOP_TEMP);
+    sb.append(Symbol.POINT).append(methodName);
+    sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
+    sb.append(Symbol.BRACKET_RIGHT);
+    sb.append(Symbol.SEMICOLON);
+    sb.append(Symbol.ENTER_LINE);
+
+    // 遍历结束
+    sb.append(JavaFormat.appendTab(2));
+    sb.append(Symbol.BRACE_RIGHT);
+    sb.append(Symbol.ENTER_LINE);
+
+    return sb.toString();
+  }
+
+  /**
+   * 获取枚举属性的定义
+   *
+   * @return 属性的定义
+   */
+  private String enumFieldDefine() {
+
+    JavaClassFieldEntity fieldInfo =
+        JavaClassFieldEntity.builder()
+            // 访问修饰符
+            .visit(JavaKeyWord.PUBLIC)
+            // 类型
+            .type(ImportCodePackageKey.ERROR_DATA.getPackageInfo().getClassName())
+            // 名称
+            .name(ImportCodePackageKey.ERROR_DATA.getPackageInfo().getVarName())
+            // 注释
+            .comment(ImportCodePackageKey.ERROR_DATA.getPackageInfo().getClassComment())
+            .build();
+
+    return JavaClassCodeUtils.getClassField(fieldInfo);
+  }
+
+  /**
+   * 枚举文件的定义
+   *
+   * @param classInfo
+   * @param author
+   * @return
+   */
+  private String enumDefine(ImportPackageInfo classInfo, String author) {
+    JavaClassEntity classEntityInfo =
+        JavaClassEntity.builder()
+            // 类的关键字
+            .classKey(JavaKeyWord.ENUM_KEY)
+            // 类名
+            .className(classInfo.getClassName())
+            // 类注释
+            .classComment(classInfo.getClassComment())
+            // 包类路径信息
+            .packagePath(classInfo.getPackagePath())
+            // 导入包信息
+            .importList(IMPORT_LIST)
+            // 作者
+            .author(author)
+            .build();
+
+    // 文件类定义
+    return JavaClassCodeUtils.javaClassDefine(classEntityInfo).toString();
+  }
+
+  /**
+   * 错误码定义
+   *
+   * @param tableColumnList
+   * @return
+   */
+  private String errorCodeDefine(List<TableColumnDTO> tableColumnList) {
+    StringBuilder outInsert = new StringBuilder();
+
+    // 获取开始的编码
+    GenerateErrorCodeProcess.INSTANCE.getStartCode();
+
+    // 错误码的类处理操作
+    for (TableColumnDTO columnInfo : tableColumnList) {
+
+      // 1为空的检查的错误码,当前列不能为空，则需要进行设置操作错误码
+      if (!columnInfo.getNullFlag()) {
+        String enumValue = this.outEnumFieldValue(columnInfo);
+        outInsert.append(enumValue);
+      }
+
+      // 2，超过长度的检查
+      String enumMoreMax = outEnumFieldMoreMax(columnInfo);
+      outInsert.append(enumMoreMax);
+    }
+
+    // 属性结束
+    outInsert.append(fieldFinish());
+
+    return outInsert.toString();
+  }
+
+  /**
+   * 生成的国际资源的key
+   *
+   * @param tableName
+   * @param columnName
+   * @return
+   */
+  public static String propertiesErrorKeyNull(String tableName, String columnName) {
+
+    StringBuilder outPropertiesKey = new StringBuilder();
+
+    // 获取模块名称
+    String moduleName =
+        GenerateConfigProcess.INSTANCE
+            .getCfgEntity()
+            .getGenerate()
+            .getCodeMenuTree()
+            .getModelName();
+
+    // 实体的名称
+    String entityName = NameProcess.INSTANCE.toJavaClassName(tableName);
+
+    // 转换为属性的名称
+    String fieldName = NameProcess.INSTANCE.toProJavaName(columnName);
+
+    // 当前的错类型为null
+    outPropertiesKey.append(NULL_KEY_PREFIX);
+    outPropertiesKey.append(Symbol.POINT);
+    outPropertiesKey.append(moduleName).append(Symbol.POINT);
+    outPropertiesKey.append(entityName).append(Symbol.POINT);
+    outPropertiesKey.append(fieldName);
+
+    return outPropertiesKey.toString();
+  }
+
+  /**
+   * 生成的国际资源的key
+   *
+   * @param tableName
+   * @param columnName
+   * @return
+   */
+  public static String propertiesErrorKeyMax(String tableName, String columnName) {
+
+    StringBuilder outPropertiesKey = new StringBuilder();
+
+    // 获取模块名称
+    String moduleName =
+        GenerateConfigProcess.INSTANCE
+            .getCfgEntity()
+            .getGenerate()
+            .getCodeMenuTree()
+            .getModelName();
+
+    // 实体的名称
+    String entityName = NameProcess.INSTANCE.toJavaClassName(tableName);
+
+    // 转换为属性的名称
+    String fieldName = NameProcess.INSTANCE.toProJavaName(columnName);
+
+    // 当前的错类型为超过最大值
+    outPropertiesKey.append(MAX_KEY_PREFIX);
+    outPropertiesKey.append(Symbol.POINT);
+    outPropertiesKey.append(moduleName).append(Symbol.POINT);
+    outPropertiesKey.append(entityName).append(Symbol.POINT);
+    outPropertiesKey.append(fieldName);
+
+    return outPropertiesKey.toString();
+  }
+
+  /**
+   * 获取空的错误码
+   *
+   * @param tableColumn
+   * @return
+   */
+  public static String enumNullCode(String tableColumn) {
+    StringBuilder code = new StringBuilder();
+
+    // 错误类型为前缀
+    code.append(NULL_PREFIX);
+    // 列名
+    String fieldName = NameProcess.INSTANCE.toNameUpperCase(tableColumn);
+    code.append(fieldName);
+
+    return code.toString();
+  }
+
+  /**
+   * 超过最大值的错误码
+   *
+   * @param tableColumn
+   * @return
+   */
+  public static String enumMaxCode(String tableColumn) {
+    String upperCaseWord = NameProcess.INSTANCE.toNameUpperCase(tableColumn);
+    return MAX_PREFIX + upperCaseWord;
+  }
+
+  /**
+   * 属性结束
+   *
+   * @return
+   */
+  private String fieldFinish() {
+    StringBuilder outFinish = new StringBuilder();
+
+    outFinish.append(JavaFormat.appendTab(1));
+    outFinish.append(Symbol.SEMICOLON);
+    outFinish.append(Symbol.ENTER_LINE);
+    outFinish.append(Symbol.ENTER_LINE);
+
+    return outFinish.toString();
+  }
+
+  /**
+   * 枚举的属性输出
+   *
+   * @param columnInfo
+   * @return
+   */
+  private String outEnumFieldValue(TableColumnDTO columnInfo) {
+    int incrementId = GenerateErrorCodeProcess.INSTANCE.increment();
+
+    // 生成的属性的key信息
+    String outPropertyKeyNull =
+        propertiesErrorKeyNull(columnInfo.getTableName(), columnInfo.getColumnName());
+
+    JavaEnumFieldEntity enumFieldEntity =
+        JavaEnumFieldEntity.builder()
+            // 名称
+            .name(enumNullCode(columnInfo.getColumnName()))
+            // 值错误提示信息
+            .value(ErrorCodeGenerate.outErrorCode(incrementId, outPropertyKeyNull))
+            // 注释
+            .comment(columnInfo.getColumnMsg() + NULL_COMMENT)
+            .build();
+
+    // 枚举值进行输出操作
+    String outEnumField = JavaClassCodeUtils.getEnumField(enumFieldEntity);
+
+    return outEnumField;
+  }
+
+  /**
+   * 枚举的属性,超过最大值
+   *
+   * @param columnInfo 列信息
+   * @return
+   */
+  private String outEnumFieldMoreMax(TableColumnDTO columnInfo) {
+
+    int incrementId = GenerateErrorCodeProcess.INSTANCE.increment();
+
+    // 生成超过最大值的key信息
+    String outPropertyKeyMax =
+        propertiesErrorKeyMax(columnInfo.getTableName(), columnInfo.getColumnName());
+
+    JavaEnumFieldEntity enumFieldEntity =
+        JavaEnumFieldEntity.builder()
+            // 名称
+            .name(enumMaxCode(columnInfo.getColumnName()))
+            // 值错误提示信息
+            .value(ErrorCodeGenerate.outErrorCode(incrementId, outPropertyKeyMax))
+            // 超过最大长度的注释
+            .comment(columnInfo.getColumnMsg() + MAX_COMMENT)
+            .build();
+
+    // 枚举值进行输出操作
+    String outEnumField = JavaClassCodeUtils.getEnumField(enumFieldEntity);
+
+    return outEnumField;
+  }
+}

@@ -131,6 +131,16 @@ public class NameProcess {
   }
 
   /**
+   * 所有字母大写，主要用于常量枚举类中
+   *
+   * @param str
+   * @return
+   */
+  public String toNameUpperCase(String str) {
+    return str.toUpperCase();
+  }
+
+  /**
    * 转换为java命名规则,首字线小写，其他的首字母大写 方法描述
    *
    * @param str

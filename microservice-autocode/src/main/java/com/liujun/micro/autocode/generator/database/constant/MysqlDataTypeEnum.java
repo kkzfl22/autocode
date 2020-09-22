@@ -10,55 +10,55 @@ package com.liujun.micro.autocode.generator.database.constant;
 public enum MysqlDataTypeEnum {
 
   /** TINYINT 1 字节 (-128，127) */
-  TINYINT(StandardTypeEnum.TINYINT, "TINYINT"),
+  TINYINT(StandardTypeEnum.TINYINT, "TINYINT", 1, 3),
 
   /** SMALLINT 2 字节 (-32 768，32 767) */
-  SMALLINT(StandardTypeEnum.SMALLINT, "SMALLINT"),
+  SMALLINT(StandardTypeEnum.SMALLINT, "SMALLINT", 1, 5),
 
   /** MEDIUMINT 3 字节 (-8 388 608，8 388 607) */
-  MEDIUMINT(StandardTypeEnum.MEDIUMINT, "MEDIUMINT"),
+  MEDIUMINT(StandardTypeEnum.MEDIUMINT, "MEDIUMINT", 1, 7),
 
   /** INT或INTEGER 4 字节 (-2 147 483 648，2 147 483 647) */
-  INT(StandardTypeEnum.INTEGER, "INT"),
+  INT(StandardTypeEnum.INTEGER, "INT", 1, 10),
 
   /** INT或INTEGER 4 字节 (-2 147 483 648，2 147 483 647) */
-  INTEGER(StandardTypeEnum.INTEGER, "INTEGER"),
+  INTEGER(StandardTypeEnum.INTEGER, "INTEGER", 1, 10),
 
   /** BIGINT 8 字节 (-9,223,372,036,854,775,808，9 223 372 036 854 775 807) */
-  BIGINT(StandardTypeEnum.BIGINT, "BIGINT"),
+  BIGINT(StandardTypeEnum.BIGINT, "BIGINT", 1, 19),
 
   /**
    * FLOAT 4 字节 (-3.402 823 466 E+38，-1.175 494 351 E-38)，0，(1.175 494 351 E-38，3.402 823 466 351
    * E+38)
    */
-  FLOAT(StandardTypeEnum.FLOAT, "FLOAT"),
+  FLOAT(StandardTypeEnum.FLOAT, "FLOAT", 1, 12),
 
   /**
    * DOUBLE 8 字节 (-1.797 693 134 862 315 7 E+308，-2.225 073 858 507 201 4 E-308)，0，(2.225 073 858
    * 507 201 4 E-308，1.797 693 134 862 315 7 E+308)
    */
-  DOUBLE(StandardTypeEnum.DOUBLE, "DOUBLE"),
+  DOUBLE(StandardTypeEnum.DOUBLE, "DOUBLE", 1, 22),
 
-  /** DECIMAL 对DECIMAL(M,D) ，如果M>D，为M+2否则为D+2 依赖于M和D的值 */
-  DECIMAL(StandardTypeEnum.DECIMAL, "DECIMAL"),
+  /** DECIMAL 对DECIMAL(M,D) ，如果M>D，为M+2否则为D+2 依赖于M和D的值 M最大65，D最大30 */
+  DECIMAL(StandardTypeEnum.DECIMAL, "DECIMAL", 1, 95),
 
   /** DATE 3 1000-01-01/9999-12-31 YYYY-MM-DD 日期值 */
-  DATE(StandardTypeEnum.DATE, "DATE"),
+  DATE(StandardTypeEnum.DATE, "DATE", 1, 10),
 
   /** TIME 3 '-838:59:59'/'838:59:59' HH:MM:SS 时间值或持续时间 */
-  TIME(StandardTypeEnum.TIME, "TIME"),
+  TIME(StandardTypeEnum.TIME, "TIME", 1, 8),
 
   /** YEAR 1 1901/2155 YYYY 年份值 */
-  YEAR(StandardTypeEnum.YEAR, "YEAR"),
+  YEAR(StandardTypeEnum.YEAR, "YEAR", 1, 4),
 
   /** DATETIME 8 1000-01-01 00:00:00/9999-12-31 23:59:59 YYYY-MM-DD HH:MM:SS 混合日期和时间值 */
-  DATETIME(StandardTypeEnum.DATETIME, "DATETIME"),
+  DATETIME(StandardTypeEnum.DATETIME, "DATETIME", 1, 20),
 
   /**
    * TIMESTAMP 4 1970-01-01 00:00:00/2038 结束时间是第 2147483647 秒，北京时间 2038-1-19 11:14:07，格林尼治时间
    * 2038年1月19日 凌晨 03:14:07 YYYYMMDD HHMMSS 混合日期和时间值，时间戳
    */
-  TIMESTAMP(StandardTypeEnum.TIMESTAMP, "TIMESTAMP"),
+  TIMESTAMP(StandardTypeEnum.TIMESTAMP, "TIMESTAMP",1,25),
 
   /** CHAR 0-255字节 定长字符串 */
   CHAR(StandardTypeEnum.CHAR, "CHAR", 0, 255),
@@ -177,5 +177,21 @@ public enum MysqlDataTypeEnum {
     }
 
     throw new IllegalArgumentException("mysql type :" + mysqlType + " not corrspend stand key");
+  }
+
+  public StandardTypeEnum getStandKey() {
+    return standKey;
+  }
+
+  public String getMysqlType() {
+    return mysqlType;
+  }
+
+  public Long getLengthStart() {
+    return lengthStart;
+  }
+
+  public Long getLengthEnd() {
+    return lengthEnd;
   }
 }

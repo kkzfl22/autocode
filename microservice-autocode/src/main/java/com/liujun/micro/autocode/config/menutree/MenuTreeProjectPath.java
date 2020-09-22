@@ -26,14 +26,14 @@ public class MenuTreeProjectPath {
    * @return 模块名称
    */
   public MenuNode getRepositoryMybatisMapperNode() {
-      return projectMenuTree
-          .getRoot()
-          .getChildren(ProjectMenuTreeKey.SRC.getKey())
-          .getChildren(ProjectMenuTreeKey.SRC_MAIN.getKey())
-          .getChildren(ProjectMenuTreeKey.MAIN_RESOURCES.getKey())
-          .getChildren(ProjectMenuTreeKey.RESOURCES_MAPPER.getKey())
-          .getChildren(projectMenuTree.getModelName())
-          .getChildren(ProjectMenuTreeKey.RESOURCES_REPOSITORY.getKey());
+    return projectMenuTree
+        .getRoot()
+        .getChildren(ProjectMenuTreeKey.SRC.getKey())
+        .getChildren(ProjectMenuTreeKey.SRC_MAIN.getKey())
+        .getChildren(ProjectMenuTreeKey.MAIN_RESOURCES.getKey())
+        .getChildren(ProjectMenuTreeKey.RESOURCES_MAPPER.getKey())
+        .getChildren(projectMenuTree.getModelName())
+        .getChildren(ProjectMenuTreeKey.RESOURCES_REPOSITORY.getKey());
   }
 
   /**
@@ -42,11 +42,11 @@ public class MenuTreeProjectPath {
    * @return 模块名称
    */
   public MenuNode getSrcJavaNode() {
-      return projectMenuTree
-          .getRoot()
-          .getChildren(ProjectMenuTreeKey.SRC.getKey())
-          .getChildren(ProjectMenuTreeKey.SRC_MAIN.getKey())
-          .getChildren(ProjectMenuTreeKey.MAIN_JAVA.getKey());
+    return projectMenuTree
+        .getRoot()
+        .getChildren(ProjectMenuTreeKey.SRC.getKey())
+        .getChildren(ProjectMenuTreeKey.SRC_MAIN.getKey())
+        .getChildren(ProjectMenuTreeKey.MAIN_JAVA.getKey());
   }
 
   /**
@@ -55,10 +55,26 @@ public class MenuTreeProjectPath {
    * @return 模块名称
    */
   public MenuNode getTestJavaNode() {
-      return projectMenuTree
-          .getRoot()
-          .getChildren(ProjectMenuTreeKey.SRC.getKey())
-          .getChildren(ProjectMenuTreeKey.SRC_TEST.getKey())
-          .getChildren(ProjectMenuTreeKey.MAIN_JAVA.getKey());
+    return projectMenuTree
+        .getRoot()
+        .getChildren(ProjectMenuTreeKey.SRC.getKey())
+        .getChildren(ProjectMenuTreeKey.SRC_TEST.getKey())
+        .getChildren(ProjectMenuTreeKey.MAIN_JAVA.getKey());
+  }
+
+  /**
+   * 获取java的资源文件目录
+   *
+   * @return 模块名称
+   */
+  public MenuNode getI18nNode() {
+    return projectMenuTree
+        .getRoot()
+        .getChildren(ProjectMenuTreeKey.SRC.getKey())
+        .getChildren(ProjectMenuTreeKey.SRC_MAIN.getKey())
+        .getChildren(ProjectMenuTreeKey.MAIN_RESOURCES.getKey())
+        .getChildren(ProjectMenuTreeKey.RESOURCE_I18N.getKey())
+        .getChildren(ProjectMenuTreeKey.I18N_RESOURCE.getKey())
+        .getChildren(projectMenuTree.getModelName());
   }
 }
