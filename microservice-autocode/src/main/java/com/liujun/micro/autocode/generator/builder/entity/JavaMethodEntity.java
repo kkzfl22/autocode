@@ -1,6 +1,8 @@
 package com.liujun.micro.autocode.generator.builder.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
@@ -11,7 +13,8 @@ import java.util.List;
  * @author liujun
  * @version 0.0.1
  */
-@Data
+@Getter
+@Setter
 @ToString
 public class JavaMethodEntity extends JavaClassElement {
 

@@ -1,6 +1,7 @@
 package com.liujun.micro.autocode.config.generate.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -10,7 +11,8 @@ import lombok.ToString;
  * @version 0.0.1
  */
 @ToString
-@Data
+@Getter
+@Setter
 public class TypeInfo {
 
   /** java中导包的路径 */

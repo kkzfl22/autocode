@@ -72,7 +72,8 @@ public class JavaCodeRepositoryMyBatisMapperCreate implements GenerateCodeInf {
               daoPackage,
               methodList,
               parseColumn,
-              DOC);
+              DOC,
+              param.getTypeEnum());
 
       String javaName = NameProcess.INSTANCE.toFieldName(tableName);
 

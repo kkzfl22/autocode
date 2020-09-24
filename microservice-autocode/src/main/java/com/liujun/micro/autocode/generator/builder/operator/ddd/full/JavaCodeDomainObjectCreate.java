@@ -75,7 +75,8 @@ public class JavaCodeDomainObjectCreate implements GenerateCodeInf {
               packageInfo,
               tableEntry.getValue(),
               param.getGenerateConfig().getGenerate().getCode(),
-              param.getGenerateConfig().getGenerate().getAuthor());
+              param.getGenerateConfig().getGenerate().getAuthor(),
+              param.getTypeEnum());
 
       // 定义项目内的完整目录结构
       String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();

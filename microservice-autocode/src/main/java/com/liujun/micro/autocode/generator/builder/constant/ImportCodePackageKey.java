@@ -27,7 +27,7 @@ public enum ImportCodePackageKey {
           JavaVarName.PAGE_RESPONSE)),
 
   /** 用于进行方法检查 */
-  PARAM_CHECK(new ImportPackageInfo("com.common.check", "ParamCheckUtils")),
+  PARAM_CHECK(new ImportPackageInfo("com.common.check", "ParamCheckUtils", "错误码检查方法")),
 
   /** 错误的对象信息 */
   ERROR_DATA(new ImportPackageInfo("com.common.entity", "ErrorData", "错误码对象", "codeData")),
@@ -36,7 +36,26 @@ public enum ImportCodePackageKey {
   ERROR_COLLECT(new ImportPackageInfo("com.common.collect", "ErrorCodeCollect", "错误码集合")),
 
   /** 错误码加载器对象 */
-  ERROR_LOADER_COLLECT(new ImportPackageInfo("com.common.collect", "ErrorLoaderCollect", "错误码加载器"));
+  ERROR_LOADER_COLLECT(new ImportPackageInfo("com.common.collect", "ErrorLoaderCollect", "错误码加载器")),
+
+  /** Getter的注解 */
+  ANNOTATION_GETTER(ImportPackageInfo.getAnnotationPkg("lombok", "Getter", "@Getter")),
+
+  /** Setter的注解 */
+  ANNOTATION_SETTER(ImportPackageInfo.getAnnotationPkg("lombok", "Setter", "@Setter")),
+
+  /** toString的注解 */
+  ANNOTATION_TOSTRING(ImportPackageInfo.getAnnotationPkg("lombok", "ToString", "@ToString")),
+
+  /** swagger的ApiModel的注解 */
+  ANNOTATION_API_MODEL(
+      ImportPackageInfo.getAnnotationPkg("io.swagger.annotations", "ApiModel", "@ApiModel")),
+
+  /** swagger的ApiModelProperty的注解 */
+  ANNOTATION_API_MODEL_PROPERTY(
+      ImportPackageInfo.getAnnotationPkg(
+          "io.swagger.annotations", "ApiModelProperty", "@ApiModelProperty")),
+  ;
 
   /** 包定义信息 */
   private final ImportPackageInfo packageInfo;

@@ -2,13 +2,15 @@ package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
 import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
+import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaAnnotation;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.TableColumnUtils;
-import com.liujun.micro.autocode.generator.builder.utils.TypeProcessUtils;
+import com.liujun.micro.autocode.generator.convergence.TypeConvergence;
+import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
@@ -28,13 +30,29 @@ public class GenerateJavaSwaggerBean {
 
   public static final GenerateJavaSwaggerBean INSTANCE = new GenerateJavaSwaggerBean();
 
-  /** 注解的相关信息 */
-  private static final List<String> ANNOTATION_LIST =
-      Arrays.asList(JavaKeyWord.BEAN_USE_DATA, JavaKeyWord.BEAN_USE_TOSTRING);
-
-  /** 导包信息 */
+  /** 注解导入包 */
   private static final List<String> ANNOTATION_IMPORT =
-      Arrays.asList(JavaKeyWord.SWAGGER_IMPORT_MODEL, JavaKeyWord.SWAGGER_IMPORT_PROPERTY);
+      Arrays.asList(
+          // get的注解包
+          ImportCodePackageKey.ANNOTATION_GETTER.getPackageInfo().packageOut(),
+          // set的注解包
+          ImportCodePackageKey.ANNOTATION_SETTER.getPackageInfo().packageOut(),
+          // toString的注解
+          ImportCodePackageKey.ANNOTATION_TOSTRING.getPackageInfo().packageOut(),
+          // apimodel的注解
+          ImportCodePackageKey.ANNOTATION_API_MODEL.getPackageInfo().packageOut(),
+          // apimodelProperty的注解
+          ImportCodePackageKey.ANNOTATION_API_MODEL_PROPERTY.getPackageInfo().packageOut());
+
+  /** 注解 */
+  private static final List<String> ANNOTATION_LIST =
+      Arrays.asList(
+          // get的注解包
+          ImportCodePackageKey.ANNOTATION_GETTER.getPackageInfo().getAnnotation(),
+          // set的注解包
+          ImportCodePackageKey.ANNOTATION_SETTER.getPackageInfo().getAnnotation(),
+          // toString的注解
+          ImportCodePackageKey.ANNOTATION_TOSTRING.getPackageInfo().getAnnotation());
 
   /**
    * 进行javaBean文件的生成操作
@@ -48,16 +66,17 @@ public class GenerateJavaSwaggerBean {
       ImportPackageInfo entityInfo,
       List<TableColumnDTO> columnList,
       List<MethodInfo> codeMethod,
-      String author) {
+      String author,
+      DatabaseTypeEnum typeEnum) {
     // 类的定义
     StringBuilder sb =
         JavaClassCodeUtils.classDefine(
             entityInfo, getImportList(codeMethod), getAnnotationList(entityInfo), author);
 
     // 作属性输出
-    this.outProperties(columnList, sb);
+    this.outProperties(columnList, sb, typeEnum);
     // in关键输的输出
-    this.inCondition(codeMethod, columnList, sb);
+    this.inCondition(codeMethod, columnList, sb, typeEnum);
     // 类结束
     JavaClassCodeUtils.classEnd(sb);
 
@@ -97,7 +116,7 @@ public class GenerateJavaSwaggerBean {
     // 添加swagger的注解
     String annotationAdd =
         JavaAnnotation.builder()
-            .annotation(JavaKeyWord.SWAGGER_APIMODEL)
+            .annotation(ImportCodePackageKey.ANNOTATION_API_MODEL.getPackageInfo().getAnnotation())
             .value(entityInfo.getClassComment())
             .build()
             .outAnnotation();
@@ -114,11 +133,14 @@ public class GenerateJavaSwaggerBean {
    * @param sb 输出的对象
    */
   private void inCondition(
-      List<MethodInfo> codeMethod, List<TableColumnDTO> columnList, StringBuilder sb) {
+      List<MethodInfo> codeMethod,
+      List<TableColumnDTO> columnList,
+      StringBuilder sb,
+      DatabaseTypeEnum typeEnum) {
     // 进行条件的输出
     Set<String> conditionList = MethodUtils.getInCondition(codeMethod);
     // 作为属性输出
-    this.outInCondition(conditionList, columnList, sb);
+    this.outInCondition(conditionList, columnList, sb, typeEnum);
   }
 
   /**
@@ -129,7 +151,10 @@ public class GenerateJavaSwaggerBean {
    * @param sb 输出
    */
   private void outInCondition(
-      Set<String> inCondition, List<TableColumnDTO> columnList, StringBuilder sb) {
+      Set<String> inCondition,
+      List<TableColumnDTO> columnList,
+      StringBuilder sb,
+      DatabaseTypeEnum typeEnum) {
     for (String inConditionItem : inCondition) {
       TableColumnDTO tableInfo = TableColumnUtils.getColumn(columnList, inConditionItem);
       if (null == tableInfo) {
@@ -137,7 +162,7 @@ public class GenerateJavaSwaggerBean {
       }
 
       // 得到java的数据类型
-      String javaDataType = TypeProcessUtils.getJavaType(tableInfo.getDataType());
+      String javaDataType = TypeConvergence.getJavaType(typeEnum, tableInfo.getDataType());
       // 得到java输出的名称
       String javaName = NameProcess.INSTANCE.toFieldName(tableInfo.getColumnName());
       // 输出的类型
@@ -153,7 +178,10 @@ public class GenerateJavaSwaggerBean {
                       // 注解中的值信息
                       .value(tableInfo.getColumnMsg() + CodeComment.JUNIT_PARSE_LIST_COMMENT)
                       // 注解符
-                      .annotation(JavaKeyWord.SWAGGER_APIMODELPROPERTY)
+                      .annotation(
+                          ImportCodePackageKey.ANNOTATION_API_MODEL_PROPERTY
+                              .getPackageInfo()
+                              .getAnnotation())
                       .build()
                       .outAnnotation())
               // 访问修饰符
@@ -176,13 +204,14 @@ public class GenerateJavaSwaggerBean {
    * @param columnList 列集合
    * @param sb 输出的对象 信息
    */
-  private void outProperties(List<TableColumnDTO> columnList, StringBuilder sb) {
+  private void outProperties(
+      List<TableColumnDTO> columnList, StringBuilder sb, DatabaseTypeEnum typeEnum) {
     // 添加属性的信息
     for (int i = 0; i < columnList.size(); i++) {
       TableColumnDTO tableBean = columnList.get(i);
 
       // 得到java的数据类型
-      String javaDataType = TypeProcessUtils.getJavaType(tableBean.getDataType());
+      String javaDataType = TypeConvergence.getJavaType(typeEnum, tableBean.getDataType());
       // 得到java输出的名称
       String javaName = NameProcess.INSTANCE.toFieldName(tableBean.getColumnName());
 
@@ -192,7 +221,10 @@ public class GenerateJavaSwaggerBean {
               .annotation(
                   JavaAnnotation.builder()
                       .value(tableBean.getColumnMsg())
-                      .annotation(JavaKeyWord.SWAGGER_APIMODELPROPERTY)
+                      .annotation(
+                          ImportCodePackageKey.ANNOTATION_API_MODEL_PROPERTY
+                              .getPackageInfo()
+                              .getAnnotation())
                       .build()
                       .outAnnotation())
               // 访问修饰符

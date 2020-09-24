@@ -159,18 +159,22 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
     boolean nullFlag = "YES".equals(isNullAble);
     TableColumnDTO bean =
         new TableColumnDTO(columnName, columnMsg, dataType, priKey, nullFlag, columnDefault);
+    // 数值类型的长度
     if (null != precision) {
       bean.setDataLength(Integer.parseInt(precision));
     }
 
+    // 数据的存储长度
     if (null != octLength) {
       bean.setDataLength(Integer.parseInt(octLength));
     }
 
+    // 数据的长度
     if (null != charMax) {
       bean.setDataLength(Integer.parseInt(charMax));
     }
 
+    // 精度
     if (null != scale) {
       bean.setDataScale(Integer.parseInt(scale));
     }

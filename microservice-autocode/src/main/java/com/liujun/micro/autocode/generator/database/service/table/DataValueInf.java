@@ -8,7 +8,7 @@ import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
  * @author liujun
  * @version 0.0.1
  */
-public interface DataParseInf {
+public interface DataValueInf {
 
   /**
    * 进行数据的填充
@@ -18,11 +18,5 @@ public interface DataParseInf {
    */
   String createValue(TableColumnDTO bean);
 
-  /**
-   * 通过数据库的类型转换为java的类型
-   *
-   * @param bean 数据列信息
-   * @return 类型
-   */
-  String parseJavaType(TableColumnDTO bean);
+
 }

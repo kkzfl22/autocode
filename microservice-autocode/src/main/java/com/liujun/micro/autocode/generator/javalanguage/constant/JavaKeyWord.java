@@ -83,18 +83,6 @@ public class JavaKeyWord {
   /** 作者 */
   public static final String DOC_AUTH = " * @author ";
 
-  /** 用来生成get和set方法 */
-  public static final String BEAN_IMPORT_DATA = "lombok.Data";
-
-  /** 用来生成toString方法 */
-  public static final String BEAN_IMPORT_TOSTRING = "lombok.ToString";
-
-  /** 用来注解data */
-  public static final String BEAN_USE_DATA = "@Data";
-
-  /** 用来生成toString */
-  public static final String BEAN_USE_TOSTRING = "@ToString";
-
   /** 集合开始 */
   public static final String LIST_TYPE = "List<";
 
@@ -151,16 +139,4 @@ public class JavaKeyWord {
 
   /** 默认的空集合 */
   public static final String LIST_EMPTY_DEFAULT = "Collections.emptyList()";
-
-  /** swagger类注解 */
-  public static final String SWAGGER_APIMODEL = "@ApiModel";
-
-  /** swagger属性注解 */
-  public static final String SWAGGER_APIMODELPROPERTY = "@ApiModelProperty";
-
-  /** 模块注解包 */
-  public static final String SWAGGER_IMPORT_MODEL = "io.swagger.annotations.ApiModel";
-
-  /** 属性注解包 */
-  public static final String SWAGGER_IMPORT_PROPERTY = "io.swagger.annotations.ApiModelProperty";
 }

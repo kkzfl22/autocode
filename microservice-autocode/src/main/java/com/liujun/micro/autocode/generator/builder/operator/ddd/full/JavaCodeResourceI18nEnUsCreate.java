@@ -28,7 +28,7 @@ public class JavaCodeResourceI18nEnUsCreate implements GenerateCodeInf {
   private static final String NULL_TITLE = " can't be empty";
 
   /** 超长长度的提示 */
-  private static final String MAX_TITLE = " Exceeding the limit in length ";
+  private static final String MAX_TITLE = " Exceeding the limit in length (#maxLength#) ";
 
   @Override
   public void generateCode(GenerateCodeContext param) {

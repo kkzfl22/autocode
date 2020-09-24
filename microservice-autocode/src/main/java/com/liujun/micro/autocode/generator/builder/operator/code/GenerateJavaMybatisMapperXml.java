@@ -6,15 +6,17 @@ import com.liujun.micro.autocode.config.generate.entity.WhereInfo;
 import com.liujun.micro.autocode.constant.MethodTypeEnum;
 import com.liujun.micro.autocode.generator.builder.constant.MyBatisKey;
 import com.liujun.micro.autocode.constant.MyBatisOperatorFlag;
+import com.liujun.micro.autocode.generator.builder.constant.MybatisDataTypeEnum;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
-import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
-import com.liujun.micro.autocode.generator.builder.utils.TypeProcessUtils;
+import com.liujun.micro.autocode.generator.convergence.TypeConvergence;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeSourceEnum;
+import com.liujun.micro.autocode.generator.database.constant.StandardTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.DatabaseTypeMsgBO;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
+import com.liujun.micro.autocode.generator.database.service.DatabaseTypeService;
 import com.liujun.micro.autocode.generator.database.service.datatype.DataTypeResource;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
@@ -55,7 +57,8 @@ public class GenerateJavaMybatisMapperXml {
       ImportPackageInfo daoPackage,
       List<MethodInfo> methodList,
       Map<String, TableColumnDTO> columnMap,
-      String mapperXmlDoc) {
+      String mapperXmlDoc,
+      DatabaseTypeEnum typeEnum) {
 
     String tableName = tableMsg.getTableName();
 
@@ -72,15 +75,16 @@ public class GenerateJavaMybatisMapperXml {
     for (MethodInfo methodItem : methodList) {
       // 添加方法
       if (MethodTypeEnum.INSERT.getType().equals(methodItem.getOperator())) {
-        insertMethod(sb, tableMsg, methodItem, poPackage, columnList);
+        insertMethod(sb, tableMsg, methodItem, poPackage, columnList, typeEnum);
       }
       // 数据库修改
       else if (MethodTypeEnum.UPDATE.getType().equals(methodItem.getOperator())) {
-        updateMethod(sb, tableMsg, methodItem, poPackage, columnList, columnMap, primaryKeyList);
+        updateMethod(
+            sb, tableMsg, methodItem, poPackage, columnList, columnMap, primaryKeyList, typeEnum);
       }
       // 数据删除
       else if (MethodTypeEnum.DELETE.getType().equals(methodItem.getOperator())) {
-        deleteMethod(sb, tableMsg, methodItem, poPackage, columnMap, primaryKeyList);
+        deleteMethod(sb, tableMsg, methodItem, poPackage, columnMap, primaryKeyList, typeEnum);
       }
       // 数据查询
       else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
@@ -92,7 +96,8 @@ public class GenerateJavaMybatisMapperXml {
             poPackage,
             columnList,
             columnMap,
-            primaryKeyList);
+            primaryKeyList,
+            typeEnum);
       }
     }
 
@@ -156,15 +161,16 @@ public class GenerateJavaMybatisMapperXml {
       List<WhereInfo> whereColumn,
       Map<String, TableColumnDTO> columnMap,
       List<TableColumnDTO> primary,
-      int tabNum) {
+      int tabNum,
+      DatabaseTypeEnum typeEnum) {
 
     // 1,如果配制了where条件，则使用
     if (whereColumn != null && !whereColumn.isEmpty()) {
-      return addCfgWhere(whereColumn, columnMap, tabNum);
+      return addCfgWhere(whereColumn, columnMap, tabNum, typeEnum);
     }
 
     // 如果未配制使用主键
-    return addWhere(primary, tabNum);
+    return addWhere(primary, tabNum, typeEnum);
   }
 
   /**
@@ -176,7 +182,10 @@ public class GenerateJavaMybatisMapperXml {
    * @return
    */
   private String addCfgWhere(
-      List<WhereInfo> whereColumn, Map<String, TableColumnDTO> columnMap, int tabNum) {
+      List<WhereInfo> whereColumn,
+      Map<String, TableColumnDTO> columnMap,
+      int tabNum,
+      DatabaseTypeEnum typeEnum) {
 
     StringBuilder sb = new StringBuilder();
 
@@ -194,7 +203,7 @@ public class GenerateJavaMybatisMapperXml {
 
       // 如果当前为判断相等
       if (MyBatisOperatorFlag.EQUAL.equals(column.getOperatorFlag())) {
-        this.conditionEquals(sb, columnName, columnMap, tabNum + 1, addAndFlag);
+        this.conditionEquals(sb, columnName, columnMap, tabNum + 1, addAndFlag, typeEnum);
       }
       // 如果当前为in，则需要进行遍历
       else if (MyBatisOperatorFlag.IN.equals(column.getOperatorFlag())) {
@@ -218,7 +227,8 @@ public class GenerateJavaMybatisMapperXml {
       String columnName,
       Map<String, TableColumnDTO> columnMap,
       int tabNum,
-      boolean addAndFlag) {
+      boolean addAndFlag,
+      DatabaseTypeEnum typeEnum) {
 
     TableColumnDTO tableMapper = columnMap.get(columnName);
 
@@ -230,8 +240,7 @@ public class GenerateJavaMybatisMapperXml {
         .append(Symbol.ENTER_LINE);
 
     String javaName = NameProcess.INSTANCE.toFieldName(columnName);
-    String typeName =
-        TypeProcessUtils.dbTypeParseMyBatis(tableMapper.getDataType(), tableMapper.getDataLength());
+    String typeName = TypeConvergence.dbTypeParseMyBatis(typeEnum, tableMapper);
 
     // 添加条件的连接符
     sb.append(JavaFormat.appendTab(tabNum));
@@ -329,7 +338,7 @@ public class GenerateJavaMybatisMapperXml {
    * @param tabNum 当前索引
    * @return
    */
-  private String addWhere(List<TableColumnDTO> columnList, int tabNum) {
+  private String addWhere(List<TableColumnDTO> columnList, int tabNum, DatabaseTypeEnum typeEnum) {
 
     StringBuilder sb = new StringBuilder();
 
@@ -339,8 +348,7 @@ public class GenerateJavaMybatisMapperXml {
       column = columnList.get(i);
       String columnName = column.getColumnName();
       String javaName = NameProcess.INSTANCE.toFieldName(columnName);
-      String typeName =
-          TypeProcessUtils.dbTypeParseMyBatis(column.getDataType(), column.getDataLength());
+      String typeName = TypeConvergence.dbTypeParseMyBatis(typeEnum, column);
 
       // 定义输出列注释
       sb.append(JavaFormat.appendTab(tabNum + 1))
@@ -591,7 +599,8 @@ public class GenerateJavaMybatisMapperXml {
       TableInfoDTO tableMsg,
       MethodInfo methodInfo,
       ImportPackageInfo poPackageInfo,
-      List<TableColumnDTO> columnList) {
+      List<TableColumnDTO> columnList,
+      DatabaseTypeEnum typeEnum) {
     // 添加操作的注释
     sb.append(JavaFormat.appendTab(1))
         .append(MyBatisKey.DOC_START)
@@ -647,10 +656,10 @@ public class GenerateJavaMybatisMapperXml {
     boolean batchFlag = MethodUtils.checkBatch(methodInfo.getParamType());
 
     if (batchFlag) {
-      insertBatch(sb, columnList);
+      insertBatch(sb, columnList, typeEnum);
     } else {
       // 单行数据添加
-      this.insertOne(sb, columnList);
+      this.insertOne(sb, columnList, typeEnum);
     }
 
     sb.append(JavaFormat.appendTab(1)).append(MyBatisKey.INSERT_XML_END).append(Symbol.ENTER_LINE);
@@ -664,7 +673,8 @@ public class GenerateJavaMybatisMapperXml {
    * @param sb 数据集
    * @param columnList 列信息
    */
-  private void insertBatch(StringBuilder sb, List<TableColumnDTO> columnList) {
+  private void insertBatch(
+      StringBuilder sb, List<TableColumnDTO> columnList, DatabaseTypeEnum typeEnum) {
     // 添加xml中的遍历头
     sb.append(JavaFormat.appendTab(2))
         .append(MyBatisKey.FOREACH_LIST_START)
@@ -677,9 +687,7 @@ public class GenerateJavaMybatisMapperXml {
     for (int i = 0; i < columnList.size(); i++) {
       TableColumnDTO tableMapper = columnList.get(i);
       String javaName = NameProcess.INSTANCE.toFieldName(tableMapper.getColumnName());
-      String typeName =
-          TypeProcessUtils.dbTypeParseMyBatis(
-              tableMapper.getDataType(), tableMapper.getDataLength());
+      String typeName = TypeConvergence.dbTypeParseMyBatis(typeEnum, tableMapper);
       // 添加列注释信息
       sb.append(JavaFormat.appendTab(3))
           .append(MyBatisKey.DOC_START)
@@ -715,7 +723,8 @@ public class GenerateJavaMybatisMapperXml {
    * @param sb 数据集
    * @param columnList 列信息
    */
-  private void insertOne(StringBuilder sb, List<TableColumnDTO> columnList) {
+  private void insertOne(
+      StringBuilder sb, List<TableColumnDTO> columnList, DatabaseTypeEnum typeEnum) {
     sb.append(JavaFormat.appendTab(2))
         .append(MyBatisKey.TRIM_VALUE_XML_START)
         .append(Symbol.ENTER_LINE);
@@ -723,9 +732,7 @@ public class GenerateJavaMybatisMapperXml {
     for (int i = 0; i < columnList.size(); i++) {
       TableColumnDTO tableMapper = columnList.get(i);
       String javaName = NameProcess.INSTANCE.toFieldName(tableMapper.getColumnName());
-      String typeName =
-          TypeProcessUtils.dbTypeParseMyBatis(
-              tableMapper.getDataType(), tableMapper.getDataLength());
+      String typeName = TypeConvergence.dbTypeParseMyBatis(typeEnum, tableMapper);
       // 添加列注释信息
       sb.append(JavaFormat.appendTab(3))
           .append(MyBatisKey.DOC_START)
@@ -767,7 +774,8 @@ public class GenerateJavaMybatisMapperXml {
       ImportPackageInfo poPackageInfo,
       List<TableColumnDTO> columnList,
       Map<String, TableColumnDTO> columnMap,
-      List<TableColumnDTO> primaryKeyList) {
+      List<TableColumnDTO> primaryKeyList,
+      DatabaseTypeEnum typeEnum) {
 
     List<TableColumnDTO> copyColumnList = new ArrayList<>(columnList);
     // 数据不能修改主键
@@ -792,12 +800,12 @@ public class GenerateJavaMybatisMapperXml {
     sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.UPDATE_SET).append(Symbol.ENTER_LINE);
 
     // 列设置操作
-    this.updateSet(sb, copyColumnList);
+    this.updateSet(sb, copyColumnList, typeEnum);
 
     sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.UPDATE_SET_END).append(Symbol.ENTER_LINE);
     sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.WHERE_START).append(Symbol.ENTER_LINE);
     // 选择条件
-    sb.append(this.addWhere(methodInfo.getWhereInfo(), columnMap, primaryKeyList, 2));
+    sb.append(this.addWhere(methodInfo.getWhereInfo(), columnMap, primaryKeyList, 2, typeEnum));
 
     sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.WHERE_END).append(Symbol.ENTER_LINE);
     sb.append(JavaFormat.appendTab(1)).append(MyBatisKey.UPDATE_XML_END).append(Symbol.ENTER_LINE);
@@ -811,7 +819,8 @@ public class GenerateJavaMybatisMapperXml {
    * @param sb 字符
    * @param copyColumnList 列信息
    */
-  private void updateSet(StringBuilder sb, List<TableColumnDTO> copyColumnList) {
+  private void updateSet(
+      StringBuilder sb, List<TableColumnDTO> copyColumnList, DatabaseTypeEnum typeEnum) {
     // trim开始
     sb.append(JavaFormat.appendTab(3)).append(MyBatisKey.UPDATE_TRIM_START);
     sb.append(Symbol.ENTER_LINE);
@@ -820,9 +829,7 @@ public class GenerateJavaMybatisMapperXml {
       TableColumnDTO tableMapper = copyColumnList.get(i);
       String columnName = tableMapper.getColumnName();
       String javaName = NameProcess.INSTANCE.toFieldName(tableMapper.getColumnName());
-      String typeName =
-          TypeProcessUtils.dbTypeParseMyBatis(
-              tableMapper.getDataType(), tableMapper.getDataLength());
+      String typeName = TypeConvergence.dbTypeParseMyBatis(typeEnum, tableMapper);
 
       // 添加列注释信息
       sb.append(JavaFormat.appendTab(4))
@@ -878,7 +885,8 @@ public class GenerateJavaMybatisMapperXml {
       MethodInfo methodInfo,
       ImportPackageInfo poPackageInfo,
       Map<String, TableColumnDTO> columnList,
-      List<TableColumnDTO> primaryKeyList) {
+      List<TableColumnDTO> primaryKeyList,
+      DatabaseTypeEnum typeEnum) {
 
     // 删除
     sb.append(JavaFormat.appendTab(1))
@@ -910,7 +918,7 @@ public class GenerateJavaMybatisMapperXml {
         .append(Symbol.ENTER_LINE);
     sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.WHERE_START).append(Symbol.ENTER_LINE);
     // 选择条件
-    sb.append(this.addWhere(methodInfo.getWhereInfo(), columnList, primaryKeyList, 2));
+    sb.append(this.addWhere(methodInfo.getWhereInfo(), columnList, primaryKeyList, 2, typeEnum));
     sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.WHERE_END).append(Symbol.ENTER_LINE);
     sb.append(JavaFormat.appendTab(1)).append(MyBatisKey.DELETE_XML_END).append(Symbol.ENTER_LINE);
 
@@ -935,7 +943,8 @@ public class GenerateJavaMybatisMapperXml {
       ImportPackageInfo poPackageInfo,
       List<TableColumnDTO> columnList,
       Map<String, TableColumnDTO> columnMap,
-      List<TableColumnDTO> keyColumn) {
+      List<TableColumnDTO> keyColumn,
+      DatabaseTypeEnum typeEnum) {
     // 查询注释
     sb.append(JavaFormat.appendTab(1))
         .append(MyBatisKey.DOC_START)
@@ -977,7 +986,7 @@ public class GenerateJavaMybatisMapperXml {
     sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.WHERE_START).append(Symbol.ENTER_LINE);
 
     // 条件的生成
-    sb.append(this.addWhere(methodInfo.getWhereInfo(), columnMap, keyColumn, 2));
+    sb.append(this.addWhere(methodInfo.getWhereInfo(), columnMap, keyColumn, 2, typeEnum));
 
     sb.append(JavaFormat.appendTab(2)).append(MyBatisKey.WHERE_END).append(Symbol.ENTER_LINE);
     sb.append(JavaFormat.appendTab(1)).append(MyBatisKey.QUERY_XML_END).append(Symbol.ENTER_LINE);
@@ -993,4 +1002,6 @@ public class GenerateJavaMybatisMapperXml {
     // 结束
     sb.append(MyBatisKey.NAMESPACE_END);
   }
+
+
 }

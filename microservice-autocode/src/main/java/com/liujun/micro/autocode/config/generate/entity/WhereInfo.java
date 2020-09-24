@@ -1,7 +1,8 @@
 package com.liujun.micro.autocode.config.generate.entity;
 
 import com.liujun.micro.autocode.constant.MyBatisOperatorFlag;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -9,7 +10,8 @@ import lombok.ToString;
  * @version 0.0.1
  */
 @ToString
-@Data
+@Getter
+@Setter
 public class WhereInfo {
 
   /** 使用条件的字段 */

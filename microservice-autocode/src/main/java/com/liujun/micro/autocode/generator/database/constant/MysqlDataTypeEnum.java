@@ -58,7 +58,7 @@ public enum MysqlDataTypeEnum {
    * TIMESTAMP 4 1970-01-01 00:00:00/2038 结束时间是第 2147483647 秒，北京时间 2038-1-19 11:14:07，格林尼治时间
    * 2038年1月19日 凌晨 03:14:07 YYYYMMDD HHMMSS 混合日期和时间值，时间戳
    */
-  TIMESTAMP(StandardTypeEnum.TIMESTAMP, "TIMESTAMP",1,25),
+  TIMESTAMP(StandardTypeEnum.TIMESTAMP, "TIMESTAMP", 1, 25),
 
   /** CHAR 0-255字节 定长字符串 */
   CHAR(StandardTypeEnum.CHAR, "CHAR", 0, 255),
@@ -138,45 +138,78 @@ public enum MysqlDataTypeEnum {
    * @return 标准的key
    */
   public static StandardTypeEnum databaseToStandKey(String mysqlType) {
-    return databaseToStandKey(mysqlType, null);
+    MysqlDataTypeEnum mysqlDataType = mysqlDataType(mysqlType);
+    if (mysqlDataType != null) {
+      return mysqlDataType.getStandKey();
+    }
+
+    return null;
   }
 
   /**
-   * 根据数据库的类型，转换为标准的key
+   * 按类型获取mysql的类型
    *
    * <p>当转换的类不存在时，则会抛出IllegalArgumentException异常
+   *
+   * @param mysqlType mysql的类型
+   * @return 标准的key
+   */
+  public static MysqlDataTypeEnum mysqlDataType(String mysqlType) {
+    for (MysqlDataTypeEnum dataType : values()) {
+      // 在数据库的类型判断中不区分大小写
+      if (dataType.mysqlType.equalsIgnoreCase(mysqlType)) {
+        return dataType;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * 长度的检查
    *
    * @param mysqlType mysql的类型
    * @param length 类型长度
    * @return 标准的key
    */
-  public static StandardTypeEnum databaseToStandKey(String mysqlType, Integer length) {
-    for (MysqlDataTypeEnum dataType : values()) {
-      // 在数据库的类型判断中不区分大小写
-      if (dataType.mysqlType.equalsIgnoreCase(mysqlType)) {
+  public static StandardTypeEnum standardAndLengthCheck(String mysqlType, Integer length) {
+    {
+      MysqlDataTypeEnum dataType = mysqlDataType(mysqlType);
 
-        // 1,如果在标准的设置中未定义长度，则与java中直接对应，返回标准的类型
-        if (dataType.lengthStart == null || dataType.lengthEnd == null || null == length) {
-          return dataType.standKey;
-        }
+      // 1,如果在标准的设置中未定义长度，则与java中直接对应，返回标准的类型
+      if (null == length) {
+        return dataType.standKey;
+      }
 
-        // 检查类型是否在java的范围中
-        if (dataType.lengthStart <= length && length <= dataType.lengthEnd) {
-          return dataType.standKey;
-        } else {
-          throw new IllegalArgumentException(
-              "mysql type :"
-                  + mysqlType
-                  + " is not in scope {"
-                  + dataType.lengthStart
-                  + " - "
-                  + dataType.lengthEnd
-                  + "}");
-        }
+      // 检查类型是否在java的范围中
+      if (dataType.lengthStart <= length && length <= dataType.lengthEnd) {
+        return dataType.standKey;
+      } else {
+        throw new IllegalArgumentException(
+            "mysql type :"
+                + mysqlType
+                + " is not in scope {"
+                + dataType.lengthStart
+                + " - "
+                + dataType.lengthEnd
+                + "}");
       }
     }
+  }
 
-    throw new IllegalArgumentException("mysql type :" + mysqlType + " not corrspend stand key");
+  /**
+   * 获取数据类型的的枚举
+   *
+   * @param dataTypeFlag
+   * @return
+   */
+  public static MysqlDataTypeEnum getMysqlType(String dataTypeFlag) {
+    for (MysqlDataTypeEnum dataType : values()) {
+      // 在数据库的类型判断中不区分大小写
+      if (dataType.mysqlType.equalsIgnoreCase(dataTypeFlag)) {
+        return dataType;
+      }
+    }
+    return null;
   }
 
   public StandardTypeEnum getStandKey() {

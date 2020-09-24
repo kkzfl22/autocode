@@ -9,7 +9,7 @@ import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
-import com.liujun.micro.autocode.generator.builder.operator.utils.TableColumnUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
@@ -18,7 +18,6 @@ import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 生成数据参数校验
@@ -73,15 +72,22 @@ public class GenerateJavaCheck {
             checkPackage, getImportList(dtoPackageInfo, errorCodeEnum), null, author);
 
     // 1, 提取出主键
-    List<TableColumnDTO> primaryColumnList = TableColumnUtils.getPrimaryKey(tableColumnList);
+    // List<TableColumnDTO> primaryColumnList = TableColumnUtils.getPrimaryKey(tableColumnList);
 
     // 将主键转换为map
-    Map<String, TableColumnDTO> primaryKeyMap = TableColumnUtils.parseToMap(primaryColumnList);
+    // Map<String, TableColumnDTO> primaryKeyMap = TableColumnUtils.parseToMap(primaryColumnList);
 
     for (MethodInfo methodInfo : methodList) {
       // 如果当前数据为添加
-      if (MethodTypeEnum.INSERT.getType().equals(methodInfo.getOperator())) {
+      if (MethodTypeEnum.INSERT.getType().equals(methodInfo.getOperator())
+          && !MethodUtils.checkBatch(methodInfo.getParamType())) {
         sb.append(this.checkInsert(methodInfo, tableColumnList, errorCodeEnum, dtoPackageInfo));
+      }
+      // 如果当前的数据为批量添加
+      else if (MethodTypeEnum.INSERT.getType().equals(methodInfo.getOperator())
+          && MethodUtils.checkBatch(methodInfo.getParamType())) {
+        sb.append(
+            this.checkInsertBatch(methodInfo, tableColumnList, errorCodeEnum, dtoPackageInfo));
       }
     }
 
@@ -89,6 +95,50 @@ public class GenerateJavaCheck {
     JavaClassCodeUtils.classEnd(sb);
 
     return sb;
+  }
+
+  /**
+   * 添加方法的参数验证
+   *
+   * @param methodInfo
+   * @param tableColumnList
+   * @param errorCode
+   * @param dtoPackageInfo
+   * @return
+   */
+  private String checkInsertBatch(
+      MethodInfo methodInfo,
+      List<TableColumnDTO> tableColumnList,
+      ImportPackageInfo errorCode,
+      ImportPackageInfo dtoPackageInfo) {
+    StringBuilder outInsert = new StringBuilder();
+
+    // 添加方法的定义
+    outInsert.append(defineMethod(methodInfo, dtoPackageInfo));
+    // 方法开始
+    JavaClassCodeUtils.methodStart(outInsert);
+    // 构建器对象的声明
+    outInsert.append(methodBuilderDefine());
+
+    for (TableColumnDTO columnInfo : tableColumnList) {
+      // 加入空的参数检查判断
+      outInsert.append(this.checkNullParam(columnInfo, dtoPackageInfo, errorCode));
+      // 2，超过长度的检查
+      String outPropertyKeyMax =
+          GenerateJavaErrorCode.propertiesErrorKeyMax(
+              columnInfo.getTableName(), columnInfo.getColumnName());
+    }
+
+    // 当前方法的结束
+    outInsert.append(methodBuilderFinish());
+
+    // 加入返回语句
+    outInsert.append(returnCode());
+
+    // 方法结束
+    JavaClassCodeUtils.methodEnd(outInsert);
+
+    return outInsert.toString();
   }
 
   /**
@@ -118,7 +168,6 @@ public class GenerateJavaCheck {
 
       // 加入空的参数检查判断
       outInsert.append(this.checkNullParam(columnInfo, dtoPackageInfo, errorCode));
-
       // 2，超过长度的检查
       String outPropertyKeyMax =
           GenerateJavaErrorCode.propertiesErrorKeyMax(
@@ -137,6 +186,11 @@ public class GenerateJavaCheck {
     return outInsert.toString();
   }
 
+  /**
+   * 返回错误对象
+   *
+   * @return 实体对象
+   */
   private String returnCode() {
     StringBuilder outInsert = new StringBuilder();
     // 加入return语句
@@ -173,6 +227,12 @@ public class GenerateJavaCheck {
       String getName = JavaMethodName.GET + nameSuffix;
 
       // 先添加注释，再添加代码
+      outInsert.append(JavaFormat.appendTab(4));
+      outInsert.append(Symbol.PATH).append(Symbol.PATH);
+      outInsert.append(columnInfo.getColumnMsg());
+      outInsert.append(Symbol.ENTER_LINE);
+
+      // 生成代码
       outInsert.append(JavaFormat.appendTab(4));
       outInsert.append(Symbol.POINT);
       outInsert.append(METHOD_CHECK_NULL).append(Symbol.BRACKET_LEFT);

@@ -60,6 +60,18 @@ public class MenuNode {
   }
 
   /**
+   * 添加子节点的方法，仅添加子节点，不返回对象
+   *
+   * @param treeNode 树形结构信息
+   * @return 节点信息
+   */
+  public void addChildrenOnly(JavaDomainTreeKey treeNode) {
+    MenuNode childrenNode = new MenuNode(treeNode);
+    childrenNode.parent = this;
+    this.getChildren().put(treeNode.getKey(), childrenNode);
+  }
+
+  /**
    * 添加子节点的方法，通过编码进行构建
    *
    * @param code 树形结构信息
@@ -70,6 +82,18 @@ public class MenuNode {
     childrenNode.parent = this;
     this.getChildren().put(code, childrenNode);
     return childrenNode;
+  }
+
+  /**
+   * 添加子节点的方法，通过编码进行构建,仅添加
+   *
+   * @param code 树形结构信息
+   * @return 节点信息
+   */
+  public void addChildrenOnly(String code) {
+    MenuNode childrenNode = new MenuNode(code);
+    childrenNode.parent = this;
+    this.getChildren().put(code, childrenNode);
   }
 
   /**

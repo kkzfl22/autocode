@@ -43,7 +43,7 @@ public class ProjectMenuTree {
     // 添加main
     MenuNode srcMainNode = srcNode.addChildren(ProjectMenuTreeKey.SRC_MAIN.getKey());
     // 添加java和
-    srcMainNode.addChildren(ProjectMenuTreeKey.MAIN_JAVA.getKey());
+    srcMainNode.addChildrenOnly(ProjectMenuTreeKey.MAIN_JAVA.getKey());
     // resource目录
     MenuNode resourceNode = srcMainNode.addChildren(ProjectMenuTreeKey.MAIN_RESOURCES.getKey());
     // 添加mapper的目录
@@ -53,19 +53,19 @@ public class ProjectMenuTree {
     MenuNode i18nModuleNode =
         i18nResourceNode.addChildren(ProjectMenuTreeKey.I18N_RESOURCE.getKey());
     // 模块
-    i18nModuleNode.addChildren(modelName);
+    i18nModuleNode.addChildrenOnly(modelName);
 
     // 在mapper添加模块
     MenuNode modelNode = mapperNode.addChildren(modelName);
     // 模块下添加repository目录
-    modelNode.addChildren(ProjectMenuTreeKey.RESOURCES_REPOSITORY.getKey());
+    modelNode.addChildrenOnly(ProjectMenuTreeKey.RESOURCES_REPOSITORY.getKey());
 
     // 添加test目录
     MenuNode srcTestNode = srcNode.addChildren(ProjectMenuTreeKey.SRC_TEST.getKey());
     // test目录下添加java
-    srcTestNode.addChildren(ProjectMenuTreeKey.MAIN_JAVA.getKey());
+    srcTestNode.addChildrenOnly(ProjectMenuTreeKey.MAIN_JAVA.getKey());
     // test目录下添加resource目录
-    srcTestNode.addChildren(ProjectMenuTreeKey.MAIN_RESOURCES.getKey());
+    srcTestNode.addChildrenOnly(ProjectMenuTreeKey.MAIN_RESOURCES.getKey());
 
     // resource目录
     MenuNode testResourceNode = srcTestNode.addChildren(ProjectMenuTreeKey.MAIN_RESOURCES.getKey());
@@ -75,7 +75,7 @@ public class ProjectMenuTree {
     // 在mapper添加模块
     MenuNode testModelNode = testMapperNode.addChildren(modelName);
     // 模块下添加repository目录
-    testModelNode.addChildren(ProjectMenuTreeKey.RESOURCES_REPOSITORY.getKey());
+    testModelNode.addChildrenOnly(ProjectMenuTreeKey.RESOURCES_REPOSITORY.getKey());
 
     return root;
   }

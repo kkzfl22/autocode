@@ -71,11 +71,12 @@ public class JavaCodeInterfaceObjectCreate implements GenerateCodeInf {
 
       // 进行存储层的bean代码生成
       StringBuilder persistBean =
-              GenerateJavaSwaggerBean.INSTANCE.generateJavaBean(
+          GenerateJavaSwaggerBean.INSTANCE.generateJavaBean(
               packageInfo,
               tableEntry.getValue(),
               param.getGenerateConfig().getGenerate().getCode(),
-              param.getGenerateConfig().getGenerate().getAuthor());
+              param.getGenerateConfig().getGenerate().getAuthor(),
+              param.getTypeEnum());
 
       // 定义项目内的完整目录结构
       String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();

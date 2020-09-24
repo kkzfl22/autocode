@@ -55,7 +55,7 @@ public class DomainMenuTree {
   /** 构建基础的目录结构 */
   private MenuNode builder() {
     // 应用层
-    defineRoot.addChildren(JavaDomainTreeKey.APPLICATION);
+    defineRoot.addChildrenOnly(JavaDomainTreeKey.APPLICATION);
     // 构建领域层
     builderDomain(modelName);
     // 构建基础资源层
@@ -79,25 +79,25 @@ public class DomainMenuTree {
             .addChildren(modelName);
 
     // 领域层中的静态资源学量
-    model.addChildren(JavaDomainTreeKey.DOMAIN_CONSTANT);
+    model.addChildrenOnly(JavaDomainTreeKey.DOMAIN_CONSTANT);
     // 添加领域层中实体
-    model.addChildren(JavaDomainTreeKey.DOMAIN_ENTITY);
+    model.addChildrenOnly(JavaDomainTreeKey.DOMAIN_ENTITY);
     // 添加服务层
-    model.addChildren(JavaDomainTreeKey.DOMAIN_SERVICE);
+    model.addChildrenOnly(JavaDomainTreeKey.DOMAIN_SERVICE);
 
     // 添加存储层资源
     // 优先添加模块名称
     MenuNode repositoryNode = model.addChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY);
     // 领域层的转换对象
-    repositoryNode.addChildren(JavaDomainTreeKey.REPOSITORY_ASSEMBLER);
+    repositoryNode.addChildrenOnly(JavaDomainTreeKey.REPOSITORY_ASSEMBLER);
     // 交互接口
-    repositoryNode.addChildren(JavaDomainTreeKey.REPOSITORY_FACADE);
+    repositoryNode.addChildrenOnly(JavaDomainTreeKey.REPOSITORY_FACADE);
     // 数据库接口层
-    repositoryNode.addChildren(JavaDomainTreeKey.REPOSITORY_MAPPER);
+    repositoryNode.addChildrenOnly(JavaDomainTreeKey.REPOSITORY_MAPPER);
     // 交互接口实现
-    repositoryNode.addChildren(JavaDomainTreeKey.REPOSITORY_PERSISTENCE);
+    repositoryNode.addChildrenOnly(JavaDomainTreeKey.REPOSITORY_PERSISTENCE);
     // 存储实体
-    repositoryNode.addChildren(JavaDomainTreeKey.REPOSITORY_PO);
+    repositoryNode.addChildrenOnly(JavaDomainTreeKey.REPOSITORY_PO);
   }
 
   /** 构建基础资源层，例如mq等设施 */
@@ -105,33 +105,33 @@ public class DomainMenuTree {
     // 基础资源层
     MenuNode infraStructureNode = defineRoot.addChildren(JavaDomainTreeKey.INFRASTRUCTURE);
     // 添加公共算法目录
-    infraStructureNode.addChildren(JavaDomainTreeKey.INFRASTRUCTURE_ALGORITHM);
+    infraStructureNode.addChildrenOnly(JavaDomainTreeKey.INFRASTRUCTURE_ALGORITHM);
     // api的目录
-    infraStructureNode.addChildren(JavaDomainTreeKey.INFRASTRUCTURE_API);
+    infraStructureNode.addChildrenOnly(JavaDomainTreeKey.INFRASTRUCTURE_API);
     // client目录
-    infraStructureNode.addChildren(JavaDomainTreeKey.INFRASTRUCTURE_CLIENT);
+    infraStructureNode.addChildrenOnly(JavaDomainTreeKey.INFRASTRUCTURE_CLIENT);
     // 公共目录
     MenuNode commonNode = infraStructureNode.addChildren(JavaDomainTreeKey.INFRASTRUCTURE_COMM);
     // 公共目录下的验证
-    commonNode.addChildren(JavaDomainTreeKey.COMM_CHECK);
+    commonNode.addChildrenOnly(JavaDomainTreeKey.COMM_CHECK);
     // 公共目录下的异常
-    commonNode.addChildren(JavaDomainTreeKey.COMM_EXCEPTION);
+    commonNode.addChildrenOnly(JavaDomainTreeKey.COMM_EXCEPTION);
     // 公共目录下的事件通道
     MenuNode rabbitQueueNode = commonNode.addChildren(JavaDomainTreeKey.COMM_RABBITMQ);
     // 事件通道下的转换目录
-    rabbitQueueNode.addChildren(JavaDomainTreeKey.RABBITMQ_ASSEMBLER);
+    rabbitQueueNode.addChildrenOnly(JavaDomainTreeKey.RABBITMQ_ASSEMBLER);
     // 事件通道下的配制目录
-    rabbitQueueNode.addChildren(JavaDomainTreeKey.RABBITMQ_CONFIG);
+    rabbitQueueNode.addChildrenOnly(JavaDomainTreeKey.RABBITMQ_CONFIG);
     // 事件通道下的实体目录
-    rabbitQueueNode.addChildren(JavaDomainTreeKey.RABBITMQ_ENTITY);
+    rabbitQueueNode.addChildrenOnly(JavaDomainTreeKey.RABBITMQ_ENTITY);
     // 事件通道下的事件目录
-    rabbitQueueNode.addChildren(JavaDomainTreeKey.RABBITMQ_EVENT);
+    rabbitQueueNode.addChildrenOnly(JavaDomainTreeKey.RABBITMQ_EVENT);
     // 公共类
-    commonNode.addChildren(JavaDomainTreeKey.COMM_UTILS);
+    commonNode.addChildrenOnly(JavaDomainTreeKey.COMM_UTILS);
     // 静态常量
-    infraStructureNode.addChildren(JavaDomainTreeKey.INFRASTRUCTURE_CONSTANT);
+    infraStructureNode.addChildrenOnly(JavaDomainTreeKey.INFRASTRUCTURE_CONSTANT);
     // 实体
-    infraStructureNode.addChildren(JavaDomainTreeKey.INFRASTRUCTURE_ENTITY);
+    infraStructureNode.addChildrenOnly(JavaDomainTreeKey.INFRASTRUCTURE_ENTITY);
   }
 
   /** 构建与前端交互的接口 */
@@ -139,17 +139,17 @@ public class DomainMenuTree {
     // 接口资源
     MenuNode interfaceNode = defineRoot.addChildren(JavaDomainTreeKey.INTERFACE);
     // 类转换处理
-    interfaceNode.addChildren(JavaDomainTreeKey.INTERFACE_ASSEMBLER);
+    interfaceNode.addChildrenOnly(JavaDomainTreeKey.INTERFACE_ASSEMBLER);
     // 校验处理
-    interfaceNode.addChildren(JavaDomainTreeKey.INTERFACE_CHECK);
+    interfaceNode.addChildrenOnly(JavaDomainTreeKey.INTERFACE_CHECK);
     // 公共类处理
-    interfaceNode.addChildren(JavaDomainTreeKey.INTERFACE_COMM);
+    interfaceNode.addChildrenOnly(JavaDomainTreeKey.INTERFACE_COMM);
     // 接口接收传输
-    interfaceNode.addChildren(JavaDomainTreeKey.INTERFACE_DTO);
+    interfaceNode.addChildrenOnly(JavaDomainTreeKey.INTERFACE_DTO);
     // 对外的接口服务
-    interfaceNode.addChildren(JavaDomainTreeKey.INTERFACE_FACADE);
+    interfaceNode.addChildrenOnly(JavaDomainTreeKey.INTERFACE_FACADE);
     // 添加错误码文件
-    interfaceNode.addChildren(JavaDomainTreeKey.INTERFACE_ERROR_CODE);
+    interfaceNode.addChildrenOnly(JavaDomainTreeKey.INTERFACE_ERROR_CODE);
   }
 
   /**

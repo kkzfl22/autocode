@@ -16,9 +16,9 @@ import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.WhereUtils;
+import com.liujun.micro.autocode.generator.convergence.TypeConvergence;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
-import com.liujun.micro.autocode.generator.database.service.DatabaseValue;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
@@ -423,7 +423,8 @@ public class GenerateJunitQuery {
       TableColumnDTO tableInfo = columnMap.get(whereInfo.getSqlColumn());
       // java属性的命名
       String fieldName = NameProcess.INSTANCE.toFieldName(tableInfo.getColumnName());
-      String javaDataType = DatabaseValue.INSTANCE.parseJavaType(dbType, tableInfo);
+
+      String javaDataType = TypeConvergence.getJavaType(dbType, tableInfo.getDataType());
       String setName = NameProcess.INSTANCE.toJavaNameFirstUpper(fieldName);
       String columnName = NameProcess.INSTANCE.toFieldName(tableInfo.getColumnName());
 

@@ -43,27 +43,11 @@ public class JavaCodeRepositoryObjectCreate implements GenerateCodeInf {
       Map.Entry<String, List<TableColumnDTO>> tableEntry = tableNameEntry.next();
       // 表名
       String tableName = tableEntry.getKey();
-      // 得到类名
-      String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
-      String className = tableClassName + REPOSITORY_PO;
-      // 表信息
-      TableInfoDTO tableInfo = tableMap.get(tableName);
-      // 获取以java定义的package路径
-      String javaPackageStr = param.getJavaCodePackage().getRepositoryObjectNode().outJavaPackage();
 
-      // 注释
-      String docComment =
-          tableInfo.getTableComment()
-              + Symbol.BRACKET_LEFT
-              + tableInfo.getTableName()
-              + Symbol.BRACKET_RIGHT
-              + DOC_ANNOTATION;
-
-      // 将当前包信息存入到上下文对象信息中
-      // 构建类路径及名称记录下
+      // 构建包的存储信息
       ImportPackageInfo packageInfo =
-          new ImportPackageInfo(
-              javaPackageStr, className, docComment, JavaVarName.INSTANCE_NAME_ENTITY);
+          this.buildPackageData(param, tableMap.get(tableName), tableName);
+
       // 将po记录到公共的上下文对象中
       ImportPackageUtils.putPackageInfo(
           tableName,
@@ -78,16 +62,53 @@ public class JavaCodeRepositoryObjectCreate implements GenerateCodeInf {
               packageInfo,
               tableEntry.getValue(),
               param.getGenerateConfig().getGenerate().getCode(),
-              param.getGenerateConfig().getGenerate().getAuthor());
+              param.getGenerateConfig().getGenerate().getAuthor(),
+              param.getTypeEnum());
 
       // 定义项目内的完整目录结构
-      String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
-
-      javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
+      String outPackagePath =
+          param.getProjectPath().getSrcJavaNode().outPath()
+              + Symbol.PATH
+              + packageInfo.getPackagePath();
 
       // 进行存储层的实体输出
       GenerateOutFileUtils.outJavaFile(
-          persistBean, param.getFileBasePath(), javaPackageStr, className);
+          persistBean, param.getFileBasePath(), outPackagePath, packageInfo.getClassName());
     }
+  }
+
+  /**
+   * 构建包信息
+   *
+   * @param param 路径信息
+   * @param tableInfo 表信息
+   * @param tableName 表名
+   * @return 导入的包信息
+   */
+  private ImportPackageInfo buildPackageData(
+      GenerateCodeContext param, TableInfoDTO tableInfo, String tableName) {
+
+    // 得到类名
+    String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
+    String className = tableClassName + REPOSITORY_PO;
+
+    // 获取以java定义的package路径
+    String javaPackageStr = param.getJavaCodePackage().getRepositoryObjectNode().outJavaPackage();
+
+    // 注释
+    String docComment =
+        tableInfo.getTableComment()
+            + Symbol.BRACKET_LEFT
+            + tableInfo.getTableName()
+            + Symbol.BRACKET_RIGHT
+            + DOC_ANNOTATION;
+
+    // 将当前包信息存入到上下文对象信息中
+    // 构建类路径及名称记录下
+    ImportPackageInfo packageInfo =
+        new ImportPackageInfo(
+            javaPackageStr, className, docComment, JavaVarName.INSTANCE_NAME_ENTITY);
+
+    return packageInfo;
   }
 }

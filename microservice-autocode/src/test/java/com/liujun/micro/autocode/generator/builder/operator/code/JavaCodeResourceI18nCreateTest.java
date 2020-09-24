@@ -12,7 +12,7 @@ import org.junit.Test;
  * @author liujun
  * @version 0.0.1
  */
-public class JavaCodeResourceI18NZhCnCreateTest {
+public class JavaCodeResourceI18nCreateTest {
 
   @Test
   public void testGenerate() {

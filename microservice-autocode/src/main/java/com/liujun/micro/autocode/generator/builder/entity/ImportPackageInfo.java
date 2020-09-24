@@ -1,7 +1,8 @@
 package com.liujun.micro.autocode.generator.builder.entity;
 
 import com.liujun.micro.autocode.constant.Symbol;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -10,7 +11,8 @@ import lombok.ToString;
  * @author liujun
  * @version 0.0.1
  */
-@Data
+@Getter
+@Setter
 @ToString
 public class ImportPackageInfo {
 
@@ -26,12 +28,10 @@ public class ImportPackageInfo {
   /** 声明的变量的名称 */
   private String varName;
 
-  /**
-   * 仅声明文件类名
-   *
-   * @param packagePath 包的路径
-   * @param className 文件类名
-   */
+  /** 注解标识 */
+  private String annotation;
+
+
   public ImportPackageInfo(String packagePath, String className) {
     this.packagePath = packagePath;
     this.className = className;
@@ -45,7 +45,8 @@ public class ImportPackageInfo {
    * @param classComment 类的注释
    */
   public ImportPackageInfo(String packagePath, String className, String classComment) {
-    this(packagePath, className);
+    this.packagePath = packagePath;
+    this.className = className;
     this.classComment = classComment;
   }
 
@@ -61,6 +62,21 @@ public class ImportPackageInfo {
       String packagePath, String className, String classComment, String varName) {
     this(packagePath, className, classComment);
     this.varName = varName;
+  }
+
+  /**
+   * 构建注解的对象信息
+   *
+   * @param packagePath
+   * @param className
+   * @param annotation
+   * @return
+   */
+  public static ImportPackageInfo getAnnotationPkg(
+      String packagePath, String className, String annotation) {
+    ImportPackageInfo instance = new ImportPackageInfo(packagePath, className);
+    instance.setAnnotation(annotation);
+    return instance;
   }
 
   /**

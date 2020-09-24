@@ -1,6 +1,8 @@
 package com.liujun.micro.autocode.config.generate.entity;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -12,8 +14,10 @@ import java.util.List;
  * @author liujun
  * @version 0.0.1
  */
-@Data
+@Getter
+@Setter
 @ToString
+@EqualsAndHashCode
 public class MethodInfo implements Comparable<MethodInfo> {
 
   /** 方法名称 */
@@ -66,7 +70,6 @@ public class MethodInfo implements Comparable<MethodInfo> {
     } else if (this.getOrder() < o.getOrder()) {
       return -1;
     }
-
     return 0;
   }
 }

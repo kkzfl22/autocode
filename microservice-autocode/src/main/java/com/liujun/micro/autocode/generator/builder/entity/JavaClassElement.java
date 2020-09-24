@@ -1,6 +1,7 @@
 package com.liujun.micro.autocode.generator.builder.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -9,7 +10,8 @@ import lombok.ToString;
  * @author liujun
  * @version 0.0.1
  */
-@Data
+@Getter
+@Setter
 @ToString
 public class JavaClassElement {
 

@@ -3,6 +3,8 @@ package com.liujun.micro.autocode.generator.builder.entity;
 import com.liujun.micro.autocode.constant.Symbol;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,7 +14,8 @@ import org.apache.commons.lang3.StringUtils;
  * @author liujun
  * @version 0.0.1
  */
-@Data
+@Getter
+@Setter
 @Builder
 @ToString
 public class JavaAnnotation {

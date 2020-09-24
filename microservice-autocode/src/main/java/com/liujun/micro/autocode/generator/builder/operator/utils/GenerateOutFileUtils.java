@@ -1,9 +1,9 @@
 package com.liujun.micro.autocode.generator.builder.operator.utils;
 
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.generator.builder.utils.MenuTreeProcessUtil;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.utils.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 生成的文件输出公共方法
@@ -40,7 +40,7 @@ public class GenerateOutFileUtils {
   public static void outFile(StringBuilder sb, String path, String definePackage, String fileName) {
 
     // 获取以路径/进行输出
-    String javaPathStr = MenuTreeProcessUtil.outPath(definePackage);
+    String javaPathStr = outPath(definePackage);
 
     StringBuilder outPath = new StringBuilder();
     // 输出的基础路径
@@ -50,5 +50,18 @@ public class GenerateOutFileUtils {
 
     // 文件输出操作
     FileUtils.writeFile(outPath.toString(), fileName, sb);
+  }
+
+  /**
+   * 按路径/进行输出
+   *
+   * @return
+   */
+  public static String outPath(String javaDefinePackage) {
+    if (StringUtils.isEmpty(javaDefinePackage)) {
+      return javaDefinePackage;
+    }
+
+    return javaDefinePackage.replaceAll(Symbol.SPIT_POINT, Symbol.PATH);
   }
 }

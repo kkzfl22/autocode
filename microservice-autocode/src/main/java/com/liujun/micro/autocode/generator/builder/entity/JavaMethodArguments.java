@@ -3,6 +3,8 @@ package com.liujun.micro.autocode.generator.builder.entity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -11,7 +13,8 @@ import lombok.ToString;
  * @author liujun
  * @version 0.0.1
  */
-@Data
+@Getter
+@Setter
 @ToString
 @Builder
 public class JavaMethodArguments {
@@ -33,14 +36,14 @@ public class JavaMethodArguments {
    */
   public static JavaMethodArguments parsePackage(ImportPackageInfo packageInfo, String name) {
 
-      return JavaMethodArguments.builder()
-          // 参数的类型
-          .type(packageInfo.getClassName())
-          // 名称
-          .name(name)
-          // 注释
-          .comment(packageInfo.getClassComment())
-          .build();
+    return JavaMethodArguments.builder()
+        // 参数的类型
+        .type(packageInfo.getClassName())
+        // 名称
+        .name(name)
+        // 注释
+        .comment(packageInfo.getClassComment())
+        .build();
   }
 
   /**
@@ -51,13 +54,13 @@ public class JavaMethodArguments {
    */
   public static JavaMethodArguments parsePackageList(ImportPackageInfo packageInfo, String name) {
 
-      return JavaMethodArguments.builder()
-          // 集合类型参数
-          .type(JavaClassCodeUtils.listType(packageInfo.getClassName()))
-          // 名称
-          .name(name)
-          // 注释
-          .comment(packageInfo.getClassComment())
-          .build();
+    return JavaMethodArguments.builder()
+        // 集合类型参数
+        .type(JavaClassCodeUtils.listType(packageInfo.getClassName()))
+        // 名称
+        .name(name)
+        // 注释
+        .comment(packageInfo.getClassComment())
+        .build();
   }
 }
