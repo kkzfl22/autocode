@@ -2,6 +2,8 @@ package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.config.generate.GenerateConfigProcess;
 import com.liujun.micro.autocode.config.generate.GenerateErrorCodeProcess;
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.config.generate.entity.TypeInfo;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
 import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
@@ -15,6 +17,7 @@ import com.liujun.micro.autocode.generator.builder.entity.JavaEnumFieldEntity;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
@@ -57,10 +60,10 @@ public class GenerateJavaErrorCode {
   private static final String NULL_COMMENT = "为空的错误码";
 
   /** 超过最大长度的错误的前缀 */
-  private static final String MAX_PREFIX = "MAX_";
+  private static final String MAX_PREFIX = "MAX_LENGTH_";
 
   /** 超过最大值的前缀 */
-  private static final String MAX_KEY_PREFIX = "max";
+  private static final String MAX_KEY_PREFIX = "max.length";
 
   /** 注释 */
   private static final String MAX_COMMENT = "超过最大长度的错误码";
@@ -71,24 +74,40 @@ public class GenerateJavaErrorCode {
   /** 数据初始化方法 */
   private static final String DATA_INIT_COMMENT = "数据初始化方法";
 
+  /** 请求集合参数 */
+  private static final String REQUEST_LIST_SUFFIX = "request.list";
+
+  /** 当前的请求集合为空 */
+  private static final String REQUEST_LIST_COMMENT = "请求集合为空";
+
   /**
    * 生成错误码
    *
    * @param errorCodePackage 错误码包
    * @param tableColumnList 表列的信息
+   * @param methodCode 参数信息
    * @param author 作者
    * @return 生成的代码
    */
   public StringBuilder generateErrorCode(
-      ImportPackageInfo errorCodePackage, List<TableColumnDTO> tableColumnList, String author) {
+      ImportPackageInfo errorCodePackage,
+      List<TableColumnDTO> tableColumnList,
+      List<MethodInfo> methodCode,
+      String author) {
 
     // 类的定义
     StringBuilder sb = new StringBuilder();
     // 枚举文件的定义
     sb.append(this.enumDefine(errorCodePackage, author));
 
-    // 错误码定义
+    // 按列进行定义错误码,包括判断空以及最大长度
     sb.append(errorCodeDefine(tableColumnList));
+
+    // 按方法检查集合操作
+    sb.append(errorCodeMethodParamDefine(methodCode, tableColumnList.get(0).getTableName()));
+
+    // 属性结束
+    sb.append(fieldFinish());
 
     // 属性的定义
     sb.append(enumFieldDefine());
@@ -487,8 +506,32 @@ public class GenerateJavaErrorCode {
       outInsert.append(enumMoreMax);
     }
 
-    // 属性结束
-    outInsert.append(fieldFinish());
+    return outInsert.toString();
+  }
+
+  /**
+   * 按方法参数进行错误码定义
+   *
+   * <p>目前
+   *
+   * @param methodCode 方法信息
+   * @return 错误码信息
+   */
+  private String errorCodeMethodParamDefine(List<MethodInfo> methodCode, String tableName) {
+    StringBuilder outInsert = new StringBuilder();
+
+    // 获取开始的编码
+    GenerateErrorCodeProcess.INSTANCE.getStartCode();
+
+    // 错误码的类处理操作
+    for (MethodInfo columnInfo : methodCode) {
+      // 检查参数是否为集合
+      if (MethodUtils.checkBatch(columnInfo.getParamType())) {
+        // 集合参数检查
+        String outValue = this.outEnumFieldList(columnInfo, tableName);
+        outInsert.append(outValue);
+      }
+    }
 
     return outInsert.toString();
   }
@@ -559,6 +602,39 @@ public class GenerateJavaErrorCode {
     outPropertiesKey.append(moduleName).append(Symbol.POINT);
     outPropertiesKey.append(entityName).append(Symbol.POINT);
     outPropertiesKey.append(fieldName);
+
+    return outPropertiesKey.toString();
+  }
+
+  /**
+   * 请求参数中集合不能为空
+   *
+   * @param tableName 表名
+   * @param methodName 方法名
+   * @return
+   */
+  public static String propertiesErrorKeyParamListNull(String tableName, String methodName) {
+
+    StringBuilder outPropertiesKey = new StringBuilder();
+
+    // 获取模块名称
+    String moduleName =
+        GenerateConfigProcess.INSTANCE
+            .getCfgEntity()
+            .getGenerate()
+            .getCodeMenuTree()
+            .getModelName();
+
+    // 实体的名称
+    String entityName = NameProcess.INSTANCE.toJavaClassName(tableName);
+
+    // 当前的错类型为超过最大值
+    outPropertiesKey.append(NULL_KEY_PREFIX);
+    outPropertiesKey.append(Symbol.POINT);
+    outPropertiesKey.append(moduleName).append(Symbol.POINT);
+    outPropertiesKey.append(entityName).append(Symbol.POINT);
+    outPropertiesKey.append(methodName).append(Symbol.POINT);
+    outPropertiesKey.append(REQUEST_LIST_SUFFIX);
 
     return outPropertiesKey.toString();
   }
@@ -659,6 +735,35 @@ public class GenerateJavaErrorCode {
             .value(ErrorCodeGenerate.outErrorCode(incrementId, outPropertyKeyMax))
             // 超过最大长度的注释
             .comment(columnInfo.getColumnMsg() + MAX_COMMENT)
+            .build();
+
+    // 枚举值进行输出操作
+    String outEnumField = JavaClassCodeUtils.getEnumField(enumFieldEntity);
+
+    return outEnumField;
+  }
+
+  /**
+   * 枚举的属性,集合为空
+   *
+   * @param columnInfo 列信息
+   * @return
+   */
+  private String outEnumFieldList(MethodInfo columnInfo, String tableName) {
+
+    int incrementId = GenerateErrorCodeProcess.INSTANCE.increment();
+
+    // 生成的属性的key信息
+    String outPropertyKeyNull = propertiesErrorKeyParamListNull(tableName, columnInfo.getName());
+
+    JavaEnumFieldEntity enumFieldEntity =
+        JavaEnumFieldEntity.builder()
+            // 名称
+            .name(enumNullCode(columnInfo.getName()))
+            // 集合为空的错误提示
+            .value(ErrorCodeGenerate.outErrorCode(incrementId, outPropertyKeyNull))
+            // 注释
+            .comment(columnInfo.getComment() + REQUEST_LIST_COMMENT)
             .build();
 
     // 枚举值进行输出操作

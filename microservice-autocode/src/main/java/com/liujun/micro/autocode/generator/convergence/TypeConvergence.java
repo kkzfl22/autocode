@@ -50,4 +50,15 @@ public class TypeConvergence {
     // 转换成对应的mybatis类型返回
     return MybatisDataTypeEnum.getMybatisType(standardType);
   }
+
+  /**
+   * 获取数据类型的最大值
+   *
+   * @param typeEnum 数据库类型
+   * @param tableColumn 列表信息
+   * @return
+   */
+  public static Integer getDbTypeMax(DatabaseTypeEnum typeEnum, TableColumnDTO tableColumn) {
+    return DatabaseTypeService.INSTANCE.getDatabaseTypeLength(typeEnum, tableColumn.getDataType());
+  }
 }

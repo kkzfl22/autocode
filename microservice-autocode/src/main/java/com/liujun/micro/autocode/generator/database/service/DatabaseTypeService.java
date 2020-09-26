@@ -58,4 +58,21 @@ public class DatabaseTypeService {
 
     return null;
   }
+
+  /**
+   * 获取数据类型的最大长度
+   *
+   * @param typeEnum 类型枚举
+   * @param databaseType 数据库的类型
+   * @return 标识的key
+   */
+  public Integer getDatabaseTypeLength(DatabaseTypeEnum typeEnum, String databaseType) {
+    DataBaseTypeInf typeInfo = DATABASE_TYPE_MAP.get(typeEnum.getDatabaseType());
+
+    if (typeInfo != null) {
+      return typeInfo.getDataTypeMax(databaseType);
+    }
+
+    return null;
+  }
 }

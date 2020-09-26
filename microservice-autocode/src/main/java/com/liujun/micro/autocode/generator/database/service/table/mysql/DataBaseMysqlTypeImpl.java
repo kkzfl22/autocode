@@ -28,4 +28,17 @@ public class DataBaseMysqlTypeImpl implements DataBaseTypeInf {
 
     return standardType;
   }
+
+  @Override
+  public Integer getDataTypeMax(String dbType) {
+
+    // 获取类型信息
+    MysqlDataTypeEnum typeEnum = MysqlDataTypeEnum.mysqlDataType(dbType);
+
+    if (typeEnum == null) {
+      return null;
+    }
+
+    return (int) ((long) typeEnum.getLengthEnd());
+  }
 }

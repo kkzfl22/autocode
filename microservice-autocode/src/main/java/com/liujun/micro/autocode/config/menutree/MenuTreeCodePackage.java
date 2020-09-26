@@ -193,6 +193,18 @@ public class MenuTreeCodePackage {
   }
 
   /**
+   * 静态常量包
+   *
+   * @return 模块名称
+   */
+  public MenuNode getInterfaceConstant() {
+    return menuTree
+        .getDefineRoot()
+        .getChildren(JavaDomainTreeKey.INTERFACE)
+        .getChildren(JavaDomainTreeKey.INTERFACE_CONSTANT);
+  }
+
+  /**
    * 前端参数的验证
    *
    * @return 模块名称

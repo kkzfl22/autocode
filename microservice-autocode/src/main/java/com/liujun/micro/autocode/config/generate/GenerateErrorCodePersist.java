@@ -100,10 +100,10 @@ public class GenerateErrorCodePersist {
       inputStream = new FileInputStream(getBasePath() + LOAD_CONFIG);
       inputObjectStream = new ObjectInputStream(inputStream);
       value = inputObjectStream.readInt();
-    } catch (FileNotFoundException e) {
-      // e.printStackTrace();
+    }
+    // 文件未加载到属性正常情况，所以异常就被吞了
+    catch (FileNotFoundException e) {
     } catch (IOException e) {
-      // e.printStackTrace();
       log.error("load IOException:", e);
     } finally {
       StreamUtils.close(inputObjectStream);

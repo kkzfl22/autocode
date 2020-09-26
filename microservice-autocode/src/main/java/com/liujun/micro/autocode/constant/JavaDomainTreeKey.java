@@ -105,6 +105,9 @@ public enum JavaDomainTreeKey {
 
   /** 统一的错误码 */
   INTERFACE_ERROR_CODE("errorCode"),
+
+  /** 静态常量信息 */
+  INTERFACE_CONSTANT("constant"),
   ;
 
   private final String key;

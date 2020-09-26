@@ -47,6 +47,9 @@ public enum GenerateCodePackageKey {
   /** 错误前端错误码对象信息 */
   INTERFACE_ERROR_CODE("interface_errorCode"),
 
+  /** 错误检查的静态常量 */
+  INTERFACE_ERROR_CONSTANT("interface_error_constant"),
+
   /** 参数的检查 */
   INTERFACE_CHECK_PARAM("interface_check_param"),
   ;

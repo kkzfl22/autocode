@@ -89,6 +89,9 @@ public class JavaVarName {
   /** 循环中的变量 */
   public static final String FOR_TEMP_INDEX = "i";
 
+  /** 数据循环变量 */
+  public static final String FOREACH_TEMP_NAME = "dataItem";
+
   /** 集合名称后缀 */
   public static final String NAME_LIST_SUFFIX = "List";
 

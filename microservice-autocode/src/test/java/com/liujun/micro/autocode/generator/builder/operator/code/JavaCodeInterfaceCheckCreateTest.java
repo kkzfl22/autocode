@@ -2,6 +2,7 @@ package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceCheckCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceConstantCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceErrorCodeCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceObjectCreate;
 import org.junit.Test;
@@ -18,6 +19,7 @@ public class JavaCodeInterfaceCheckCreateTest {
   public void testGenerate() {
     JavaCodeInterfaceErrorCodeCreate instance = new JavaCodeInterfaceErrorCodeCreate();
     JavaCodeInterfaceObjectCreate dtoObjInstance = new JavaCodeInterfaceObjectCreate();
+    JavaCodeInterfaceConstantCreate constantInstance = new JavaCodeInterfaceConstantCreate();
     JavaCodeInterfaceCheckCreate checkInstance = new JavaCodeInterfaceCheckCreate();
 
     GenerateCodeContext context = CodeBaseUtils.getBase();
@@ -25,6 +27,7 @@ public class JavaCodeInterfaceCheckCreateTest {
     // 进行数据生成
     instance.generateCode(context);
     dtoObjInstance.generateCode(context);
+    constantInstance.generateCode(context);
     checkInstance.generateCode(context);
   }
 }

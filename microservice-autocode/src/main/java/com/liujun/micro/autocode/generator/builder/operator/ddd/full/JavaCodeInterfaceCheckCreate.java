@@ -69,6 +69,13 @@ public class JavaCodeInterfaceCheckCreate implements GenerateCodeInf {
               GenerateCodePackageKey.INTERFACE_ERROR_CODE.getKey(),
               tableName);
 
+      // 获取参数校验的常量类
+      ImportPackageInfo constantPackage =
+          ImportPackageUtils.getDefineClass(
+              param.getPackageMap(),
+              GenerateCodePackageKey.INTERFACE_ERROR_CONSTANT.getKey(),
+              tableName);
+
       // 进行转换方法的生成
       StringBuilder sb =
           GenerateJavaCheck.INSTANCE.generateCheck(
@@ -77,6 +84,7 @@ public class JavaCodeInterfaceCheckCreate implements GenerateCodeInf {
               tableNameItem.getValue(),
               transferPackageInfo,
               errorCodePkg,
+              constantPackage,
               param.getGenerateConfig().getGenerate().getAuthor());
 
       // 定义项目内的完整目录结构

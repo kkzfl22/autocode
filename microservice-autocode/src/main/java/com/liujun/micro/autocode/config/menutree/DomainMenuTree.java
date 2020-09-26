@@ -150,6 +150,8 @@ public class DomainMenuTree {
     interfaceNode.addChildrenOnly(JavaDomainTreeKey.INTERFACE_FACADE);
     // 添加错误码文件
     interfaceNode.addChildrenOnly(JavaDomainTreeKey.INTERFACE_ERROR_CODE);
+    // 添加静态常量
+    interfaceNode.addChildrenOnly(JavaDomainTreeKey.INTERFACE_CONSTANT);
   }
 
   /**

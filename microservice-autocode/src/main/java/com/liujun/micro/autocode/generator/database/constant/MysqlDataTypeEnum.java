@@ -151,13 +151,13 @@ public enum MysqlDataTypeEnum {
    *
    * <p>当转换的类不存在时，则会抛出IllegalArgumentException异常
    *
-   * @param mysqlType mysql的类型
+   * @param dataTypeParam mysql的类型
    * @return 标准的key
    */
-  public static MysqlDataTypeEnum mysqlDataType(String mysqlType) {
+  public static MysqlDataTypeEnum mysqlDataType(String dataTypeParam) {
     for (MysqlDataTypeEnum dataType : values()) {
       // 在数据库的类型判断中不区分大小写
-      if (dataType.mysqlType.equalsIgnoreCase(mysqlType)) {
+      if (dataType.mysqlType.equalsIgnoreCase(dataTypeParam)) {
         return dataType;
       }
     }

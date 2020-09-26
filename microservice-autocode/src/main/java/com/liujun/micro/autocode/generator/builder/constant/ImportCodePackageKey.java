@@ -35,6 +35,9 @@ public enum ImportCodePackageKey {
   /** 错误码容器集合 */
   ERROR_COLLECT(new ImportPackageInfo("com.common.collect", "ErrorCodeCollect", "错误码集合")),
 
+  /** 公共错误码枚举 */
+  ERROR_CODE_COMMON(new ImportPackageInfo("com.common.entity", "APICodeEnum", "公共错误码")),
+
   /** 错误码加载器对象 */
   ERROR_LOADER_COLLECT(new ImportPackageInfo("com.common.collect", "ErrorLoaderCollect", "错误码加载器")),
 
