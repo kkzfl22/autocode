@@ -65,4 +65,25 @@ public class TableColumnDTO {
     this.nullFlag = nullFlag;
     this.defaultValue = defaultvalue;
   }
+
+  /**
+   * 以现在对象值生成新的对象
+   *
+   * @return
+   */
+  public TableColumnDTO newInstanceForCurrValue() {
+    TableColumnDTO columnInfo = new TableColumnDTO();
+    columnInfo.setTableName(this.getTableName());
+    columnInfo.setColumnName(this.getColumnName());
+    columnInfo.setColumnMsg(this.getColumnMsg());
+    columnInfo.setDataType(this.getDataType());
+    columnInfo.setPrimaryKey(this.getPrimaryKey());
+    columnInfo.setDataLength(this.getDataLength());
+    columnInfo.setDataScale(this.getDataScale());
+    columnInfo.setAutoIncrement(this.getAutoIncrement());
+    columnInfo.setNullFlag(this.getNullFlag());
+    columnInfo.setDefaultValue(this.getDefaultValue());
+    columnInfo.setSqlColumnType(this.getSqlColumnType());
+    return columnInfo;
+  }
 }

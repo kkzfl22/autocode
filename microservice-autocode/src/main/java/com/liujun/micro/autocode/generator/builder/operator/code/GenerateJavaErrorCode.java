@@ -3,7 +3,8 @@ package com.liujun.micro.autocode.generator.builder.operator.code;
 import com.liujun.micro.autocode.config.generate.GenerateConfigProcess;
 import com.liujun.micro.autocode.config.generate.GenerateErrorCodeProcess;
 import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
-import com.liujun.micro.autocode.config.generate.entity.TypeInfo;
+import com.liujun.micro.autocode.config.generate.entity.WhereInfo;
+import com.liujun.micro.autocode.constant.MyBatisOperatorFlag;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
 import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
@@ -15,13 +16,13 @@ import com.liujun.micro.autocode.generator.builder.entity.JavaClassEntity;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
 import com.liujun.micro.autocode.generator.builder.entity.JavaEnumFieldEntity;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
-import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -104,7 +105,7 @@ public class GenerateJavaErrorCode {
     sb.append(errorCodeDefine(tableColumnList));
 
     // 按方法检查集合操作
-    sb.append(errorCodeMethodParamDefine(methodCode, tableColumnList.get(0).getTableName()));
+    sb.append(errorCodeMethodWhereDefine(methodCode, tableColumnList.get(0).getTableName()));
 
     // 属性结束
     sb.append(fieldFinish());
@@ -517,7 +518,7 @@ public class GenerateJavaErrorCode {
    * @param methodCode 方法信息
    * @return 错误码信息
    */
-  private String errorCodeMethodParamDefine(List<MethodInfo> methodCode, String tableName) {
+  private String errorCodeMethodWhereDefine(List<MethodInfo> methodCode, String tableName) {
     StringBuilder outInsert = new StringBuilder();
 
     // 获取开始的编码
@@ -531,9 +532,60 @@ public class GenerateJavaErrorCode {
         String outValue = this.outEnumFieldList(columnInfo, tableName);
         outInsert.append(outValue);
       }
+
+      // 还有条件的检查
+      if (columnInfo.getWhereInfo() != null && !columnInfo.getWhereInfo().isEmpty()) {
+        for (WhereInfo whereItem : columnInfo.getWhereInfo()) {
+          if (MyBatisOperatorFlag.IN.equals(whereItem.getOperatorFlag())) {
+            outInsert.append(errorCodeWhereIn(columnInfo, tableName, whereItem, outInsert));
+          }
+        }
+      }
     }
 
     return outInsert.toString();
+  }
+
+  /**
+   * where条件中的错误码定义
+   *
+   * @param method
+   * @param tableName
+   * @param whereItem
+   * @param outInsert
+   * @return
+   */
+  private String errorCodeWhereIn(
+      MethodInfo method, String tableName, WhereInfo whereItem, StringBuilder outInsert) {
+    StringBuilder outDataStr = new StringBuilder();
+
+    // 进行数据枚举的集合的查询
+    String enumValue = outEnumWhereFieldList(method, tableName, whereItem, outInsert);
+    outDataStr.append(enumValue);
+
+    // 2，超过长度的检查
+    String enumMoreMax =
+        outEnumFieldMoreMaxList(
+            tableName,
+            whereItem.getSqlColumn() + Symbol.UNDER_LINE + JavaVarName.NAME_LIST_SUFFIX,
+            method.getComment(),
+            outInsert);
+    outDataStr.append(enumMoreMax);
+
+    return outDataStr.toString();
+  }
+
+  /**
+   * 生成的国际资源的key
+   *
+   * @param tableName
+   * @param columnName
+   * @return
+   */
+  public static String propertiesErrorKeyNullWhereIn(String tableName, String columnName) {
+
+    String fieldName = NameProcess.INSTANCE.toProJavaName(columnName);
+    return propertiesErrorKey(NULL_KEY_PREFIX, tableName, fieldName, Symbol.EMPTY);
   }
 
   /**
@@ -545,30 +597,8 @@ public class GenerateJavaErrorCode {
    */
   public static String propertiesErrorKeyNull(String tableName, String columnName) {
 
-    StringBuilder outPropertiesKey = new StringBuilder();
-
-    // 获取模块名称
-    String moduleName =
-        GenerateConfigProcess.INSTANCE
-            .getCfgEntity()
-            .getGenerate()
-            .getCodeMenuTree()
-            .getModelName();
-
-    // 实体的名称
-    String entityName = NameProcess.INSTANCE.toJavaClassName(tableName);
-
-    // 转换为属性的名称
     String fieldName = NameProcess.INSTANCE.toProJavaName(columnName);
-
-    // 当前的错类型为null
-    outPropertiesKey.append(NULL_KEY_PREFIX);
-    outPropertiesKey.append(Symbol.POINT);
-    outPropertiesKey.append(moduleName).append(Symbol.POINT);
-    outPropertiesKey.append(entityName).append(Symbol.POINT);
-    outPropertiesKey.append(fieldName);
-
-    return outPropertiesKey.toString();
+    return propertiesErrorKey(NULL_KEY_PREFIX, tableName, fieldName, null);
   }
 
   /**
@@ -580,30 +610,9 @@ public class GenerateJavaErrorCode {
    */
   public static String propertiesErrorKeyMax(String tableName, String columnName) {
 
-    StringBuilder outPropertiesKey = new StringBuilder();
-
-    // 获取模块名称
-    String moduleName =
-        GenerateConfigProcess.INSTANCE
-            .getCfgEntity()
-            .getGenerate()
-            .getCodeMenuTree()
-            .getModelName();
-
-    // 实体的名称
-    String entityName = NameProcess.INSTANCE.toJavaClassName(tableName);
-
     // 转换为属性的名称
     String fieldName = NameProcess.INSTANCE.toProJavaName(columnName);
-
-    // 当前的错类型为超过最大值
-    outPropertiesKey.append(MAX_KEY_PREFIX);
-    outPropertiesKey.append(Symbol.POINT);
-    outPropertiesKey.append(moduleName).append(Symbol.POINT);
-    outPropertiesKey.append(entityName).append(Symbol.POINT);
-    outPropertiesKey.append(fieldName);
-
-    return outPropertiesKey.toString();
+    return propertiesErrorKey(MAX_KEY_PREFIX, tableName, fieldName, null);
   }
 
   /**
@@ -614,6 +623,20 @@ public class GenerateJavaErrorCode {
    * @return
    */
   public static String propertiesErrorKeyParamListNull(String tableName, String methodName) {
+    return propertiesErrorKey(NULL_KEY_PREFIX, tableName, methodName, REQUEST_LIST_SUFFIX);
+  }
+
+  /**
+   * 错误码输出
+   *
+   * @param prefix
+   * @param tableName
+   * @param methodName
+   * @param suffix
+   * @return
+   */
+  public static String propertiesErrorKey(
+      String prefix, String tableName, String methodName, String suffix) {
 
     StringBuilder outPropertiesKey = new StringBuilder();
 
@@ -628,13 +651,16 @@ public class GenerateJavaErrorCode {
     // 实体的名称
     String entityName = NameProcess.INSTANCE.toJavaClassName(tableName);
 
-    // 当前的错类型为超过最大值
-    outPropertiesKey.append(NULL_KEY_PREFIX);
+    outPropertiesKey.append(prefix);
     outPropertiesKey.append(Symbol.POINT);
     outPropertiesKey.append(moduleName).append(Symbol.POINT);
     outPropertiesKey.append(entityName).append(Symbol.POINT);
-    outPropertiesKey.append(methodName).append(Symbol.POINT);
-    outPropertiesKey.append(REQUEST_LIST_SUFFIX);
+    outPropertiesKey.append(methodName);
+
+    if (!StringUtils.isEmpty(suffix)) {
+      outPropertiesKey.append(Symbol.POINT);
+      outPropertiesKey.append(suffix);
+    }
 
     return outPropertiesKey.toString();
   }
@@ -744,6 +770,42 @@ public class GenerateJavaErrorCode {
   }
 
   /**
+   * 枚举的属性集合,超过最大值
+   *
+   * @param name 名称信息
+   * @param comment 注释
+   * @return
+   */
+  private String outEnumFieldMoreMaxList(
+      String tableName, String name, String comment, StringBuilder outDataStr) {
+
+    // 生成超过最大值的key信息
+    String outPropertyKeyMax = propertiesErrorKeyMax(tableName, name);
+
+    // 重复数据的检查
+    if (outDataStr.indexOf(enumMaxCode(name)) != -1) {
+      return Symbol.EMPTY;
+    }
+
+    int incrementId = GenerateErrorCodeProcess.INSTANCE.increment();
+
+    JavaEnumFieldEntity enumFieldEntity =
+        JavaEnumFieldEntity.builder()
+            // 名称
+            .name(enumMaxCode(name))
+            // 值错误提示信息
+            .value(ErrorCodeGenerate.outErrorCode(incrementId, outPropertyKeyMax))
+            // 超过最大长度的注释
+            .comment(comment + MAX_COMMENT)
+            .build();
+
+    // 枚举值进行输出操作
+    String outEnumField = JavaClassCodeUtils.getEnumField(enumFieldEntity);
+
+    return outEnumField;
+  }
+
+  /**
    * 枚举的属性,集合为空
    *
    * @param columnInfo 列信息
@@ -764,6 +826,49 @@ public class GenerateJavaErrorCode {
             .value(ErrorCodeGenerate.outErrorCode(incrementId, outPropertyKeyNull))
             // 注释
             .comment(columnInfo.getComment() + REQUEST_LIST_COMMENT)
+            .build();
+
+    // 枚举值进行输出操作
+    String outEnumField = JavaClassCodeUtils.getEnumField(enumFieldEntity);
+
+    return outEnumField;
+  }
+
+  /**
+   * 请求的查询请求中的集合
+   *
+   * @param columnInfo 列信息
+   * @return
+   */
+  private String outEnumWhereFieldList(
+      MethodInfo columnInfo, String tableName, WhereInfo whereInfo, StringBuilder outDataInfo) {
+
+    String sqlName = whereInfo.getSqlColumn() + Symbol.UNDER_LINE + JavaVarName.NAME_LIST_SUFFIX;
+
+    String nameInfo = enumNullCode(sqlName);
+
+    if (outDataInfo.indexOf(nameInfo) != -1) {
+      return Symbol.EMPTY;
+    }
+
+    int incrementId = GenerateErrorCodeProcess.INSTANCE.increment();
+
+    // 生成的属性的key信息
+    String outPropertyKeyNull = propertiesErrorKeyNullWhereIn(tableName, sqlName);
+
+    JavaEnumFieldEntity enumFieldEntity =
+        JavaEnumFieldEntity.builder()
+            // 名称
+            .name(nameInfo)
+            // 集合为空的错误提示
+            .value(ErrorCodeGenerate.outErrorCode(incrementId, outPropertyKeyNull))
+            // 注释
+            .comment(
+                columnInfo.getComment()
+                    + Symbol.SPACE
+                    + whereInfo.getSqlColumn()
+                    + Symbol.SPACE
+                    + REQUEST_LIST_COMMENT)
             .build();
 
     // 枚举值进行输出操作

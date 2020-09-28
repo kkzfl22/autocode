@@ -1,10 +1,15 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
+import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.config.generate.entity.WhereInfo;
+import com.liujun.micro.autocode.constant.MyBatisOperatorFlag;
 import com.liujun.micro.autocode.constant.Symbol;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassEntity;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.TableColumnUtils;
 import com.liujun.micro.autocode.generator.convergence.TypeConvergence;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
@@ -12,6 +17,7 @@ import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 生前API层的相关常量信息
@@ -29,15 +35,20 @@ public class GenerateJavaInterfaceConstant {
   /** 最大长度的限制 */
   private static final String MAX_LENGTH_TITLE = "最大长度的限制";
 
+  /** 默认集合的最大值 */
+  private static final String DEFAULT_MAX_LIST_SIZE = "16";
+
   /**
    * 生成错误码
    *
+   * @param method 方法信息
    * @param interfaceConstant 常量类
    * @param tableColumnList 表列的信息
    * @param author 作者
    * @return 生成的代码
    */
   public StringBuilder generateInterfaceConstant(
+      List<MethodInfo> method,
       DatabaseTypeEnum dbType,
       ImportPackageInfo interfaceConstant,
       List<TableColumnDTO> tableColumnList,
@@ -50,6 +61,9 @@ public class GenerateJavaInterfaceConstant {
 
     // 定义最大长度的的常量
     sb.append(fieldMaxAll(dbType, tableColumnList));
+
+    // 定义最大长度的的常量
+    sb.append(fieldWhereInMaxList(tableColumnList, method));
 
     // 类的结束
     JavaClassCodeUtils.classEnd(sb);
@@ -97,6 +111,89 @@ public class GenerateJavaInterfaceConstant {
     }
 
     return outData.toString();
+  }
+
+  /**
+   * where条件的in最大值
+   *
+   * @param tableColumnList 列信息
+   * @param method 方法
+   * @return 输出
+   */
+  private String fieldWhereInMaxList(
+      List<TableColumnDTO> tableColumnList, List<MethodInfo> method) {
+    StringBuilder outData = new StringBuilder();
+
+    for (MethodInfo methodInfo : method) {
+      outData.append(this.fieldWhereInMax(tableColumnList, methodInfo, outData));
+    }
+
+    return outData.toString();
+  }
+
+  /**
+   * where条件的in最大值
+   *
+   * @param tableColumnList 列信息
+   * @param method 方法
+   * @return 输出
+   */
+  private String fieldWhereInMax(
+      List<TableColumnDTO> tableColumnList, MethodInfo method, StringBuilder whereData) {
+    StringBuilder outData = new StringBuilder();
+
+    Map<String, TableColumnDTO> tableMap = TableColumnUtils.parseToMap(tableColumnList);
+
+    for (WhereInfo whereInfo : method.getWhereInfo()) {
+      if (MyBatisOperatorFlag.IN.equals(whereInfo.getOperatorFlag())) {
+
+        String outName =
+            whereInfo.getSqlColumn() + Symbol.UNDER_LINE + JavaVarName.NAME_LIST_SUFFIX;
+
+        // 检查名称是否已经存
+        if (whereData.indexOf(name(outName)) != -1) {
+          continue;
+        }
+
+        TableColumnDTO tableInfo = tableMap.get(whereInfo.getSqlColumn());
+
+        outData.append(fieldMaxLengthDefineList(outName, tableInfo.getColumnMsg()));
+        outData.append(Symbol.ENTER_LINE);
+      }
+    }
+
+    return outData.toString();
+  }
+
+  /**
+   * 单个类属性的最大值的定义
+   *
+   * @param name 名称
+   * @param comment 注释
+   * @return 定义的代码信息
+   */
+  private String fieldMaxLengthDefineList(String name, String comment) {
+
+    JavaClassFieldEntity classFieldEntity =
+        JavaClassFieldEntity.builder()
+            // 访问修饰符
+            .visit(JavaKeyWord.PUBLIC)
+            // 静态标识
+            .staticFlag(JavaKeyWord.STATIC)
+            // final
+            .finalFlag(JavaKeyWord.FINAL)
+            // 类型
+            .type(JavaKeyWord.INT_TYPE)
+            // 名称,常量以列名全大写，加MAX_LENGTH结束
+            .name(name(name))
+            // 注释
+            .comment(comment + MAX_LENGTH_TITLE)
+            // 构建最大值
+            .value(DEFAULT_MAX_LIST_SIZE)
+            .build();
+
+    // 类属性的输出
+    return JavaClassCodeUtils.getClassField(classFieldEntity);
   }
 
   /**

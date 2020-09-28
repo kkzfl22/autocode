@@ -56,6 +56,7 @@ public class JavaCodeInterfaceConstantCreate implements GenerateCodeInf {
       // 代码的生成操作
       StringBuilder sb =
           GenerateJavaInterfaceConstant.INSTANCE.generateInterfaceConstant(
+              param.getGenerateConfig().getGenerate().getCode(),
               param.getTypeEnum(),
               constantPkg,
               tableNameItem.getValue(),

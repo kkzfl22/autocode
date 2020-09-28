@@ -1,8 +1,9 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
-import com.liujun.micro.autocode.config.generate.entity.TypeInfo;
+import com.liujun.micro.autocode.config.generate.entity.WhereInfo;
 import com.liujun.micro.autocode.constant.MethodTypeEnum;
+import com.liujun.micro.autocode.constant.MyBatisOperatorFlag;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.JavaMethodName;
@@ -12,6 +13,7 @@ import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.TableColumnUtils;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
@@ -20,6 +22,7 @@ import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 生成数据参数校验
@@ -97,12 +100,6 @@ public class GenerateJavaCheck {
         JavaClassCodeUtils.classDefine(
             checkPackage, getImportList(dtoPackageInfo, errorCodeEnum, constantPkg), null, author);
 
-    // 1, 提取出主键
-    // List<TableColumnDTO> primaryColumnList = TableColumnUtils.getPrimaryKey(tableColumnList);
-
-    // 将主键转换为map
-    // Map<String, TableColumnDTO> primaryKeyMap = TableColumnUtils.parseToMap(primaryColumnList);
-
     for (MethodInfo methodInfo : methodList) {
       // 如果当前数据为添加
       if (MethodTypeEnum.INSERT.getType().equals(methodInfo.getOperator())
@@ -122,6 +119,25 @@ public class GenerateJavaCheck {
                 errorCodeEnum,
                 dtoPackageInfo,
                 constantPkg));
+      }
+
+      // 修改
+      else if (MethodTypeEnum.UPDATE.getType().equals(methodInfo.getOperator())) {
+        sb.append(
+            this.checkUpdate(
+                methodInfo, tableColumnList, errorCodeEnum, dtoPackageInfo, constantPkg));
+      }
+      // 删除
+      else if (MethodTypeEnum.DELETE.getType().equals(methodInfo.getOperator())) {
+        sb.append(
+            this.whereCondition(
+                methodInfo, tableColumnList, errorCodeEnum, dtoPackageInfo, constantPkg));
+      }
+      // 查询
+      else if (MethodTypeEnum.QUERY.getType().equals(methodInfo.getOperator())) {
+        sb.append(
+            this.whereCondition(
+                methodInfo, tableColumnList, errorCodeEnum, dtoPackageInfo, constantPkg));
       }
     }
 
@@ -353,6 +369,174 @@ public class GenerateJavaCheck {
   }
 
   /**
+   * 以查询条件为准备进行的验证
+   *
+   * <p>1,删除优先根据条件，如果没有条件，则使用主键的判断
+   *
+   * @param methodInfo 方法
+   * @param tableColumnList 表列信息
+   * @param errorCode 错误码
+   * @param dtoPackageInfo 传输实体包
+   * @param constantPkg 常量类的包
+   * @return 生成的代码
+   */
+  private String whereCondition(
+      MethodInfo methodInfo,
+      List<TableColumnDTO> tableColumnList,
+      ImportPackageInfo errorCode,
+      ImportPackageInfo dtoPackageInfo,
+      ImportPackageInfo constantPkg) {
+    StringBuilder outInsert = new StringBuilder();
+
+    // 添加方法的定义
+    outInsert.append(defineMethod(methodInfo, dtoPackageInfo));
+    // 方法开始
+    JavaClassCodeUtils.methodStart(outInsert);
+    // 构建器对象的声明
+    outInsert.append(methodBuilderDefine());
+
+    // 参数的判断
+    outInsert.append(
+        checkMethodParam(
+            methodInfo, tableColumnList, errorCode, dtoPackageInfo, constantPkg, outInsert));
+
+    // 当前方法的结束
+    outInsert.append(methodBuilderFinish());
+
+    // 加入返回语句
+    outInsert.append(returnCode());
+
+    // 方法结束
+    JavaClassCodeUtils.methodEnd(outInsert);
+
+    return outInsert.toString();
+  }
+
+  /**
+   * 方法参数的相关生成
+   *
+   * @param methodInfo 方法的信息
+   * @param tableColumnList 表的表信息
+   * @param errorCode 错误码
+   * @param dtoPackageInfo dto信息
+   * @param constantPkg 静态常量类
+   * @return
+   */
+  private String checkMethodParam(
+      MethodInfo methodInfo,
+      List<TableColumnDTO> tableColumnList,
+      ImportPackageInfo errorCode,
+      ImportPackageInfo dtoPackageInfo,
+      ImportPackageInfo constantPkg,
+      StringBuilder outBuilder) {
+
+    StringBuilder outInsert = new StringBuilder();
+
+    // 检查当前参数是否存在,如果不存在，则使用默认主键
+    if (methodInfo.getWhereInfo() != null && !methodInfo.getWhereInfo().isEmpty()) {
+      // 获取参数列
+      List<TableColumnDTO> dataColumnList =
+          getWhereParam(tableColumnList, methodInfo.getWhereInfo());
+      // 进行空与最大值参数的检查
+      outInsert.append(
+          checkNullAndMaxParam(dataColumnList, errorCode, dtoPackageInfo, constantPkg, outBuilder));
+    }
+    // 存在，则按条件进行设置
+    else {
+      // 1, 提取出主键
+      List<TableColumnDTO> primaryColumnList = TableColumnUtils.getPrimaryKey(tableColumnList);
+      // 进行空与最大值参数的检查
+      outInsert.append(
+          checkNullAndMaxParam(
+              primaryColumnList, errorCode, dtoPackageInfo, constantPkg, outBuilder));
+    }
+
+    return outInsert.toString();
+  }
+
+  /**
+   * 进行where条件的检查
+   *
+   * @param tableColumnList
+   * @param whereColumns
+   * @return
+   */
+  private List<TableColumnDTO> getWhereParam(
+      List<TableColumnDTO> tableColumnList, List<WhereInfo> whereColumns) {
+    // 1, 提取出主键
+    Map<String, TableColumnDTO> primaryColumnList = TableColumnUtils.parseToMap(tableColumnList);
+    List<TableColumnDTO> tableColumn = new ArrayList<>();
+
+    for (WhereInfo whereInfo : whereColumns) {
+
+      // 如果当前为in字段，则设需要进行列名的设置
+      if (MyBatisOperatorFlag.IN.equals(whereInfo.getOperatorFlag())) {
+        TableColumnDTO tableColumnInfo = primaryColumnList.get(whereInfo.getSqlColumn());
+        if (null != tableColumnInfo) {
+          TableColumnDTO columnNewData = tableColumnInfo.newInstanceForCurrValue();
+          columnNewData.setColumnName(
+              columnNewData.getColumnName() + Symbol.UNDER_LINE + JavaVarName.NAME_LIST_SUFFIX);
+          tableColumn.add(columnNewData);
+        }
+      }
+      // 非in字段进行列名的设置操作
+      else {
+        TableColumnDTO tableColumnInfo = primaryColumnList.get(whereInfo.getSqlColumn());
+        if (null != tableColumnInfo) {
+          tableColumn.add(tableColumnInfo);
+        }
+      }
+    }
+
+    return tableColumn;
+  }
+
+  /**
+   * 进行空与最大值的检查
+   *
+   * @param tableColumnList
+   * @param errorCode
+   * @param dtoPackageInfo
+   * @param constantPkg
+   * @return
+   */
+  private String checkNullAndMaxParam(
+      List<TableColumnDTO> tableColumnList,
+      ImportPackageInfo errorCode,
+      ImportPackageInfo dtoPackageInfo,
+      ImportPackageInfo constantPkg,
+      StringBuilder outBuilder) {
+    StringBuilder outInsert = new StringBuilder();
+
+    // 加入空的参数检查判断
+    for (TableColumnDTO columnInfo : tableColumnList) {
+
+      // 当已经被生成过，则不再生成
+      String nullCode = GenerateJavaErrorCode.enumNullCode(columnInfo.getColumnName());
+      if (outBuilder.indexOf(nullCode) != -1) {
+        continue;
+      }
+
+      outInsert.append(this.checkNullParam(columnInfo, dtoPackageInfo, errorCode));
+    }
+
+    // 最大长度的判断
+    for (TableColumnDTO columnInfo : tableColumnList) {
+
+      // 当已经被生成过，则不再生成
+      String maxCode = GenerateJavaErrorCode.enumMaxCode(columnInfo.getColumnName());
+      if (outBuilder.indexOf(maxCode) != -1) {
+        continue;
+      }
+
+      outInsert.append(
+          this.checkMaxLengthParam(columnInfo, dtoPackageInfo, errorCode, constantPkg));
+    }
+
+    return outInsert.toString();
+  }
+
+  /**
    * 添加方法的参数验证
    *
    * @param methodInfo 方法
@@ -377,16 +561,55 @@ public class GenerateJavaCheck {
     // 构建器对象的声明
     outInsert.append(methodBuilderDefine());
 
-    // 加入空的参数检查判断
-    for (TableColumnDTO columnInfo : tableColumnList) {
-      outInsert.append(this.checkNullParam(columnInfo, dtoPackageInfo, errorCode));
-    }
+    // 进行空与最大值的判断
+    outInsert.append(
+        checkNullAndMaxParam(tableColumnList, errorCode, dtoPackageInfo, constantPkg, outInsert));
 
-    // 最大长度的判断
-    for (TableColumnDTO columnInfo : tableColumnList) {
-      outInsert.append(
-          this.checkMaxLengthParam(columnInfo, dtoPackageInfo, errorCode, constantPkg));
-    }
+    // 当前方法的结束
+    outInsert.append(methodBuilderFinish());
+
+    // 加入返回语句
+    outInsert.append(returnCode());
+
+    // 方法结束
+    JavaClassCodeUtils.methodEnd(outInsert);
+
+    return outInsert.toString();
+  }
+
+  /**
+   * 添加方法的参数验证
+   *
+   * @param methodInfo 方法
+   * @param tableColumnList 表列信息
+   * @param errorCode 错误码
+   * @param dtoPackageInfo 传输实体包
+   * @param constantPkg 常量类的包
+   * @return 生成的代码
+   */
+  private String checkUpdate(
+      MethodInfo methodInfo,
+      List<TableColumnDTO> tableColumnList,
+      ImportPackageInfo errorCode,
+      ImportPackageInfo dtoPackageInfo,
+      ImportPackageInfo constantPkg) {
+    StringBuilder outInsert = new StringBuilder();
+
+    // 添加方法的定义
+    outInsert.append(defineMethod(methodInfo, dtoPackageInfo));
+    // 方法开始
+    JavaClassCodeUtils.methodStart(outInsert);
+    // 构建器对象的声明
+    outInsert.append(methodBuilderDefine());
+
+    // 进行空与最大值的判断
+    outInsert.append(
+        checkNullAndMaxParam(tableColumnList, errorCode, dtoPackageInfo, constantPkg, outInsert));
+
+    // 进行查询参数的检查
+    outInsert.append(
+        checkMethodParam(
+            methodInfo, tableColumnList, errorCode, dtoPackageInfo, constantPkg, outInsert));
 
     // 当前方法的结束
     outInsert.append(methodBuilderFinish());
