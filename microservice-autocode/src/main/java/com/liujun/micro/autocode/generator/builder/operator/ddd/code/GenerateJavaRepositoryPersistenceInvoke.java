@@ -440,7 +440,7 @@ public class GenerateJavaRepositoryPersistenceInvoke {
     sb.append(Symbol.SPACE).append(JavaVarName.QUERY_RETURN_DATA);
     sb.append(Symbol.SPACE).append(Symbol.EQUAL);
     sb.append(Symbol.SPACE).append(assemblerPkg.getClassName()).append(Symbol.POINT);
-    sb.append(JavaMethodName.ASSEMBLER_PERSIST_ENTITY_NAME).append(Symbol.BRACKET_LEFT);
+    sb.append(JavaMethodName.ASSEMBLER_DOMAIN_ENTITY_NAME).append(Symbol.BRACKET_LEFT);
     sb.append(JavaVarName.QUERY_RESPONSE_DATA).append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
 

@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * 类公共元素信息
  *
@@ -19,7 +21,7 @@ public class JavaClassElement {
   protected String comment;
 
   /** 方法注解 */
-  protected String annotation;
+  protected List<String> annotationList;
 
   /** 方法访问修饰符 */
   protected String visit;

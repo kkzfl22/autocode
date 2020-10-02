@@ -22,4 +22,30 @@ public class CodeAnnotation {
 
   /** 用于标识重写 */
   public static final String OVERRIDE = "@Override";
+
+  /** swagger的注解API */
+  public static final String SWAGGER_API = "@Api";
+
+  /** tags标识 */
+  public static final String SWAGGER_API_TAGS = "tags";
+
+  /** 值 */
+  public static final String SWAGGER_API_VALUE = "value";
+
+  /** 表当前为rest请求 */
+  public static final String SPRING_CONTROLLER = "@RestController";
+
+  /** 请求的地址 */
+  public static final String SPRING_REQUEST_MAPPING = "@RequestMapping";
+
+  /** 请求的地址信息 */
+  public static final String SPRING_REQUEST_MAPPING_VALUE = "value";
+
+  /** 请求方法 */
+  public static final String SPRING_REQUEST_MAPPING_METHOD = "method";
+
+  /** swagger的注解信息 */
+  public static final String SWAGGER_API_OPERATION = "@ApiOperation";
+
+
 }

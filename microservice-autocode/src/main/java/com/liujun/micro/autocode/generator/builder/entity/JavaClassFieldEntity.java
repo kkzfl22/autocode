@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -131,7 +133,9 @@ public class JavaClassFieldEntity extends JavaClassElement {
 
   public JavaClassFieldEntity(Builder builder) {
     this.comment = builder.comment;
-    this.annotation = builder.annotation;
+    if (builder.annotation != null && !builder.annotation.isEmpty()) {
+      this.annotationList = new ArrayList<>(Arrays.asList(builder.annotation));
+    }
     this.visit = builder.visit;
     this.staticFlag = builder.staticFlag;
     this.finalFlag = builder.finalFlag;

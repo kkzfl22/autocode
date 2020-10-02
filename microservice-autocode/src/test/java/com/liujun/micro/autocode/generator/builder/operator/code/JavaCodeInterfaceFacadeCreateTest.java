@@ -4,13 +4,22 @@ import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeApplicationServiceCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainObjectCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainServiceCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceAssemblerCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceCheckCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceConstantCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceErrorCodeCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceFacadeCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceObjectCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryAssemblerCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryDaoInfCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryFacadeInfCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryObjectCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryPersistenceCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeResourceI18nEnUsCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeResourceI18nZhCnCreate;
 import org.junit.Test;
+
+import java.util.Locale;
 
 /**
  * 执行应用服务的创建操作
@@ -40,8 +49,24 @@ public class JavaCodeInterfaceFacadeCreateTest {
     JavaCodeDomainServiceCreate domainService = new JavaCodeDomainServiceCreate();
     // 生成应用服务
     JavaCodeApplicationServiceCreate applicationService = new JavaCodeApplicationServiceCreate();
+
+    // 错误码
+    JavaCodeInterfaceErrorCodeCreate errorCode = new JavaCodeInterfaceErrorCodeCreate();
+    // 静态文件
+    JavaCodeInterfaceConstantCreate constantCode = new JavaCodeInterfaceConstantCreate();
+    // dto转换为领域的对象
+    JavaCodeInterfaceAssemblerCreate javaCode = new JavaCodeInterfaceAssemblerCreate();
+
+    // 国际化错误码
+    JavaCodeResourceI18nEnUsCreate en = new JavaCodeResourceI18nEnUsCreate();
+    JavaCodeResourceI18nZhCnCreate china = new JavaCodeResourceI18nZhCnCreate();
+
+    // 错误验证的文件生成
+    JavaCodeInterfaceCheckCreate paramCheck = new JavaCodeInterfaceCheckCreate();
     // api的服务
     JavaCodeInterfaceFacadeCreate interfaceFacadeCreate = new JavaCodeInterfaceFacadeCreate();
+    // 对象存储
+    JavaCodeInterfaceObjectCreate dataTransfer = new JavaCodeInterfaceObjectCreate();
 
     GenerateCodeContext context = CodeBaseUtils.getBase();
 
@@ -58,11 +83,30 @@ public class JavaCodeInterfaceFacadeCreateTest {
     // 领域存储实现
     repositoryPersistence.generateCode(context);
 
+    // 数据存储
+    dataTransfer.generateCode(context);
+
+    // 错误友
+    errorCode.generateCode(context);
+    // 静态常量文件
+    constantCode.generateCode(context);
+
+    // 国际化
+    en.generateCode(context);
+    china.generateCode(context);
+
     // 进行领域服务代码的生成
     domainService.generateCode(context);
+    // 生成错误码
+
+    // 参数的生成
+    paramCheck.generateCode(context);
 
     // 应用服务生成
     applicationService.generateCode(context);
+
+    // 转换层
+    javaCode.generateCode(context);
 
     // 生成对外API
     interfaceFacadeCreate.generateCode(context);

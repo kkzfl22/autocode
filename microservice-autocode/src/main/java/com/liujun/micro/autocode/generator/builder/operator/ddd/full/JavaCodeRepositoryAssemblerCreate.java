@@ -130,7 +130,7 @@ public class JavaCodeRepositoryAssemblerCreate implements GenerateCodeInf {
 
     // 将存储层的对象转换为领域层的对象
     GenerateJavaAssembler.INSTANCE.assemblerMethod(
-        JavaMethodName.ASSEMBLER_PERSIST_ENTITY_NAME,
+        JavaMethodName.ASSEMBLER_DOMAIN_ENTITY_NAME,
         CodeComment.ASSEMBLER_PERSIST_ENTITY_COMMENT,
         poPackage,
         domainPackage,
@@ -159,7 +159,7 @@ public class JavaCodeRepositoryAssemblerCreate implements GenerateCodeInf {
           CodeComment.ASSEMBLER_PERSIST_ENTITY_LIST_COMMENT,
           poPackage,
           domainPackage,
-          JavaMethodName.ASSEMBLER_PERSIST_ENTITY_NAME);
+          JavaMethodName.ASSEMBLER_DOMAIN_ENTITY_NAME);
     }
 
     // 结束

@@ -233,9 +233,11 @@ public class JavaClassCodeUtils {
     }
 
     // 检查当前是否存在注解
-    if (StringUtils.isNotEmpty(method.getAnnotation())) {
-      sb.append(JavaFormat.appendTab(tabIndex)).append(method.getAnnotation());
-      sb.append(Symbol.ENTER_LINE);
+    if (method.getAnnotationList() != null && !method.getAnnotationList().isEmpty()) {
+      for (String annotationItem : method.getAnnotationList()) {
+        sb.append(JavaFormat.appendTab(tabIndex)).append(annotationItem);
+        sb.append(Symbol.ENTER_LINE);
+      }
     }
 
     // 方法的声明
@@ -256,6 +258,12 @@ public class JavaClassCodeUtils {
     if (method.getArguments() != null && !method.getArguments().isEmpty()) {
       for (int i = 0; i < method.getArguments().size(); i++) {
         JavaMethodArguments argument = method.getArguments().get(i);
+
+        // 检查注解
+        if (StringUtils.isNotEmpty(argument.getAnnotation())) {
+          sb.append(argument.getAnnotation()).append(Symbol.SPACE);
+        }
+
         sb.append(argument.getType()).append(Symbol.SPACE).append(argument.getName());
 
         if (i != method.getArguments().size() - 1) {
@@ -378,9 +386,11 @@ public class JavaClassCodeUtils {
     }
 
     // 注解检查
-    if (StringUtils.isNotEmpty(classField.getAnnotation())) {
-      outField.append(JavaFormat.appendTab(tabIndex)).append(classField.getAnnotation());
-      outField.append(Symbol.ENTER_LINE);
+    if (classField.getAnnotationList() != null && !classField.getAnnotationList().isEmpty()) {
+      for (String annotationItem : classField.getAnnotationList()) {
+        outField.append(JavaFormat.appendTab(tabIndex)).append(annotationItem);
+        outField.append(Symbol.ENTER_LINE);
+      }
     }
 
     // 属性的访问修饰符

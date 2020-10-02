@@ -97,7 +97,7 @@ public class JavaCodeInterfaceAssemblerCreate implements GenerateCodeInf {
    * 生成java实体转换的实体类
    *
    * @param columnList 列信息
-   * @param poPackage 实体1
+   * @param dtoPackage 实体1
    * @param domainPackage 实体2
    * @param assemblerPackage 转换类的信息
    * @param methodList 方法
@@ -106,7 +106,7 @@ public class JavaCodeInterfaceAssemblerCreate implements GenerateCodeInf {
    */
   private StringBuilder generateJavaAssembler(
       List<TableColumnDTO> columnList,
-      ImportPackageInfo poPackage,
+      ImportPackageInfo dtoPackage,
       ImportPackageInfo domainPackage,
       ImportPackageInfo assemblerPackage,
       List<MethodInfo> methodList,
@@ -115,14 +115,14 @@ public class JavaCodeInterfaceAssemblerCreate implements GenerateCodeInf {
     // 1,方法头的定义
     StringBuilder sb =
         GenerateJavaAssembler.INSTANCE.defineClass(
-            poPackage, domainPackage, assemblerPackage, author);
+            dtoPackage, domainPackage, assemblerPackage, author);
 
     // 将传输对象转换为领域对象
     GenerateJavaAssembler.INSTANCE.assemblerMethod(
         JavaMethodName.ASSEMBLER_TRANSFER_DOMAIN_NAME,
         CodeComment.ASSEMBLER_TRANSFER_DOMAIN_COMMENT,
+        dtoPackage,
         domainPackage,
-        poPackage,
         columnList,
         sb,
         methodList,
@@ -132,8 +132,8 @@ public class JavaCodeInterfaceAssemblerCreate implements GenerateCodeInf {
     GenerateJavaAssembler.INSTANCE.assemblerMethod(
         JavaMethodName.ASSEMBLER_DOMAIN_TRANSFER_NAME,
         CodeComment.ASSEMBLER_DOMAIN_TRANSFER_COMMENT,
-        poPackage,
         domainPackage,
+        dtoPackage,
         columnList,
         sb,
         methodList,
@@ -149,16 +149,16 @@ public class JavaCodeInterfaceAssemblerCreate implements GenerateCodeInf {
           sb,
           JavaMethodName.ASSEMBLER_TRANSFER_DOMAIN_LIST_NAME,
           CodeComment.ASSEMBLER_TRANSFER_DOMAIN_LIST_COMMENT,
+          dtoPackage,
           domainPackage,
-          poPackage,
           JavaMethodName.ASSEMBLER_TRANSFER_DOMAIN_NAME);
       // 2，将领域集合转换为传输集合
       GenerateJavaAssembler.INSTANCE.assemblerListMethod(
           sb,
           JavaMethodName.ASSEMBLER_DOMAIN_TRANSFER_LIST_NAME,
           CodeComment.ASSEMBLER_DOMAIN_TRANSFER_LIST_COMMENT,
-          poPackage,
           domainPackage,
+          dtoPackage,
           JavaMethodName.ASSEMBLER_DOMAIN_TRANSFER_NAME);
     }
 

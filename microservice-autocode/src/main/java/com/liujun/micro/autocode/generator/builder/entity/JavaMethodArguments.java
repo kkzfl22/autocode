@@ -19,6 +19,9 @@ import lombok.ToString;
 @Builder
 public class JavaMethodArguments {
 
+  /** 参数的注解 */
+  private String annotation;
+
   /** 参数类型 */
   private String type;
 

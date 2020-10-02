@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,7 +43,7 @@ public class JavaMethodEntity extends JavaClassElement {
     private String comment;
 
     /** 方法注解 */
-    private String annotation;
+    private List<String> annotation;
 
     /** 方法访问修饰符 */
     private String visit;
@@ -64,8 +65,21 @@ public class JavaMethodEntity extends JavaClassElement {
       return this;
     }
 
-    public Builder annotation(String annotation) {
-      this.annotation = annotation;
+    public Builder annotation(String annotationStr) {
+      if (null == this.annotation) {
+        this.annotation = new ArrayList<>();
+      }
+
+      this.annotation.add(annotationStr);
+
+      return this;
+    }
+
+    public Builder annotation(List<String> annotationList) {
+      if (null == this.annotation) {
+        this.annotation = new ArrayList<>();
+      }
+      this.annotation.addAll(annotationList);
       return this;
     }
 
@@ -111,7 +125,7 @@ public class JavaMethodEntity extends JavaClassElement {
 
   public JavaMethodEntity(Builder builder) {
     this.comment = builder.comment;
-    this.annotation = builder.annotation;
+    this.annotationList = builder.annotation;
     this.visit = builder.visit;
     this.staticFlag = builder.staticFlag;
     this.finalFlag = builder.finalFlag;

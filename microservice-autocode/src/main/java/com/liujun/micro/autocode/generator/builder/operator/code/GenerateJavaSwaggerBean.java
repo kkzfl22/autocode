@@ -117,7 +117,7 @@ public class GenerateJavaSwaggerBean {
     String annotationAdd =
         JavaAnnotation.builder()
             .annotation(ImportCodePackageKey.ANNOTATION_API_MODEL.getPackageInfo().getAnnotation())
-            .value(entityInfo.getClassComment())
+            .annotationValue(entityInfo.getClassComment())
             .build()
             .outAnnotation();
     dataList.add(annotationAdd);
@@ -176,7 +176,8 @@ public class GenerateJavaSwaggerBean {
               .annotation(
                   JavaAnnotation.builder()
                       // 注解中的值信息
-                      .value(tableInfo.getColumnMsg() + CodeComment.JUNIT_PARSE_LIST_COMMENT)
+                      .annotationValue(
+                          tableInfo.getColumnMsg() + CodeComment.JUNIT_PARSE_LIST_COMMENT)
                       // 注解符
                       .annotation(
                           ImportCodePackageKey.ANNOTATION_API_MODEL_PROPERTY
@@ -220,7 +221,7 @@ public class GenerateJavaSwaggerBean {
               // 注解
               .annotation(
                   JavaAnnotation.builder()
-                      .value(tableBean.getColumnMsg())
+                      .annotationValue(tableBean.getColumnMsg())
                       .annotation(
                           ImportCodePackageKey.ANNOTATION_API_MODEL_PROPERTY
                               .getPackageInfo()

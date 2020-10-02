@@ -9,7 +9,7 @@ import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.code.GenerateJavaDomainServiceInvoke;
+import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaAction;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 聚合领域层服务的实现，主要是对外API的服务
+ * API层的实现，用于实现对外的接口服务
  *
  * @author liujun
  * @version 0.0.1
@@ -59,7 +59,8 @@ public class JavaCodeInterfaceFacadeCreate implements GenerateCodeInf {
 
       // 将领域的存储实现存至流程中
       ImportPackageInfo applicationServicePackage =
-          new ImportPackageInfo(javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
+          new ImportPackageInfo(
+              javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
       ImportPackageUtils.putPackageInfo(
           tableName,
           param.getPackageMap(),
@@ -72,9 +73,9 @@ public class JavaCodeInterfaceFacadeCreate implements GenerateCodeInf {
       String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
       javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
 
-      // 调用存储接口
+      // api的接口
       StringBuilder sb =
-          this.generateApplicationService(
+          GenerateJavaAction.INSTANCE.generateAction(
               packageMap,
               param.getGenerateConfig().getGenerate().getCode(),
               param.getGenerateConfig().getGenerate().getAuthor());
@@ -84,69 +85,17 @@ public class JavaCodeInterfaceFacadeCreate implements GenerateCodeInf {
     }
   }
 
-  /**
-   * 生成应用的服务
-   *
-   * @param packageMap 导入的包信息
-   * @param methodList 方法
-   * @param author 作者
-   * @return 构建的存储层对象
-   */
-  private StringBuilder generateApplicationService(
-      Map<String, ImportPackageInfo> packageMap, List<MethodInfo> methodList, String author) {
+  /// **
+  // * 生成应用的服务
+  // *
+  // * @param packageMap 导入的包信息
+  // * @param methodList 方法
+  // * @param author 作者
+  // * @return 构建的存储层对象
+  // */
+  // private StringBuilder generateActionService(
+  //    Map<String, ImportPackageInfo> packageMap, List<MethodInfo> methodList, String author) {
+  //
 
-    // 领域实体实体
-    ImportPackageInfo domainPackageInfo = packageMap.get(GenerateCodePackageKey.DOMAIN_DO.getKey());
-
-    // 领域的服务接口
-    ImportPackageInfo applicatinServicePackage =
-        packageMap.get(GenerateCodePackageKey.APPLICATION_SERVICE.getKey());
-
-    // API的服务接口
-    ImportPackageInfo interfaceFacadeService =
-        packageMap.get(GenerateCodePackageKey.INTERFACE_FACADE.getKey());
-
-    // 类的声明
-    StringBuilder sb =
-        GenerateJavaDomainServiceInvoke.INSTANCE.domainServiceDefine(
-            applicatinServicePackage,
-            domainPackageInfo,
-            interfaceFacadeService,
-            methodList,
-            author);
-
-    // 1,类属性的创建
-    sb.append(
-        JavaClassCodeUtils.getClassField(
-            JavaClassFieldEntity.getPrivateAutowiredField(
-                applicatinServicePackage.getClassName(),
-                JavaVarName.APPLICATION_INSTANCE_NAME,
-                applicatinServicePackage.getClassComment())));
-
-    for (MethodInfo methodItem : methodList) {
-      // 1,针对增删除改的方法进行调用
-      if (MethodTypeEnum.INSERT.getType().equals(methodItem.getOperator())
-          || MethodTypeEnum.UPDATE.getType().equals(methodItem.getOperator())
-          || MethodTypeEnum.DELETE.getType().equals(methodItem.getOperator())) {
-        GenerateJavaDomainServiceInvoke.INSTANCE.updateMethod(
-            sb, methodItem, domainPackageInfo, JavaVarName.APPLICATION_INSTANCE_NAME);
-      }
-      // 如果当前为查询分页操作
-      else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())
-          && methodItem.getPageQueryFlag() != null
-          && methodItem.getPageQueryFlag()) {
-        GenerateJavaDomainServiceInvoke.INSTANCE.pageQueryMethod(
-            sb, methodItem, domainPackageInfo, JavaVarName.APPLICATION_INSTANCE_NAME);
-      }
-      // 如果当前为查询则进行查询调用操作
-      else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
-        GenerateJavaDomainServiceInvoke.INSTANCE.queryMethod(
-            sb, methodItem, domainPackageInfo, JavaVarName.APPLICATION_INSTANCE_NAME);
-      }
-    }
-
-    // 类的结束
-    JavaClassCodeUtils.classEnd(sb);
-    return sb;
-  }
+  // }
 }

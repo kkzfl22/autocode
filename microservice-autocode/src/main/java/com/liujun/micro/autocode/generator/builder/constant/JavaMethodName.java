@@ -60,7 +60,7 @@ public class JavaMethodName {
   public static final String ASSEMBLER_ENTITY_PERSIST_NAME = "toPersistObject";
 
   /** 将存储实体转换为领域对象的方法 */
-  public static final String ASSEMBLER_PERSIST_ENTITY_NAME = "toDomainEntity";
+  public static final String ASSEMBLER_DOMAIN_ENTITY_NAME = "toDomainEntity";
 
   /** 集合的判空方法 */
   public static final String LIST_EMPTY = "isEmpty";
@@ -121,4 +121,10 @@ public class JavaMethodName {
 
   /** 添加错误码 */
   public static final String ADD_ERROR_CODE = "addErrorCode";
+
+  /** 失败操作 */
+  public static final String RESPONSE_FAIL = "fail";
+
+  /** 成功方法 */
+  public static final String RESPONSE_SUCCESS = "ok";
 }

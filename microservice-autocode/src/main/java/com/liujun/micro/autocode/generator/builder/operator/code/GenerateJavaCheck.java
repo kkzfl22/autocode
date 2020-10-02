@@ -18,6 +18,7 @@ import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,6 +63,9 @@ public class GenerateJavaCheck {
   /** 错误码的成功获取 */
   private static final String ERROR_CODE_SUCCESS = "APICodeEnum.SUCCESS.getErrorData()";
 
+  /** 用于进行获取分页的对象信息 */
+  private static final String PAGE_GET_DATA = "getData()";
+
   public static final GenerateJavaCheck INSTANCE = new GenerateJavaCheck();
 
   private static final List<String> IMPORT_LIST =
@@ -74,7 +78,9 @@ public class GenerateJavaCheck {
           JavaKeyWord.IMPORT_LIST,
           JavaKeyWord.IMPORT_ARRAYLIST,
           // 公共错误导入
-          ImportCodePackageKey.ERROR_CODE_COMMON.getPackageInfo().packageOut());
+          ImportCodePackageKey.ERROR_CODE_COMMON.getPackageInfo().packageOut(),
+          // 分页请求的对象
+          ImportCodePackageKey.HTTP_PAGE_REQUEST.getPackageInfo().packageOut());
 
   /**
    * 生成数据的参数校验方法
@@ -133,6 +139,15 @@ public class GenerateJavaCheck {
             this.whereCondition(
                 methodInfo, tableColumnList, errorCodeEnum, dtoPackageInfo, constantPkg));
       }
+      // 分页查询
+      else if (MethodTypeEnum.QUERY.getType().equals(methodInfo.getOperator())
+          && null != methodInfo.getPageQueryFlag()
+          && methodInfo.getPageQueryFlag()) {
+        sb.append(
+            this.pageCondition(
+                methodInfo, tableColumnList, errorCodeEnum, dtoPackageInfo, constantPkg));
+      }
+
       // 查询
       else if (MethodTypeEnum.QUERY.getType().equals(methodInfo.getOperator())) {
         sb.append(
@@ -369,6 +384,48 @@ public class GenerateJavaCheck {
   }
 
   /**
+   * 分页查询的验证需要特别的
+   *
+   * @param methodInfo 方法
+   * @param tableColumnList 表列信息
+   * @param errorCode 错误码
+   * @param dtoPackageInfo 传输实体包
+   * @param constantPkg 常量类的包
+   * @return 生成的代码
+   */
+  private String pageCondition(
+      MethodInfo methodInfo,
+      List<TableColumnDTO> tableColumnList,
+      ImportPackageInfo errorCode,
+      ImportPackageInfo dtoPackageInfo,
+      ImportPackageInfo constantPkg) {
+    StringBuilder outInsert = new StringBuilder();
+
+    // 添加方法的定义
+    outInsert.append(pageDefineMethod(methodInfo, dtoPackageInfo));
+    // 方法开始
+    JavaClassCodeUtils.methodStart(outInsert);
+    // 构建器对象的声明
+    outInsert.append(methodBuilderDefine());
+
+    // 参数的判断
+    outInsert.append(
+        checkMethodParamPage(
+            methodInfo, tableColumnList, errorCode, dtoPackageInfo, constantPkg, outInsert));
+
+    // 当前方法的结束
+    outInsert.append(methodBuilderFinish());
+
+    // 加入返回语句
+    outInsert.append(returnCode());
+
+    // 方法结束
+    JavaClassCodeUtils.methodEnd(outInsert);
+
+    return outInsert.toString();
+  }
+
+  /**
    * 以查询条件为准备进行的验证
    *
    * <p>1,删除优先根据条件，如果没有条件，则使用主键的判断
@@ -455,6 +512,49 @@ public class GenerateJavaCheck {
   }
 
   /**
+   * 分页查询方法参数的相关生成
+   *
+   * @param methodInfo 方法的信息
+   * @param tableColumnList 表的表信息
+   * @param errorCode 错误码
+   * @param dtoPackageInfo dto信息
+   * @param constantPkg 静态常量类
+   * @return
+   */
+  private String checkMethodParamPage(
+      MethodInfo methodInfo,
+      List<TableColumnDTO> tableColumnList,
+      ImportPackageInfo errorCode,
+      ImportPackageInfo dtoPackageInfo,
+      ImportPackageInfo constantPkg,
+      StringBuilder outBuilder) {
+
+    StringBuilder outInsert = new StringBuilder();
+
+    // 检查当前参数是否存在,如果不存在，则使用默认主键
+    if (methodInfo.getWhereInfo() != null && !methodInfo.getWhereInfo().isEmpty()) {
+      // 获取参数列
+      List<TableColumnDTO> dataColumnList =
+          getWhereParam(tableColumnList, methodInfo.getWhereInfo());
+      // 进行空与最大值参数的检查
+      outInsert.append(
+          checkNullAndMaxParamPage(
+              dataColumnList, errorCode, dtoPackageInfo, constantPkg, outBuilder));
+    }
+    // 存在，则按条件进行设置
+    else {
+      // 1, 提取出主键
+      List<TableColumnDTO> primaryColumnList = TableColumnUtils.getPrimaryKey(tableColumnList);
+      // 进行空与最大值参数的检查
+      outInsert.append(
+          checkNullAndMaxParamPage(
+              primaryColumnList, errorCode, dtoPackageInfo, constantPkg, outBuilder));
+    }
+
+    return outInsert.toString();
+  }
+
+  /**
    * 进行where条件的检查
    *
    * @param tableColumnList
@@ -531,6 +631,51 @@ public class GenerateJavaCheck {
 
       outInsert.append(
           this.checkMaxLengthParam(columnInfo, dtoPackageInfo, errorCode, constantPkg));
+    }
+
+    return outInsert.toString();
+  }
+
+  /**
+   * 进行空与最大值的检查
+   *
+   * @param tableColumnList
+   * @param errorCode
+   * @param dtoPackageInfo
+   * @param constantPkg
+   * @return
+   */
+  private String checkNullAndMaxParamPage(
+      List<TableColumnDTO> tableColumnList,
+      ImportPackageInfo errorCode,
+      ImportPackageInfo dtoPackageInfo,
+      ImportPackageInfo constantPkg,
+      StringBuilder outBuilder) {
+    StringBuilder outInsert = new StringBuilder();
+
+    // 加入空的参数检查判断
+    for (TableColumnDTO columnInfo : tableColumnList) {
+
+      // 当已经被生成过，则不再生成
+      String nullCode = GenerateJavaErrorCode.enumNullCode(columnInfo.getColumnName());
+      if (outBuilder.indexOf(nullCode) != -1) {
+        continue;
+      }
+
+      outInsert.append(this.checkNullParamPage(columnInfo, dtoPackageInfo, errorCode));
+    }
+
+    // 最大长度的判断
+    for (TableColumnDTO columnInfo : tableColumnList) {
+
+      // 当已经被生成过，则不再生成
+      String maxCode = GenerateJavaErrorCode.enumMaxCode(columnInfo.getColumnName());
+      if (outBuilder.indexOf(maxCode) != -1) {
+        continue;
+      }
+
+      outInsert.append(
+          this.checkMaxLengthParamPage(columnInfo, dtoPackageInfo, errorCode, constantPkg));
     }
 
     return outInsert.toString();
@@ -705,6 +850,31 @@ public class GenerateJavaCheck {
    */
   private String checkNullParam(
       TableColumnDTO columnInfo, ImportPackageInfo dtoPackageInfo, ImportPackageInfo errorCode) {
+
+    // 进行空的检查
+    return this.checkNullParam(columnInfo, dtoPackageInfo, errorCode, Symbol.EMPTY);
+  }
+
+  /**
+   * 分页查询的空验证
+   *
+   * @param columnInfo 空的参数信息
+   * @param dtoPackageInfo dto的实体信息
+   * @param errorCode 错误码
+   * @return 构建的关空代码
+   */
+  private String checkNullParamPage(
+      TableColumnDTO columnInfo, ImportPackageInfo dtoPackageInfo, ImportPackageInfo errorCode) {
+
+    // 分页查询中的空验证
+    return this.checkNullParam(columnInfo, dtoPackageInfo, errorCode, PAGE_GET_DATA);
+  }
+
+  private String checkNullParam(
+      TableColumnDTO columnInfo,
+      ImportPackageInfo dtoPackageInfo,
+      ImportPackageInfo errorCode,
+      String dataGet) {
     StringBuilder outInsert = new StringBuilder();
 
     // 1,检查当前的列是否允许为空，不允许为空，则进行类型的检查
@@ -730,7 +900,13 @@ public class GenerateJavaCheck {
       outInsert.append(JavaFormat.appendTab(4));
       outInsert.append(Symbol.POINT);
       outInsert.append(METHOD_CHECK_NULL).append(Symbol.BRACKET_LEFT);
-      outInsert.append(dtoPackageInfo.getVarName()).append(Symbol.POINT);
+      outInsert.append(dtoPackageInfo.getVarName());
+
+      // 用户从对象中再次获取数据
+      if (StringUtils.isNotEmpty(dataGet)) {
+        outInsert.append(Symbol.POINT).append(dataGet);
+      }
+      outInsert.append(Symbol.POINT);
       outInsert.append(getName).append(Symbol.BRACKET_LEFT);
       outInsert.append(Symbol.BRACKET_RIGHT).append(Symbol.COMMA);
       // 错误码
@@ -761,6 +937,44 @@ public class GenerateJavaCheck {
       ImportPackageInfo dtoPackageInfo,
       ImportPackageInfo errorCode,
       ImportPackageInfo constantPkg) {
+
+    return checkMaxLengthParamInvoke(
+        columnInfo, dtoPackageInfo, errorCode, constantPkg, Symbol.EMPTY);
+  }
+
+  /**
+   * 分页方法参数的最大长度检查
+   *
+   * @param columnInfo 空的参数信息
+   * @param dtoPackageInfo dto的实体信息
+   * @param errorCode 错误码
+   * @return 构建的关空代码
+   */
+  private String checkMaxLengthParamPage(
+      TableColumnDTO columnInfo,
+      ImportPackageInfo dtoPackageInfo,
+      ImportPackageInfo errorCode,
+      ImportPackageInfo constantPkg) {
+
+    return checkMaxLengthParamInvoke(
+        columnInfo, dtoPackageInfo, errorCode, constantPkg, PAGE_GET_DATA);
+  }
+
+  /**
+   * 进行检查最大的长度参数
+   *
+   * @param columnInfo
+   * @param dtoPackageInfo
+   * @param errorCode
+   * @param constantPkg
+   * @return
+   */
+  private String checkMaxLengthParamInvoke(
+      TableColumnDTO columnInfo,
+      ImportPackageInfo dtoPackageInfo,
+      ImportPackageInfo errorCode,
+      ImportPackageInfo constantPkg,
+      String paramCheck) {
     StringBuilder outInsert = new StringBuilder();
 
     String codeDataName =
@@ -783,7 +997,14 @@ public class GenerateJavaCheck {
     outInsert.append(JavaFormat.appendTab(4));
     outInsert.append(Symbol.POINT);
     outInsert.append(METHOD_CHECK_MAXLENGTH).append(Symbol.BRACKET_LEFT);
-    outInsert.append(dtoPackageInfo.getVarName()).append(Symbol.POINT);
+    outInsert.append(dtoPackageInfo.getVarName());
+
+    // 获取对象中的参数
+    if (StringUtils.isNotEmpty(paramCheck)) {
+      outInsert.append(Symbol.POINT).append(paramCheck);
+    }
+
+    outInsert.append(Symbol.POINT);
     outInsert.append(getName).append(Symbol.BRACKET_LEFT);
     outInsert.append(Symbol.BRACKET_RIGHT).append(Symbol.COMMA);
 
@@ -928,7 +1149,7 @@ public class GenerateJavaCheck {
             // 返回类型
             .type(ImportCodePackageKey.ERROR_DATA.getPackageInfo().getClassName())
             // 方法名
-            .name(NAME_PREFIX + NameProcess.INSTANCE.toJavaNameFirstUpper(methodInfo.getName()))
+            .name(getMethodName(methodInfo.getName()))
             // 参数
             .arguments(arguments)
             .build();
@@ -936,6 +1157,66 @@ public class GenerateJavaCheck {
     JavaClassCodeUtils.methodDefine(outInsert, methodDefine);
 
     return outInsert.toString();
+  }
+
+  /**
+   * 定义方法
+   *
+   * @param methodInfo 方法
+   * @param dtoPackageInfo 数据传输包
+   * @return
+   */
+  private String pageDefineMethod(MethodInfo methodInfo, ImportPackageInfo dtoPackageInfo) {
+    StringBuilder outInsert = new StringBuilder();
+
+    List<JavaMethodArguments> arguments = new ArrayList<>();
+
+    String paramType =
+        ImportCodePackageKey.HTTP_PAGE_REQUEST.getPackageInfo().getClassName()
+            + Symbol.ANGLE_BRACKETS_LEFT
+            + dtoPackageInfo.getClassName()
+            + Symbol.ANGLE_BRACKETS_RIGHT;
+
+    // 检查错误
+    arguments.add(
+        JavaMethodArguments.builder()
+            .type(paramType)
+            .name(dtoPackageInfo.getVarName())
+            .comment(dtoPackageInfo.getClassComment())
+            .build());
+
+    // 方法的声明
+    JavaMethodEntity methodDefine =
+        JavaMethodEntity.builder()
+            // 访问修饰符
+            .visit(JavaKeyWord.PUBLIC)
+            // 静态标识
+            .staticFlag(JavaKeyWord.STATIC)
+            // 注释
+            .comment(methodInfo.getComment() + CHECK_PARAM)
+            // 返回注释
+            .returnComment(ImportCodePackageKey.ERROR_DATA.getPackageInfo().getClassComment())
+            // 返回类型
+            .type(ImportCodePackageKey.ERROR_DATA.getPackageInfo().getClassName())
+            // 方法名
+            .name(getMethodName(methodInfo.getName()))
+            // 参数
+            .arguments(arguments)
+            .build();
+
+    JavaClassCodeUtils.methodDefine(outInsert, methodDefine);
+
+    return outInsert.toString();
+  }
+
+  /**
+   * 获取方法名
+   *
+   * @param methodName
+   * @return
+   */
+  public static final String getMethodName(String methodName) {
+    return NAME_PREFIX + NameProcess.INSTANCE.toJavaNameFirstUpper(methodName);
   }
 
   /**

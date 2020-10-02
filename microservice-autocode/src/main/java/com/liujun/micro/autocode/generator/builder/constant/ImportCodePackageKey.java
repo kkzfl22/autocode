@@ -14,7 +14,7 @@ public enum ImportCodePackageKey {
   PAGE_PARAM(
       new ImportPackageInfo(
           "com.common.entity",
-          "PageDataInfo",
+          "PageDO",
           CodeComment.PAGE_REQUEST_COMMENT,
           JavaVarName.PAGE_REQUEST)),
 
@@ -22,7 +22,7 @@ public enum ImportCodePackageKey {
   PAGE_RESULT(
       new ImportPackageInfo(
           "com.common.entity",
-          "PageDataInfo",
+          "PageDO",
           CodeComment.PAGE_RESPONSE_COMMENT,
           JavaVarName.PAGE_RESPONSE)),
 
@@ -54,10 +54,58 @@ public enum ImportCodePackageKey {
   ANNOTATION_API_MODEL(
       ImportPackageInfo.getAnnotationPkg("io.swagger.annotations", "ApiModel", "@ApiModel")),
 
+  /** swagger的Api的注解 */
+  ANNOTATION_API(ImportPackageInfo.getAnnotationPkg("io.swagger.annotations", "Api", "@Api")),
+
+  /** swagger的Api的注解 */
+  ANNOTATION_API_OPERATION(
+      ImportPackageInfo.getAnnotationPkg(
+          "io.swagger.annotations", "ApiOperation", "@ApiOperation")),
+
   /** swagger的ApiModelProperty的注解 */
   ANNOTATION_API_MODEL_PROPERTY(
       ImportPackageInfo.getAnnotationPkg(
           "io.swagger.annotations", "ApiModelProperty", "@ApiModelProperty")),
+
+  /** spring的RestController注解 */
+  SPRING_REST_CONTROLLER(
+      ImportPackageInfo.getAnnotationPkg(
+          "org.springframework.web.bind.annotation", "RestController", "@RestController")),
+
+  /** spring的RestController注解 */
+  SPRING_REQUEST_MAPPING(
+      ImportPackageInfo.getAnnotationPkg(
+          "org.springframework.web.bind.annotation", "RequestMapping", "@RequestMapping")),
+
+  /** spring的request Method注解 */
+  SPRING_REQUEST_METHOD(
+      new ImportPackageInfo("org.springframework.web.bind.annotation", "RequestMethod")),
+
+  /** spring的RequestBody注解 */
+  SPRING_REQUEST_BODY(
+      ImportPackageInfo.getAnnotationPkg(
+          "org.springframework.web.bind.annotation", "RequestBody", "@RequestBody")),
+
+  /** spring的RequestBody注解 */
+  HTTP_SERVLET_REQUEST(
+      new ImportPackageInfo("javax.servlet.http", "HttpServletRequest", "http请求信息", "request")),
+
+  /** API请求响应对象 */
+  HTTP_API_RESPONSE(
+      new ImportPackageInfo("com.common.entity", "ApiResponse", "返回结果信息", "response")),
+
+  /** API分页请求响应对象 */
+  HTTP_API_PAGE_RESPONSE(
+      new ImportPackageInfo("com.common.entity", "ApiPageResponse", "分页结果信息", "response")),
+
+
+  /** API分页请求响应对象 */
+  HTTP_PAGE_REQUEST(
+      new ImportPackageInfo("com.common.entity", "PageDTO", "分页查询公共请求对象", "pageRequest")),
+
+  /** API分页请求响应对象 */
+  API_ASSEMBLER_PAGE(
+      new ImportPackageInfo("com.common.assembler", "PageAssembler", "分页转换对象", "assembler")),
   ;
 
   /** 包定义信息 */

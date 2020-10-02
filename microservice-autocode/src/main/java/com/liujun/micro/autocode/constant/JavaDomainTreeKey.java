@@ -104,7 +104,7 @@ public enum JavaDomainTreeKey {
   INTERFACE_FACADE("facade"),
 
   /** 统一的错误码 */
-  INTERFACE_ERROR_CODE("errorCode"),
+  INTERFACE_ERROR_CODE("errorcode"),
 
   /** 静态常量信息 */
   INTERFACE_CONSTANT("constant"),
