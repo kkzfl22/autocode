@@ -154,6 +154,32 @@ public class GenerateJavaAction {
                                 JavaVarName.APPLICATION_INSTANCE_NAME,
                                 applicationServicePackage.getClassComment())));
 
+
+        //执行方法的生成
+        generateMethod(methodList, sb, assembler, paramCheckService, apiObject, domainPackageInfo);
+
+        // 类的结束
+        JavaClassCodeUtils.classEnd(sb);
+        return sb;
+    }
+
+    /**
+     * 方法的生成操作
+     *
+     * @param methodList
+     * @param sb
+     * @param assembler
+     * @param paramCheckService
+     * @param apiObject
+     * @param domainPackageInfo
+     */
+    private void generateMethod(List<MethodInfo> methodList,
+                                StringBuilder sb,
+                                ImportPackageInfo assembler,
+                                ImportPackageInfo paramCheckService,
+                                ImportPackageInfo apiObject,
+                                ImportPackageInfo domainPackageInfo
+    ) {
         for (MethodInfo methodItem : methodList) {
             // 1,针对增删除改的方法进行调用
             if (MethodTypeEnum.INSERT.getType().equals(methodItem.getOperator())) {
@@ -213,11 +239,8 @@ public class GenerateJavaAction {
                         assembler);
             }
         }
-
-        // 类的结束
-        JavaClassCodeUtils.classEnd(sb);
-        return sb;
     }
+
 
     /**
      * 数据修改相关的调用

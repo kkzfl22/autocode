@@ -78,6 +78,7 @@ public class FileUtils {
         }
 
         //存在，则执行删除操作
-        outfile.delete();
+        boolean deleteRps = outfile.delete();
+        log.info("delete rsp {}", deleteRps);
     }
 }
