@@ -137,8 +137,13 @@ public class JavaCodeInterfaceFacadeJunitCreate implements GenerateCodeInf {
                 ImportPackageUtils.getDefineClass(
                         packageMap, GenerateCodePackageKey.APPLICATION_SERVICE.getKey(), tableName);
 
+        //api层的实现
+        ImportPackageInfo facadePackageInfo =
+                ImportPackageUtils.getDefineClass(
+                        packageMap, GenerateCodePackageKey.INTERFACE_FACADE.getKey(), tableName);
 
-        return Arrays.asList(repositoryPackageInfo, domainServicePackageInfo, applicationServicePackageInfo);
+
+        return Arrays.asList(repositoryPackageInfo, domainServicePackageInfo, applicationServicePackageInfo, facadePackageInfo);
 
     }
 

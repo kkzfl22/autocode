@@ -9,6 +9,7 @@ import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageK
 import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.JavaMethodName;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarValue;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassEntity;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
@@ -19,6 +20,7 @@ import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
+import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +48,7 @@ public class GenerateJavaAction {
                     "lombok.extern.slf4j.Slf4j",
                     "org.springframework.beans.factory.annotation.Autowired",
                     "org.springframework.stereotype.Service",
+                    JavaKeyWord.IMPORT_COLLECTIONS,
                     JavaKeyWord.IMPORT_LIST,
                     ImportCodePackageKey.ANNOTATION_API_MODEL.getPackageInfo().packageOut(),
                     ImportCodePackageKey.ANNOTATION_API_MODEL_PROPERTY.getPackageInfo().packageOut(),
@@ -60,7 +63,9 @@ public class GenerateJavaAction {
                     ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().packageOut(),
                     ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().packageOut(),
                     ImportCodePackageKey.HTTP_PAGE_REQUEST.getPackageInfo().packageOut(),
-                    ImportCodePackageKey.API_ASSEMBLER_PAGE.getPackageInfo().packageOut());
+                    ImportCodePackageKey.API_ASSEMBLER_PAGE.getPackageInfo().packageOut()
+
+            );
 
     /**
      * 分页相关 导入包
@@ -814,6 +819,9 @@ public class GenerateJavaAction {
         sb.append(JavaVarName.QUERY_PAGE_PARAM_VAR).append(Symbol.BRACKET_RIGHT);
         sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
 
+        //数据转换操作
+        sb.append(this.dataParse(assembler));
+
         // 返回语句
         sb.append(JavaFormat.appendTab(2)).append(JavaKeyWord.RETURN).append(Symbol.SPACE);
         sb.append(ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().getClassName());
@@ -826,6 +834,66 @@ public class GenerateJavaAction {
 
         return sb.toString();
     }
+
+
+    private String dataParse(ImportPackageInfo assembler) {
+        StringBuilder sb = new StringBuilder();
+        //返回数据转换
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(JavaKeyWord.IF).append(Symbol.BRACKET_LEFT);
+        sb.append(JavaVarName.PAGE_RETURN_DATA).append(Symbol.POINT);
+        sb.append(JavaMethodName.GET);
+        sb.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_DATA));
+        sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
+        sb.append(Symbol.SPACE).append(Symbol.EQUAL_NOT).append(JavaVarValue.VALUE_NULL).append(Symbol.BRACKET_RIGHT);
+        sb.append(Symbol.SPACE).append(Symbol.BRACE_LEFT);
+        sb.append(Symbol.ENTER_LINE);
+        //数数转换
+        sb.append(JavaFormat.appendTab(3));
+        sb.append(JavaVarName.PAGE_RETURN_DATA).append(Symbol.POINT);
+        sb.append(JavaMethodName.SET);
+        sb.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_DATA));
+        sb.append(Symbol.BRACKET_LEFT);
+        sb.append(assembler.getClassName()).append(Symbol.POINT);
+        sb.append(JavaMethodName.ASSEMBLER_DOMAIN_TRANSFER_LIST_NAME).append(Symbol.BRACKET_LEFT);
+        sb.append(JavaVarName.PAGE_RETURN_DATA).append(Symbol.POINT);
+        sb.append(JavaMethodName.GET);
+        sb.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_DATA));
+        sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
+        sb.append(Symbol.BRACKET_RIGHT);
+        sb.append(Symbol.BRACKET_RIGHT);
+        sb.append(Symbol.SEMICOLON);
+        sb.append(Symbol.ENTER_LINE);
+
+        //判断结果
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(Symbol.BRACE_RIGHT);
+        sb.append(Symbol.ENTER_LINE);
+
+
+        //为空，则设置一个空对象
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(JavaKeyWord.ELSE).append(Symbol.BRACE_LEFT);
+        sb.append(Symbol.ENTER_LINE);
+
+        //数数转换
+        sb.append(JavaFormat.appendTab(3));
+        sb.append(JavaVarName.PAGE_RETURN_DATA).append(Symbol.POINT);
+        sb.append(JavaMethodName.SET);
+        sb.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_DATA));
+        sb.append(Symbol.BRACKET_LEFT).append(JavaKeyWord.LIST_EMPTY_DEFAULT);
+        sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
+        sb.append(Symbol.ENTER_LINE);
+
+
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(Symbol.BRACE_RIGHT);
+        sb.append(Symbol.ENTER_LINE);
+
+
+        return sb.toString();
+    }
+
 
     /**
      * 方法的定义

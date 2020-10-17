@@ -43,7 +43,9 @@ public class JavaCodeRepositoryJunitMyBatisScanConfigCreate implements GenerateC
             "org.springframework.context.annotation.Bean",
             ImportJunitPkgKey.SPRING_CONFIG.getPackageInfo().packageOut(),
             "org.springframework.jdbc.datasource.DataSourceTransactionManager",
-            "javax.sql.DataSource"
+            "javax.sql.DataSource",
+            "com.github.pagehelper.PageInterceptor",
+            "java.util.Properties"
     );
 
 
@@ -81,8 +83,15 @@ public class JavaCodeRepositoryJunitMyBatisScanConfigCreate implements GenerateC
             //事务的获取逻辑
             outClass.append(transManagerClass());
 
+
+            //换行
+            outClass.append(Symbol.ENTER_LINE);
+
+            //分页插件
+            outClass.append(pageInterceptor());
+
             // 将数据库存储的文件输出
-            JavaClassCodeUtils.methodEnd(outClass);
+            JavaClassCodeUtils.classEnd(outClass);
 
 
             // 定义项目内的完整目录结构
@@ -130,6 +139,49 @@ public class JavaCodeRepositoryJunitMyBatisScanConfigCreate implements GenerateC
         outMethod.append(JavaFormat.appendTab(2));
         outMethod.append("return new DataSourceTransactionManager(dataSource);");
         outMethod.append(Symbol.ENTER_LINE);
+        outMethod.append(JavaFormat.appendTab(1));
+        outMethod.append(Symbol.BRACE_RIGHT);
+        outMethod.append(Symbol.ENTER_LINE);
+
+        return outMethod.toString();
+    }
+
+
+    /**
+     * 分页插件拦截
+     *
+     * @return 构建的代码
+     */
+    private String pageInterceptor() {
+        StringBuilder outMethod = new StringBuilder();
+
+        outMethod.append(JavaFormat.appendTab(1));
+        outMethod.append("@Bean");
+        outMethod.append(Symbol.ENTER_LINE);
+        outMethod.append(JavaFormat.appendTab(1));
+        outMethod.append("public PageInterceptor pageCfg() {");
+        outMethod.append(Symbol.ENTER_LINE);
+        outMethod.append(JavaFormat.appendTab(2));
+        outMethod.append("PageInterceptor cfg = new PageInterceptor();");
+        outMethod.append(Symbol.ENTER_LINE);
+
+        outMethod.append(JavaFormat.appendTab(2));
+        outMethod.append("Properties properties = new Properties();");
+        outMethod.append(Symbol.ENTER_LINE);
+
+        outMethod.append(JavaFormat.appendTab(2));
+        outMethod.append("properties.setProperty(\"helperDialect\", \"mysql\");");
+        outMethod.append(Symbol.ENTER_LINE);
+
+        outMethod.append(JavaFormat.appendTab(2));
+        outMethod.append("cfg.setProperties(properties);");
+        outMethod.append(Symbol.ENTER_LINE);
+
+        outMethod.append(JavaFormat.appendTab(2));
+        outMethod.append("return cfg;");
+        outMethod.append(Symbol.ENTER_LINE);
+
+        outMethod.append(JavaFormat.appendTab(1));
         outMethod.append(Symbol.BRACE_RIGHT);
         outMethod.append(Symbol.ENTER_LINE);
 

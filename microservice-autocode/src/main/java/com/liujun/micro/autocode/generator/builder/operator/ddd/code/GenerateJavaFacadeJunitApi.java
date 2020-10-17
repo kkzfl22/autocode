@@ -1,9 +1,13 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.code;
 
 import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.config.generate.entity.TypeInfo;
+import com.liujun.micro.autocode.constant.GenerateDefineFlag;
 import com.liujun.micro.autocode.constant.MethodTypeEnum;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
+import com.liujun.micro.autocode.generator.builder.constant.JavaMethodName;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarValue;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitDefine;
@@ -11,9 +15,11 @@ import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJ
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitUpdate;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
+import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
 import java.util.ArrayList;
@@ -39,6 +45,11 @@ public class GenerateJavaFacadeJunitApi {
      * 成功的响应码
      */
     private static final String SUCCESS_CODE = "APICodeEnum.SUCCESS.getErrorData().getCode()";
+
+    /**
+     * 调用的获取结果的方法
+     */
+    private static final String GET_METHOD = ".getCode()";
 
     /**
      * 生成单元测试的类信息
@@ -96,9 +107,11 @@ public class GenerateJavaFacadeJunitApi {
                 GenerateJunitUpdate.INSTANCE.oneUpdateMethod(
                         sb, methodItem, insertMethod,
                         ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
-                        SUCCESS_CODE);
+                        SUCCESS_CODE,
+                        GET_METHOD
+                );
             }
-            // 非主键的删除方法
+            // 主键的删除方法
             else if (MethodTypeEnum.DELETE.getType().equals(methodItem.getOperator())
                     && !Boolean.TRUE.equals(methodItem.getPrimaryFlag())) {
                 GenerateJunitUpdate.INSTANCE.batchDelete(
@@ -110,7 +123,8 @@ public class GenerateJavaFacadeJunitApi {
                         type,
                         primaryKeyList,
                         ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
-                        SUCCESS_CODE);
+                        SUCCESS_CODE,
+                        GET_METHOD);
             }
             // 分页查询方法
             else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())
@@ -130,7 +144,9 @@ public class GenerateJavaFacadeJunitApi {
         MethodInfo methodItem = MethodUtils.getPrimaryDeleteMethod(methodList);
         if (null != methodItem) {
             GenerateJunitUpdate.INSTANCE.deleteMethod(
-                    sb, methodItem, entityPackage, JavaKeyWord.TYPE_BOOLEAN, Boolean.TRUE.toString());
+                    sb, methodItem, entityPackage, ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                    SUCCESS_CODE,
+                    GET_METHOD);
         }
 
         // 结束
@@ -145,6 +161,9 @@ public class GenerateJavaFacadeJunitApi {
 
         importList.add(ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().packageOut());
         importList.add(ImportCodePackageKey.HTTP_API_RESPONSE_CODE.getPackageInfo().packageOut());
+        importList.add(ImportCodePackageKey.PAGE_DTO.getPackageInfo().packageOut());
+        importList.add(ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().packageOut());
+        importList.add(ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().packageOut());
 
         return importList;
     }
@@ -164,13 +183,14 @@ public class GenerateJavaFacadeJunitApi {
             GenerateJunitUpdate.INSTANCE.batchInsertMethod(
                     sb, method, methodList,
                     ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
-                    SUCCESS_CODE
+                    SUCCESS_CODE,
+                    GET_METHOD
             );
         } else {
             // 执行单个添加
             GenerateJunitUpdate.INSTANCE.oneInsertMethod(
                     sb, method, ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
-                    SUCCESS_CODE);
+                    SUCCESS_CODE, GET_METHOD);
         }
     }
 
@@ -204,11 +224,124 @@ public class GenerateJavaFacadeJunitApi {
         this.queryInsert(sb, queryMethod, tabIndex, poPackageInfo, columnMap, methodList);
 
         // 添加查询的代码
-        GenerateJunitQuery.INSTANCE.junitQueryMethod(
+        this.junitQueryMethod(
                 sb, queryMethod, poPackageInfo, columnMap, tabIndex, dbType, primaryList);
 
         // 方法结束
         JavaClassCodeUtils.methodEnd(sb);
+    }
+
+
+    /**
+     * 单元测试中的查询部分
+     *
+     * @param sb
+     * @param queryMethod
+     * @param poPackageInfo
+     * @param columnMap
+     * @param tabIndex
+     * @param dbType
+     * @param primaryList
+     */
+    public void junitQueryMethod(
+            StringBuilder sb,
+            MethodInfo queryMethod,
+            ImportPackageInfo poPackageInfo,
+            Map<String, TableColumnDTO> columnMap,
+            int tabIndex,
+            DatabaseTypeEnum dbType,
+            List<TableColumnDTO> primaryList) {
+
+        sb.append(Symbol.ENTER_LINE);
+
+        TypeInfo resultType = queryMethod.getReturnType();
+        String className = resultType.getImportClassName();
+        className =
+                className.replaceAll(
+                        GenerateDefineFlag.TABLE_NAME.getDefineFlag(), poPackageInfo.getClassName());
+
+        // 进行条件的设置
+        GenerateJunitQuery.INSTANCE.methodQueryConditionSet(sb, queryMethod, poPackageInfo, columnMap, dbType, primaryList);
+
+        // 调用查询方法
+        this.invokeQueryMethodData(sb, queryMethod, poPackageInfo);
+
+        // 执行方法结果断言
+        this.methodResponseAssert(sb, queryMethod, poPackageInfo);
+    }
+
+
+    /**
+     * 调用查询方法
+     *
+     * @param sb
+     */
+    private void invokeQueryMethodData(
+            StringBuilder sb, MethodInfo queryMethod, ImportPackageInfo dtoDataInfo) {
+
+        // 方法调用
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().getClassName());
+        sb.append(Symbol.ANGLE_BRACKETS_LEFT).append(dtoDataInfo.getClassName()).append(Symbol.ANGLE_BRACKETS_RIGHT);
+        sb.append(Symbol.SPACE);
+
+        sb.append(JavaVarName.INVOKE_METHOD_QUERY_RSP).append(Symbol.SPACE);
+        sb.append(Symbol.EQUAL);
+
+        sb.append(Symbol.BRACKET_LEFT);
+        sb.append(ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().getClassName());
+        sb.append(Symbol.ANGLE_BRACKETS_LEFT).append(dtoDataInfo.getClassName()).append(Symbol.ANGLE_BRACKETS_RIGHT);
+        sb.append(Symbol.BRACKET_RIGHT);
+
+        sb.append(Symbol.SPACE).append(JavaVarName.SPRING_INSTANCE_NAME);
+        sb.append(Symbol.POINT).append(queryMethod.getName()).append(Symbol.BRACKET_LEFT);
+        sb.append(JavaVarName.METHOD_PARAM_TEMP_NAME).append(Symbol.BRACKET_RIGHT);
+        sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
+    }
+
+    /**
+     * 查询方法结果断言操作
+     *
+     * @param sb
+     * @param methodInfo
+     */
+    private void methodResponseAssert(StringBuilder sb, MethodInfo methodInfo, ImportPackageInfo dtoInfo) {
+        // 如果当前返回结果为结果集，则使用使用集合断言
+        boolean checkList = ReturnUtils.checkReturnList(methodInfo.getReturns());
+        if (checkList) {
+            sb.append(JavaFormat.appendTab(2));
+            sb.append(JavaKeyWord.THIS).append(Symbol.POINT);
+            sb.append(JavaMethodName.ASSERT_DATA_LIST);
+            sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.BATCH_LIST_NAME);
+            sb.append(Symbol.COMMA).append(Symbol.SPACE);
+            sb.append(Symbol.BRACKET_LEFT);
+            sb.append(JavaKeyWord.LIST_TYPE);
+            sb.append(dtoInfo.getClassName());
+            sb.append(Symbol.ANGLE_BRACKETS_RIGHT);
+            sb.append(Symbol.BRACKET_RIGHT);
+            sb.append(JavaVarName.INVOKE_METHOD_QUERY_RSP);
+            sb.append(Symbol.POINT);
+            sb.append(JavaMethodName.GET);
+            sb.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_DTO_DATA));
+            sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
+
+            sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
+            sb.append(Symbol.ENTER_LINE);
+        }
+        // 当前为对象，则执行对象断言
+        else if (ReturnUtils.checkReturnObject(methodInfo.getReturns())) {
+            sb.append(JavaFormat.appendTab(2));
+            sb.append(JavaKeyWord.THIS).append(Symbol.POINT);
+            sb.append(JavaMethodName.ASSERT_DATA);
+            sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.INSTANCE_NAME_ENTITY);
+            sb.append(Symbol.COMMA).append(Symbol.SPACE).append(JavaVarName.INVOKE_METHOD_QUERY_RSP);
+            sb.append(Symbol.POINT);
+            sb.append(JavaMethodName.GET);
+            sb.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_DTO_DATA));
+            sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
+            sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
+            sb.append(Symbol.ENTER_LINE);
+        }
     }
 
     /**
@@ -241,12 +374,138 @@ public class GenerateJavaFacadeJunitApi {
         this.queryInsert(sb, queryMethod, tabIndex, poPackageInfo, columnMap, methodList);
 
         // 分页查询的代码
-        GenerateJunitQuery.INSTANCE.junitPageQueryMethod(
-                sb, queryMethod, poPackageInfo, columnMap, tabIndex, dbType, primaryList);
+        this.junitPageQueryMethod(
+                sb, queryMethod, poPackageInfo, columnMap, dbType, primaryList);
 
         // 方法结束
         JavaClassCodeUtils.methodEnd(sb);
     }
+
+
+    /**
+     * 单元测试中的分页查询部分
+     *
+     * @param sb
+     * @param queryMethod
+     * @param dtoPackageInfo
+     * @param columnMap
+     * @param dbType
+     * @param primaryList
+     */
+    public void junitPageQueryMethod(
+            StringBuilder sb,
+            MethodInfo queryMethod,
+            ImportPackageInfo dtoPackageInfo,
+            Map<String, TableColumnDTO> columnMap,
+            DatabaseTypeEnum dbType,
+            List<TableColumnDTO> primaryList) {
+
+        sb.append(Symbol.ENTER_LINE);
+
+        TypeInfo resultType = queryMethod.getReturnType();
+        String className = resultType.getImportClassName();
+        className =
+                className.replaceAll(
+                        GenerateDefineFlag.TABLE_NAME.getDefineFlag(), dtoPackageInfo.getClassName());
+
+        // 进行条件的设置
+        GenerateJunitQuery.INSTANCE.methodQueryConditionSet(sb, queryMethod, dtoPackageInfo, columnMap, dbType, primaryList);
+
+        // 调用分页查询方法
+        this.invokePageQueryMethod(sb, queryMethod, dtoPackageInfo);
+
+        // 执行方法结果断言
+        this.methodPageResponseAssert(sb, dtoPackageInfo);
+    }
+
+
+    /**
+     * 调用分页的方法
+     *
+     * @param sb
+     */
+    private void invokePageQueryMethod(StringBuilder sb, MethodInfo queryMethod, ImportPackageInfo dtoPackage) {
+
+        // 声明分页的对象信息
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(ImportCodePackageKey.PAGE_DTO.getPackageInfo().getClassName());
+        sb.append(Symbol.ANGLE_BRACKETS_LEFT).append(dtoPackage.getClassName()).append(Symbol.ANGLE_BRACKETS_RIGHT);
+        sb.append(Symbol.SPACE).append(JavaVarName.QUERY_PAGE_PARAM_VAR).append(Symbol.SPACE);
+        sb.append(Symbol.EQUAL).append(Symbol.SPACE);
+        sb.append(JavaKeyWord.NEW).append(Symbol.SPACE);
+        sb.append(ImportCodePackageKey.PAGE_DTO.getPackageInfo().getClassName());
+        sb.append(Symbol.ANGLE_BRACKETS_LEFT).append(Symbol.ANGLE_BRACKETS_RIGHT);
+        sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
+        sb.append(Symbol.ENTER_LINE);
+
+        //设置值,当前页大小
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(JavaVarName.QUERY_PAGE_PARAM_VAR).append(Symbol.POINT);
+        sb.append(JavaMethodName.SET);
+        sb.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_SIZE));
+        sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.FINAL_BATCH_INSERT_NUM).append(Symbol.BRACKET_RIGHT);
+        sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
+
+        //当前第1页
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(JavaVarName.QUERY_PAGE_PARAM_VAR).append(Symbol.POINT);
+        sb.append(JavaMethodName.SET);
+        sb.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_NUM));
+        sb.append(Symbol.BRACKET_LEFT).append(JavaVarValue.VALUE_ONE).append(Symbol.BRACKET_RIGHT);
+        sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
+
+        //设置数据值
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(JavaVarName.QUERY_PAGE_PARAM_VAR).append(Symbol.POINT);
+        sb.append(JavaMethodName.SET);
+        sb.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_DTO_DATA));
+        sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.METHOD_PARAM_TEMP_NAME).append(Symbol.BRACKET_RIGHT);
+        sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
+
+
+        // 方法调用
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().getClassName());
+        sb.append(Symbol.ANGLE_BRACKETS_LEFT).append(dtoPackage.getClassName()).append(Symbol.ANGLE_BRACKETS_RIGHT);
+        sb.append(Symbol.SPACE).append(ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().getVarName());
+        sb.append(Symbol.SPACE);
+        sb.append(Symbol.EQUAL).append(Symbol.SPACE);
+        sb.append(Symbol.BRACKET_LEFT);
+        sb.append(ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().getClassName());
+        sb.append(Symbol.ANGLE_BRACKETS_LEFT).append(dtoPackage.getClassName()).append(Symbol.ANGLE_BRACKETS_RIGHT);
+        sb.append(Symbol.BRACKET_RIGHT);
+        sb.append(JavaVarName.SPRING_INSTANCE_NAME);
+        sb.append(Symbol.POINT).append(queryMethod.getName()).append(Symbol.BRACKET_LEFT);
+        sb.append(JavaVarName.QUERY_PAGE_PARAM_VAR);
+        sb.append(Symbol.BRACKET_RIGHT);
+        sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
+    }
+
+    /**
+     * 查询方法结果断言操作
+     *
+     * @param sb
+     * @param poPackage 实体信息
+     */
+    private void methodPageResponseAssert(StringBuilder sb, ImportPackageInfo poPackage) {
+        int tabIndex = 0;
+        // 如果当前返回结果为结果集，则使用使用集合断言
+        sb.append(JavaFormat.appendTab(tabIndex + 2));
+        sb.append(JavaKeyWord.THIS).append(Symbol.POINT);
+        sb.append(JavaMethodName.ASSERT_DATA_LIST);
+        sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.BATCH_LIST_NAME);
+        sb.append(Symbol.COMMA).append(Symbol.SPACE);
+        sb.append(Symbol.BRACKET_LEFT).append(JavaKeyWord.LIST_TYPE);
+        sb.append(poPackage.getClassName());
+        sb.append(JavaKeyWord.LIST_TYPE_END).append(Symbol.BRACKET_RIGHT);
+        sb.append(ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().getVarName());
+        sb.append(Symbol.POINT).append(JavaMethodName.GET);
+        sb.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_DTO_DATA));
+        sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
+        sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
+        sb.append(Symbol.ENTER_LINE);
+    }
+
 
     /**
      * 查询的数据插入操作
@@ -275,8 +534,8 @@ public class GenerateJavaFacadeJunitApi {
             // 调用批量添加方法
             sb.append(
                     GenerateJunitUpdate.INSTANCE.invokeBatch(
-                            methodList,  ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
-                            SUCCESS_CODE));
+                            methodList, ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                            SUCCESS_CODE, GET_METHOD));
 
             // 进行标识的设置操作
             sb.append(
@@ -290,8 +549,8 @@ public class GenerateJavaFacadeJunitApi {
             // 调用单个添加方法
             sb.append(
                     GenerateJunitUpdate.INSTANCE.insertInvokeMethod(
-                            insertMethod,  ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
-                            SUCCESS_CODE));
+                            insertMethod, ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                            SUCCESS_CODE, GET_METHOD));
 
             // 进行标识的设置操作
             sb.append(GenerateJunitDefine.INSTANCE.setBatchInsertFlag(JavaVarValue.INSERT_TYPE_ONE_KEY));

@@ -161,11 +161,19 @@ public enum ImportCodePackageKey {
     HTTP_API_RESPONSE(
             new ImportPackageInfo("com.common.entity", "ApiResponse", "返回结果信息", "response")),
 
+
     /**
      * API分页请求响应对象
      */
     HTTP_API_PAGE_RESPONSE(
             new ImportPackageInfo("com.common.entity", "ApiPageResponse", "分页结果信息", "response")),
+
+
+    /**
+     * API查询请求响应对象
+     */
+    HTTP_API_DATA_RESPONSE(
+            new ImportPackageInfo("com.common.entity", "ApiDataResponse", "分页结果信息", "response")),
 
 
     /**

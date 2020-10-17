@@ -72,7 +72,7 @@ public class JavaCodeInterfaceFacadeCreate implements GenerateCodeInf {
             String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
             javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
 
-            // api的接口
+            // api的接口实现
             StringBuilder sb =
                     GenerateJavaAction.INSTANCE.generateAction(
                             packageMap,
