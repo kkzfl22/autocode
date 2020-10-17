@@ -1,7 +1,6 @@
 package com.liujun.micro.autocode;
 
-import com.liujun.micro.autocode.config.generate.GenerateErrorCodePersist;
-import com.liujun.micro.autocode.config.generate.entity.Generate;
+import com.liujun.micro.autocode.generator.run.CodeCreateMicroServiceRun;
 
 /**
  * 程序入口
@@ -11,11 +10,10 @@ import com.liujun.micro.autocode.config.generate.entity.Generate;
  */
 public class MainRun {
 
-  public static void main(String[] args) {
+    public static void main(String[] args) {
+        //代码生成
+        CodeCreateMicroServiceRun.INSTANCE.generate();
 
-    int errorCode = -1000120;
-    GenerateErrorCodePersist.INSTANCE.save(errorCode);
-    int loadCode = GenerateErrorCodePersist.INSTANCE.load();
-    System.out.println("加载的错误码:" + loadCode);
-  }
+        System.out.println("finish");
+    }
 }

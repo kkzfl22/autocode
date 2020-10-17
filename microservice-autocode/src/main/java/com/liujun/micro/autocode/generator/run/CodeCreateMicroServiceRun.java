@@ -1,50 +1,29 @@
 package com.liujun.micro.autocode.generator.run;
 
 import com.liujun.micro.autocode.config.generate.GenerateConfigProcess;
-import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
-import com.liujun.micro.autocode.generator.builder.service.AutoCodeBeanBuilder;
-import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
+import com.liujun.micro.autocode.generator.run.builder.GenerateCodeBuilder;
 
 /**
- * 微服务相当的类的代码生成
+ * 相当的类的代码生成
  *
- * @since 2018年4月15日 下午9:39:49
- * @version 0.0.1
  * @author liujun
+ * @version 0.0.1
+ * @since 2018年4月15日 下午9:39:49
  */
 public class CodeCreateMicroServiceRun {
 
-  public static void main(String[] args) {
-    // 代码基础路径
-    String basePkg = "com.paraview.security.pap.microservice.";
-    // 表空间
-    String tableSpace = "autocode";
 
-    /** 模块名称 */
-    String modelName = "attribute";
-    // 文件输出代码路径
-    String filePath = "D:/java/encode/javacode/";
+    public static final CodeCreateMicroServiceRun INSTANCE = new CodeCreateMicroServiceRun();
 
-    GenerateCodeContext param =
-        new GenerateCodeContext(
-            filePath,
-            basePkg,
-            modelName,
-            DatabaseTypeEnum.MYSQL,
-            tableSpace,
-            GenerateConfigProcess.INSTANCE.getCfgEntity());
-    AutoCodeBeanBuilder builder = new AutoCodeBeanBuilder(param);
 
-    // 1,数据准备,从数据库捞取数据
-    builder.builderInit();
+    public void generate() {
 
-    // 使用javaBean代码的生成操作
-    // 生成bean
-    builder.addPersistObject();
+        //生成构建器
+        GenerateCodeBuilder builder = new GenerateCodeBuilder(GenerateConfigProcess.INSTANCE.getCfgEntity());
 
-    // 生成代码
-    builder.generateCode();
+        //进行代码的生成操作
+        builder.generate();
 
-    System.out.println("生成结束");
-  }
+        System.out.println("代码生成结束");
+    }
 }

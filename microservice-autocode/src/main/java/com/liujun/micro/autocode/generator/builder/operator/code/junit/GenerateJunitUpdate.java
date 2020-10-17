@@ -71,7 +71,7 @@ public class GenerateJunitUpdate {
     JavaClassCodeUtils.methodStart(sb);
 
     // 调用批量插入方法
-    this.invokeBatchInsert(sb, tabIndex, methodList, insertReturnType, insertSuccessValue);
+    sb.append(this.invokeBatchInsert(methodList, insertReturnType, insertSuccessValue));
 
     // 方法结束
     JavaClassCodeUtils.methodEnd(sb);
@@ -80,25 +80,22 @@ public class GenerateJunitUpdate {
   /**
    * 调用批量的数据插入
    *
-   * @param sb 代码
-   * @param tabIndex 当前的tab数
    * @param methodList 所有的方法
    * @param insertReturnType 插入的返回类型
    * @param insertSuccessValue 插入成功的值
    */
-  private void invokeBatchInsert(
-      StringBuilder sb,
-      int tabIndex,
-      List<MethodInfo> methodList,
-      String insertReturnType,
-      String insertSuccessValue) {
+  private String invokeBatchInsert(
+      List<MethodInfo> methodList, String insertReturnType, String insertSuccessValue) {
+
+    StringBuilder sb = new StringBuilder();
 
     // 调用批量添加方法
-    this.invokeBatch(sb, tabIndex, methodList, insertReturnType, insertSuccessValue);
+    sb.append(this.invokeBatch(methodList, insertReturnType, insertSuccessValue));
 
     // 进行标识的设置操作
-    GenerateJunitDefine.INSTANCE.setBatchInsertFlag(
-        sb, tabIndex - 1, JavaVarValue.INSERT_TYPE_BATCH_KEY);
+    sb.append(GenerateJunitDefine.INSTANCE.setBatchInsertFlag(JavaVarValue.INSERT_TYPE_BATCH_KEY));
+
+    return sb.toString();
   }
 
   /**
@@ -137,10 +134,10 @@ public class GenerateJunitUpdate {
     JavaClassCodeUtils.methodStart(sb);
 
     // 调用添加方法
-    insertInvokeMethod(sb, tabIndex, method, insertReturnType, insertSuccessValue);
+    sb.append(insertInvokeMethod(method, insertReturnType, insertSuccessValue));
 
     // 进行标识的设置操作
-    GenerateJunitDefine.INSTANCE.setBatchInsertFlag(sb, tabIndex, JavaVarValue.INSERT_TYPE_ONE_KEY);
+    sb.append(GenerateJunitDefine.INSTANCE.setBatchInsertFlag(JavaVarValue.INSERT_TYPE_ONE_KEY));
 
     sb.append(JavaFormat.appendTab(tabIndex + 1)).append(Symbol.BRACE_RIGHT);
     sb.append(Symbol.ENTER_LINE).append(Symbol.ENTER_LINE);
@@ -149,20 +146,39 @@ public class GenerateJunitUpdate {
   /**
    * 批量插入操作
    *
-   * @param sb 字符
-   * @param tabIndex 索引号
    * @param methodList 批次
    * @param insertReturnType 插入数据的返回类型
    * @param insertSuccessValue 插入数据的成功标识
    */
-  public void invokeBatch(
-      StringBuilder sb,
-      int tabIndex,
-      List<MethodInfo> methodList,
-      String insertReturnType,
-      String insertSuccessValue) {
+  public String invokeBatch(
+      List<MethodInfo> methodList, String insertReturnType, String insertSuccessValue) {
     // 获取批量添加的数据
     MethodInfo batchInsert = MethodUtils.getBatchInsertMethod(methodList);
+
+    // 优先使用批量添加方法
+    if (batchInsert != null) {
+      return invokeBatchMethod(insertReturnType, insertSuccessValue, batchInsert);
+    }
+    // 当批量添加的方法没有时，则使用遍历的方江苏进行多个数据单项添加
+    else {
+      // todo
+      System.out.println("");
+    }
+    return null;
+  }
+
+  /**
+   * 执行批量添加方法
+   *
+   * @param insertReturnType 插入返回的对象
+   * @param insertSuccessValue 成功后的值
+   * @param batchInsert 批量添加的方法
+   * @return
+   */
+  private String invokeBatchMethod(
+      String insertReturnType, String insertSuccessValue, MethodInfo batchInsert) {
+    StringBuilder sb = new StringBuilder();
+    int tabIndex = 1;
 
     // 方法调用
     sb.append(JavaFormat.appendTab(tabIndex + 1)).append(insertReturnType);
@@ -177,23 +193,23 @@ public class GenerateJunitUpdate {
     sb.append(insertSuccessValue).append(Symbol.COMMA);
     sb.append(JavaVarName.INVOKE_METHOD_OPERATOR_RSP);
     sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
+
+    return sb.toString();
   }
 
   /**
    * 调用插入方法
    *
-   * @param sb 字符信息
-   * @param tabIndex 当前插入的tab字符的索引
    * @param method 方法信息
    * @param insertReturnType 插入的返回类型
    * @param insertSuccessValue 插入数据的对比值
    */
-  public void insertInvokeMethod(
-      StringBuilder sb,
-      int tabIndex,
-      MethodInfo method,
-      String insertReturnType,
-      String insertSuccessValue) {
+  public String insertInvokeMethod(
+      MethodInfo method, String insertReturnType, String insertSuccessValue) {
+    StringBuilder sb = new StringBuilder();
+    ;
+    int tabIndex = 0;
+
     // 方法调用
     sb.append(JavaFormat.appendTab(tabIndex + 2)).append(insertReturnType).append(Symbol.SPACE);
     sb.append(JavaVarName.INVOKE_METHOD_OPERATOR_RSP).append(Symbol.SPACE);
@@ -209,6 +225,8 @@ public class GenerateJunitUpdate {
     sb.append(insertSuccessValue).append(Symbol.COMMA);
     sb.append(JavaVarName.INVOKE_METHOD_OPERATOR_RSP);
     sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
+
+    return sb.toString();
   }
 
   /**
@@ -252,10 +270,10 @@ public class GenerateJunitUpdate {
     JavaClassCodeUtils.methodStart(sb);
 
     // 调用添加方法
-    insertInvokeMethod(sb, tabIndex, insertMethod, insertReturnType, insertSuccessValue);
+    sb.append(this.insertInvokeMethod(insertMethod, insertReturnType, insertSuccessValue));
 
     // 进行标识的设置操作
-    GenerateJunitDefine.INSTANCE.setBatchInsertFlag(sb, tabIndex, JavaVarValue.INSERT_TYPE_ONE_KEY);
+    sb.append(GenerateJunitDefine.INSTANCE.setBatchInsertFlag(JavaVarValue.INSERT_TYPE_ONE_KEY));
 
     sb.append(Symbol.ENTER_LINE);
 
@@ -472,16 +490,14 @@ public class GenerateJunitUpdate {
 
     // 进行in的处理
     // 查询方法的前的插入方法
-    GenerateJunitQuery.INSTANCE.conditionIn(
-        sb, queryMethod, tabIndex, poPackageInfo, columnMap);
+    GenerateJunitQuery.INSTANCE.conditionIn(sb, queryMethod, tabIndex, poPackageInfo, columnMap);
 
     // 调用批量添加方法
-    GenerateJunitUpdate.INSTANCE.invokeBatch(
-        sb, tabIndex + 1, methodList, insertReturnType, insertSuccessValue);
+    sb.append(
+        GenerateJunitUpdate.INSTANCE.invokeBatch(methodList, insertReturnType, insertSuccessValue));
 
     // 进行标识的设置操作,当前为批量删除方法，
-    GenerateJunitDefine.INSTANCE.setBatchInsertFlag(
-        sb, tabIndex, JavaVarValue.INSERT_TYPE_NONE_KEY);
+    sb.append(GenerateJunitDefine.INSTANCE.setBatchInsertFlag(JavaVarValue.INSERT_TYPE_NONE_KEY));
 
     sb.append(Symbol.ENTER_LINE);
 

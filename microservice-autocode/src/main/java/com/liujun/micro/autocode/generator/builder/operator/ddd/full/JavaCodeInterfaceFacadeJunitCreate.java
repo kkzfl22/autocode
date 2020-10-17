@@ -1,16 +1,14 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.full;
 
-import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
-import com.liujun.micro.autocode.generator.builder.constant.GenerateCommImport;
 import com.liujun.micro.autocode.generator.builder.constant.ImportJunitPkgKey;
-import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitDefine;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.code.GenerateJavaDomainJunitService;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.code.GenerateJavaFacadeJunitApi;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GeneratePathUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
@@ -26,20 +24,20 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * 生成领域服务的单元测试
+ * api层的单元测试
  *
  * @author liujun
  * @version 0.0.1
  * @since 2018年4月15日 下午4:11:42
  */
-public class JavaCodeDomainJunitServiceCreate implements GenerateCodeInf {
+public class JavaCodeInterfaceFacadeJunitCreate implements GenerateCodeInf {
 
     /**
      * 注释
      */
-    private static final String DATABASE_DOC = "领域服务的单元测试";
+    private static final String DATABASE_DOC = "api的单元测试";
 
-    public static final JavaCodeDomainJunitServiceCreate INSTANCE = new JavaCodeDomainJunitServiceCreate();
+    public static final JavaCodeInterfaceFacadeJunitCreate INSTANCE = new JavaCodeInterfaceFacadeJunitCreate();
 
     @Override
     public void generateCode(GenerateCodeContext param) {
@@ -58,26 +56,30 @@ public class JavaCodeDomainJunitServiceCreate implements GenerateCodeInf {
             Map<String, TableColumnDTO> tableColumnMap = param.getColumnMapMap().get(entry.getKey());
 
             // 获取domain领域对象实体
-            ImportPackageInfo domainPackage =
+            ImportPackageInfo facadePackage =
                     ImportPackageUtils.getDefineClass(
-                            param.getPackageMap(), GenerateCodePackageKey.DOMAIN_DO.getKey(), tableName);
+                            param.getPackageMap(), GenerateCodePackageKey.INTERFACE_OBJECT.getKey(), tableName);
 
-            // 获取领域层的服务对象
-            ImportPackageInfo domainServicePackage =
+            // 获取web
+            ImportPackageInfo interfaceFacadePackage =
                     ImportPackageUtils.getDefineClass(
-                            param.getPackageMap(), GenerateCodePackageKey.DOMAIN_SERVICE.getKey(), tableName);
+                            param.getPackageMap(), GenerateCodePackageKey.INTERFACE_FACADE.getKey(), tableName);
 
             // 首字母大写
             String className =
                     GenerateJunitDefine.TEST_SUFFIX_NAME
-                            + NameProcess.INSTANCE.toJavaNameFirstUpper(domainServicePackage.getClassName());
+                            + NameProcess.INSTANCE.toJavaNameFirstUpper(interfaceFacadePackage.getClassName());
 
             // 获取以领域服务的路径信息
-            String javaDaoPackageStr = param.getJavaCodePackage().getDomainServiceNode().outJavaPackage();
+            String interfaceFacadePackageStr = param.getJavaCodePackage().getInterfaceFacadeNode().outJavaPackage();
 
             // 包信息
             ImportPackageInfo junitDomainServicePkg =
-                    new ImportPackageInfo(javaDaoPackageStr, className, DATABASE_DOC);
+                    new ImportPackageInfo(interfaceFacadePackageStr, className, DATABASE_DOC);
+
+
+            // 方法信息
+            List<MethodInfo> methodList = param.getGenerateConfig().getGenerate().getCode();
 
 
             // 获取dao的完整路径
@@ -86,25 +88,11 @@ public class JavaCodeDomainJunitServiceCreate implements GenerateCodeInf {
                             param.getPackageMap(), GenerateCodePackageKey.REPOSITORY_MAPPER_CONFIG.getKey(), GenerateCodePackageKey.REPOSITORY_MAPPER_CONFIG.getKey());
 
 
-            // 存储层实体
-            ImportPackageInfo repositoryPackageInfo =
-                    ImportPackageUtils.getDefineClass(
-                            param.getPackageMap(), GenerateCodePackageKey.PERSIST_PERSISTENCE.getKey(), tableName);
-
-            // 存储层实体
-            ImportPackageInfo domainServicePackageInfo =
-                    ImportPackageUtils.getDefineClass(
-                            param.getPackageMap(), GenerateCodePackageKey.DOMAIN_SERVICE.getKey(), tableName);
-
-
-            // 方法信息
-            List<MethodInfo> methodList = param.getGenerateConfig().getGenerate().getCode();
-
             // 进行单元测试代码的生成
             StringBuilder sb =
-                    GenerateJavaDomainJunitService.INSTANCE.generateJunitService(
-                            domainPackage,
-                            domainServicePackage,
+                    GenerateJavaFacadeJunitApi.INSTANCE.generateJunitService(
+                            facadePackage,
+                            interfaceFacadePackage,
                             junitDomainServicePkg,
                             param.getTypeEnum(),
                             columnList,
@@ -113,17 +101,47 @@ public class JavaCodeDomainJunitServiceCreate implements GenerateCodeInf {
                             tableColumnMap,
                             getDependencyList(mybatisScanConfig),
                             mybatisScanConfig,
-                            Arrays.asList(domainServicePackageInfo, repositoryPackageInfo),
+                            getRunImport(param.getPackageMap(), tableName),
                             param.getGenerateConfig().getGenerate().getAuthor());
 
             // 定义项目内的完整目录结构
             String baseJavaPath = param.getProjectPath().getTestJavaNode().outPath();
-            javaDaoPackageStr = baseJavaPath + Symbol.PATH + javaDaoPackageStr;
+            interfaceFacadePackageStr = baseJavaPath + Symbol.PATH + interfaceFacadePackageStr;
 
             // 将数据库存储的文件输出
-            GenerateOutFileUtils.outJavaFile(sb, GeneratePathUtils.outServicePath(param), javaDaoPackageStr, className);
+            GenerateOutFileUtils.outJavaFile(sb, GeneratePathUtils.outServicePath(param), interfaceFacadePackageStr, className);
         }
     }
+
+    /**
+     * 获取导入的包信息
+     *
+     * @param packageMap 存储我包结构信息
+     * @param tableName  表名
+     * @return 集合
+     */
+    private List<ImportPackageInfo> getRunImport(Map<String, Map<String, ImportPackageInfo>> packageMap, String tableName) {
+        // 存储层实体
+        ImportPackageInfo repositoryPackageInfo =
+                ImportPackageUtils.getDefineClass(
+                        packageMap, GenerateCodePackageKey.PERSIST_PERSISTENCE.getKey(), tableName);
+
+        // 存储层实体
+        ImportPackageInfo domainServicePackageInfo =
+                ImportPackageUtils.getDefineClass(
+                        packageMap, GenerateCodePackageKey.DOMAIN_SERVICE.getKey(), tableName);
+
+
+        // 应用层实体
+        ImportPackageInfo applicationServicePackageInfo =
+                ImportPackageUtils.getDefineClass(
+                        packageMap, GenerateCodePackageKey.APPLICATION_SERVICE.getKey(), tableName);
+
+
+        return Arrays.asList(repositoryPackageInfo, domainServicePackageInfo, applicationServicePackageInfo);
+
+    }
+
 
     private List<String> getDependencyList(ImportPackageInfo mybatisScanConfig) {
 

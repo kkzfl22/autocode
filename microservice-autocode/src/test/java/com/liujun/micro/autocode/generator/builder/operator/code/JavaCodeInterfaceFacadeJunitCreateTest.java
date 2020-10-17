@@ -3,6 +3,7 @@ package com.liujun.micro.autocode.generator.builder.operator.code;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeApplicationServiceCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainRepositoryFacadeCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainServiceCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceAssemblerCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceCheckCreate;
@@ -10,10 +11,11 @@ import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInt
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceErrorCodeCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceFacadeApiCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceFacadeCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceFacadeJunitCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceObjectCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryAssemblerCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryDaoInfCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainRepositoryFacadeCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryJunitMyBatisScanConfigCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryObjectCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryPersistenceCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeResourceI18nEnUsCreate;
@@ -26,12 +28,14 @@ import org.junit.Test;
  * @author liujun
  * @version 0.0.1
  */
-public class JavaCodeInterfaceFacadeCreateTest {
+public class JavaCodeInterfaceFacadeJunitCreateTest {
 
     @Test
     public void testGenerate() {
         // 领域实体
         JavaCodeDomainObjectCreate instance = new JavaCodeDomainObjectCreate();
+        //数据库配制文件
+        JavaCodeRepositoryJunitMyBatisScanConfigCreate myBatisScanConfigCreate = JavaCodeRepositoryJunitMyBatisScanConfigCreate.INSTANCE;
         // 数据库实体
         JavaCodeRepositoryObjectCreate repositoryInstance = new JavaCodeRepositoryObjectCreate();
         // 数据库转换
@@ -66,8 +70,12 @@ public class JavaCodeInterfaceFacadeCreateTest {
         JavaCodeInterfaceFacadeCreate interfaceFacadeCreate = new JavaCodeInterfaceFacadeCreate();
         // 对象存储
         JavaCodeInterfaceObjectCreate dataTransfer = new JavaCodeInterfaceObjectCreate();
+
         //方法的定义
         JavaCodeInterfaceFacadeApiCreate facadeApi = JavaCodeInterfaceFacadeApiCreate.INSTANCE;
+
+        //web层的单元测试
+        JavaCodeInterfaceFacadeJunitCreate facadeJunitCreate = JavaCodeInterfaceFacadeJunitCreate.INSTANCE;
 
         GenerateCodeContext context = CodeBaseUtils.getBase();
 
@@ -83,6 +91,9 @@ public class JavaCodeInterfaceFacadeCreateTest {
         repositoryFacadeInf.generateCode(context);
         // 领域存储实现
         repositoryPersistence.generateCode(context);
+
+        //数据库的配制
+        myBatisScanConfigCreate.generateCode(context);
 
         // 数据存储
         dataTransfer.generateCode(context);
@@ -109,11 +120,13 @@ public class JavaCodeInterfaceFacadeCreateTest {
         // 转换层
         javaCode.generateCode(context);
 
+        //对外接口的定义
         facadeApi.generateCode(context);
 
         // 生成对外API
         interfaceFacadeCreate.generateCode(context);
 
-
+        //web层的单元测试
+        facadeJunitCreate.generateCode(context);
     }
 }

@@ -1,18 +1,15 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.full;
 
-import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
-import com.liujun.micro.autocode.constant.MethodTypeEnum;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
-import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
 import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaAction;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.GeneratePathUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
-import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaCommentUtil;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
@@ -30,72 +27,62 @@ import java.util.Map;
  */
 public class JavaCodeInterfaceFacadeCreate implements GenerateCodeInf {
 
-  private static final String NAME_SUFFIX = "Action";
-  private static final String CLASS_COMMENT = "的API服务";
+    private static final String NAME_SUFFIX = "Action";
+    private static final String CLASS_COMMENT = "的API服务";
 
-  @Override
-  public void generateCode(GenerateCodeContext param) {
-    Map<String, TableInfoDTO> tableMap = param.getTableMap();
-    Map<String, List<TableColumnDTO>> map = param.getColumnMapList();
-    Iterator<Map.Entry<String, List<TableColumnDTO>>> tableNameEntry = map.entrySet().iterator();
-    while (tableNameEntry.hasNext()) {
-      Map.Entry<String, List<TableColumnDTO>> tableNameItem = tableNameEntry.next();
-      // 获取表信息
-      TableInfoDTO tableInfo = param.getTableMap().get(tableNameItem.getKey());
+    public static final JavaCodeInterfaceFacadeCreate INSTANCE = new JavaCodeInterfaceFacadeCreate();
 
-      // 表名
-      String tableName = tableNameItem.getKey();
+    @Override
+    public void generateCode(GenerateCodeContext param) {
+        Map<String, TableInfoDTO> tableMap = param.getTableMap();
+        Map<String, List<TableColumnDTO>> map = param.getColumnMapList();
+        Iterator<Map.Entry<String, List<TableColumnDTO>>> tableNameEntry = map.entrySet().iterator();
+        while (tableNameEntry.hasNext()) {
+            Map.Entry<String, List<TableColumnDTO>> tableNameItem = tableNameEntry.next();
+            // 获取表信息
+            TableInfoDTO tableInfo = param.getTableMap().get(tableNameItem.getKey());
 
-      // 得到类名
-      String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
-      String className = tableClassName + NAME_SUFFIX;
+            // 表名
+            String tableName = tableNameItem.getKey();
 
-      // 注释
-      String docComment =
-          JavaCommentUtil.tableCommentProc(tableInfo.getTableComment()) + CLASS_COMMENT;
+            // 得到类名
+            String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
+            String className = tableClassName + NAME_SUFFIX;
 
-      // 获取以java的接口对象
-      String javaPackageStr = param.getJavaCodePackage().getInterfaceFacadeNode().outJavaPackage();
+            // 注释
+            String docComment =
+                    JavaCommentUtil.tableCommentProc(tableInfo.getTableComment()) + CLASS_COMMENT;
 
-      // 将领域的存储实现存至流程中
-      ImportPackageInfo applicationServicePackage =
-          new ImportPackageInfo(
-              javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
-      ImportPackageUtils.putPackageInfo(
-          tableName,
-          param.getPackageMap(),
-          GenerateCodePackageKey.INTERFACE_FACADE.getKey(),
-          applicationServicePackage,
-          tableMap.size());
-      Map<String, ImportPackageInfo> packageMap = param.getPackageMap().get(tableName);
+            // 获取以java的接口对象
+            String javaPackageStr = param.getJavaCodePackage().getInterfaceFacadeNode().outJavaPackage();
 
-      // 定义项目内的完整目录结构
-      String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
-      javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
+            // 将领域的存储实现存至流程中
+            ImportPackageInfo applicationServicePackage =
+                    new ImportPackageInfo(
+                            javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
+            ImportPackageUtils.putPackageInfo(
+                    tableName,
+                    param.getPackageMap(),
+                    GenerateCodePackageKey.INTERFACE_FACADE.getKey(),
+                    applicationServicePackage,
+                    tableMap.size());
+            Map<String, ImportPackageInfo> packageMap = param.getPackageMap().get(tableName);
 
-      // api的接口
-      StringBuilder sb =
-          GenerateJavaAction.INSTANCE.generateAction(
-              packageMap,
-              param.getGenerateConfig().getGenerate().getCode(),
-              param.getGenerateConfig().getGenerate().getAuthor());
+            // 定义项目内的完整目录结构
+            String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
+            javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
 
-      // 进行存储层的接口输出
-      GenerateOutFileUtils.outJavaFile(sb, param.getFileBasePath(), javaPackageStr, className);
+            // api的接口
+            StringBuilder sb =
+                    GenerateJavaAction.INSTANCE.generateAction(
+                            packageMap,
+                            param.getGenerateConfig().getGenerate().getCode(),
+                            param.getGenerateConfig().getGenerate().getAuthor());
+
+            // 进行存储层的接口输出
+            GenerateOutFileUtils.outJavaFile(sb, GeneratePathUtils.outServicePath(param), javaPackageStr, className);
+        }
     }
-  }
 
-  /// **
-  // * 生成应用的服务
-  // *
-  // * @param packageMap 导入的包信息
-  // * @param methodList 方法
-  // * @param author 作者
-  // * @return 构建的存储层对象
-  // */
-  // private StringBuilder generateActionService(
-  //    Map<String, ImportPackageInfo> packageMap, List<MethodInfo> methodList, String author) {
-  //
 
-  // }
 }

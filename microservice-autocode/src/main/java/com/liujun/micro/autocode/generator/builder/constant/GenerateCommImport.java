@@ -8,6 +8,6 @@ package com.liujun.micro.autocode.generator.builder.constant;
  */
 public class GenerateCommImport {
 
-  /** 单元测试的父类 */
-  public static final String JUNIT_PARENT_NAME = "TestParent";
+    /** 单元测试的父类 */
+    //public static final String JUNIT_PARENT_NAME = "TestParent";
 }

@@ -23,7 +23,7 @@ public class JavaCodeRepositoryPersistenceCreateTest {
     // 数据库dao
     JavaCodeRepositoryDaoInfCreate repositoryDaoInf = new JavaCodeRepositoryDaoInfCreate();
     // 领域存储接口
-    JavaCodeRepositoryFacadeInfCreate repositoryFacadeInf = new JavaCodeRepositoryFacadeInfCreate();
+    JavaCodeDomainRepositoryFacadeCreate repositoryFacadeInf = new JavaCodeDomainRepositoryFacadeCreate();
     // 领域存储实现
     JavaCodeRepositoryPersistenceCreate repositoryPersistence =
         new JavaCodeRepositoryPersistenceCreate();

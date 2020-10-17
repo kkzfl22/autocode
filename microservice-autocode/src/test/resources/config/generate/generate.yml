@@ -13,6 +13,8 @@ generate:
   type: ddd
   #生成的目标数据库类型:mysql目标数据库为mysql;oralce，目标数据库为oracle
   databaseType: mysql
+  #数据库表空间命名
+  databaseTableSpaceName: generate
   #错误码开始编号，依次向后；如果需要重新以此开始，需删除序列文件.否则将以序列化后的文件数字，取整加2000开始
   startErrorCode: -10000
   #是否修改错误码编号,默认为true，进行修改
@@ -58,6 +60,8 @@ generate:
       order: 400
     #批量根据主键删除数据
     - name: deleteByIds
+      #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
+      disable: true
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: delete
       #方法的注释
@@ -90,6 +94,7 @@ generate:
       order: 700
     #根据主键集合进行查询操作
     - name: queryByIds
+      disable: true
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: query
       #方法的注释
@@ -102,6 +107,8 @@ generate:
       order: 800
     #根据主键集合进行查询操作
     - name: queryByName
+      #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
+      disable: true
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: query
       #方法的注释
@@ -116,6 +123,8 @@ generate:
     - name: queryByInfo
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: query
+      #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
+      disable: true
       #方法的注释
       comment: 根据信息查询
       ##where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
@@ -127,10 +136,19 @@ generate:
   #代码内的目录结构的配制
   codeMenuTree:
     #最基础的目标配制
-    baseMenu: com.paraview.security.pap.microservice.
+    baseMenu: com.paraview.example.
     #最新输出的模块的名称
-    modelName: user
+    domainName: user
+  #模块名称
+  moduleName: user
+  #代码生成器需要包括的范围
+  #目前存在api,application,domain,repository
+  #api代码对外暴露的api接口，包含一系列的方法
+  #application表示聚合层
+  #domain表示领域服务层
+  #repository表示存储层的代码生成，目前使用mybatis
+  scope: api,application,domain,repository
   #输出文件的配制
-  output: D:/java/workspace/selfwork/autocode/generateCode/
+  output: D:\java\workspace\selfwork\autocode\testgenerate\test-autocode
   #公共文件和路径
   commonPath: D:/java/encode/common/

@@ -6,7 +6,7 @@ import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDom
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainServiceCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryAssemblerCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryDaoInfCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryFacadeInfCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainRepositoryFacadeCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryObjectCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryPersistenceCreate;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class JavaCodeApplicationServiceCreateTest {
     // 数据库dao
     JavaCodeRepositoryDaoInfCreate repositoryDaoInf = new JavaCodeRepositoryDaoInfCreate();
     // 领域存储接口
-    JavaCodeRepositoryFacadeInfCreate repositoryFacadeInf = new JavaCodeRepositoryFacadeInfCreate();
+    JavaCodeDomainRepositoryFacadeCreate repositoryFacadeInf = new JavaCodeDomainRepositoryFacadeCreate();
     // 领域存储实现
     JavaCodeRepositoryPersistenceCreate repositoryPersistence =
         new JavaCodeRepositoryPersistenceCreate();

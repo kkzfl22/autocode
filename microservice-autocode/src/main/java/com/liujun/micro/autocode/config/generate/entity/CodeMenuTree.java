@@ -15,9 +15,13 @@ import lombok.ToString;
 @ToString
 public class CodeMenuTree {
 
-  /** 最基础的目录 */
-  private String baseMenu;
+    /**
+     * 最基础的目录
+     */
+    private String baseMenu;
 
-  /** 代码内的模块名称 */
-  private String modelName;
+    /**
+     * 代码内的领域名称
+     */
+    private String domainName;
 }

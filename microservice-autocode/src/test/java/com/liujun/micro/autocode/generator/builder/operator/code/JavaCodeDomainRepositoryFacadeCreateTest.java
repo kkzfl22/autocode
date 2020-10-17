@@ -2,7 +2,7 @@ package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainObjectCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryFacadeInfCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainRepositoryFacadeCreate;
 import org.junit.Test;
 
 /**
@@ -11,12 +11,12 @@ import org.junit.Test;
  * @author liujun
  * @version 0.0.1
  */
-public class JavaCodeRepositoryFacadeInfCreateTest {
+public class JavaCodeDomainRepositoryFacadeCreateTest {
 
   @Test
   public void testGenerate() {
     JavaCodeDomainObjectCreate instance = new JavaCodeDomainObjectCreate();
-    JavaCodeRepositoryFacadeInfCreate domainService = new JavaCodeRepositoryFacadeInfCreate();
+    JavaCodeDomainRepositoryFacadeCreate domainService = new JavaCodeDomainRepositoryFacadeCreate();
 
     GenerateCodeContext context = CodeBaseUtils.getBase();
     // 进行数据生成

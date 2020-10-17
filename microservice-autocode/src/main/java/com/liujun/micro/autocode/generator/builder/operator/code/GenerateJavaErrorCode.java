@@ -145,7 +145,7 @@ public class GenerateJavaErrorCode {
             .getCfgEntity()
             .getGenerate()
             .getCodeMenuTree()
-            .getModelName();
+            .getDomainName();
     String moduleNameOutValue = Symbol.QUOTE + moduleName + Symbol.QUOTE;
 
     JavaClassFieldEntity fieldEntity =
@@ -646,7 +646,7 @@ public class GenerateJavaErrorCode {
             .getCfgEntity()
             .getGenerate()
             .getCodeMenuTree()
-            .getModelName();
+            .getDomainName();
 
     // 实体的名称
     String entityName = NameProcess.INSTANCE.toJavaClassName(tableName);

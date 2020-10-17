@@ -3,8 +3,7 @@ package com.liujun.micro.autocode.generator.builder.operator.ddd.code;
 import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
 import com.liujun.micro.autocode.constant.MethodTypeEnum;
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.generator.builder.constant.ImportJunitPkgKey;
-import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
+import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarValue;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.code.junit.GenerateJunitDefine;
@@ -18,37 +17,41 @@ import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 数据库的层的单元测试
+ * api层的单元测试服务
  *
  * @author liujun
  * @version 0.0.1
  */
-public class GenerateJavaRepositoryJunitDao {
+public class GenerateJavaFacadeJunitApi {
 
     /**
      * 进行构建操作
      */
-    public static final GenerateJavaRepositoryJunitDao INSTANCE =
-            new GenerateJavaRepositoryJunitDao();
+    public static final GenerateJavaFacadeJunitApi INSTANCE =
+            new GenerateJavaFacadeJunitApi();
+
+
+    /**
+     * 成功的响应码
+     */
+    private static final String SUCCESS_CODE = "APICodeEnum.SUCCESS.getErrorData().getCode()";
 
     /**
      * 生成单元测试的类信息
      *
-     * @param entityPackage     实体的包定义
-     * @param targetPackage     执行方法的目标类信息
-     * @param junitPackage      单元测试的代码路径
-     * @param type              类型
-     * @param columnList        列信息
-     * @param primaryKeyList    主键列信息
-     * @param methodList        配制的方法信息
-     * @param tableColumnMap    以map结构的表信息
-     * @param mybatisScanConfig mybatis的配制
-     * @param author            作者
+     * @param entityPackage  实体的包定义
+     * @param targetPackage  执行方法的目标类信息
+     * @param junitPackage   单元测试的代码路径
+     * @param type           类型
+     * @param columnList     列信息
+     * @param primaryKeyList 主键列信息
+     * @param methodList     配制的方法信息
+     * @param tableColumnMap 以map结构的表信息
+     * @param author         作者
      * @return 构建的单元测试代码
      */
     public StringBuilder generateJunitService(
@@ -60,14 +63,15 @@ public class GenerateJavaRepositoryJunitDao {
             List<TableColumnDTO> primaryKeyList,
             List<MethodInfo> methodList,
             Map<String, TableColumnDTO> tableColumnMap,
+            List<String> dependencyList,
             ImportPackageInfo mybatisScanConfig,
+            List<ImportPackageInfo> importCfgList,
             String author) {
-
 
         // 文件头定义
         StringBuilder sb =
                 GenerateJunitDefine.INSTANCE.defineHead(
-                        entityPackage, junitPackage, methodList,dependencyList(mybatisScanConfig),mybatisScanConfig,  Collections.emptyList(), author);
+                        entityPackage, junitPackage, methodList, dependencyList, mybatisScanConfig, importCfgList, facadeImport(), author);
 
         // 操作数据之前的初始化相关的工作
         GenerateJunitDefine.INSTANCE.beforeMethod(
@@ -90,7 +94,9 @@ public class GenerateJavaRepositoryJunitDao {
                 // 插入方法
                 MethodInfo insertMethod = MethodUtils.getInsertMethod(methodList);
                 GenerateJunitUpdate.INSTANCE.oneUpdateMethod(
-                        sb, methodItem, insertMethod, JavaKeyWord.INT_TYPE, JavaVarValue.DEFAULT_ADD_RSP);
+                        sb, methodItem, insertMethod,
+                        ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                        SUCCESS_CODE);
             }
             // 非主键的删除方法
             else if (MethodTypeEnum.DELETE.getType().equals(methodItem.getOperator())
@@ -103,8 +109,15 @@ public class GenerateJavaRepositoryJunitDao {
                         methodList,
                         type,
                         primaryKeyList,
-                        JavaKeyWord.INT_TYPE,
-                        JavaVarName.FINAL_BATCH_INSERT_NUM);
+                        ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                        SUCCESS_CODE);
+            }
+            // 分页查询方法
+            else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())
+                    && null != methodItem.getPageQueryFlag()
+                    && methodItem.getPageQueryFlag()) {
+                this.pageQueryMethod(
+                        sb, methodItem, entityPackage, tableColumnMap, methodList, type, primaryKeyList);
             }
             // 数据查询
             else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
@@ -117,7 +130,7 @@ public class GenerateJavaRepositoryJunitDao {
         MethodInfo methodItem = MethodUtils.getPrimaryDeleteMethod(methodList);
         if (null != methodItem) {
             GenerateJunitUpdate.INSTANCE.deleteMethod(
-                    sb, methodItem, entityPackage, JavaKeyWord.INT_TYPE, JavaVarValue.DEFAULT_ADD_RSP);
+                    sb, methodItem, entityPackage, JavaKeyWord.TYPE_BOOLEAN, Boolean.TRUE.toString());
         }
 
         // 结束
@@ -126,23 +139,15 @@ public class GenerateJavaRepositoryJunitDao {
         return sb;
     }
 
-    /**
-     * 单元测试所像依赖的最小文件
-     *
-     * @return
-     */
-    private List<String> dependencyList(ImportPackageInfo mybatisScanConfig) {
-        List<String> dependencyList = new ArrayList<>(4);
-        //数据源的包
-        dependencyList.add(ImportJunitPkgKey.SPRING_BOOT_TEST_DATA_SOURCE.getPackageInfo().getClassName());
-        //mybatis的自动装类
-        dependencyList.add(ImportJunitPkgKey.SPRING_BOOT_TEST_MYBATIS_AUTO_CONFIG.getPackageInfo().getClassName());
-        //mybatis的扫包
-        dependencyList.add(mybatisScanConfig.getClassName());
 
-        return dependencyList;
+    private List<String> facadeImport() {
+        List<String> importList = new ArrayList<>();
+
+        importList.add(ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().packageOut());
+        importList.add(ImportCodePackageKey.HTTP_API_RESPONSE_CODE.getPackageInfo().packageOut());
+
+        return importList;
     }
-
 
     /**
      * 数据的操作方法
@@ -157,11 +162,15 @@ public class GenerateJavaRepositoryJunitDao {
         if (batchFlag) {
             // 执行批量的添加
             GenerateJunitUpdate.INSTANCE.batchInsertMethod(
-                    sb, method, methodList, JavaKeyWord.INT_TYPE, JavaVarName.FINAL_BATCH_INSERT_NUM);
+                    sb, method, methodList,
+                    ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                    SUCCESS_CODE
+            );
         } else {
             // 执行单个添加
             GenerateJunitUpdate.INSTANCE.oneInsertMethod(
-                    sb, method, JavaKeyWord.INT_TYPE, JavaVarValue.DEFAULT_ADD_RSP);
+                    sb, method, ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                    SUCCESS_CODE);
         }
     }
 
@@ -191,8 +200,8 @@ public class GenerateJavaRepositoryJunitDao {
         // 查询方法的定义
         GenerateJunitQuery.INSTANCE.queryMethodDefine(sb, queryMethod, methodName);
 
-        // 数据查询前的插入
-        sb.append(this.queryInsert(queryMethod, poPackageInfo, columnMap, methodList));
+        // 查询方法的前的插入方法
+        this.queryInsert(sb, queryMethod, tabIndex, poPackageInfo, columnMap, methodList);
 
         // 添加查询的代码
         GenerateJunitQuery.INSTANCE.junitQueryMethod(
@@ -203,21 +212,59 @@ public class GenerateJavaRepositoryJunitDao {
     }
 
     /**
-     * 数据查询前的插入
+     * 分页查询
      *
-     * @param queryMethod   查询方法
-     * @param poPackageInfo 实体信息
-     * @param columnMap     类
-     * @param methodList    方法集
+     * @param sb            添加的对象
+     * @param queryMethod   方法
+     * @param poPackageInfo 导入的实体
+     * @param columnMap     列集合
+     * @param methodList    方法
+     * @param dbType        类型信息
+     * @param primaryList   主键列
      */
-    private String queryInsert(
+    public void pageQueryMethod(
+            StringBuilder sb,
             MethodInfo queryMethod,
             ImportPackageInfo poPackageInfo,
             Map<String, TableColumnDTO> columnMap,
-            List<MethodInfo> methodList) {
+            List<MethodInfo> methodList,
+            DatabaseTypeEnum dbType,
+            List<TableColumnDTO> primaryList) {
+        String methodName = NameProcess.INSTANCE.toJavaNameFirstUpper(queryMethod.getName());
+
         int tabIndex = 0;
 
-        StringBuilder sb = new StringBuilder();
+        // 查询方法的定义
+        GenerateJunitQuery.INSTANCE.queryMethodDefine(sb, queryMethod, methodName);
+
+        // 查询方法的前的插入方法
+        this.queryInsert(sb, queryMethod, tabIndex, poPackageInfo, columnMap, methodList);
+
+        // 分页查询的代码
+        GenerateJunitQuery.INSTANCE.junitPageQueryMethod(
+                sb, queryMethod, poPackageInfo, columnMap, tabIndex, dbType, primaryList);
+
+        // 方法结束
+        JavaClassCodeUtils.methodEnd(sb);
+    }
+
+    /**
+     * 查询的数据插入操作
+     *
+     * @param sb
+     * @param queryMethod   方法信息
+     * @param tabIndex      索引号
+     * @param poPackageInfo 实体
+     * @param columnMap     列信息
+     * @param methodList    列
+     */
+    public void queryInsert(
+            StringBuilder sb,
+            MethodInfo queryMethod,
+            int tabIndex,
+            ImportPackageInfo poPackageInfo,
+            Map<String, TableColumnDTO> columnMap,
+            List<MethodInfo> methodList) {
         // 给查询方法生成添加数据
         // 1,检查当前方法是否结果为结果集,如果为结果集需要执行批量插入
         // 或者当前的请求条件中带有in条件，也需要批量插入
@@ -228,7 +275,8 @@ public class GenerateJavaRepositoryJunitDao {
             // 调用批量添加方法
             sb.append(
                     GenerateJunitUpdate.INSTANCE.invokeBatch(
-                            methodList, JavaKeyWord.INT_TYPE, JavaVarName.FINAL_BATCH_INSERT_NUM));
+                            methodList,  ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                            SUCCESS_CODE));
 
             // 进行标识的设置操作
             sb.append(
@@ -242,12 +290,11 @@ public class GenerateJavaRepositoryJunitDao {
             // 调用单个添加方法
             sb.append(
                     GenerateJunitUpdate.INSTANCE.insertInvokeMethod(
-                            insertMethod, JavaKeyWord.INT_TYPE, JavaVarValue.DEFAULT_ADD_RSP));
+                            insertMethod,  ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                            SUCCESS_CODE));
 
             // 进行标识的设置操作
             sb.append(GenerateJunitDefine.INSTANCE.setBatchInsertFlag(JavaVarValue.INSERT_TYPE_ONE_KEY));
         }
-
-        return sb.toString();
     }
 }

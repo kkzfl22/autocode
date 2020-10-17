@@ -8,6 +8,7 @@ import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.code.GenerateJavaDomainServiceInvoke;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.GeneratePathUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaCommentUtil;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
@@ -26,58 +27,60 @@ import java.util.Map;
  */
 public class JavaCodeDomainServiceCreate implements GenerateCodeInf {
 
-  private static final String NAME_SUFFIX = "DomainService";
-  private static final String CLASS_COMMENT = "的领域服务";
+    private static final String NAME_SUFFIX = "DomainService";
+    private static final String CLASS_COMMENT = "的领域服务";
 
-  @Override
-  public void generateCode(GenerateCodeContext param) {
-    Map<String, TableInfoDTO> tableMap = param.getTableMap();
-    Map<String, List<TableColumnDTO>> map = param.getColumnMapList();
-    Iterator<Map.Entry<String, List<TableColumnDTO>>> tableNameEntry = map.entrySet().iterator();
-    while (tableNameEntry.hasNext()) {
-      Map.Entry<String, List<TableColumnDTO>> tableNameItem = tableNameEntry.next();
-      // 获取表信息
-      TableInfoDTO tableInfo = param.getTableMap().get(tableNameItem.getKey());
+    public static final JavaCodeDomainServiceCreate INSTANCE = new JavaCodeDomainServiceCreate();
 
-      // 表名
-      String tableName = tableNameItem.getKey();
+    @Override
+    public void generateCode(GenerateCodeContext param) {
+        Map<String, TableInfoDTO> tableMap = param.getTableMap();
+        Map<String, List<TableColumnDTO>> map = param.getColumnMapList();
+        Iterator<Map.Entry<String, List<TableColumnDTO>>> tableNameEntry = map.entrySet().iterator();
+        while (tableNameEntry.hasNext()) {
+            Map.Entry<String, List<TableColumnDTO>> tableNameItem = tableNameEntry.next();
+            // 获取表信息
+            TableInfoDTO tableInfo = param.getTableMap().get(tableNameItem.getKey());
 
-      // 得到类名
-      String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
-      String className = tableClassName + NAME_SUFFIX;
+            // 表名
+            String tableName = tableNameItem.getKey();
 
-      // 注释
-      String docComment =
-          JavaCommentUtil.tableCommentProc(tableInfo.getTableComment()) + CLASS_COMMENT;
+            // 得到类名
+            String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
+            String className = tableClassName + NAME_SUFFIX;
 
-      // 获取以java定义的package路径
-      String javaPackageStr = param.getJavaCodePackage().getDomainServiceNode().outJavaPackage();
+            // 注释
+            String docComment =
+                    JavaCommentUtil.tableCommentProc(tableInfo.getTableComment()) + CLASS_COMMENT;
 
-      // 将领域的存储实现存至流程中
-      ImportPackageInfo repositoryPersistPackage =
-          new ImportPackageInfo(
-              javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
-      ImportPackageUtils.putPackageInfo(
-          tableName,
-          param.getPackageMap(),
-          GenerateCodePackageKey.DOMAIN_SERVICE.getKey(),
-          repositoryPersistPackage,
-          tableMap.size());
-      Map<String, ImportPackageInfo> packageMap = param.getPackageMap().get(tableName);
+            // 获取以java定义的package路径
+            String javaPackageStr = param.getJavaCodePackage().getDomainServiceNode().outJavaPackage();
 
-      // 定义项目内的完整目录结构
-      String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
-      javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
+            // 将领域的存储实现存至流程中
+            ImportPackageInfo repositoryPersistPackage =
+                    new ImportPackageInfo(
+                            javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
+            ImportPackageUtils.putPackageInfo(
+                    tableName,
+                    param.getPackageMap(),
+                    GenerateCodePackageKey.DOMAIN_SERVICE.getKey(),
+                    repositoryPersistPackage,
+                    tableMap.size());
+            Map<String, ImportPackageInfo> packageMap = param.getPackageMap().get(tableName);
 
-      // 调用存储接口
-      StringBuilder sb =
-          GenerateJavaDomainServiceInvoke.INSTANCE.generateDomainService(
-              packageMap,
-              param.getGenerateConfig().getGenerate().getCode(),
-              param.getGenerateConfig().getGenerate().getAuthor());
+            // 定义项目内的完整目录结构
+            String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
+            javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
 
-      // 进行存储层的接口输出
-      GenerateOutFileUtils.outJavaFile(sb, param.getFileBasePath(), javaPackageStr, className);
+            // 调用存储接口
+            StringBuilder sb =
+                    GenerateJavaDomainServiceInvoke.INSTANCE.generateDomainService(
+                            packageMap,
+                            param.getGenerateConfig().getGenerate().getCode(),
+                            param.getGenerateConfig().getGenerate().getAuthor());
+
+            // 进行存储层的接口输出
+            GenerateOutFileUtils.outJavaFile(sb, GeneratePathUtils.outServicePath(param), javaPackageStr, className);
+        }
     }
-  }
 }

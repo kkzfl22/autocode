@@ -22,7 +22,7 @@ public class ProjectMenuTree {
               .getCfgEntity()
               .getGenerate()
               .getCodeMenuTree()
-              .getModelName());
+              .getDomainName());
 
   /** 目录树结构的最顶层节点 */
   private final MenuNode root = new MenuNode(ROOT);

@@ -98,6 +98,6 @@ public class TableColumnUtils {
       }
     }
 
-    throw new IllegalArgumentException("condition :" + inConditionItem + "not exists!");
+    throw new IllegalArgumentException("condition :" + inConditionItem + " not exists!");
   }
 }
