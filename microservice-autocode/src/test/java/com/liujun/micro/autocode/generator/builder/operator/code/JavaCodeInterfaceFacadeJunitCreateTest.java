@@ -7,6 +7,7 @@ import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDom
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainServiceCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceAssemblerCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceCheckCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceConfigCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceConstantCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceErrorCodeCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceFacadeApiCreate;
@@ -77,6 +78,10 @@ public class JavaCodeInterfaceFacadeJunitCreateTest {
         //web层的单元测试
         JavaCodeInterfaceFacadeJunitCreate facadeJunitCreate = JavaCodeInterfaceFacadeJunitCreate.INSTANCE;
 
+
+        //配制的加载国际化文件
+        JavaCodeInterfaceConfigCreate configInstance = JavaCodeInterfaceConfigCreate.INSTANCE;
+
         GenerateCodeContext context = CodeBaseUtils.getBase();
 
         // 进行数据生成
@@ -119,6 +124,9 @@ public class JavaCodeInterfaceFacadeJunitCreateTest {
 
         // 转换层
         javaCode.generateCode(context);
+
+        //生成加载错误码
+        configInstance.generateCode(context);
 
         //对外接口的定义
         facadeApi.generateCode(context);

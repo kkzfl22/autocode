@@ -10,6 +10,7 @@ import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDom
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainServiceCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceAssemblerCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceCheckCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceConfigCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceConstantCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceErrorCodeCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceFacadeApiCreate;
@@ -158,8 +159,11 @@ public class GenerateCodeBuilder {
         apiList.add(JavaCodeResourceI18nZhCnCreate.INSTANCE);
         //9,国际化英文相关的资源文件的生成
         apiList.add(JavaCodeResourceI18nEnUsCreate.INSTANCE);
-        //10,api的单元测试
+        //10,资源码国际化文件加载
+        apiList.add(JavaCodeInterfaceConfigCreate.INSTANCE);
+        //11,api的单元测试
         apiList.add(JavaCodeInterfaceFacadeJunitCreate.INSTANCE);
+
 
         //存储层的集合
         SCOPE_MAP.put(GenerateScopeEnum.API, apiList);

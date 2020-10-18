@@ -210,6 +210,19 @@ public class MenuTreeCodePackage {
                 .getChildren(JavaDomainTreeKey.INTERFACE_ERROR_CODE);
     }
 
+
+    /**
+     * 配制目录
+     *
+     * @return 模块名称
+     */
+    public MenuNode getInterfaceConfigNode() {
+        return menuTree
+                .getDefineRoot()
+                .getChildren(JavaDomainTreeKey.INTERFACE)
+                .getChildren(JavaDomainTreeKey.INTERFACE_CONFIG);
+    }
+
     /**
      * 静态常量包
      *

@@ -80,7 +80,7 @@ public class GenerateJavaCheck {
           // 公共错误导入
           ImportCodePackageKey.ERROR_CODE_COMMON.getPackageInfo().packageOut(),
           // 分页请求的对象
-          ImportCodePackageKey.HTTP_PAGE_REQUEST.getPackageInfo().packageOut());
+          ImportCodePackageKey.API_PAGE_REQUEST.getPackageInfo().packageOut());
 
   /**
    * 生成数据的参数校验方法
@@ -1172,7 +1172,7 @@ public class GenerateJavaCheck {
     List<JavaMethodArguments> arguments = new ArrayList<>();
 
     String paramType =
-        ImportCodePackageKey.HTTP_PAGE_REQUEST.getPackageInfo().getClassName()
+        ImportCodePackageKey.API_PAGE_REQUEST.getPackageInfo().getClassName()
             + Symbol.ANGLE_BRACKETS_LEFT
             + dtoPackageInfo.getClassName()
             + Symbol.ANGLE_BRACKETS_RIGHT;

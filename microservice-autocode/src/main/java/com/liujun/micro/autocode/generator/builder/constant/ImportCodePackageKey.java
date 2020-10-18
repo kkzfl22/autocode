@@ -158,28 +158,28 @@ public enum ImportCodePackageKey {
     /**
      * API请求响应对象
      */
-    HTTP_API_RESPONSE(
+    API_RESPONSE(
             new ImportPackageInfo("com.common.entity", "ApiResponse", "返回结果信息", "response")),
 
 
     /**
      * API分页请求响应对象
      */
-    HTTP_API_PAGE_RESPONSE(
+    API_PAGE_RESPONSE(
             new ImportPackageInfo("com.common.entity", "ApiPageResponse", "分页结果信息", "response")),
 
 
     /**
      * API查询请求响应对象
      */
-    HTTP_API_DATA_RESPONSE(
+    API_DATA_RESPONSE(
             new ImportPackageInfo("com.common.entity", "ApiDataResponse", "分页结果信息", "response")),
 
 
     /**
      * API分页请求响应对象
      */
-    HTTP_PAGE_REQUEST(
+    API_PAGE_REQUEST(
             new ImportPackageInfo("com.common.entity", "PageDTO", "分页查询公共请求对象", "pageRequest")),
 
     /**
@@ -192,7 +192,17 @@ public enum ImportCodePackageKey {
     /**
      * 响应的错误码信息
      */
-    HTTP_API_RESPONSE_CODE(new ImportPackageInfo("com.common.entity", "APICodeEnum")),
+    API_RESPONSE_CODE(new ImportPackageInfo("com.common.entity", "APICodeEnum")),
+
+    /**
+     * 动态加载的接口
+     */
+    API_CONFIG_INTERFACE(new ImportPackageInfo("org.springframework.beans.factory.config", "BeanPostProcessor")),
+
+    /**
+     * 加载注解
+     */
+    API_CONFIG_LOAD_ANNOTATION(ImportPackageInfo.getAnnotationPkg("javax.annotation", "PostConstruct", "@PostConstruct")),
 
     ;
 

@@ -106,7 +106,7 @@ public class GenerateJavaFacadeJunitApi {
                 MethodInfo insertMethod = MethodUtils.getInsertMethod(methodList);
                 GenerateJunitUpdate.INSTANCE.oneUpdateMethod(
                         sb, methodItem, insertMethod,
-                        ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                        ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName(),
                         SUCCESS_CODE,
                         GET_METHOD
                 );
@@ -122,7 +122,7 @@ public class GenerateJavaFacadeJunitApi {
                         methodList,
                         type,
                         primaryKeyList,
-                        ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                        ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName(),
                         SUCCESS_CODE,
                         GET_METHOD);
             }
@@ -144,7 +144,7 @@ public class GenerateJavaFacadeJunitApi {
         MethodInfo methodItem = MethodUtils.getPrimaryDeleteMethod(methodList);
         if (null != methodItem) {
             GenerateJunitUpdate.INSTANCE.deleteMethod(
-                    sb, methodItem, entityPackage, ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                    sb, methodItem, entityPackage, ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName(),
                     SUCCESS_CODE,
                     GET_METHOD);
         }
@@ -159,11 +159,11 @@ public class GenerateJavaFacadeJunitApi {
     private List<String> facadeImport() {
         List<String> importList = new ArrayList<>();
 
-        importList.add(ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().packageOut());
-        importList.add(ImportCodePackageKey.HTTP_API_RESPONSE_CODE.getPackageInfo().packageOut());
+        importList.add(ImportCodePackageKey.API_RESPONSE.getPackageInfo().packageOut());
+        importList.add(ImportCodePackageKey.API_RESPONSE_CODE.getPackageInfo().packageOut());
         importList.add(ImportCodePackageKey.PAGE_DTO.getPackageInfo().packageOut());
-        importList.add(ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().packageOut());
-        importList.add(ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().packageOut());
+        importList.add(ImportCodePackageKey.API_PAGE_RESPONSE.getPackageInfo().packageOut());
+        importList.add(ImportCodePackageKey.API_DATA_RESPONSE.getPackageInfo().packageOut());
 
         return importList;
     }
@@ -182,14 +182,14 @@ public class GenerateJavaFacadeJunitApi {
             // 执行批量的添加
             GenerateJunitUpdate.INSTANCE.batchInsertMethod(
                     sb, method, methodList,
-                    ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                    ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName(),
                     SUCCESS_CODE,
                     GET_METHOD
             );
         } else {
             // 执行单个添加
             GenerateJunitUpdate.INSTANCE.oneInsertMethod(
-                    sb, method, ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                    sb, method, ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName(),
                     SUCCESS_CODE, GET_METHOD);
         }
     }
@@ -281,7 +281,7 @@ public class GenerateJavaFacadeJunitApi {
 
         // 方法调用
         sb.append(JavaFormat.appendTab(2));
-        sb.append(ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().getClassName());
+        sb.append(ImportCodePackageKey.API_DATA_RESPONSE.getPackageInfo().getClassName());
         sb.append(Symbol.ANGLE_BRACKETS_LEFT).append(dtoDataInfo.getClassName()).append(Symbol.ANGLE_BRACKETS_RIGHT);
         sb.append(Symbol.SPACE);
 
@@ -289,7 +289,7 @@ public class GenerateJavaFacadeJunitApi {
         sb.append(Symbol.EQUAL);
 
         sb.append(Symbol.BRACKET_LEFT);
-        sb.append(ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().getClassName());
+        sb.append(ImportCodePackageKey.API_DATA_RESPONSE.getPackageInfo().getClassName());
         sb.append(Symbol.ANGLE_BRACKETS_LEFT).append(dtoDataInfo.getClassName()).append(Symbol.ANGLE_BRACKETS_RIGHT);
         sb.append(Symbol.BRACKET_RIGHT);
 
@@ -465,13 +465,13 @@ public class GenerateJavaFacadeJunitApi {
 
         // 方法调用
         sb.append(JavaFormat.appendTab(2));
-        sb.append(ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().getClassName());
+        sb.append(ImportCodePackageKey.API_PAGE_RESPONSE.getPackageInfo().getClassName());
         sb.append(Symbol.ANGLE_BRACKETS_LEFT).append(dtoPackage.getClassName()).append(Symbol.ANGLE_BRACKETS_RIGHT);
-        sb.append(Symbol.SPACE).append(ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().getVarName());
+        sb.append(Symbol.SPACE).append(ImportCodePackageKey.API_PAGE_RESPONSE.getPackageInfo().getVarName());
         sb.append(Symbol.SPACE);
         sb.append(Symbol.EQUAL).append(Symbol.SPACE);
         sb.append(Symbol.BRACKET_LEFT);
-        sb.append(ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().getClassName());
+        sb.append(ImportCodePackageKey.API_PAGE_RESPONSE.getPackageInfo().getClassName());
         sb.append(Symbol.ANGLE_BRACKETS_LEFT).append(dtoPackage.getClassName()).append(Symbol.ANGLE_BRACKETS_RIGHT);
         sb.append(Symbol.BRACKET_RIGHT);
         sb.append(JavaVarName.SPRING_INSTANCE_NAME);
@@ -498,7 +498,7 @@ public class GenerateJavaFacadeJunitApi {
         sb.append(Symbol.BRACKET_LEFT).append(JavaKeyWord.LIST_TYPE);
         sb.append(poPackage.getClassName());
         sb.append(JavaKeyWord.LIST_TYPE_END).append(Symbol.BRACKET_RIGHT);
-        sb.append(ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().getVarName());
+        sb.append(ImportCodePackageKey.API_PAGE_RESPONSE.getPackageInfo().getVarName());
         sb.append(Symbol.POINT).append(JavaMethodName.GET);
         sb.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_DTO_DATA));
         sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
@@ -534,7 +534,7 @@ public class GenerateJavaFacadeJunitApi {
             // 调用批量添加方法
             sb.append(
                     GenerateJunitUpdate.INSTANCE.invokeBatch(
-                            methodList, ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                            methodList, ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName(),
                             SUCCESS_CODE, GET_METHOD));
 
             // 进行标识的设置操作
@@ -549,7 +549,7 @@ public class GenerateJavaFacadeJunitApi {
             // 调用单个添加方法
             sb.append(
                     GenerateJunitUpdate.INSTANCE.insertInvokeMethod(
-                            insertMethod, ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName(),
+                            insertMethod, ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName(),
                             SUCCESS_CODE, GET_METHOD));
 
             // 进行标识的设置操作

@@ -169,6 +169,11 @@ public enum JavaDomainTreeKey {
     INTERFACE_DTO("dto"),
 
     /**
+     * 配制信息
+     */
+    INTERFACE_CONFIG("config"),
+
+    /**
      * 对外服务接口
      */
     INTERFACE_FACADE("facade"),

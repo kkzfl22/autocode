@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class JavaCodeInterfaceFacadeCreate implements GenerateCodeInf {
 
-    private static final String NAME_SUFFIX = "Action";
+    private static final String NAME_SUFFIX = "Facade";
     private static final String CLASS_COMMENT = "的API服务";
 
     public static final JavaCodeInterfaceFacadeCreate INSTANCE = new JavaCodeInterfaceFacadeCreate();

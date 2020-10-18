@@ -7,19 +7,15 @@ import com.liujun.micro.autocode.generator.builder.constant.CodeAnnotation;
 import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
 import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
-import com.liujun.micro.autocode.generator.builder.constant.JavaMethodName;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaAnnotation;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassEntity;
-import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
-import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
-import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
 import java.util.ArrayList;
@@ -51,7 +47,7 @@ public class GenerateJavaFacadeAction {
                     ImportCodePackageKey.ANNOTATION_API_OPERATION.getPackageInfo().packageOut(),
                     ImportCodePackageKey.SPRING_REQUEST_BODY.getPackageInfo().packageOut(),
                     ImportCodePackageKey.SPRING_REQUEST_METHOD.getPackageInfo().packageOut(),
-                    ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().packageOut(),
+                    ImportCodePackageKey.API_RESPONSE.getPackageInfo().packageOut(),
                     JavaKeyWord.IMPORT_LIST,
                     ImportCodePackageKey.PAGE_DTO.getPackageInfo().packageOut()
             );
@@ -177,10 +173,10 @@ public class GenerateJavaFacadeAction {
                         // 方法注释
                         .comment(method.getComment())
                         // 返回值
-                        .type(ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName())
+                        .type(ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName())
                         // 返回注释
                         .returnComment(
-                                ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassComment())
+                                ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassComment())
                         // 方法名
                         .name(method.getName())
                         // 批量操作参数
@@ -249,19 +245,37 @@ public class GenerateJavaFacadeAction {
      */
     private List<String> getAnnotation(MethodInfo method, String httpMethodName) {
 
+
+        // 检查当前参数是否为集合
+        boolean checkBatchFlag = MethodUtils.checkBatch(method.getParamType());
+
+
         List<String> dataList = new ArrayList<>();
 
         // 添加swagger的注解
         dataList.add(getSwaggerAnnotation(method).outAnnotation());
-        // spring的注解,@RequestMapping
-        dataList.add(
-                JavaAnnotation.builder()
-                        .annotation(
-                                ImportCodePackageKey.SPRING_REQUEST_MAPPING.getPackageInfo().getAnnotation())
-                        .annotationValue(true, CodeAnnotation.SPRING_REQUEST_MAPPING_METHOD, httpMethodName)
-                        .build()
-                        .outAnnotation());
 
+        if (checkBatchFlag) {
+            // spring的注解,@RequestMapping
+            dataList.add(
+                    JavaAnnotation.builder()
+                            .annotation(
+                                    ImportCodePackageKey.SPRING_REQUEST_MAPPING.getPackageInfo().getAnnotation())
+                            .annotationValue(
+                                    CodeAnnotation.SPRING_REQUEST_MAPPING_VALUE, Symbol.PATH + method.getName())
+                            .annotationValue(true, CodeAnnotation.SPRING_REQUEST_MAPPING_METHOD, httpMethodName)
+                            .build()
+                            .outAnnotation());
+        } else {
+            // spring的注解,@RequestMapping
+            dataList.add(
+                    JavaAnnotation.builder()
+                            .annotation(
+                                    ImportCodePackageKey.SPRING_REQUEST_MAPPING.getPackageInfo().getAnnotation())
+                            .annotationValue(true, CodeAnnotation.SPRING_REQUEST_MAPPING_METHOD, httpMethodName)
+                            .build()
+                            .outAnnotation());
+        }
         return dataList;
     }
 
@@ -340,7 +354,7 @@ public class GenerateJavaFacadeAction {
                         // 返回注释
                         .comment(method.getComment())
                         // 返回值
-                        .type(ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName())
+                        .type(ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName())
                         // 返回注释
                         .returnComment(CodeComment.JUNIT_PARSE_LIST_COMMENT)
                         // 方法名
@@ -377,12 +391,12 @@ public class GenerateJavaFacadeAction {
                                 .annotation(
                                         ImportCodePackageKey.SPRING_REQUEST_BODY.getPackageInfo().getAnnotation())
                                 .type(
-                                        ImportCodePackageKey.HTTP_PAGE_REQUEST.getPackageInfo().getClassName()
+                                        ImportCodePackageKey.API_PAGE_REQUEST.getPackageInfo().getClassName()
                                                 + Symbol.ANGLE_BRACKETS_LEFT
                                                 + dataTransferPkg.getClassName()
                                                 + Symbol.ANGLE_BRACKETS_RIGHT)
                                 .name(JavaVarName.METHOD_PARAM_NAME)
-                                .comment(ImportCodePackageKey.HTTP_PAGE_REQUEST.getPackageInfo().getClassComment())
+                                .comment(ImportCodePackageKey.API_PAGE_REQUEST.getPackageInfo().getClassComment())
                                 .build());
 
         JavaMethodEntity methodEntity =
@@ -392,7 +406,7 @@ public class GenerateJavaFacadeAction {
                         // 方法注释
                         .comment(method.getComment())
                         // 返回值
-                        .type(ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName())
+                        .type(ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName())
                         // 分页查询结果
                         .returnComment(CodeComment.PAGE_RESPONSE_COMMENT)
                         // 方法名
@@ -461,7 +475,7 @@ public class GenerateJavaFacadeAction {
                 JavaAnnotation.builder().annotation(CodeAnnotation.SPRING_CONTROLLER).build();
         // request的mapping操作
         String outApiUrl =
-                Symbol.PATH + NameProcess.INSTANCE.toFieldName(interfaceFacade.getClassName());
+                Symbol.PATH + NameProcess.INSTANCE.toJavaNameFirstLower(interfaceFacade.getClassName());
         // 请求注解
         JavaAnnotation requestMapping =
                 JavaAnnotation.builder()

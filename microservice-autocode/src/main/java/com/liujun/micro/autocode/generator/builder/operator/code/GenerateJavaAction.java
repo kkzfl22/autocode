@@ -60,11 +60,11 @@ public class GenerateJavaAction {
                     ImportCodePackageKey.SPRING_REQUEST_METHOD.getPackageInfo().packageOut(),
                     ImportCodePackageKey.ERROR_DATA.getPackageInfo().packageOut(),
                     ImportCodePackageKey.ERROR_CODE_COMMON.getPackageInfo().packageOut(),
-                    ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().packageOut(),
-                    ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().packageOut(),
-                    ImportCodePackageKey.HTTP_PAGE_REQUEST.getPackageInfo().packageOut(),
+                    ImportCodePackageKey.API_RESPONSE.getPackageInfo().packageOut(),
+                    ImportCodePackageKey.API_PAGE_RESPONSE.getPackageInfo().packageOut(),
+                    ImportCodePackageKey.API_PAGE_REQUEST.getPackageInfo().packageOut(),
                     ImportCodePackageKey.API_ASSEMBLER_PAGE.getPackageInfo().packageOut(),
-                    ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().packageOut()
+                    ImportCodePackageKey.API_DATA_RESPONSE.getPackageInfo().packageOut()
 
             );
 
@@ -275,10 +275,10 @@ public class GenerateJavaAction {
                         // 方法注释
                         .comment(method.getComment())
                         // 返回值
-                        .type(ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName())
+                        .type(ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName())
                         // 返回注释
                         .returnComment(
-                                ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassComment())
+                                ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassComment())
                         // 方法名
                         .name(method.getName())
                         // 批量操作参数
@@ -448,7 +448,7 @@ public class GenerateJavaAction {
         // 填写成功返回
         sb.append(JavaFormat.appendTab(3));
         sb.append(JavaKeyWord.RETURN).append(Symbol.SPACE);
-        sb.append(ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName());
+        sb.append(ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName());
         sb.append(Symbol.POINT).append(JavaMethodName.RESPONSE_SUCCESS);
         sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
         sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
@@ -459,7 +459,7 @@ public class GenerateJavaAction {
 
         // 返回语句
         sb.append(JavaFormat.appendTab(2)).append(JavaKeyWord.RETURN).append(Symbol.SPACE);
-        sb.append(ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName());
+        sb.append(ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName());
         sb.append(Symbol.POINT).append(JavaMethodName.RESPONSE_FAIL);
         sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
         sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
@@ -501,7 +501,7 @@ public class GenerateJavaAction {
         // 发生错误了，直接返回
         sb.append(JavaFormat.appendTab(3));
         sb.append(JavaKeyWord.RETURN).append(Symbol.SPACE);
-        sb.append(ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName());
+        sb.append(ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName());
         sb.append(Symbol.POINT).append(JavaMethodName.RESPONSE_FAIL);
         sb.append(Symbol.BRACKET_LEFT);
         sb.append(ImportCodePackageKey.ERROR_DATA.getPackageInfo().getVarName());
@@ -591,7 +591,7 @@ public class GenerateJavaAction {
         //响应单集合对象的构建
         sb.append(JavaFormat.appendTab(3));
         sb.append(JavaKeyWord.RETURN).append(Symbol.SPACE);
-        sb.append(ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().getClassName());
+        sb.append(ImportCodePackageKey.API_DATA_RESPONSE.getPackageInfo().getClassName());
         sb.append(Symbol.POINT).append(JavaMethodName.RESPONSE_SUCCESS);
         sb.append(Symbol.BRACKET_LEFT);
         sb.append(assembler.getClassName()).append(Symbol.POINT);
@@ -611,7 +611,7 @@ public class GenerateJavaAction {
         //响应空对象
         sb.append(JavaFormat.appendTab(3));
         sb.append(JavaKeyWord.RETURN).append(Symbol.SPACE);
-        sb.append(ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().getClassName());
+        sb.append(ImportCodePackageKey.API_DATA_RESPONSE.getPackageInfo().getClassName());
         sb.append(Symbol.POINT).append(JavaMethodName.RESPONSE_SUCCESS);
         sb.append(Symbol.BRACKET_LEFT);
         sb.append(JavaVarValue.LIST_EMPTY_DEFAULT);
@@ -673,7 +673,7 @@ public class GenerateJavaAction {
         //响应单对象的构建
         sb.append(JavaFormat.appendTab(3));
         sb.append(JavaKeyWord.RETURN).append(Symbol.SPACE);
-        sb.append(ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().getClassName());
+        sb.append(ImportCodePackageKey.API_DATA_RESPONSE.getPackageInfo().getClassName());
         sb.append(Symbol.POINT).append(JavaMethodName.RESPONSE_SUCCESS);
         sb.append(Symbol.BRACKET_LEFT);
         sb.append(assembler.getClassName()).append(Symbol.POINT).append(JavaMethodName.ASSEMBLER_DOMAIN_TRANSFER_NAME);
@@ -692,7 +692,7 @@ public class GenerateJavaAction {
         //响应空对象
         sb.append(JavaFormat.appendTab(3));
         sb.append(JavaKeyWord.RETURN).append(Symbol.SPACE);
-        sb.append(ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().getClassName());
+        sb.append(ImportCodePackageKey.API_DATA_RESPONSE.getPackageInfo().getClassName());
         sb.append(Symbol.POINT).append(JavaMethodName.RESPONSE_SUCCESS);
         sb.append(Symbol.BRACKET_LEFT);
         sb.append(JavaVarValue.MAP_EMPTY);
@@ -739,7 +739,7 @@ public class GenerateJavaAction {
                         // 返回注释
                         .comment(method.getComment())
                         // 返回值
-                        .type(ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName())
+                        .type(ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName())
                         // 返回注释
                         .returnComment(CodeComment.JUNIT_PARSE_LIST_COMMENT)
                         // 方法名
@@ -782,12 +782,12 @@ public class GenerateJavaAction {
                 Arrays.asList(
                         JavaMethodArguments.builder()
                                 .type(
-                                        ImportCodePackageKey.HTTP_PAGE_REQUEST.getPackageInfo().getClassName()
+                                        ImportCodePackageKey.API_PAGE_REQUEST.getPackageInfo().getClassName()
                                                 + Symbol.ANGLE_BRACKETS_LEFT
                                                 + dataTransferPkg.getClassName()
                                                 + Symbol.ANGLE_BRACKETS_RIGHT)
                                 .name(JavaVarName.METHOD_PARAM_NAME)
-                                .comment(ImportCodePackageKey.HTTP_PAGE_REQUEST.getPackageInfo().getClassComment())
+                                .comment(ImportCodePackageKey.API_PAGE_REQUEST.getPackageInfo().getClassComment())
                                 .build());
 
         JavaMethodEntity methodEntity =
@@ -799,7 +799,7 @@ public class GenerateJavaAction {
                         // 方法注释
                         .comment(method.getComment())
                         // 返回值
-                        .type(ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().getClassName())
+                        .type(ImportCodePackageKey.API_RESPONSE.getPackageInfo().getClassName())
                         // 分页查询结果
                         .returnComment(CodeComment.PAGE_RESPONSE_COMMENT)
                         // 方法名
@@ -895,7 +895,7 @@ public class GenerateJavaAction {
 
         // 返回语句
         sb.append(JavaFormat.appendTab(2)).append(JavaKeyWord.RETURN).append(Symbol.SPACE);
-        sb.append(ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().getClassName());
+        sb.append(ImportCodePackageKey.API_PAGE_RESPONSE.getPackageInfo().getClassName());
         sb.append(Symbol.POINT).append(PAGE_API_RSP_METHOD);
         sb.append(Symbol.BRACKET_LEFT)
                 .append(JavaVarName.PAGE_RETURN_DATA)

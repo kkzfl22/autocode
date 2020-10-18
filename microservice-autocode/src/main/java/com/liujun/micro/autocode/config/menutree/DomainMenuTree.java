@@ -187,6 +187,8 @@ public class DomainMenuTree {
         interfaceNode.addChildrenOnly(JavaDomainTreeKey.INTERFACE_ERROR_CODE);
         // 添加静态常量
         interfaceNode.addChildrenOnly(JavaDomainTreeKey.INTERFACE_CONSTANT);
+        //资源加载
+        interfaceNode.addChildrenOnly(JavaDomainTreeKey.INTERFACE_CONFIG);
     }
 
     /**
