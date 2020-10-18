@@ -21,7 +21,7 @@ public class FileUtils {
      * @param fileName 输出文件名
      * @param data     数据内容
      */
-    public static void writeFile(String filePath, String fileName, StringBuilder data) {
+    public static void writeFile(String filePath, String fileName, String data) {
         writeFile(filePath, fileName, data, false);
     }
 
@@ -33,7 +33,7 @@ public class FileUtils {
      * @param data     数据内容
      */
     public static void writeFile(
-            String filePath, String fileName, StringBuilder data, boolean append) {
+            String filePath, String fileName, String data, boolean append) {
 
         OutputStream fw = null;
         OutputStreamWriter outStreamWriter = null;
@@ -53,7 +53,7 @@ public class FileUtils {
             // 输出指定编码的文件
             outStreamWriter = new OutputStreamWriter(fw, StandardCharsets.UTF_8);
             buffOut = new BufferedWriter(outStreamWriter);
-            buffOut.write(data.toString());
+            buffOut.write(data);
         } catch (IOException e) {
             log.error("FileUtils IOException", e);
         } finally {

@@ -229,8 +229,5 @@ public class JavaKeyWord {
      */
     public static final String LOGIC_OR = "||";
 
-    /**
-     * 默认的空集合
-     */
-    public static final String LIST_EMPTY_DEFAULT = "Collections.emptyList()";
+
 }

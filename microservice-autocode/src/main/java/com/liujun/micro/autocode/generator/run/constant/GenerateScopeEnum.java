@@ -33,6 +33,11 @@ public enum GenerateScopeEnum {
      * 存储层的代码生成
      */
     REPOSITORY("repository"),
+
+    /**
+     * 所有都会执行的阶段
+     */
+    COMMON("common"),
     ;
 
     /**

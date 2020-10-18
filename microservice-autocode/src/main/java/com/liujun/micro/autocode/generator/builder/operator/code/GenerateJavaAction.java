@@ -63,7 +63,8 @@ public class GenerateJavaAction {
                     ImportCodePackageKey.HTTP_API_RESPONSE.getPackageInfo().packageOut(),
                     ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().packageOut(),
                     ImportCodePackageKey.HTTP_PAGE_REQUEST.getPackageInfo().packageOut(),
-                    ImportCodePackageKey.API_ASSEMBLER_PAGE.getPackageInfo().packageOut()
+                    ImportCodePackageKey.API_ASSEMBLER_PAGE.getPackageInfo().packageOut(),
+                    ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().packageOut()
 
             );
 
@@ -578,14 +579,49 @@ public class GenerateJavaAction {
         sb.append(domainPkg.getVarName()).append(Symbol.BRACKET_RIGHT);
         sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
 
-        // 返回语句
-        sb.append(JavaFormat.appendTab(2)).append(JavaKeyWord.RETURN).append(Symbol.SPACE);
-        sb.append(ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().getClassName());
-        sb.append(Symbol.POINT).append(QUERY_RSP_OK).append(Symbol.BRACKET_LEFT);
-        sb.append(JavaVarName.QUERY_LIST_RETURN_DATA)
-                .append(Symbol.BRACKET_RIGHT)
-                .append(Symbol.SEMICOLON);
+
+        //进行响应的构建
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(JavaKeyWord.IF).append(Symbol.BRACKET_LEFT);
+        sb.append(JavaVarName.QUERY_LIST_RETURN_DATA).append(Symbol.SPACE);
+        sb.append(Symbol.EQUAL_NOT).append(Symbol.SPACE);
+        sb.append(JavaVarValue.VALUE_NULL).append(Symbol.BRACKET_RIGHT).append(Symbol.BRACE_LEFT);
         sb.append(Symbol.ENTER_LINE);
+
+        //响应单集合对象的构建
+        sb.append(JavaFormat.appendTab(3));
+        sb.append(JavaKeyWord.RETURN).append(Symbol.SPACE);
+        sb.append(ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().getClassName());
+        sb.append(Symbol.POINT).append(JavaMethodName.RESPONSE_SUCCESS);
+        sb.append(Symbol.BRACKET_LEFT);
+        sb.append(assembler.getClassName()).append(Symbol.POINT);
+        sb.append(JavaMethodName.ASSEMBLER_DOMAIN_TRANSFER_LIST_NAME);
+        sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.QUERY_LIST_RETURN_DATA);
+        sb.append(Symbol.BRACKET_RIGHT).append(Symbol.BRACKET_RIGHT);
+        sb.append(Symbol.SEMICOLON);
+        sb.append(Symbol.ENTER_LINE);
+
+        //else判断
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(Symbol.BRACE_RIGHT).append(Symbol.SPACE);
+        sb.append(JavaKeyWord.ELSE).append(Symbol.SPACE).append(Symbol.BRACE_LEFT);
+        sb.append(Symbol.ENTER_LINE);
+
+
+        //响应空对象
+        sb.append(JavaFormat.appendTab(3));
+        sb.append(JavaKeyWord.RETURN).append(Symbol.SPACE);
+        sb.append(ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().getClassName());
+        sb.append(Symbol.POINT).append(JavaMethodName.RESPONSE_SUCCESS);
+        sb.append(Symbol.BRACKET_LEFT);
+        sb.append(JavaVarValue.LIST_EMPTY_DEFAULT);
+        sb.append(Symbol.BRACKET_RIGHT);
+        sb.append(Symbol.SEMICOLON);
+        sb.append(Symbol.ENTER_LINE);
+
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(Symbol.BRACE_RIGHT).append(Symbol.ENTER_LINE);
+
 
         return sb.toString();
     }
@@ -616,7 +652,7 @@ public class GenerateJavaAction {
         sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
         sb.append(Symbol.ENTER_LINE);
 
-        // 执行数据的分页查询
+        // 执行数据的查询
         sb.append(JavaFormat.appendTab(2));
         sb.append(poPkg.getClassName()).append(Symbol.SPACE).append(JavaVarName.QUERY_RETURN_DATA);
         sb.append(Symbol.SPACE).append(Symbol.EQUAL);
@@ -625,12 +661,47 @@ public class GenerateJavaAction {
         sb.append(poPkg.getVarName()).append(Symbol.BRACKET_RIGHT);
         sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
 
-        // 返回语句
-        sb.append(JavaFormat.appendTab(2)).append(JavaKeyWord.RETURN).append(Symbol.SPACE);
-        sb.append(ImportCodePackageKey.HTTP_API_PAGE_RESPONSE.getPackageInfo().getClassName());
-        sb.append(Symbol.POINT).append(QUERY_RSP_OK).append(Symbol.BRACKET_LEFT);
-        sb.append(JavaVarName.QUERY_RETURN_DATA).append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
+
+        //进行响应的构建
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(JavaKeyWord.IF).append(Symbol.BRACKET_LEFT);
+        sb.append(JavaVarName.QUERY_RETURN_DATA).append(Symbol.SPACE);
+        sb.append(Symbol.EQUAL_NOT).append(Symbol.SPACE);
+        sb.append(JavaVarValue.VALUE_NULL).append(Symbol.BRACKET_RIGHT).append(Symbol.BRACE_LEFT);
         sb.append(Symbol.ENTER_LINE);
+
+        //响应单对象的构建
+        sb.append(JavaFormat.appendTab(3));
+        sb.append(JavaKeyWord.RETURN).append(Symbol.SPACE);
+        sb.append(ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().getClassName());
+        sb.append(Symbol.POINT).append(JavaMethodName.RESPONSE_SUCCESS);
+        sb.append(Symbol.BRACKET_LEFT);
+        sb.append(assembler.getClassName()).append(Symbol.POINT).append(JavaMethodName.ASSEMBLER_DOMAIN_TRANSFER_NAME);
+        sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.QUERY_RETURN_DATA);
+        sb.append(Symbol.BRACKET_RIGHT).append(Symbol.BRACKET_RIGHT);
+        sb.append(Symbol.SEMICOLON);
+        sb.append(Symbol.ENTER_LINE);
+
+        //else判断
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(Symbol.BRACE_RIGHT).append(Symbol.SPACE);
+        sb.append(JavaKeyWord.ELSE).append(Symbol.SPACE).append(Symbol.BRACE_LEFT);
+        sb.append(Symbol.ENTER_LINE);
+
+
+        //响应空对象
+        sb.append(JavaFormat.appendTab(3));
+        sb.append(JavaKeyWord.RETURN).append(Symbol.SPACE);
+        sb.append(ImportCodePackageKey.HTTP_API_DATA_RESPONSE.getPackageInfo().getClassName());
+        sb.append(Symbol.POINT).append(JavaMethodName.RESPONSE_SUCCESS);
+        sb.append(Symbol.BRACKET_LEFT);
+        sb.append(JavaVarValue.MAP_EMPTY);
+        sb.append(Symbol.BRACKET_RIGHT);
+        sb.append(Symbol.SEMICOLON);
+        sb.append(Symbol.ENTER_LINE);
+
+        sb.append(JavaFormat.appendTab(2));
+        sb.append(Symbol.BRACE_RIGHT).append(Symbol.ENTER_LINE);
 
         return sb.toString();
     }
@@ -863,6 +934,7 @@ public class GenerateJavaAction {
         sb.append(Symbol.BRACKET_RIGHT);
         sb.append(Symbol.BRACKET_RIGHT);
         sb.append(Symbol.SEMICOLON);
+        sb.append(Symbol.SEMICOLON);
         sb.append(Symbol.ENTER_LINE);
 
         //判断结果
@@ -881,8 +953,9 @@ public class GenerateJavaAction {
         sb.append(JavaVarName.PAGE_RETURN_DATA).append(Symbol.POINT);
         sb.append(JavaMethodName.SET);
         sb.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_DATA));
-        sb.append(Symbol.BRACKET_LEFT).append(JavaKeyWord.LIST_EMPTY_DEFAULT);
+        sb.append(Symbol.BRACKET_LEFT).append(JavaVarValue.LIST_EMPTY_DEFAULT);
         sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
+        sb.append(Symbol.SEMICOLON);
         sb.append(Symbol.ENTER_LINE);
 
 

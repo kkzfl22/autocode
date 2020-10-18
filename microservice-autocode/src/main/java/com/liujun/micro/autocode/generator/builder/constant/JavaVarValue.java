@@ -62,4 +62,17 @@ public class JavaVarValue {
      * 批量插入标识
      */
     public static final String INSERT_TYPE_BATCH_KEY = "InsertType.INSERT_TYPE_BATCH";
+
+
+    /**
+     * 默认的空集合
+     */
+    public static final String LIST_EMPTY_DEFAULT = "Collections.emptyList()";
+
+    /**
+     * 默认的空map
+     */
+    public static final String MAP_EMPTY = "Collections.emptyMap()";
+
+
 }

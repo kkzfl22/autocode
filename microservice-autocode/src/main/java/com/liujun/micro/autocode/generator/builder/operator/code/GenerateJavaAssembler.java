@@ -119,7 +119,7 @@ public class GenerateJavaAssembler {
 
     // 返回空对象
     sb.append(JavaFormat.appendTab(tabIndex + 2)).append(JavaKeyWord.RETURN);
-    sb.append(Symbol.SPACE).append(JavaKeyWord.LIST_EMPTY_DEFAULT).append(Symbol.SEMICOLON);
+    sb.append(Symbol.SPACE).append(JavaVarValue.LIST_EMPTY_DEFAULT).append(Symbol.SEMICOLON);
     sb.append(Symbol.ENTER_LINE);
 
 

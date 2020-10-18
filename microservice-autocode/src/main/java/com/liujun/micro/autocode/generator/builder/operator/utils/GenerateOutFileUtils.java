@@ -52,6 +52,20 @@ public class GenerateOutFileUtils {
      */
     public static void outFile(
             StringBuilder sb, String path, String definePackage, String fileName, boolean append) {
+        outFile(sb.toString(), path, definePackage, fileName, append);
+    }
+
+
+    /**
+     * 文件输出操作
+     *
+     * @param sb            输出字符
+     * @param path          最基础的输出路径
+     * @param definePackage 工程内的路径信息
+     * @param fileName      输出的文件名
+     */
+    public static void outFile(
+            String sb, String path, String definePackage, String fileName, boolean append) {
 
         // 获取以路径/进行输出
         String javaPathStr = outPath(definePackage);

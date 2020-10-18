@@ -21,7 +21,7 @@ public class GeneratePathUtils {
      * @return
      */
     public static String outServicePath(GenerateCodeContext param) {
-        return param.getFileBasePath() + Symbol.PATH + param.getModuleName();
+        return ouProjectPath(param) + Symbol.PATH + param.getModuleName();
     }
 
 
@@ -32,7 +32,27 @@ public class GeneratePathUtils {
      * @return
      */
     public static String outApiPath(GenerateCodeContext param) {
-        return param.getFileBasePath() + Symbol.PATH + param.getModuleName() + MODULE_SUFFIX_NAME;
+        return ouProjectPath(param) + Symbol.PATH + getApiModuleName(param);
+    }
+
+    /**
+     * 模块的名称
+     *
+     * @param param
+     * @return
+     */
+    public static String getApiModuleName(GenerateCodeContext param) {
+        return param.getModuleName() + MODULE_SUFFIX_NAME;
+    }
+
+    /**
+     * 获取项目的的基础路径
+     *
+     * @param param 上下文信息
+     * @return
+     */
+    public static String ouProjectPath(GenerateCodeContext param) {
+        return param.getFileBasePath() + Symbol.PATH + param.getGenerateConfig().getGenerate().getProjectName();
     }
 
 }

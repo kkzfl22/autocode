@@ -12,9 +12,12 @@ import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInt
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceCheckCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceConstantCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceErrorCodeCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceFacadeApiCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceFacadeCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceFacadeJunitCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeProjectCfgCopyCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeProjectMavenPomCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryAssemblerCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryDaoInfCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryJunitDaoCreate;
@@ -48,6 +51,8 @@ public class GenerateCodeBuilder {
 
 
     static {
+        //公共都需要执行的
+        common();
         //存储层的代码加入到生成流程中
         repository();
         //领域层的代码加入到生成器中
@@ -58,6 +63,22 @@ public class GenerateCodeBuilder {
         api();
 
     }
+
+    /**
+     * 存储层代码生成的加入
+     */
+    private static void common() {
+        List<GenerateCodeInf> commonList = new ArrayList<>(4);
+        //1,项目配制文件的拷贝
+        commonList.add(JavaCodeProjectCfgCopyCreate.INSTANCE);
+        //2,项目的maven的文件的生成
+        commonList.add(JavaCodeProjectMavenPomCreate.INSTANCE);
+
+
+        //存储层的集合
+        SCOPE_MAP.put(GenerateScopeEnum.COMMON, commonList);
+    }
+
 
     /**
      * 存储层代码生成的加入
@@ -129,13 +150,15 @@ public class GenerateCodeBuilder {
         apiList.add(JavaCodeInterfaceErrorCodeCreate.INSTANCE);
         //5,api层的错误码检查
         apiList.add(JavaCodeInterfaceCheckCreate.INSTANCE);
-        //6,生成api层的代码
+        //6,生成api接口
+        apiList.add(JavaCodeInterfaceFacadeApiCreate.INSTANCE);
+        //7,生成api的实现的代码
         apiList.add(JavaCodeInterfaceFacadeCreate.INSTANCE);
-        //7,国际化中文相关的资源文件的生成
+        //8,国际化中文相关的资源文件的生成
         apiList.add(JavaCodeResourceI18nZhCnCreate.INSTANCE);
-        //8,国际化英文相关的资源文件的生成
+        //9,国际化英文相关的资源文件的生成
         apiList.add(JavaCodeResourceI18nEnUsCreate.INSTANCE);
-        //9,api的单元测试
+        //10,api的单元测试
         apiList.add(JavaCodeInterfaceFacadeJunitCreate.INSTANCE);
 
         //存储层的集合
@@ -181,6 +204,9 @@ public class GenerateCodeBuilder {
 
         //4,api层的代码的生成
         generateScope(GenerateScopeEnum.API, scopeEnums);
+
+        //5，公共的的文件的生成
+        runGenerate(SCOPE_MAP.get(GenerateScopeEnum.COMMON));
     }
 
 
@@ -218,8 +244,18 @@ public class GenerateCodeBuilder {
             return;
         }
 
+        //执行生成
+        runGenerate(SCOPE_MAP.get(scope));
+    }
+
+    /**
+     * 项目代码生成的执行
+     *
+     * @param runList
+     */
+    private void runGenerate(List<GenerateCodeInf> runList) {
         //执行代码的生成操作
-        for (GenerateCodeInf scopeItem : SCOPE_MAP.get(scope)) {
+        for (GenerateCodeInf scopeItem : runList) {
             scopeItem.generateCode(context);
         }
     }

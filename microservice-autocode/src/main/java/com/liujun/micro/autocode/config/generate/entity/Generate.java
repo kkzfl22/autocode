@@ -62,10 +62,6 @@ public class Generate {
      */
     private String output;
 
-    /**
-     * 公共文件和路径
-     */
-    private String commonPath;
 
     /**
      * 作者名称
@@ -86,5 +82,16 @@ public class Generate {
      * 模块名称
      */
     private String moduleName;
+
+    /**
+     * 总项目名称
+     */
+    private String projectName;
+
+
+    /**
+     * 生成项目时maven的相关设置
+     */
+    private MavenInfo maven;
 
 }

@@ -124,11 +124,11 @@ generate:
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: query
       #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
-      disable: true
+      disable: false
       #方法的注释
       comment: 根据信息查询
       ##where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
-      where: NAMESPACE_ID,USER_NAME
+      #where: NAMESPACE_ID,USER_NAME
       #返回值类型信息
       returns: table_name
       #排序
@@ -139,7 +139,15 @@ generate:
     baseMenu: com.paraview.example.
     #最新输出的模块的名称
     domainName: user
+  #模块名称
   moduleName: user
+  #工程名
+  projectName: data-user
+  #maven的配制信息
+  #maven的artifactId即为各工程或者模块的名称
+  maven:
+    groupId: com.paraview.example
+    version: 1.0-SNAPSHOT
   #代码生成器需要包括的范围
   #目前存在api,application,domain,repository
   #api代码对外暴露的api接口，包含一系列的方法
@@ -149,5 +157,3 @@ generate:
   scope: api,application,domain,repository
   #输出文件的配制
   output: D:\java\workspace\selfwork\autocode\testgenerate\test-autocode
-  #公共文件和路径
-  commonPath: D:/java/encode/common/
