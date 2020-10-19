@@ -27,65 +27,66 @@ import java.util.Map.Entry;
  */
 public class JavaCodeDomainRepositoryFacadeCreate implements GenerateCodeInf {
 
-    public static final String SUFFIX_NAME = "RepositoryInterface";
-    private static final String COMMENT = "的领域存储接口";
+  public static final String SUFFIX_NAME = "RepositoryInterface";
+  private static final String COMMENT = "的领域存储接口";
 
-    public static final JavaCodeDomainRepositoryFacadeCreate INSTANCE = new JavaCodeDomainRepositoryFacadeCreate();
+  public static final JavaCodeDomainRepositoryFacadeCreate INSTANCE =
+      new JavaCodeDomainRepositoryFacadeCreate();
 
-    @Override
+  @Override
+  public void generateCode(GenerateCodeContext param) {
 
-    public void generateCode(GenerateCodeContext param) {
+    Map<String, TableInfoDTO> tableMap = param.getTableMap();
+    Map<String, List<TableColumnDTO>> map = param.getColumnMapList();
+    Iterator<Entry<String, List<TableColumnDTO>>> tableNameEntry = map.entrySet().iterator();
+    while (tableNameEntry.hasNext()) {
+      Entry<String, List<TableColumnDTO>> tableNameItem = tableNameEntry.next();
+      // 获取表信息
+      TableInfoDTO tableInfo = param.getTableMap().get(tableNameItem.getKey());
 
-        Map<String, TableInfoDTO> tableMap = param.getTableMap();
-        Map<String, List<TableColumnDTO>> map = param.getColumnMapList();
-        Iterator<Entry<String, List<TableColumnDTO>>> tableNameEntry = map.entrySet().iterator();
-        while (tableNameEntry.hasNext()) {
-            Entry<String, List<TableColumnDTO>> tableNameItem = tableNameEntry.next();
-            // 获取表信息
-            TableInfoDTO tableInfo = param.getTableMap().get(tableNameItem.getKey());
+      // 表名
+      String tableName = tableNameItem.getKey();
 
-            // 表名
-            String tableName = tableNameItem.getKey();
+      // 得到类名
+      String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
+      String className = tableClassName + SUFFIX_NAME;
 
-            // 得到类名
-            String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
-            String className = tableClassName + SUFFIX_NAME;
+      // 获取以java定义的package路径
+      String javaPackageStr = param.getJavaCodePackage().getRepositoryFacadeNode().outJavaPackage();
 
-            // 获取以java定义的package路径
-            String javaPackageStr = param.getJavaCodePackage().getRepositoryFacadeNode().outJavaPackage();
+      // 注释
+      String docComment = JavaCommentUtil.tableCommentProc(tableInfo.getTableComment()) + COMMENT;
 
-            // 注释
-            String docComment = JavaCommentUtil.tableCommentProc(tableInfo.getTableComment()) + COMMENT;
+      // 将dao信息进行储存至流程中
+      ImportPackageInfo daoPackageInfo =
+          new ImportPackageInfo(javaPackageStr, className, docComment);
+      ImportPackageUtils.putPackageInfo(
+          tableName,
+          param.getPackageMap(),
+          GenerateCodePackageKey.DOMAIN_PERSIST_FACADE.getKey(),
+          daoPackageInfo,
+          tableMap.size());
 
-            // 将dao信息进行储存至流程中
-            ImportPackageInfo daoPackageInfo =
-                    new ImportPackageInfo(javaPackageStr, className, docComment);
-            ImportPackageUtils.putPackageInfo(
-                    tableName,
-                    param.getPackageMap(),
-                    GenerateCodePackageKey.DOMAIN_PERSIST_FACADE.getKey(),
-                    daoPackageInfo,
-                    tableMap.size());
+      // 存储层实体
+      ImportPackageInfo domainPackageInfo =
+          ImportPackageUtils.getDefineClass(
+              param.getPackageMap(), GenerateCodePackageKey.DOMAIN_DO.getKey(), tableName);
 
-            // 存储层实体
-            ImportPackageInfo domainPackageInfo =
-                    ImportPackageUtils.getDefineClass(
-                            param.getPackageMap(), GenerateCodePackageKey.DOMAIN_DO.getKey(), tableName);
+      // 进行领域方法的相关方法的生成
+      StringBuilder sb =
+          GenerateJavaRepositoryFacadeInterface.INSTANCE.generateJavaInterface(
+              daoPackageInfo,
+              domainPackageInfo,
+              param.getGenerateConfig().getGenerate().getCode(),
+              param.getGenerateConfig().getGenerate().getAuthor());
 
-            // 进行领域方法的相关方法的生成
-            StringBuilder sb =
-                    GenerateJavaRepositoryFacadeInterface.INSTANCE.generateJavaInterface(
-                            daoPackageInfo,
-                            domainPackageInfo,
-                            param.getGenerateConfig().getGenerate().getCode(),
-                            param.getGenerateConfig().getGenerate().getAuthor());
+      // 定义项目内的完整目录结构
+      String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
+      javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
 
-            // 定义项目内的完整目录结构
-            String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
-            javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
-
-            // 进行存储层的接口输出
-            GenerateOutFileUtils.outJavaFile(sb, GeneratePathUtils.outServicePath(param), javaPackageStr, className);
-        }
+      // 进行存储层的接口输出
+      GenerateOutFileUtils.outJavaFile(
+          sb, GeneratePathUtils.outServicePath(param), javaPackageStr, className);
     }
+  }
 }

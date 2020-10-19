@@ -1,6 +1,7 @@
 package com.liujun.micro.autocode.config.properties;
 
 import com.liujun.micro.autocode.constant.ConfigEnum;
+import com.liujun.micro.autocode.generator.builder.operator.utils.FileReaderUtils;
 import com.liujun.micro.autocode.utils.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,20 +48,12 @@ public class ConfigProperties {
     InputStream in = null;
     String config = PRO_FILE;
     try {
-      // 优先使用外部文件配制
-      in = getOutFile();
+      in = FileReaderUtils.getFileInputStream(config);
 
-      // 然后使用内部默认文件配制
-      if (in == null) {
-        in = ConfigProperties.class.getResourceAsStream(config);
-      }
-
-      if (in == null) {
-        in = Thread.currentThread().getContextClassLoader().getResourceAsStream(config);
-      }
-
+      // 加载数据
       prop.load(in);
 
+      // 进行数据的存储至map中
       dataPutMap(prop);
     } catch (IOException e) {
       log.error(PRO_FILE + " loader error ", e);
@@ -68,24 +61,6 @@ public class ConfigProperties {
       StreamUtils.close(in);
     }
     prop = null;
-  }
-
-  /**
-   * 获取外部文件
-   *
-   * @return 文件流
-   */
-  private InputStream getOutFile() {
-    try {
-      // 优先使用外部文件加载
-      return new FileInputStream(PRO_FILE);
-    }
-    // 此处只捕获异常不处理，外部文件可能不存在，并非错误，使用内部文件即可
-    catch (FileNotFoundException e) {
-      log.info("out file not exists :" + PRO_FILE);
-    }
-
-    return null;
   }
 
   /**

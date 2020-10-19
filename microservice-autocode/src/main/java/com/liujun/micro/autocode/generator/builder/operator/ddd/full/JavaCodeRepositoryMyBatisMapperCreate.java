@@ -29,65 +29,66 @@ import java.util.Map.Entry;
  */
 public class JavaCodeRepositoryMyBatisMapperCreate implements GenerateCodeInf {
 
-    public static final String DOC = "数据库操作";
+  public static final String DOC = "数据库操作";
 
+  public static final JavaCodeRepositoryMyBatisMapperCreate INSTANCE =
+      new JavaCodeRepositoryMyBatisMapperCreate();
 
-    public static final JavaCodeRepositoryMyBatisMapperCreate INSTANCE = new JavaCodeRepositoryMyBatisMapperCreate();
+  @Override
+  public void generateCode(GenerateCodeContext param) {
 
-    @Override
-    public void generateCode(GenerateCodeContext param) {
+    Map<String, TableInfoDTO> tableMap = param.getTableMap();
+    Map<String, List<TableColumnDTO>> map = param.getColumnMapList();
+    Iterator<Entry<String, List<TableColumnDTO>>> iterTable = map.entrySet().iterator();
 
-        Map<String, TableInfoDTO> tableMap = param.getTableMap();
-        Map<String, List<TableColumnDTO>> map = param.getColumnMapList();
-        Iterator<Entry<String, List<TableColumnDTO>>> iterTable = map.entrySet().iterator();
+    while (iterTable.hasNext()) {
+      Entry<String, List<TableColumnDTO>> entry = iterTable.next();
+      String tableName = entry.getKey();
+      TableInfoDTO tableMsg = tableMap.get(tableName);
 
-        while (iterTable.hasNext()) {
-            Entry<String, List<TableColumnDTO>> entry = iterTable.next();
-            String tableName = entry.getKey();
-            TableInfoDTO tableMsg = tableMap.get(tableName);
+      List<TableColumnDTO> columnList = entry.getValue();
 
-            List<TableColumnDTO> columnList = entry.getValue();
+      // 获取当前主键列表
+      List<TableColumnDTO> primaryKeyList = TableColumnUtils.getPrimaryKey(columnList);
+      // 获取po的完整路径
+      ImportPackageInfo poPackage =
+          ImportPackageUtils.getDefineClass(
+              param.getPackageMap(), GenerateCodePackageKey.PERSIST_PO.getKey(), tableName);
 
-            // 获取当前主键列表
-            List<TableColumnDTO> primaryKeyList = TableColumnUtils.getPrimaryKey(columnList);
-            // 获取po的完整路径
-            ImportPackageInfo poPackage =
-                    ImportPackageUtils.getDefineClass(
-                            param.getPackageMap(), GenerateCodePackageKey.PERSIST_PO.getKey(), tableName);
+      // 获取dao的完整路径
+      ImportPackageInfo daoPackage =
+          ImportPackageUtils.getDefineClass(
+              param.getPackageMap(), GenerateCodePackageKey.PERSIST_DAO.getKey(), tableName);
 
-            // 获取dao的完整路径
-            ImportPackageInfo daoPackage =
-                    ImportPackageUtils.getDefineClass(
-                            param.getPackageMap(), GenerateCodePackageKey.PERSIST_DAO.getKey(), tableName);
+      // 方法列表
+      List<MethodInfo> methodList = param.getGenerateConfig().getGenerate().getCode();
 
-            // 方法列表
-            List<MethodInfo> methodList = param.getGenerateConfig().getGenerate().getCode();
+      // 获取数据
+      Map<String, TableColumnDTO> parseColumn = param.getColumnMapMap().get(tableName);
 
-            // 获取数据
-            Map<String, TableColumnDTO> parseColumn = param.getColumnMapMap().get(tableName);
+      // 进行mapper内容的生成
+      StringBuilder sb =
+          GenerateJavaMybatisMapperXml.INSTANCE.generateMapperXml(
+              tableMsg,
+              columnList,
+              primaryKeyList,
+              poPackage,
+              daoPackage,
+              methodList,
+              parseColumn,
+              DOC,
+              param.getTypeEnum());
 
-            // 进行mapper内容的生成
-            StringBuilder sb =
-                    GenerateJavaMybatisMapperXml.INSTANCE.generateMapperXml(
-                            tableMsg,
-                            columnList,
-                            primaryKeyList,
-                            poPackage,
-                            daoPackage,
-                            methodList,
-                            parseColumn,
-                            DOC,
-                            param.getTypeEnum());
+      String javaName = NameProcess.INSTANCE.toFieldName(tableName);
 
-            String javaName = NameProcess.INSTANCE.toFieldName(tableName);
+      // 定义项目内的完整目录结构
+      String outMapperPath = param.getProjectPath().getRepositoryMybatisMapperNode().outPath();
 
-            // 定义项目内的完整目录结构
-            String outMapperPath = param.getProjectPath().getRepositoryMybatisMapperNode().outPath();
-
-            // 文件名
-            String fileName = javaName + MyBatisKey.MYBATIS_SUFFIX_NAME;
-            // 将mybatis文件的mapper输出到文件中
-            GenerateOutFileUtils.outFile(sb, GeneratePathUtils.outServicePath(param), outMapperPath, fileName);
-        }
+      // 文件名
+      String fileName = javaName + MyBatisKey.MYBATIS_SUFFIX_NAME;
+      // 将mybatis文件的mapper输出到文件中
+      GenerateOutFileUtils.outFile(
+          sb, GeneratePathUtils.outServicePath(param), outMapperPath, fileName);
     }
+  }
 }

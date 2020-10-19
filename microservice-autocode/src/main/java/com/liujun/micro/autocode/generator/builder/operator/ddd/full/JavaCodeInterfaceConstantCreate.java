@@ -26,78 +26,77 @@ import java.util.Map.Entry;
  */
 public class JavaCodeInterfaceConstantCreate implements GenerateCodeInf {
 
-    /**
-     * 错误码后缀
-     */
-    private static final String NAME_SUFFIX = "Constant";
+  /** 错误码后缀 */
+  private static final String NAME_SUFFIX = "Constant";
 
-    private static final String NAME_COMMENT = "常量信息";
+  private static final String NAME_COMMENT = "常量信息";
 
-    public static final JavaCodeInterfaceConstantCreate INSTANCE = new JavaCodeInterfaceConstantCreate();
+  public static final JavaCodeInterfaceConstantCreate INSTANCE =
+      new JavaCodeInterfaceConstantCreate();
 
-    @Override
-    public void generateCode(GenerateCodeContext param) {
+  @Override
+  public void generateCode(GenerateCodeContext param) {
 
-        Map<String, TableInfoDTO> tableMap = param.getTableMap();
-        Map<String, List<TableColumnDTO>> map = param.getColumnMapList();
-        Iterator<Entry<String, List<TableColumnDTO>>> tableNameEntry = map.entrySet().iterator();
-        while (tableNameEntry.hasNext()) {
-            Entry<String, List<TableColumnDTO>> tableNameItem = tableNameEntry.next();
+    Map<String, TableInfoDTO> tableMap = param.getTableMap();
+    Map<String, List<TableColumnDTO>> map = param.getColumnMapList();
+    Iterator<Entry<String, List<TableColumnDTO>>> tableNameEntry = map.entrySet().iterator();
+    while (tableNameEntry.hasNext()) {
+      Entry<String, List<TableColumnDTO>> tableNameItem = tableNameEntry.next();
 
-            // 表名
-            String tableName = tableNameItem.getKey();
+      // 表名
+      String tableName = tableNameItem.getKey();
 
-            // 构建常量包信息
-            ImportPackageInfo constantPkg = this.generatePackageInfo(param, tableName);
+      // 构建常量包信息
+      ImportPackageInfo constantPkg = this.generatePackageInfo(param, tableName);
 
-            // 进行存储至上下文中
-            ImportPackageUtils.putPackageInfo(
-                    tableName,
-                    param.getPackageMap(),
-                    GenerateCodePackageKey.INTERFACE_ERROR_CONSTANT.getKey(),
-                    constantPkg,
-                    tableMap.size());
+      // 进行存储至上下文中
+      ImportPackageUtils.putPackageInfo(
+          tableName,
+          param.getPackageMap(),
+          GenerateCodePackageKey.INTERFACE_ERROR_CONSTANT.getKey(),
+          constantPkg,
+          tableMap.size());
 
-            // 代码的生成操作
-            StringBuilder sb =
-                    GenerateJavaInterfaceConstant.INSTANCE.generateInterfaceConstant(
-                            param.getGenerateConfig().getGenerate().getCode(),
-                            param.getTypeEnum(),
-                            constantPkg,
-                            tableNameItem.getValue(),
-                            param.getGenerateConfig().getGenerate().getAuthor());
+      // 代码的生成操作
+      StringBuilder sb =
+          GenerateJavaInterfaceConstant.INSTANCE.generateInterfaceConstant(
+              param.getGenerateConfig().getGenerate().getCode(),
+              param.getTypeEnum(),
+              constantPkg,
+              tableNameItem.getValue(),
+              param.getGenerateConfig().getGenerate().getAuthor());
 
-            // 定义项目内的完整目录结构
-            String javaPackageStr =
-                    param.getProjectPath().getSrcJavaNode().outPath()
-                            + Symbol.PATH
-                            + constantPkg.getPackagePath();
+      // 定义项目内的完整目录结构
+      String javaPackageStr =
+          param.getProjectPath().getSrcJavaNode().outPath()
+              + Symbol.PATH
+              + constantPkg.getPackagePath();
 
-            // 进行存储层的接口输出
-            GenerateOutFileUtils.outJavaFile(
-                    sb, GeneratePathUtils.outServicePath(param), javaPackageStr, constantPkg.getClassName());
-        }
+      // 进行存储层的接口输出
+      GenerateOutFileUtils.outJavaFile(
+          sb, GeneratePathUtils.outServicePath(param), javaPackageStr, constantPkg.getClassName());
     }
+  }
 
-    /**
-     * 构建常量类的包信息
-     *
-     * @param param     公共上下文信息
-     * @param tableName 表名
-     * @return 包信息
-     */
-    private ImportPackageInfo generatePackageInfo(GenerateCodeContext param, String tableName) {
-        // 得到类名
-        String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
-        String className = tableClassName + NAME_SUFFIX;
+  /**
+   * 构建常量类的包信息
+   *
+   * @param param 公共上下文信息
+   * @param tableName 表名
+   * @return 包信息
+   */
+  private ImportPackageInfo generatePackageInfo(GenerateCodeContext param, String tableName) {
+    // 得到类名
+    String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
+    String className = tableClassName + NAME_SUFFIX;
 
-        // 获取常量包的路径
-        String javaPackageStr = param.getJavaCodePackage().getInterfaceConstant().outJavaPackage();
+    // 获取常量包的路径
+    String javaPackageStr = param.getJavaCodePackage().getInterfaceConstant().outJavaPackage();
 
-        // 将常量包的路径进行存储至流程中
-        ImportPackageInfo errorCodeAssemblerPkg =
-                new ImportPackageInfo(javaPackageStr, className, NAME_COMMENT);
+    // 将常量包的路径进行存储至流程中
+    ImportPackageInfo errorCodeAssemblerPkg =
+        new ImportPackageInfo(javaPackageStr, className, NAME_COMMENT);
 
-        return errorCodeAssemblerPkg;
-    }
+    return errorCodeAssemblerPkg;
+  }
 }

@@ -27,70 +27,72 @@ import java.util.Map.Entry;
  */
 public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
 
-    private static final String DAO_SUFFIX = "Mapper";
-    private static final String DAO_COMMENT = "的数据库操作";
+  private static final String DAO_SUFFIX = "Mapper";
+  private static final String DAO_COMMENT = "的数据库操作";
 
+  public static final JavaCodeRepositoryDaoInfCreate INSTANCE =
+      new JavaCodeRepositoryDaoInfCreate();
 
-    public static final JavaCodeRepositoryDaoInfCreate INSTANCE = new JavaCodeRepositoryDaoInfCreate();
+  @Override
+  public void generateCode(GenerateCodeContext param) {
 
-    @Override
-    public void generateCode(GenerateCodeContext param) {
+    Map<String, TableInfoDTO> tableMap = param.getTableMap();
+    Map<String, List<TableColumnDTO>> map = param.getColumnMapList();
+    Iterator<Entry<String, List<TableColumnDTO>>> tableNameEntry = map.entrySet().iterator();
+    while (tableNameEntry.hasNext()) {
+      Entry<String, List<TableColumnDTO>> tableNameItem = tableNameEntry.next();
+      // 获取表信息
+      TableInfoDTO tableInfo = param.getTableMap().get(tableNameItem.getKey());
 
-        Map<String, TableInfoDTO> tableMap = param.getTableMap();
-        Map<String, List<TableColumnDTO>> map = param.getColumnMapList();
-        Iterator<Entry<String, List<TableColumnDTO>>> tableNameEntry = map.entrySet().iterator();
-        while (tableNameEntry.hasNext()) {
-            Entry<String, List<TableColumnDTO>> tableNameItem = tableNameEntry.next();
-            // 获取表信息
-            TableInfoDTO tableInfo = param.getTableMap().get(tableNameItem.getKey());
+      // 表名
+      String tableName = tableNameItem.getKey();
 
-            // 表名
-            String tableName = tableNameItem.getKey();
+      // 得到类名
+      String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
+      String className = tableClassName + DAO_SUFFIX;
 
-            // 得到类名
-            String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
-            String className = tableClassName + DAO_SUFFIX;
+      // 获取以java定义的package路径
+      String javaPackageStr = param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage();
 
-            // 获取以java定义的package路径
-            String javaPackageStr = param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage();
+      // 注释
+      String docComment =
+          tableInfo.getTableComment()
+              + Symbol.BRACKET_LEFT
+              + tableInfo.getTableName()
+              + Symbol.BRACKET_RIGHT
+              + DAO_COMMENT;
 
-            // 注释
-            String docComment =
-                    tableInfo.getTableComment()
-                            + Symbol.BRACKET_LEFT
-                            + tableInfo.getTableName()
-                            + Symbol.BRACKET_RIGHT
-                            + DAO_COMMENT;
+      // 将dao信息进行储存至流程中
+      ImportPackageInfo daoPackageInfo =
+          new ImportPackageInfo(
+              javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
+      ImportPackageUtils.putPackageInfo(
+          tableName,
+          param.getPackageMap(),
+          GenerateCodePackageKey.PERSIST_DAO.getKey(),
+          daoPackageInfo,
+          tableMap.size());
 
-            // 将dao信息进行储存至流程中
-            ImportPackageInfo daoPackageInfo =
-                    new ImportPackageInfo(javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
-            ImportPackageUtils.putPackageInfo(
-                    tableName,
-                    param.getPackageMap(),
-                    GenerateCodePackageKey.PERSIST_DAO.getKey(),
-                    daoPackageInfo,
-                    tableMap.size());
+      // 获取实体信息
+      ImportPackageInfo poPackageInfo =
+          ImportPackageUtils.getDefineClass(
+              param.getPackageMap(), GenerateCodePackageKey.PERSIST_PO.getKey(), tableName);
 
-            // 获取实体信息
-            ImportPackageInfo poPackageInfo =
-                    ImportPackageUtils.getDefineClass(
-                            param.getPackageMap(), GenerateCodePackageKey.PERSIST_PO.getKey(), tableName);
+      // 进行dao的相关方法的生成
+      StringBuilder sb =
+          GenerateJavaDaoInterface.INSTANCE.generateJavaInterface(
+              poPackageInfo,
+              daoPackageInfo,
+              param.getGenerateConfig().getGenerate().getCode(),
+              param.getGenerateConfig().getGenerate().getAuthor());
 
-            // 进行dao的相关方法的生成
-            StringBuilder sb =
-                    GenerateJavaDaoInterface.INSTANCE.generateJavaInterface(
-                            poPackageInfo,
-                            daoPackageInfo,
-                            param.getGenerateConfig().getGenerate().getCode(),
-                            param.getGenerateConfig().getGenerate().getAuthor());
+      // 定义项目内的完整目录结构
+      String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
+      javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
 
-            // 定义项目内的完整目录结构
-            String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
-            javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
-
-            // 进行存储层的接口输出
-            GenerateOutFileUtils.outJavaFile(sb, GeneratePathUtils.outServicePath(param), javaPackageStr, className);
-        }
+      // 进行存储层的接口输出
+      GenerateOutFileUtils.outJavaFile(
+          sb, GeneratePathUtils.outServicePath(param), javaPackageStr, className);
     }
+  }
 }

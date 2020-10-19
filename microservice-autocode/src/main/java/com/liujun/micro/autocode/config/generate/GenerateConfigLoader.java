@@ -1,6 +1,7 @@
 package com.liujun.micro.autocode.config.generate;
 
 import com.liujun.micro.autocode.config.generate.entity.GenerateConfigEntity;
+import com.liujun.micro.autocode.generator.builder.operator.utils.FileReaderUtils;
 import com.liujun.micro.autocode.utils.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;
@@ -43,39 +44,13 @@ public class GenerateConfigLoader {
 
     try {
       // 优先加载外部配制文件
-      input = getOutFileStream();
-      if (null == input) {
-        // 当外部文件不存时，则使用内部配制文件
-        input = GenerateConfigLoader.class.getClassLoader().getResourceAsStream(LOAD_CONFIG);
-      }
-      if (null == input) {
-        throw new IllegalArgumentException(LOAD_CONFIG + " load error");
-      }
+      input = FileReaderUtils.getFileInputStream(LOAD_CONFIG);
       config = yaml.loadAs(input, GenerateConfigEntity.class);
     } finally {
       StreamUtils.close(input);
     }
 
     return config;
-  }
-
-  /**
-   * 获取外部文件的流
-   *
-   * @return 文件流
-   */
-  private static InputStream getOutFileStream() {
-    InputStream outFileStream = null;
-
-    try {
-      outFileStream = new FileInputStream(LOAD_CONFIG);
-    }
-    // 当外部文件不存在时，会报出文件不存在异常，此异常需忽略，后续加载内置文件即可
-    catch (FileNotFoundException e) {
-      log.info("out file not exists :" + LOAD_CONFIG);
-    }
-
-    return outFileStream;
   }
 
   /**

@@ -1,5 +1,6 @@
 package com.liujun.micro.autocode.generator.database.service.datatype;
 
+import com.liujun.micro.autocode.generator.builder.operator.utils.FileReaderUtils;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeSourceEnum;
 import com.liujun.micro.autocode.generator.database.entity.DatabaseTypeMsgBO;
@@ -79,12 +80,7 @@ public class DataTypeResource {
       }
 
       // 优先执行外部文件加载
-      this.getInputStream(fileName);
-
-      // 当外部文件未加载成功，再加载内部文件
-      if (input == null) {
-        input = this.getClass().getClassLoader().getResourceAsStream(fileName);
-      }
+      input = FileReaderUtils.getFileInputStream(fileName);
 
       properties.load(input);
       Iterator<Map.Entry<Object, Object>> iter = properties.entrySet().iterator();
