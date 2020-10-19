@@ -3,10 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-#parent_define#
+    #parent_define#
 
     <modelVersion>4.0.0</modelVersion>
-#api_define#
+    #api_define#
     <packaging>jar</packaging>
 
 
@@ -31,8 +31,6 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
-
-        <!--基础公共依赖包-->
         <dependency>
             <groupId>com.commmon</groupId>
             <artifactId>code-common</artifactId>

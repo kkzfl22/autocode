@@ -1,13 +1,15 @@
 package com.liujun.micro.autocode.generator.builder.operator.utils;
 
-import com.liujun.micro.autocode.config.properties.ConfigProperties;
+import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.utils.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * 文件读取的公共类
@@ -30,18 +32,24 @@ public class FileReaderUtils {
     StringBuilder outValue = new StringBuilder();
 
     InputStream input = null;
+    InputStreamReader inputStreamReader = null;
+    BufferedReader bufferedReader = null;
     try {
       input = getFileInputStream(path);
-      // 使用4K的缓冲区
-      byte[] readByte = new byte[4096];
-      int readLength = -1;
-      while ((readLength = input.read(readByte)) != -1) {
-        outValue.append(new String(readByte, 0, readLength));
+      inputStreamReader = new InputStreamReader(input);
+      bufferedReader = new BufferedReader(inputStreamReader);
+
+      String lineValue;
+
+      while ((lineValue = bufferedReader.readLine()) != null) {
+        outValue.append(JavaEncodeUtils.outCodeUtf8(lineValue)).append(Symbol.ENTER_LINE);
       }
     } catch (IOException e) {
       e.printStackTrace();
       log.error("read file {} ", e);
     } finally {
+      StreamUtils.close(bufferedReader);
+      StreamUtils.close(inputStreamReader);
       StreamUtils.close(input);
     }
     return outValue.toString();

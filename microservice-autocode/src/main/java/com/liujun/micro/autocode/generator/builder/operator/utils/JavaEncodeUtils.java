@@ -1,12 +1,14 @@
 package com.liujun.micro.autocode.generator.builder.operator.utils;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * java字符的编码工具类
  *
  * @author liujun
  * @version 0.0.1
  */
-public class JavaResourceEncodeUtils {
+public class JavaEncodeUtils {
 
   /** 标识 */
   private static final char FLAG = '\u007f';
@@ -54,5 +56,15 @@ public class JavaResourceEncodeUtils {
       }
     }
     return stringBuffer.toString();
+  }
+
+  /**
+   * 进行字符的统一编码，以防系统造成乱码
+   *
+   * @param value
+   * @return
+   */
+  public static String outCodeUtf8(String value) {
+    return new String(value.getBytes(), StandardCharsets.UTF_8);
   }
 }

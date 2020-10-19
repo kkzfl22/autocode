@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-#parent_define#
+    #parent_define#
 
     <packaging>pom</packaging>
 
     <modules>
-#parent_module_name#
+        #parent_module_name#
     </modules>
 
     <!-- FIXME change it to the project's website -->
@@ -54,10 +54,10 @@
             </dependency>
 
 
-            <!-- 如果使用Junit4.5以上 jmockit依赖需要在junit4之前 -->
+            <!-- 如果使用Junit4.5以上, jmockit依赖需要在junit4之前 -->
             <!-- 或者在测试类上添加注解 @RunWith(JMockit.class) -->
-            <!-- 如果是TestNG 6.2+ 或者 JUnit 5+， 没有位置限制 -->
-            <!--经过测试发现jmockit的功能最全，覆盖的场景最多，所以选择了jmockit-->
+            <!-- 如果是TestNG 6.2+或者JUnit 5+,没有位置限制 -->
+            <!--经过测试发现jmockit的功能最全,覆盖的场景最多所以选择了jmockit-->
             <dependency>
                 <groupId>org.jmockit</groupId>
                 <artifactId>jmockit</artifactId>
@@ -197,7 +197,7 @@
             </dependency>
 
 
-#parent_module_define#
+            #parent_module_define#
 
 
         </dependencies>

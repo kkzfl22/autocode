@@ -6,7 +6,7 @@ import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
 import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaErrorCode;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GeneratePathUtils;
-import com.liujun.micro.autocode.generator.builder.operator.utils.JavaResourceEncodeUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.JavaEncodeUtils;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
@@ -97,11 +97,11 @@ public class JavaCodeResourceI18nEnUsCreate implements GenerateCodeInf {
   private String outResource(String outPropertyKeyNull, String comment, String title) {
     StringBuilder sb = new StringBuilder();
     sb.append(Symbol.POUND)
-        .append(JavaResourceEncodeUtils.native2ascii(comment))
+        .append(JavaEncodeUtils.native2ascii(comment))
         .append(Symbol.SPACE);
     sb.append(Symbol.ENTER_LINE);
     sb.append(outPropertyKeyNull).append(Symbol.EQUAL);
-    sb.append(JavaResourceEncodeUtils.native2ascii(title));
+    sb.append(JavaEncodeUtils.native2ascii(title));
     sb.append(Symbol.ENTER_LINE);
     return sb.toString();
   }

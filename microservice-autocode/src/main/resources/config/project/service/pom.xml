@@ -3,9 +3,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-#parent_define#
+    #parent_define#
     <modelVersion>4.0.0</modelVersion>
-#service_define#
+    #service_define#
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 
@@ -49,11 +49,6 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-
-        <!-- 如果使用Junit4.5以上 jmockit依赖需要在junit4之前 -->
-        <!-- 或者在测试类上添加注解 @RunWith(JMockit.class) -->
-        <!-- 如果是TestNG 6.2+ 或者 JUnit 5+， 没有位置限制 -->
-        <!--经过测试发现jmockit的功能最全，覆盖的场景最多，所以选择了jmockit-->
         <dependency>
             <groupId>org.jmockit</groupId>
             <artifactId>jmockit</artifactId>
@@ -64,14 +59,11 @@
             <artifactId>junit</artifactId>
         </dependency>
 
-
-        <!-- 分页插件 -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- alibaba的druid数据库连接池 -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
@@ -132,7 +124,6 @@
             <artifactId>janino</artifactId>
         </dependency>
 
-        <!--动态修改日志级别-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -150,7 +141,7 @@
             <artifactId>hutool-all</artifactId>
         </dependency>
 
-#service_module_dependency#
+        #service_module_dependency#
 
 
     </dependencies>
