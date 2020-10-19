@@ -442,6 +442,8 @@ public class GenerateJavaErrorCode {
         JavaClassFieldEntity.builder()
             // 访问修饰符
             .visit(JavaKeyWord.PUBLIC)
+            // 不可变标识符
+            .finalFlag(JavaKeyWord.FINAL)
             // 类型
             .type(ImportCodePackageKey.ERROR_DATA.getPackageInfo().getClassName())
             // 名称
