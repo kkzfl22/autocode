@@ -45,27 +45,16 @@ public class JavaCodeRepositoryPersistenceCreate implements GenerateCodeInf {
       // 表名
       String tableName = tableNameItem.getKey();
 
-      // 得到类名
-      String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
-      String className = tableClassName + NAME_SUFFIX;
+      // 获取类名
+      String className = this.getClassName(tableName);
 
-      // 注释
-      String docComment =
-          JavaCommentUtil.tableCommentProc(tableInfo.getTableComment()) + CLASS_COMMENT;
+      // 依赖信息导入
+      this.dependencyPersistence(param, tableInfo, tableMap.size());
 
       // 获取以java定义的package路径
       String javaPackageStr =
           param.getJavaCodePackage().getRepositoryPersistenceNode().outJavaPackage();
 
-      // 将领域的存储实现存至流程中
-      ImportPackageInfo repositoryPersistPackage =
-          new ImportPackageInfo(javaPackageStr, className, docComment);
-      ImportPackageUtils.putPackageInfo(
-          tableName,
-          param.getPackageMap(),
-          GenerateCodePackageKey.PERSIST_PERSISTENCE.getKey(),
-          repositoryPersistPackage,
-          tableMap.size());
       Map<String, ImportPackageInfo> packageMap = param.getPackageMap().get(tableName);
 
       // 定义项目内的完整目录结构
@@ -83,5 +72,39 @@ public class JavaCodeRepositoryPersistenceCreate implements GenerateCodeInf {
       GenerateOutFileUtils.outJavaFile(
           sb, GeneratePathUtils.outServicePath(param), javaPackageStr, className);
     }
+  }
+
+  public void dependencyPersistence(
+      GenerateCodeContext param, TableInfoDTO tableInfo, int initSize) {
+
+    String className = this.getClassName(tableInfo.getTableName());
+
+    // 注释
+    String docComment =
+        JavaCommentUtil.tableCommentProc(tableInfo.getTableComment()) + CLASS_COMMENT;
+
+    // 获取以java定义的package路径
+    String javaPackageStr =
+        param.getJavaCodePackage().getRepositoryPersistenceNode().outJavaPackage();
+
+    // 将领域的存储实现存至流程中
+    ImportPackageInfo repositoryPersistPackage =
+        new ImportPackageInfo(javaPackageStr, className, docComment);
+    ImportPackageUtils.putPackageInfo(
+        tableInfo.getTableName(),
+        param.getPackageMap(),
+        GenerateCodePackageKey.PERSIST_PERSISTENCE.getKey(),
+        repositoryPersistPackage,
+        initSize);
+  }
+
+  /**
+   * 得到类名
+   *
+   * @param tableName 表名
+   * @return 类信息
+   */
+  private String getClassName(String tableName) {
+    return NameProcess.INSTANCE.toJavaClassName(tableName) + NAME_SUFFIX;
   }
 }

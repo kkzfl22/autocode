@@ -6,6 +6,8 @@ import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
 import com.liujun.micro.autocode.config.generate.entity.TypeInfo;
 import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
 import com.liujun.micro.autocode.constant.MethodTypeEnum;
+import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
+import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
@@ -30,20 +32,23 @@ public class GenerateJavaDaoInterface {
   /**
    * 生成java的接口信息
    *
-   * @param poPackageInfo 实体包的信息
-   * @param daoPackageInfo dao的类定义
-   * @param codeMethod 需要生成的方法
+   * @param param 上下文参数
+   * @param tableName 名称信息
    * @return 生成的javabean对象
    */
-  public StringBuilder generateJavaInterface(
-      ImportPackageInfo poPackageInfo,
-      ImportPackageInfo daoPackageInfo,
-      List<MethodInfo> codeMethod,
-      String author) {
+  public StringBuilder generateJavaInterface(GenerateCodeContext param, String tableName) {
 
-    // 获得当前配制的方法
+    // 获取实体信息
+    ImportPackageInfo poPackageInfo =
+        ImportPackageUtils.getDefineClass(
+            param.getPackageMap(), GenerateCodePackageKey.PERSIST_PO.getKey(), tableName);
+    ImportPackageInfo daoPackageInfo =
+        ImportPackageUtils.getDefineClass(
+            param.getPackageMap(), GenerateCodePackageKey.PERSIST_DAO.getKey(), tableName);
+    List<MethodInfo> codeMethod = param.getGenerateConfig().getGenerate().getCode();
+    String author = param.getGenerateConfig().getGenerate().getAuthor();
 
-      // 1,方法头的定义
+    // 1,方法头的定义
     StringBuilder sb = defineClass(author, daoPackageInfo, poPackageInfo, null, codeMethod);
 
     for (MethodInfo methodItem : codeMethod) {

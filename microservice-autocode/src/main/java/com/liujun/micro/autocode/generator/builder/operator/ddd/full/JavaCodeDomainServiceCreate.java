@@ -45,27 +45,12 @@ public class JavaCodeDomainServiceCreate implements GenerateCodeInf {
       // 表名
       String tableName = tableNameItem.getKey();
 
-      // 得到类名
-      String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
-      String className = tableClassName + NAME_SUFFIX;
-
-      // 注释
-      String docComment =
-          JavaCommentUtil.tableCommentProc(tableInfo.getTableComment()) + CLASS_COMMENT;
+      // 基础的依赖生成
+      this.domainServiceDependency(param, tableInfo, tableMap.size());
 
       // 获取以java定义的package路径
       String javaPackageStr = param.getJavaCodePackage().getDomainServiceNode().outJavaPackage();
 
-      // 将领域的存储实现存至流程中
-      ImportPackageInfo repositoryPersistPackage =
-          new ImportPackageInfo(
-              javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
-      ImportPackageUtils.putPackageInfo(
-          tableName,
-          param.getPackageMap(),
-          GenerateCodePackageKey.DOMAIN_SERVICE.getKey(),
-          repositoryPersistPackage,
-          tableMap.size());
       Map<String, ImportPackageInfo> packageMap = param.getPackageMap().get(tableName);
 
       // 定义项目内的完整目录结构
@@ -81,7 +66,49 @@ public class JavaCodeDomainServiceCreate implements GenerateCodeInf {
 
       // 进行存储层的接口输出
       GenerateOutFileUtils.outJavaFile(
-          sb, GeneratePathUtils.outServicePath(param), javaPackageStr, className);
+          sb,
+          GeneratePathUtils.outServicePath(param),
+          javaPackageStr,
+          this.getClassName(tableName));
     }
+  }
+
+  /**
+   * 得到类名
+   *
+   * @param tableName
+   * @return
+   */
+  private String getClassName(String tableName) {
+    return NameProcess.INSTANCE.toJavaClassName(tableName) + NAME_SUFFIX;
+  }
+
+  /**
+   * 领域层的服务依赖
+   *
+   * @param param 流程参数
+   * @param tableInfo 表信息
+   * @param initSize 初始化大小
+   */
+  public void domainServiceDependency(
+      GenerateCodeContext param, TableInfoDTO tableInfo, int initSize) {
+    // 注释
+    String docComment =
+        JavaCommentUtil.tableCommentProc(tableInfo.getTableComment()) + CLASS_COMMENT;
+
+    // 获取以java定义的package路径
+    String javaPackageStr = param.getJavaCodePackage().getDomainServiceNode().outJavaPackage();
+    String className = this.getClassName(tableInfo.getTableName());
+
+    // 将领域的存储实现存至流程中
+    ImportPackageInfo repositoryPersistPackage =
+        new ImportPackageInfo(
+            javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
+    ImportPackageUtils.putPackageInfo(
+        tableInfo.getTableName(),
+        param.getPackageMap(),
+        GenerateCodePackageKey.DOMAIN_SERVICE.getKey(),
+        repositoryPersistPackage,
+        initSize);
   }
 }

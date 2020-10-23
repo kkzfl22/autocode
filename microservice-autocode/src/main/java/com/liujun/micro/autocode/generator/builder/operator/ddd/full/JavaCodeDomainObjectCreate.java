@@ -32,7 +32,7 @@ public class JavaCodeDomainObjectCreate implements GenerateCodeInf {
   private static final String DOC_ANNOTATION = "的领域实体信息";
 
   /** 领域层的后缀名 */
-  public static final String DOMAIN_PO = "DO";
+  private static final String DOMAIN_PO = "DO";
 
   public static final JavaCodeDomainObjectCreate INSTANCE = new JavaCodeDomainObjectCreate();
 
@@ -47,47 +47,74 @@ public class JavaCodeDomainObjectCreate implements GenerateCodeInf {
       Map.Entry<String, List<TableColumnDTO>> tableEntry = tableNameEntry.next();
       // 表名
       String tableName = tableEntry.getKey();
-      // 得到类名
-      String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
-      String className = tableClassName + DOMAIN_PO;
+
+      // 获取类名
+      String className = this.getClassName(tableName);
+
       // 表信息
       TableInfoDTO tableInfo = tableMap.get(tableName);
-      // 获取以java定义的package路径
-      String javaPackageStr = param.getJavaCodePackage().getDomainObjectNode().outJavaPackage();
 
-      // 注释
-      String docComment =
-          JavaCommentUtil.tableCommentProc(tableInfo.getTableComment()) + DOC_ANNOTATION;
+      // 领域对象依赖存储信息的构建
+      domainObjectPkg(param, tableInfo, tableMap.size());
 
-      // 将当前包信息存入到上下文对象信息中
-      // 构建类路径及名称记录下
-      ImportPackageInfo packageInfo =
-          new ImportPackageInfo(
-              javaPackageStr, className, docComment, JavaVarName.INSTANCE_NAME_ENTITY);
-      // 将领域对象记录到公共的上下文对象中，领域层的实体对象
-      ImportPackageUtils.putPackageInfo(
-          tableName,
-          param.getPackageMap(),
-          GenerateCodePackageKey.DOMAIN_DO.getKey(),
-          packageInfo,
-          tableMap.size());
+      // 存储层的实体
+      ImportPackageInfo domainObject =
+          param.getPackageMap().get(tableName).get(GenerateCodePackageKey.DOMAIN_DO.getKey());
 
       // 进行存储层的bean代码生成
       StringBuilder persistBean =
-          GenerateJavaBean.INSTANCE.generateJavaBean(
-              packageInfo,
-              tableEntry.getValue(),
-              param.getGenerateConfig().getGenerate().getCode(),
-              param.getGenerateConfig().getGenerate().getAuthor(),
-              param.getTypeEnum());
+          GenerateJavaBean.INSTANCE.generateJavaBean(domainObject, tableEntry.getValue(), param);
 
+      // 获取以java定义的package路径
+      String javaPackageStr = param.getJavaCodePackage().getDomainObjectNode().outJavaPackage();
       // 定义项目内的完整目录结构
-      String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
-      javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
+      String outJavaPackageStr =
+          param.getProjectPath().getSrcJavaNode().outPath() + Symbol.PATH + javaPackageStr;
 
       // 进行领域层的实体输出
       GenerateOutFileUtils.outJavaFile(
-          persistBean, GeneratePathUtils.outServicePath(param), javaPackageStr, className);
+          persistBean, GeneratePathUtils.outServicePath(param), outJavaPackageStr, className);
     }
+  }
+
+  /**
+   * 领域的依赖
+   *
+   * @param param 参数
+   * @param tableInfo 表信息
+   * @param tableMapSize 表大小
+   */
+  public void domainObjectPkg(GenerateCodeContext param, TableInfoDTO tableInfo, int tableMapSize) {
+    // 获取以java定义的package路径
+    String javaPackageStr = param.getJavaCodePackage().getDomainObjectNode().outJavaPackage();
+    // 类名
+    String className = JavaCodeDomainObjectCreate.INSTANCE.getClassName(tableInfo.getTableName());
+    // 注释
+    String docComment =
+        JavaCommentUtil.tableCommentProc(tableInfo.getTableComment())
+            + JavaCodeDomainObjectCreate.DOC_ANNOTATION;
+    // 将当前包信息存入到上下文对象信息中
+    // 构建类路径及名称记录下
+    ImportPackageInfo packageInfo =
+        new ImportPackageInfo(
+            javaPackageStr, className, docComment, JavaVarName.INSTANCE_NAME_ENTITY);
+    // 将领域对象记录到公共的上下文对象中，领域层的实体对象
+    ImportPackageUtils.putPackageInfo(
+        tableInfo.getTableName(),
+        param.getPackageMap(),
+        GenerateCodePackageKey.DOMAIN_DO.getKey(),
+        packageInfo,
+        tableMapSize);
+  }
+
+  /**
+   * 得到类名
+   *
+   * @param tableName 表名
+   * @return 当前的类名
+   */
+  private String getClassName(String tableName) {
+    // 得到类名
+    return NameProcess.INSTANCE.toJavaClassName(tableName) + DOMAIN_PO;
   }
 }

@@ -49,31 +49,16 @@ public class JavaCodeApplicationServiceCreate implements GenerateCodeInf {
 
       // 表名
       String tableName = tableNameItem.getKey();
+      String className = this.getClassName(tableName);
 
-      // 得到类名
-      String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
-      String className = tableClassName + NAME_SUFFIX;
+      // 进行应用的依赖
+      this.applicationDependency(param, tableInfo, tableMap.size());
 
-      // 注释
-      String docComment =
-          JavaCommentUtil.tableCommentProc(tableInfo.getTableComment()) + CLASS_COMMENT;
+      Map<String, ImportPackageInfo> packageMap = param.getPackageMap().get(tableName);
 
       // 获取以java定义的package路径
       String javaPackageStr =
           param.getJavaCodePackage().getApplicationServiceNode().outJavaPackage();
-
-      // 将领域的存储实现存至流程中
-      ImportPackageInfo applicationServicePackage =
-          new ImportPackageInfo(
-              javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
-      ImportPackageUtils.putPackageInfo(
-          tableName,
-          param.getPackageMap(),
-          GenerateCodePackageKey.APPLICATION_SERVICE.getKey(),
-          applicationServicePackage,
-          tableMap.size());
-      Map<String, ImportPackageInfo> packageMap = param.getPackageMap().get(tableName);
-
       // 定义项目内的完整目录结构
       String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
       javaPackageStr = baseJavaPath + Symbol.PATH + javaPackageStr;
@@ -151,5 +136,48 @@ public class JavaCodeApplicationServiceCreate implements GenerateCodeInf {
     // 类的结束
     JavaClassCodeUtils.classEnd(sb);
     return sb;
+  }
+
+  /**
+   * * 获取类名
+   *
+   * @param tableName 表名
+   * @return 类名
+   */
+  public String getClassName(String tableName) {
+    // 得到类名
+    String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
+    return tableClassName + NAME_SUFFIX;
+  }
+
+  /**
+   * 应用层的依赖
+   *
+   * @param param 参数
+   * @param tableInfo 表信息
+   * @param tableMapSize 表大小
+   */
+  public void applicationDependency(
+      GenerateCodeContext param, TableInfoDTO tableInfo, int tableMapSize) {
+
+    String javaPackageStr = param.getJavaCodePackage().getApplicationServiceNode().outJavaPackage();
+
+    // 类名
+    String className =
+        JavaCodeApplicationServiceCreate.INSTANCE.getClassName(tableInfo.getTableName());
+
+    String docComment =
+        JavaCommentUtil.tableCommentProc(tableInfo.getTableComment()) + CLASS_COMMENT;
+
+    // 将领域的存储实现存至流程中
+    ImportPackageInfo applicationServicePackage =
+        new ImportPackageInfo(
+            javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
+    ImportPackageUtils.putPackageInfo(
+        tableInfo.getTableName(),
+        param.getPackageMap(),
+        GenerateCodePackageKey.APPLICATION_SERVICE.getKey(),
+        applicationServicePackage,
+        tableMapSize);
   }
 }

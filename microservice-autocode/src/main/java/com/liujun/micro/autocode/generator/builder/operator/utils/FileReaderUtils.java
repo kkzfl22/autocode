@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 文件读取的公共类
@@ -36,7 +37,7 @@ public class FileReaderUtils {
     BufferedReader bufferedReader = null;
     try {
       input = getFileInputStream(path);
-      inputStreamReader = new InputStreamReader(input);
+      inputStreamReader = new InputStreamReader(input, StandardCharsets.UTF_8);
       bufferedReader = new BufferedReader(inputStreamReader);
 
       String lineValue;

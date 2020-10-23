@@ -1,7 +1,9 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
+import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
@@ -50,16 +52,15 @@ public class GenerateJavaBean {
    * 进行javaBean文件的生成操作
    *
    * @param columnList 列信息
-   * @param codeMethod 需要生成的方法
-   * @param author 作者
    * @return 生成的javabean对象
    */
   public StringBuilder generateJavaBean(
-      ImportPackageInfo entityInfo,
-      List<TableColumnDTO> columnList,
-      List<MethodInfo> codeMethod,
-      String author,
-      DatabaseTypeEnum typeEnum) {
+      ImportPackageInfo entityInfo, List<TableColumnDTO> columnList, GenerateCodeContext param) {
+
+    List<MethodInfo> codeMethod = param.getGenerateConfig().getGenerate().getCode();
+    String author = param.getGenerateConfig().getGenerate().getAuthor();
+    DatabaseTypeEnum typeEnum = param.getTypeEnum();
+
     // 类的定义
     StringBuilder sb =
         JavaClassCodeUtils.classDefine(

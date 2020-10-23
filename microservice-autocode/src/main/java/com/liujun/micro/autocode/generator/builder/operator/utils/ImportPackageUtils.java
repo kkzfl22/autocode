@@ -36,10 +36,10 @@ public class ImportPackageUtils {
     return importPackage.get(packageFlag);
   }
 
-
-
   /**
    * 将当前文件信息放入到流程的map中
+   *
+   * <p>只有在不存在的情况下，才会被放入
    *
    * @param tableName 表名
    * @param packageMap 用于存储的map

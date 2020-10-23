@@ -1,5 +1,5 @@
 generate:
-  #当前的模式：1，完整覆盖模式，2，追加模式,, 3，追加方法模式
+  #当前的模式：1，完整覆盖模式，2，追加模式,, 3，追加方法模式,4,追加字段模式
   #1，完整覆盖模式，针对首次生成工程
   #在运行之前将所有文件进行删除操作，包括文件夹。
   #2，追加覆盖模式,针对同一工程的新加聚合的场景
@@ -8,6 +8,9 @@ generate:
   #根据情况选择是否需要更新开始错误码号。
   #3,追加方法模式，针对已经存在的代码，添加新方法的情况
   #此模式会在原代码的结束前的位置添加新的方法
+  #4,数据库表进行了段的更新，
+  #所有实体文件中添加字段以及方mapper文件中
+  #转换方法中添加字段,单元测试中添加字段
   model: 1
   #生成代码的类型：ddd，使用领域驱动ddd四层架构
   type: ddd
@@ -34,6 +37,7 @@ generate:
     - name: insertList
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: insert
+      disable: false
       #方法的描述
       comment: 批量添加
       #参数列表,table_name表示以表名生成的对象实体，默认 table_name
@@ -56,6 +60,8 @@ generate:
       comment: 单个删除
       #标识当前是否为主键操作
       primaryFlag: true
+      #where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
+      #where: PKG_CODE in
       #排序
       order: 400
     #批量根据主键删除数据
@@ -67,7 +73,7 @@ generate:
       #方法的注释
       comment: 批量删除
       #where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
-      where: namespace_id,oid in
+      where: oid in
       #排序
       order: 500
     #分页查询
@@ -83,7 +89,7 @@ generate:
       #排序
       order: 600
     #根据主键进行查询
-    - name: queryById
+    - name: detail
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: query
       #方法的注释
@@ -94,13 +100,14 @@ generate:
       order: 700
     #根据主键集合进行查询操作
     - name: queryByIds
+      #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
       disable: true
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: query
       #方法的注释
       comment: 根据一批id查询
       ##where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
-      where: OID in
+      #where: OID in
       #返回值类型信息
       returns: java.util.List<table_name>
       #排序
@@ -119,34 +126,34 @@ generate:
       returns: java.util.List<table_name>
       #排序
       order: 900
-    #根据主键集合进行查询操作
-    - name: queryByInfo
+    #查询所有
+    - name: queryByPkgCode
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: query
       #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
-      disable: false
+      disable: true
       #方法的注释
-      comment: 根据信息查询
+      comment: 根据权限包编码查询权限信息
       ##where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
-      #where: NAMESPACE_ID,USER_NAME
+      where: PKG_CODE in
       #返回值类型信息
-      returns: table_name
+      returns: java.util.List<table_name>
       #排序
       order: 1000
   #代码内的目录结构的配制
   codeMenuTree:
     #最基础的目标配制
-    baseMenu: com.paraview.example.
+    baseMenu: com.paraview.poc.authpkg.
     #最新输出的模块的名称
-    domainName: user
+    domainName: auth
   #模块名称
-  moduleName: user
+  moduleName: auth
   #工程名
-  projectName: data-user
+  projectName: auth-pkg
   #maven的配制信息
   #maven的artifactId即为各工程或者模块的名称
   maven:
-    groupId: com.paraview.example
+    groupId: com.paraview.authpkg
     version: 1.0-SNAPSHOT
   #代码生成器需要包括的范围
   #目前存在api,application,domain,repository
@@ -156,4 +163,4 @@ generate:
   #repository表示存储层的代码生成，目前使用mybatis
   scope: api,application,domain,repository
   #输出文件的配制
-  output: D:\java\workspace\selfwork\autocode\testgenerate\test-autocode
+  output: D:\java\workspace\PARA\demo\generatecode

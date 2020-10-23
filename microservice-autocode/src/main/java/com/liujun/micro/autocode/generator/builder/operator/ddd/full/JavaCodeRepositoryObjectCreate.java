@@ -49,26 +49,22 @@ public class JavaCodeRepositoryObjectCreate implements GenerateCodeInf {
       // 表名
       String tableName = tableEntry.getKey();
 
-      // 构建包的存储信息
-      ImportPackageInfo packageInfo =
-          this.buildPackageData(param, tableMap.get(tableName), tableName);
+      // 存储层实体
+      repositoryObjectDependency(param, tableMap.get(tableName), tableMap.size());
 
       // 将po记录到公共的上下文对象中
-      ImportPackageUtils.putPackageInfo(
-          tableName,
-          param.getPackageMap(),
-          GenerateCodePackageKey.PERSIST_PO.getKey(),
-          packageInfo,
-          tableMap.size());
+      ImportPackageInfo packageInfo =
+          ImportPackageUtils.getDefineClass(
+              param.getPackageMap(), GenerateCodePackageKey.PERSIST_PO.getKey(), tableName);
+
+      // 存储层的实体
+      ImportPackageInfo repositoryObject =
+          param.getPackageMap().get(tableName).get(GenerateCodePackageKey.PERSIST_PO.getKey());
 
       // 进行存储层的bean代码生成
       StringBuilder persistBean =
           GenerateJavaBean.INSTANCE.generateJavaBean(
-              packageInfo,
-              tableEntry.getValue(),
-              param.getGenerateConfig().getGenerate().getCode(),
-              param.getGenerateConfig().getGenerate().getAuthor(),
-              param.getTypeEnum());
+              repositoryObject, tableEntry.getValue(), param);
 
       // 定义项目内的完整目录结构
       String outPackagePath =
@@ -86,20 +82,14 @@ public class JavaCodeRepositoryObjectCreate implements GenerateCodeInf {
   }
 
   /**
-   * 构建包信息
+   * 存储层实体的依赖
    *
-   * @param param 路径信息
+   * @param param 参数
    * @param tableInfo 表信息
-   * @param tableName 表名
-   * @return 导入的包信息
+   * @param tableMapSize 表大小
    */
-  private ImportPackageInfo buildPackageData(
-      GenerateCodeContext param, TableInfoDTO tableInfo, String tableName) {
-
-    // 得到类名
-    String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
-    String className = tableClassName + REPOSITORY_PO;
-
+  public void repositoryObjectDependency(
+      GenerateCodeContext param, TableInfoDTO tableInfo, int tableMapSize) {
     // 获取以java定义的package路径
     String javaPackageStr = param.getJavaCodePackage().getRepositoryObjectNode().outJavaPackage();
 
@@ -115,8 +105,29 @@ public class JavaCodeRepositoryObjectCreate implements GenerateCodeInf {
     // 构建类路径及名称记录下
     ImportPackageInfo packageInfo =
         new ImportPackageInfo(
-            javaPackageStr, className, docComment, JavaVarName.INSTANCE_NAME_ENTITY);
+            javaPackageStr,
+            this.getClassName(tableInfo.getTableName()),
+            docComment,
+            JavaVarName.INSTANCE_NAME_ENTITY);
+    // 将po记录到公共的上下文对象中
+    ImportPackageUtils.putPackageInfo(
+        tableInfo.getTableName(),
+        param.getPackageMap(),
+        GenerateCodePackageKey.PERSIST_PO.getKey(),
+        packageInfo,
+        tableMapSize);
+  }
 
-    return packageInfo;
+  /**
+   * 获取类名
+   *
+   * @param tableName 表名
+   * @return 返回当前类的名称
+   */
+  public String getClassName(String tableName) {
+    // 得到类名
+    String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
+
+    return tableClassName + REPOSITORY_PO;
   }
 }

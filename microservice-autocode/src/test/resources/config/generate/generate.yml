@@ -1,5 +1,5 @@
 generate:
-  #当前的模式：1，完整覆盖模式，2，追加模式,, 3，追加方法模式
+  #当前的模式：1，完整覆盖模式，2，追加模式,, 3，追加方法模式,4,追加字段模式
   #1，完整覆盖模式，针对首次生成工程
   #在运行之前将所有文件进行删除操作，包括文件夹。
   #2，追加覆盖模式,针对同一工程的新加聚合的场景
@@ -8,6 +8,9 @@ generate:
   #根据情况选择是否需要更新开始错误码号。
   #3,追加方法模式，针对已经存在的代码，添加新方法的情况
   #此模式会在原代码的结束前的位置添加新的方法
+  #4,数据库表进行了段的更新，
+  #所有实体文件中添加字段以及方mapper文件中
+  #转换方法中添加字段,单元测试中添加字段
   model: 1
   #生成代码的类型：ddd，使用领域驱动ddd四层架构
   type: ddd
@@ -106,13 +109,15 @@ generate:
       #排序
       order: 800
     #根据主键集合进行查询操作
-    - name: queryList
+    - name: queryByName
       #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
-      disable: false
+      disable: true
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: query
       #方法的注释
       comment: 根据名称查询
+      ##where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
+      where: NAMESPACE_ID,USER_NAME in
       #返回值类型信息
       returns: java.util.List<table_name>
       #排序
@@ -122,11 +127,11 @@ generate:
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: query
       #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
-      disable: true
+      disable: false
       #方法的注释
       comment: 根据信息查询
       ##where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
-      where: NAMESPACE_ID,USER_NAME
+      #where: NAMESPACE_ID,USER_NAME
       #返回值类型信息
       returns: table_name
       #排序
@@ -154,4 +159,4 @@ generate:
   #repository表示存储层的代码生成，目前使用mybatis
   scope: api,application,domain,repository
   #输出文件的配制
-  output: D:\java\workspace\selfwork\autocode\testgenerate\test-autocode
+  output: D:\java\workspace\selfwork\autocode\testgenerate\example

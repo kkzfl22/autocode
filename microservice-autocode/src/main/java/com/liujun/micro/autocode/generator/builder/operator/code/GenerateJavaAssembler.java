@@ -122,8 +122,6 @@ public class GenerateJavaAssembler {
     sb.append(Symbol.SPACE).append(JavaVarValue.LIST_EMPTY_DEFAULT).append(Symbol.SEMICOLON);
     sb.append(Symbol.ENTER_LINE);
 
-
-
     // 方法声明检查结束
     sb.append(JavaFormat.appendTab(tabIndex + 1)).append(Symbol.BRACE_RIGHT);
     sb.append(Symbol.ENTER_LINE);
@@ -411,6 +409,7 @@ public class GenerateJavaAssembler {
     }
     // 导入实体包
     dataList.add(entityPackageInfo1.packageOut());
+    // 当导入包时可能此还不存在，需要判断
     dataList.add(entityPackageInfo2.packageOut());
 
     return dataList;

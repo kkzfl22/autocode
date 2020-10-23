@@ -1,0 +1,46 @@
+package com.liujun.micro.autocode.algorithm.ahocorsick;
+
+import java.util.List;
+
+/**
+ * ac自动机算法，用于字符的多模式串匹配操作
+ *
+ * @author liujun
+ * @version 0.0.1
+ * @date 2019/03/08
+ */
+public class BaseAhoCorasickChar extends BaseAhoCorasick {
+
+  /** ac自动机的大小 */
+  private static final int AC_SIZE = 256;
+
+  @Override
+  protected int getAcSize() {
+    return AC_SIZE;
+  }
+
+  /**
+   * 获取ac自动机的实例对象，通过传入的模式串数组
+   *
+   * @param matchStr 模式串信息
+   * @return ac自动机的实例对象
+   */
+  public static BaseAhoCorasickChar getAhoCorasickInstance(List<String> matchStr) {
+    BaseAhoCorasickChar ahoCorasick = new BaseAhoCorasickChar();
+    ahoCorasick.buildFailure(matchStr);
+
+    return ahoCorasick;
+  }
+
+  /**
+   * 获取索引节点
+   *
+   * @param srcArray
+   * @return
+   */
+  @Override
+  public int getIndex(char srcArray) {
+    int index = (int) srcArray;
+    return index;
+  }
+}

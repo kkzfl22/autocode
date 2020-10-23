@@ -1,7 +1,6 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.full;
 
 import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.generator.builder.constant.CodeAnnotation;
 import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.ImportJunitPkgKey;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
@@ -59,25 +58,20 @@ public class JavaCodeRepositoryJunitMyBatisScanConfigCreate implements GenerateC
       String javaDaoPackageStr =
           param.getJavaCodePackage().getRepositoryDaoNodeConfig().outJavaPackage();
 
-      // 单元测试的路径
-      ImportPackageInfo importPkg =
-          new ImportPackageInfo(
-              param.getJavaCodePackage().getRepositoryDaoNodeConfig().outJavaPackage(),
-              JavaVarName.JUNIT_TRANSACTION_CLASS_NAME,
-              DATABASE_DOC);
+      // mybatis依赖的生成
+      this.mybatisDependency(param);
 
-      // 单元测试的公共类
-      ImportPackageUtils.putPackageInfo(
-          GenerateCodePackageKey.REPOSITORY_MAPPER_CONFIG.getKey(),
-          param.getPackageMap(),
-          GenerateCodePackageKey.REPOSITORY_MAPPER_CONFIG.getKey(),
-          importPkg,
-          0);
+      // 获取dao的完整路径
+      ImportPackageInfo mybatisScanConfig =
+          ImportPackageUtils.getDefineClass(
+              param.getPackageMap(),
+              GenerateCodePackageKey.REPOSITORY_MAPPER_CONFIG.getKey(),
+              GenerateCodePackageKey.REPOSITORY_MAPPER_CONFIG.getKey());
 
       // 生成接口的定义
       StringBuilder outClass =
           JavaClassCodeUtils.classDefine(
-              importPkg,
+              mybatisScanConfig,
               IMPORT_CLASS,
               annotationList(param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage()),
               param.getGenerateConfig().getGenerate().getAuthor());
@@ -193,5 +187,37 @@ public class JavaCodeRepositoryJunitMyBatisScanConfigCreate implements GenerateC
     outMethod.append(Symbol.ENTER_LINE);
 
     return outMethod.toString();
+  }
+
+  /**
+   * 类的注释
+   *
+   * @return
+   */
+  public String getClassComment() {
+    return DATABASE_DOC;
+  }
+
+  /**
+   * mybatis的依赖
+   *
+   * @param param
+   */
+  public void mybatisDependency(GenerateCodeContext param) {
+
+    // 单元测试的路径
+    ImportPackageInfo importPkg =
+        new ImportPackageInfo(
+            param.getJavaCodePackage().getRepositoryDaoNodeConfig().outJavaPackage(),
+            JavaVarName.JUNIT_TRANSACTION_CLASS_NAME,
+            JavaCodeRepositoryJunitMyBatisScanConfigCreate.INSTANCE.getClassComment());
+
+    // 单元测试的公共类
+    ImportPackageUtils.putPackageInfo(
+        GenerateCodePackageKey.REPOSITORY_MAPPER_CONFIG.getKey(),
+        param.getPackageMap(),
+        GenerateCodePackageKey.REPOSITORY_MAPPER_CONFIG.getKey(),
+        importPkg,
+        0);
   }
 }

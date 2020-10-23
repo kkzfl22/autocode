@@ -51,40 +51,14 @@ public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
       String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
       String className = tableClassName + DAO_SUFFIX;
 
+      // 基础包的依赖构建
+      this.daoRepositoryDependency(param, tableInfo, tableMap.size());
+
       // 获取以java定义的package路径
       String javaPackageStr = param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage();
 
-      // 注释
-      String docComment =
-          tableInfo.getTableComment()
-              + Symbol.BRACKET_LEFT
-              + tableInfo.getTableName()
-              + Symbol.BRACKET_RIGHT
-              + DAO_COMMENT;
-
-      // 将dao信息进行储存至流程中
-      ImportPackageInfo daoPackageInfo =
-          new ImportPackageInfo(
-              javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
-      ImportPackageUtils.putPackageInfo(
-          tableName,
-          param.getPackageMap(),
-          GenerateCodePackageKey.PERSIST_DAO.getKey(),
-          daoPackageInfo,
-          tableMap.size());
-
-      // 获取实体信息
-      ImportPackageInfo poPackageInfo =
-          ImportPackageUtils.getDefineClass(
-              param.getPackageMap(), GenerateCodePackageKey.PERSIST_PO.getKey(), tableName);
-
       // 进行dao的相关方法的生成
-      StringBuilder sb =
-          GenerateJavaDaoInterface.INSTANCE.generateJavaInterface(
-              poPackageInfo,
-              daoPackageInfo,
-              param.getGenerateConfig().getGenerate().getCode(),
-              param.getGenerateConfig().getGenerate().getAuthor());
+      StringBuilder sb = GenerateJavaDaoInterface.INSTANCE.generateJavaInterface(param, tableName);
 
       // 定义项目内的完整目录结构
       String baseJavaPath = param.getProjectPath().getSrcJavaNode().outPath();
@@ -94,5 +68,37 @@ public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
       GenerateOutFileUtils.outJavaFile(
           sb, GeneratePathUtils.outServicePath(param), javaPackageStr, className);
     }
+  }
+
+  /**
+   * dao接口的依赖
+   *
+   * @param param
+   * @param tableInfo
+   * @param tableMapSize
+   */
+  public void daoRepositoryDependency(
+      GenerateCodeContext param, TableInfoDTO tableInfo, int tableMapSize) {
+    // 获取以java定义的package路径
+    String javaPackageStr = param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage();
+
+    // 注释
+    String docComment =
+        tableInfo.getTableComment()
+            + Symbol.BRACKET_LEFT
+            + tableInfo.getTableName()
+            + Symbol.BRACKET_RIGHT
+            + DAO_COMMENT;
+
+    // 将dao信息进行储存至流程中
+    ImportPackageInfo daoPackageInfo =
+        new ImportPackageInfo(
+            javaPackageStr, tableInfo.getTableName(), docComment, JavaVarName.SPRING_INSTANCE_NAME);
+    ImportPackageUtils.putPackageInfo(
+        tableInfo.getTableName(),
+        param.getPackageMap(),
+        GenerateCodePackageKey.PERSIST_DAO.getKey(),
+        daoPackageInfo,
+        tableMapSize);
   }
 }

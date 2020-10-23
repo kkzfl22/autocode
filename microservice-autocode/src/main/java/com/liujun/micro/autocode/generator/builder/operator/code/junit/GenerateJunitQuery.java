@@ -613,7 +613,7 @@ public class GenerateJunitQuery {
         sb.append(Symbol.BRACKET_LEFT).append(JavaVarName.FINAL_BATCH_INSERT_NUM);
         sb.append(Symbol.BRACKET_RIGHT);
         sb.append(Symbol.POINT).append(JavaMethodName.PAGE_NUM);
-        sb.append(Symbol.BRACKET_LEFT).append(JavaVarValue.ZORE);
+        sb.append(Symbol.BRACKET_LEFT).append(JavaVarValue.ZERO);
         sb.append(Symbol.BRACKET_RIGHT);
         sb.append(Symbol.POINT).append(JavaMethodName.PAGE_BUILD);
         sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
