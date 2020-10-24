@@ -46,10 +46,7 @@ public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
 
       // 表名
       String tableName = tableNameItem.getKey();
-
-      // 得到类名
-      String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
-      String className = tableClassName + DAO_SUFFIX;
+      String className = this.getClassName(tableName);
 
       // 基础包的依赖构建
       this.daoRepositoryDependency(param, tableInfo, tableMap.size());
@@ -68,6 +65,18 @@ public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
       GenerateOutFileUtils.outJavaFile(
           sb, GeneratePathUtils.outServicePath(param), javaPackageStr, className);
     }
+  }
+
+  /**
+   * 获取类名
+   *
+   * @param tableName
+   * @return
+   */
+  private String getClassName(String tableName) {
+    // 得到类名
+    String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
+    return tableClassName + DAO_SUFFIX;
   }
 
   /**
@@ -90,10 +99,12 @@ public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
             + Symbol.BRACKET_RIGHT
             + DAO_COMMENT;
 
+    String className = this.getClassName(tableInfo.getTableName());
+
     // 将dao信息进行储存至流程中
     ImportPackageInfo daoPackageInfo =
         new ImportPackageInfo(
-            javaPackageStr, tableInfo.getTableName(), docComment, JavaVarName.SPRING_INSTANCE_NAME);
+            javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
     ImportPackageUtils.putPackageInfo(
         tableInfo.getTableName(),
         param.getPackageMap(),
