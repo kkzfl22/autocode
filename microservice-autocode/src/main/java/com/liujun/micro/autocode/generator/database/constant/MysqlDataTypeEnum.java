@@ -58,7 +58,7 @@ public enum MysqlDataTypeEnum {
    * TIMESTAMP 4 1970-01-01 00:00:00/2038 结束时间是第 2147483647 秒，北京时间 2038-1-19 11:14:07，格林尼治时间
    * 2038年1月19日 凌晨 03:14:07 YYYYMMDD HHMMSS 混合日期和时间值，时间戳
    */
-  TIMESTAMP(StandardTypeEnum.TIMESTAMP, "TIMESTAMP", 1, 25),
+  TIMESTAMP(StandardTypeEnum.TIMESTAMP, "TIMESTAMP", 0, 25),
 
   /** CHAR 0-255字节 定长字符串 */
   CHAR(StandardTypeEnum.CHAR, "CHAR", 0, 255),

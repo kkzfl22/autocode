@@ -32,6 +32,7 @@ import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRep
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeResourceI18nEnUsCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeResourceI18nZhCnCreate;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
+import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
 import com.liujun.micro.autocode.generator.database.service.DatabaseOperator;
 import com.liujun.micro.autocode.generator.run.constant.GenerateScopeEnum;
 
@@ -203,8 +204,16 @@ public class GenerateCodeBuilder {
 
   /** 代码构建之前的数据库查询工作 */
   public void databaseLoader() {
+
+    Map<String, TableInfoDTO> tableMap =
+        DatabaseOperator.INSTANCE.getTableInfo(context.getTableSpaceName());
+
+    if (null == tableMap || tableMap.isEmpty()) {
+      throw new IllegalArgumentException("table is empty,please check!");
+    }
+
     // 读取数据库中表信息
-    context.setTableMap(DatabaseOperator.INSTANCE.getTableInfo(context.getTableSpaceName()));
+    context.setTableMap(tableMap);
 
     Map<String, List<TableColumnDTO>> tableColumnList =
         DatabaseOperator.INSTANCE.getColumnInfo(context.getTableSpaceName());

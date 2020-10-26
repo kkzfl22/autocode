@@ -163,21 +163,19 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
     if (null != precision) {
       bean.setDataLength(Integer.parseInt(precision));
     }
-
     // 数据的存储长度
     if (null != octLength) {
       bean.setDataLength(Integer.parseInt(octLength));
     }
-
     // 数据的长度
     if (null != charMax) {
       bean.setDataLength(Integer.parseInt(charMax));
     }
-
     // 精度
     if (null != scale) {
       bean.setDataScale(Integer.parseInt(scale));
     }
+
     bean.setAutoIncrement("auto_increment".equals(extra));
     bean.setTableName(tableName);
     bean.setSqlColumnType(columnType);
@@ -194,6 +192,10 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
       if (sqlDataLength != bean.getDataLength()) {
         bean.setDataLength(sqlDataLength);
       }
+    }
+
+    if (bean.getDataLength() == null) {
+      bean.setDataLength(0);
     }
 
     return bean;

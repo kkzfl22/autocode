@@ -22,6 +22,10 @@ public class DataParseMysqlValueImpl implements DataValueInf {
     // 1,得到标准的类型
     StandardTypeEnum standType = MysqlDataTypeEnum.databaseToStandKey(bean.getDataType());
 
+    if (null == standType) {
+      System.out.println("error");
+    }
+
     return JavaDataTypeGenerateValueEnum.getGenerateFun(standType, bean.getDataLength());
   }
 }

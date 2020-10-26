@@ -17,7 +17,7 @@ generate:
   #生成的目标数据库类型:mysql目标数据库为mysql;oralce，目标数据库为oracle
   databaseType: mysql
   #数据库表空间命名
-  databaseTableSpaceName: generate
+  databaseTableSpaceName: wwhmetadata
   #错误码开始编号，依次向后；如果需要重新以此开始，需删除序列文件.否则将以序列化后的文件数字，取整加2000开始
   startErrorCode: -10000
   #是否修改错误码编号,默认为true，进行修改
