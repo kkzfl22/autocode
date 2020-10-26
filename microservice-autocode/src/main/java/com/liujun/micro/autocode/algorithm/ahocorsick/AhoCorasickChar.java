@@ -9,7 +9,7 @@ import java.util.List;
  * @version 0.0.1
  * @date 2019/03/08
  */
-public class BaseAhoCorasickChar extends BaseAhoCorasick {
+public class AhoCorasickChar extends BaseAhoCorasick {
 
   /** ac自动机的大小 */
   private static final int AC_SIZE = 256;
@@ -25,8 +25,8 @@ public class BaseAhoCorasickChar extends BaseAhoCorasick {
    * @param matchStr 模式串信息
    * @return ac自动机的实例对象
    */
-  public static BaseAhoCorasickChar getAhoCorasickInstance(List<String> matchStr) {
-    BaseAhoCorasickChar ahoCorasick = new BaseAhoCorasickChar();
+  public static AhoCorasickChar getAhoCorasickInstance(List<String> matchStr) {
+    AhoCorasickChar ahoCorasick = new AhoCorasickChar();
     ahoCorasick.buildFailure(matchStr);
 
     return ahoCorasick;

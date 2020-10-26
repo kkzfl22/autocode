@@ -70,7 +70,7 @@ public enum DatabaseTypeEnum {
         }
 
 
-        throw new IllegalArgumentException("generate.yml config error ,databaseType : " + databaseConfigType);
+        throw new IllegalArgumentException("generate-def.yml config error ,databaseType : " + databaseConfigType);
     }
 
 

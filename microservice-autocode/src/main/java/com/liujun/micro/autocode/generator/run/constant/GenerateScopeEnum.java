@@ -87,7 +87,7 @@ public enum GenerateScopeEnum {
         }
 
         //当配制错误，详细的指出错误信息
-        throw new IllegalArgumentException("generate.yml scope config error :" + scopeStr);
+        throw new IllegalArgumentException("generate-def.yml scope config error :" + scopeStr);
     }
 
 

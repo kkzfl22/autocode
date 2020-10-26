@@ -1,7 +1,5 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.increment.field;
 
-import com.liujun.micro.autocode.algorithm.ahocorsick.BaseAhoCorasickChar;
-import com.liujun.micro.autocode.algorithm.ahocorsick.MatcherBusi;
 import com.liujun.micro.autocode.algorithm.booyermoore.CharMatcherBmBadChars;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.builder.constant.MyBatisKey;
@@ -9,19 +7,15 @@ import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
 import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaMybatisMapperXml;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryMyBatisMapperCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.increment.field.matcher.MatcherFieldContext;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.increment.field.matcher.MultMatcherProcess;
 import com.liujun.micro.autocode.generator.builder.operator.utils.FileReaderUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GenerateOutFileUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.GeneratePathUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.TableColumnUtils;
-import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
-import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -49,24 +43,9 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
   public static final JavaCodeRepositoryMyBatisMapperFieldReplace INSTANCE =
       new JavaCodeRepositoryMyBatisMapperFieldReplace();
 
-  /** 标签模式串 */
-  private static final List<String> MAPPER_CODE =
-      Arrays.asList(
-          MyBatisKey.RESULT_MAP_START,
-          MyBatisKey.INSERT_TAB_START,
-          MyBatisKey.UPDATE_TAG_START,
-          MyBatisKey.QUERY_TAG_START);
-
-  /** 进行ac自动机算法的多模式串求解 */
-  private static final BaseAhoCorasickChar AC_MATCHER = new BaseAhoCorasickChar();
-
   /** 结束符的匹配 */
   public static final CharMatcherBmBadChars TAG_START_END_MATCHER =
       CharMatcherBmBadChars.getGoodSuffixInstance(Symbol.ANGLE_BRACKETS_RIGHT);
-
-  /** 操作示例 */
-  public static final Map<String, Consumer<MapperFieldContext>> RUN_REPLACE_FIELD =
-      new HashMap<>(MAPPER_CODE.size());
 
   /** </resultMap> 位置匹配 */
   private static final CharMatcherBmBadChars RESULT_MAP_END_MATCHER =
@@ -96,11 +75,15 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
   private static final CharMatcherBmBadChars QUERY_XML_END_MATCHER =
       CharMatcherBmBadChars.getGoodSuffixInstance(MyBatisKey.QUERY_XML_END);
 
-  static {
-    // 模式串构建
-    AC_MATCHER.buildFailure(MAPPER_CODE);
-    AC_MATCHER.builderFailurePointer();
+  /** 多模式式串的匹配处理 */
+  private static final MultMatcherProcess matcherProcess;
 
+  /** 操作示例 */
+  public static final Map<String, Consumer<MatcherFieldContext>> RUN_REPLACE_FIELD;
+
+  static {
+    // 初始化容器对象
+    RUN_REPLACE_FIELD = new HashMap<>(4);
     // 返回结果集的处理
     RUN_REPLACE_FIELD.put(MyBatisKey.RESULT_MAP_START, INSTANCE::resultMapProc);
     // 添加的处理
@@ -109,6 +92,9 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
     RUN_REPLACE_FIELD.put(MyBatisKey.UPDATE_TAG_START, INSTANCE::updateProc);
     // 查询的处理
     RUN_REPLACE_FIELD.put(MyBatisKey.QUERY_TAG_START, INSTANCE::queryProc);
+
+    // 进行多模式串的处理
+    matcherProcess = MultMatcherProcess.getInstance(RUN_REPLACE_FIELD);
   }
 
   @Override
@@ -125,10 +111,10 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
       String mapperContext = this.readerMapper(param, tableName);
 
       // 构建上下文对象
-      MapperFieldContext context = builderContext(param, tableName, mapperContext);
+      MatcherFieldContext context = this.builderContext(param, tableName, mapperContext);
 
       // 进行数据的属性字段的构建
-      String resultValue = this.dataMapperFieldIncrement(context);
+      String resultValue = matcherProcess.charValueProcDefault(context);
 
       // 将mybatis文件的mapper输出到文件中
       GenerateOutFileUtils.outFile(
@@ -140,6 +126,32 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
           JavaCodeRepositoryMyBatisMapperCreate.INSTANCE.getMapperName(tableName),
           false);
     }
+  }
+
+  /**
+   * 构建上下文对象信息
+   *
+   * @param param 上下文参数
+   * @param tableName 表
+   * @param dataContext mapper内容信息
+   * @return 构建的操作对象
+   */
+  public MatcherFieldContext builderContext(
+      GenerateCodeContext param, String tableName, String dataContext) {
+
+    MatcherFieldContext context = new MatcherFieldContext(dataContext);
+
+    context.setLastIndex(0);
+    context.setTableInfo(param.getTableMap().get(tableName));
+    context.setColumnList(param.getColumnMapList().get(tableName));
+    context.setColumnMap(param.getColumnMapMap().get(tableName));
+    context.setOutValueIncrement(
+        new StringBuilder(dataContext.length() + (int) ((dataContext.length()) * 0.2)));
+    // 获取当前主键列表
+    context.setPrimaryKeyList(TableColumnUtils.getPrimaryKey(context.getColumnList()));
+    context.setTypeEnum(param.getTypeEnum());
+
+    return context;
   }
 
   /**
@@ -162,77 +174,11 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
   }
 
   /**
-   * 构建上下文对象信息
-   *
-   * @param param 上下文参数
-   * @param tableName 表
-   * @param dataContext mapper内容信息
-   * @return 构建的操作对象
-   */
-  private MapperFieldContext builderContext(
-      GenerateCodeContext param, String tableName, String dataContext) {
-
-    MapperFieldContext context = new MapperFieldContext(dataContext);
-
-    context.setLastIndex(0);
-    context.setTableInfo(param.getTableMap().get(tableName));
-    context.setColumnList(param.getColumnMapList().get(tableName));
-    context.setColumnMap(param.getColumnMapMap().get(tableName));
-    // 获取当前主键列表
-    context.setPrimaryKeyList(TableColumnUtils.getPrimaryKey(context.getColumnList()));
-    context.setTypeEnum(param.getTypeEnum());
-
-    return context;
-  }
-
-  /**
-   * 进行数据的处理操作
-   *
-   * @param context 处理的上下文对象信息
-   * @return
-   */
-  private String dataMapperFieldIncrement(MapperFieldContext context) {
-
-    while (true) {
-      MatcherBusi matcherBusi =
-          AC_MATCHER.matcherOne(context.getSrcDataArray(), context.getLastIndex());
-
-      // 当模式串被找到，则执行对应的操作
-      if (matcherBusi.getMatcherIndex() != -1) {
-        // 执行替换操作
-        Consumer<MapperFieldContext> runReplace =
-            RUN_REPLACE_FIELD.get(matcherBusi.getMatcherKey());
-
-        // 设置当前查询到的信息
-        context.setMatcherBusi(matcherBusi);
-        runReplace.accept(context);
-
-      }
-      // 当查找为-1，说明已经匹配结束
-      else {
-        break;
-      }
-    }
-
-    // 将最后剩余的字符拷贝到结果中
-    if (context.getLastIndex() < context.getSrcDataArray().length) {
-      String lastValue =
-          new String(
-              context.getSrcDataArray(),
-              context.getLastIndex(),
-              context.getSrcDataArray().length - context.getLastIndex());
-      context.getOutMapperIncrement().append(lastValue);
-    }
-
-    return context.getOutMapperIncrement().toString();
-  }
-
-  /**
    * 用来进行响应查询结果的处理
    *
    * @param context
    */
-  private void resultMapProc(MapperFieldContext context) {
+  private void resultMapProc(MatcherFieldContext context) {
 
     // resultMap开始标签的结束位置
     int resultMapStartEndIndex =
@@ -247,14 +193,14 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
             context.getSrcDataArray(),
             context.getLastIndex(),
             resultMapStartEndIndex + 1 - context.getLastIndex());
-    context.getOutMapperIncrement().append(startData).append(Symbol.ENTER_LINE);
+    context.getOutValueIncrement().append(startData).append(Symbol.ENTER_LINE);
 
     // 1,生成新的查询结果集中的列结果集信息
     String newResultMap =
         GenerateJavaMybatisMapperXml.INSTANCE.outResultMap(
             context.getColumnList(), context.getPrimaryKeyList());
     // 将新的内容拷贝进
-    context.getOutMapperIncrement().append(newResultMap);
+    context.getOutValueIncrement().append(newResultMap);
 
     // 查找当前的resultMap标签的结束位置
     int resultMapEndIndex =
@@ -262,7 +208,7 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
 
     String addValue = MyBatisKey.RESULT_MAP_END + Symbol.ENTER_LINE;
     // 结束标签拷贝
-    context.getOutMapperIncrement().append(addValue);
+    context.getOutValueIncrement().append(addValue);
 
     // 设置当前处理到的结束位置,然后交给下一个处理
     context.setLastIndex(resultMapEndIndex + addValue.length());
@@ -275,7 +221,7 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
    *
    * @param context 处理的对象信息
    */
-  private void insertProc(MapperFieldContext context) {
+  private void insertProc(MatcherFieldContext context) {
 
     // insert开始标签的结束位置
     int resultMapStartEndIndex =
@@ -306,18 +252,18 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
             context.getSrcDataArray(),
             context.getLastIndex(),
             resultMapStartEndIndex + 1 - context.getLastIndex());
-    context.getOutMapperIncrement().append(startData).append(Symbol.ENTER_LINE);
+    context.getOutValueIncrement().append(startData).append(Symbol.ENTER_LINE);
 
     // 1,生成新的插入数据内容
     String newInsertContext =
         GenerateJavaMybatisMapperXml.INSTANCE.insertContext(
             context.getColumnList(), context.getTypeEnum(), batchFlag);
     // 将新的内容拷贝进
-    context.getOutMapperIncrement().append(newInsertContext);
+    context.getOutValueIncrement().append(newInsertContext);
 
     String insertValue = MyBatisKey.INSERT_XML_END + Symbol.ENTER_LINE;
     // 结束标签拷贝
-    context.getOutMapperIncrement().append(insertValue);
+    context.getOutValueIncrement().append(insertValue);
 
     // 设置当前处理到的结束位置,然后交给下一个处理
     context.setLastIndex(resultMapEndIndex + insertValue.length());
@@ -330,7 +276,7 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
    *
    * @param context 上下文对象
    */
-  private void updateProc(MapperFieldContext context) {
+  private void updateProc(MatcherFieldContext context) {
 
     // </update>位置
     int updateEndTag =
@@ -345,7 +291,7 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
             context.getSrcDataArray(),
             context.getLastIndex(),
             updateEndTag + insertValue.length() - context.getLastIndex());
-    context.getOutMapperIncrement().append(startData);
+    context.getOutValueIncrement().append(startData);
 
     // 设置当前处理到的结束位置,然后交给下一个处理
     context.setLastIndex(updateEndTag + insertValue.length());
@@ -358,7 +304,7 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
    *
    * @param context 上下文对象
    */
-  private void queryProc(MapperFieldContext context) {
+  private void queryProc(MatcherFieldContext context) {
 
     // query标签的位置
     int queryIndex =
@@ -382,13 +328,13 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
             context.getSrcDataArray(),
             context.getLastIndex(),
             queryIndex + MyBatisKey.QUERY_KEY.length() - context.getLastIndex());
-    context.getOutMapperIncrement().append(startData).append(Symbol.ENTER_LINE);
+    context.getOutValueIncrement().append(startData).append(Symbol.ENTER_LINE);
 
     // 1,生成新的查询列内容
     String newQueryField =
         GenerateJavaMybatisMapperXml.INSTANCE.queryField(context.getColumnList());
     // 将新的内容拷贝进
-    context.getOutMapperIncrement().append(newQueryField).append(JavaFormat.appendTab(2));
+    context.getOutValueIncrement().append(newQueryField).append(JavaFormat.appendTab(2));
 
     String queryEndXml =
         new String(
@@ -398,7 +344,7 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
 
     String insertValue = queryEndXml + Symbol.ENTER_LINE;
     // 结束标签拷贝
-    context.getOutMapperIncrement().append(insertValue);
+    context.getOutValueIncrement().append(insertValue);
 
     // 最后位置的值
     String updateEndValue = MyBatisKey.QUERY_XML_END + Symbol.ENTER_LINE;
@@ -417,46 +363,6 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
   private void takCheck(int findIndex, String tableName, String xmlTag) {
     if (findIndex == -1) {
       throw new IllegalArgumentException("curr " + tableName + " mapper tag start error " + xmlTag);
-    }
-  }
-
-  /** 构建字段处理的上下文信息 */
-  @Getter
-  @Setter
-  @ToString
-  private class MapperFieldContext {
-
-    /** 数据的原始字符串 */
-    private final char[] srcDataArray;
-
-    /** 当前被查询到的对象信息 */
-    private MatcherBusi matcherBusi;
-
-    /** 最终输出的字符信息,相比原有的字符，扩容20% */
-    private final StringBuilder outMapperIncrement;
-
-    /** 表结构信息 */
-    private TableInfoDTO tableInfo;
-
-    /** 列的map信息 */
-    private Map<String, TableColumnDTO> columnMap;
-
-    /** 列的集合 */
-    private List<TableColumnDTO> columnList;
-
-    /** 主键列信息 */
-    private List<TableColumnDTO> primaryKeyList;
-
-    /** 最后操作的位置 */
-    private int lastIndex;
-
-    /** 数据库枚举信息 */
-    private DatabaseTypeEnum typeEnum;
-
-    public MapperFieldContext(String srcData) {
-      this.srcDataArray = srcData.toCharArray();
-      this.outMapperIncrement =
-          new StringBuilder(srcDataArray.length + (int) ((srcDataArray.length) * 0.2));
     }
   }
 }

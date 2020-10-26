@@ -64,6 +64,82 @@ generate:
       #where: PKG_CODE in
       #排序
       order: 400
+    #批量根据主键删除数据
+    - name: deleteByIds
+      #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
+      disable: true
+      #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
+      operator: delete
+      #方法的注释
+      comment: 批量删除
+      #where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
+      where: oid in
+      #排序
+      order: 500
+    #分页查询
+    - name: queryPage
+      #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
+      operator: query
+      #方法的注释
+      comment: 分页查询
+      #分页查询标识
+      pageQueryFlag: true
+      #返回值类型信息
+      returns: java.util.List<table_name>
+      #排序
+      order: 600
+    #根据主键进行查询
+    - name: detail
+      #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
+      operator: query
+      #方法的注释
+      comment: 根据id查询
+      #返回值类型信息
+      returns: table_name
+      #排序
+      order: 700
+    #根据主键集合进行查询操作
+    - name: queryByIds
+      #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
+      disable: true
+      #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
+      operator: query
+      #方法的注释
+      comment: 根据一批id查询
+      ##where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
+      #where: OID in
+      #返回值类型信息
+      returns: java.util.List<table_name>
+      #排序
+      order: 800
+    #根据主键集合进行查询操作
+    - name: queryByName
+      #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
+      disable: true
+      #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
+      operator: query
+      #方法的注释
+      comment: 根据名称查询
+      ##where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
+      where: NAMESPACE_ID,USER_NAME in
+      #返回值类型信息
+      returns: java.util.List<table_name>
+      #排序
+      order: 900
+    #查询所有
+    - name: queryByPkgCode
+      #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
+      operator: query
+      #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
+      disable: true
+      #方法的注释
+      comment: 根据权限包编码查询权限信息
+      ##where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
+      where: PKG_CODE in
+      #返回值类型信息
+      returns: java.util.List<table_name>
+      #排序
+      order: 1000
   #代码内的目录结构的配制
   codeMenuTree:
     #最基础的目标配制
@@ -87,4 +163,4 @@ generate:
   #repository表示存储层的代码生成，目前使用mybatis
   scope: api,application,domain,repository
   #输出文件的配制
-  output: D:\java\code_gen
+  output: D:\java\workspace\PARA\demo\generatecode
