@@ -15,7 +15,7 @@ import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInt
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceFacadeJunitCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceObjectCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryAssemblerCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryDaoInfCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryMapperInfCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryJunitMyBatisScanConfigCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryObjectCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryPersistenceCreate;
@@ -42,7 +42,7 @@ public class JavaCodeInterfaceFacadeJunitCreateTest {
         // 数据库转换
         JavaCodeRepositoryAssemblerCreate assembler = new JavaCodeRepositoryAssemblerCreate();
         // 数据库dao
-        JavaCodeRepositoryDaoInfCreate repositoryDaoInf = new JavaCodeRepositoryDaoInfCreate();
+        JavaCodeRepositoryMapperInfCreate repositoryDaoInf = new JavaCodeRepositoryMapperInfCreate();
         // 领域存储接口
         JavaCodeDomainRepositoryFacadeCreate repositoryFacadeInf = new JavaCodeDomainRepositoryFacadeCreate();
         // 领域存储实现

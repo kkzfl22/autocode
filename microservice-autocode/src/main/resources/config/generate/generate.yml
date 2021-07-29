@@ -17,7 +17,7 @@ generate:
   #生成的目标数据库类型:mysql目标数据库为mysql;oralce，目标数据库为oracle
   databaseType: mysql
   #数据库表空间命名
-  databaseTableSpaceName: wwhmetadata
+  databaseTableSpaceName: autocode
   #错误码开始编号，依次向后；如果需要重新以此开始，需删除序列文件.否则将以序列化后的文件数字，取整加2000开始
   startErrorCode: -10000
   #是否修改错误码编号,默认为true，进行修改
@@ -29,6 +29,8 @@ generate:
     - name: insert
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: insert
+      #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
+      disable: false
       #方法的描述
       comment: 单个添加
       #排序
@@ -52,10 +54,12 @@ generate:
       comment: 修改方法
       #排序
       order: 300
-    #单个数据删除
+    # 单个数据删除
     - name: delete
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
-      operator: delete
+      operator: true
+      #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
+      disable: false
       #方法的注释
       comment: 单个删除
       #标识当前是否为主键操作
@@ -64,20 +68,52 @@ generate:
       #where: PKG_CODE in
       #排序
       order: 400
+      # 批量根据主键删除数据
+    - name: deleteByIds
+      #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
+      operator: delete
+      #方法的注释
+      comment: 批量删除
+      #      #标识当前是否为主键操作
+      primaryFlag: true
+      #where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
+      # where: id in
+      #排序
+      order: 500
+    #分页查询
+    - name: queryPage
+      #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
+      operator: queryPage
+      #方法的注释
+      comment: 分页查询
+      #返回值类型信息
+      returns: java.util.List<table_name>
+      #排序
+      order: 600
+    # 查询详细
+    - name: detail
+      #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
+      operator: query
+      #方法的注释
+      comment: 按id查询详细
+      #返回值类型信息
+      returns: table_name
+      #排序
+      order: 700
   #代码内的目录结构的配制
   codeMenuTree:
     #最基础的目标配制
-    baseMenu: com.paraview.poc.authpkg.
+    baseMenu: com.liujun.schedule
     #最新输出的模块的名称
-    domainName: auth
+    domainName: task
   #模块名称
-  moduleName: auth
+  moduleName: scheduletask
   #工程名
-  projectName: auth-pkg
+  projectName: schedule
   #maven的配制信息
   #maven的artifactId即为各工程或者模块的名称
   maven:
-    groupId: com.paraview.authpkg
+    groupId: com.liujun.schedule.task
     version: 1.0-SNAPSHOT
   #代码生成器需要包括的范围
   #目前存在api,application,domain,repository

@@ -3,7 +3,7 @@ package com.liujun.micro.autocode.generator.builder.operator.ddd.dependency;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainObjectCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryDaoInfCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryMapperInfCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryJunitMyBatisScanConfigCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryObjectCreate;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
@@ -50,7 +50,7 @@ public class JavaCodeDomainDependency implements GenerateCodeInf {
           param, tableInfo, tableMap.size());
 
       // 领域数据库接口
-      JavaCodeRepositoryDaoInfCreate.INSTANCE.daoRepositoryDependency(
+      JavaCodeRepositoryMapperInfCreate.INSTANCE.daoRepositoryDependency(
           param, tableInfo, tableMap.size());
     }
   }

@@ -141,6 +141,13 @@
             <artifactId>hutool-all</artifactId>
         </dependency>
 
+
+        <dependency>
+            <groupId>com.ddd.common</groupId>
+            <artifactId>ddd-base</artifactId>
+        </dependency>
+
+
         #service_module_dependency#
 
 

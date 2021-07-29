@@ -2,7 +2,7 @@ package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryObjectCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryDaoInfCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryMapperInfCreate;
 import org.junit.Test;
 
 /**
@@ -11,7 +11,7 @@ import org.junit.Test;
  * @author liujun
  * @version 0.0.1
  */
-public class JavaCodeRepositoryDaoInfCreateTest {
+public class JavaCodeRepositoryMapperInfCreateTest {
 
   @Test
   public void testGenerate() {
@@ -19,7 +19,7 @@ public class JavaCodeRepositoryDaoInfCreateTest {
     GenerateCodeContext context = CodeBaseUtils.getBase();
 
     JavaCodeRepositoryObjectCreate poInstance = new JavaCodeRepositoryObjectCreate();
-    JavaCodeRepositoryDaoInfCreate daoInstance = new JavaCodeRepositoryDaoInfCreate();
+    JavaCodeRepositoryMapperInfCreate daoInstance = new JavaCodeRepositoryMapperInfCreate();
 
     // po优先生成
     poInstance.generateCode(context);

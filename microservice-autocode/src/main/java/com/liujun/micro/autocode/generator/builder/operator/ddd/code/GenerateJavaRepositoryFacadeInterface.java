@@ -13,6 +13,7 @@ import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaDaoInterface;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.JavaCommentUtil;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 
@@ -27,7 +28,8 @@ import java.util.List;
  */
 public class GenerateJavaRepositoryFacadeInterface {
 
-  public static final GenerateJavaRepositoryFacadeInterface INSTANCE = new GenerateJavaRepositoryFacadeInterface();
+  public static final GenerateJavaRepositoryFacadeInterface INSTANCE =
+      new GenerateJavaRepositoryFacadeInterface();
 
   /**
    * 生成java的接口信息
@@ -45,7 +47,7 @@ public class GenerateJavaRepositoryFacadeInterface {
 
     // 获得当前配制的方法
 
-      // 检查当前是否存在分页查询
+    // 检查当前是否存在分页查询
     boolean checkPage = MethodUtils.checkPageQuery(codeMethod);
 
     List<ImportPackageInfo> importPackage = null;
@@ -72,6 +74,11 @@ public class GenerateJavaRepositoryFacadeInterface {
 
         // 修改方法,包括，增加、删、改
         this.updateMethod(sb, poPackageInfo.getClassName(), methodItem);
+      }
+      // 方法分页执行查询操作
+      else if (MethodTypeEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())) {
+        // 分页查询查询方法
+        this.pageQueryMethod(sb, poPackageInfo.getClassName(), methodItem);
       }
       // 方法执行查询操作
       else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
@@ -144,8 +151,39 @@ public class GenerateJavaRepositoryFacadeInterface {
    * @param poClassName 实体的名称
    * @param methodItem 方法实体
    */
-  private void queryMethod(StringBuilder sb, String poClassName, MethodInfo methodItem) {
+  private void pageQueryMethod(StringBuilder sb, String poClassName, MethodInfo methodItem) {
 
+    JavaMethodEntity methodInfo =
+        JavaMethodEntity.builder()
+            // 方法注释
+            .comment(methodItem.getComment())
+            // 返回值
+            .type(JavaCommentUtil.pageQueryReturn(poClassName))
+            // 返回值注释
+            .returnComment(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getClassComment())
+            // 方法名
+            .name(methodItem.getName())
+            // 参数
+            .arguments(JavaCommentUtil.pageQueryParam(methodItem, poClassName))
+            .build();
+
+    // 方法生成
+    JavaClassCodeUtils.methodDefine(sb, methodInfo);
+
+    // 接口声明结束
+    sb.append(Symbol.SEMICOLON);
+    sb.append(Symbol.ENTER_LINE);
+    sb.append(Symbol.ENTER_LINE);
+  }
+
+  /**
+   * 分页查询方法
+   *
+   * @param sb 代码信息
+   * @param poClassName 实体的名称
+   * @param methodItem 方法实体
+   */
+  private void queryMethod(StringBuilder sb, String poClassName, MethodInfo methodItem) {
     List<JavaMethodArguments> argumentsList = new ArrayList<>(methodItem.getParamType().size());
 
     // 添加参数,目前仅使用0个参数
@@ -157,54 +195,20 @@ public class GenerateJavaRepositoryFacadeInterface {
             .build();
     argumentsList.add(argumentItem);
 
-    JavaMethodEntity methodInfo = null;
-
-    // 在此分页查询需要返回特殊的对象
-    if (methodItem.getPageQueryFlag() != null && methodItem.getPageQueryFlag()) {
-
-      // 分页添加分页参数
-      JavaMethodArguments pageReq =
-          JavaMethodArguments.builder()
-              .type(ImportCodePackageKey.PAGE_PARAM.getPackageInfo().getClassName())
-              .name(JavaVarName.PAGE_REQUEST)
-              .comment(ImportCodePackageKey.PAGE_PARAM.getPackageInfo().getClassComment())
-              .build();
-
-      argumentsList.add(pageReq);
-
-      // 方法实体信息
-      methodInfo =
-          JavaMethodEntity.builder()
-              // 方法注释
-              .comment(methodItem.getComment())
-              // 返回值
-              .type(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getClassName())
-              // 返回值注释
-              .returnComment(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getClassComment())
-              // 方法名
-              .name(methodItem.getName())
-              // 参数
-              .arguments(argumentsList)
-              .build();
-
-    }
-    // 普通查询按实际返回需可
-    else {
-      // 方法实体信息
-      methodInfo =
-          JavaMethodEntity.builder()
-              // 方法注释
-              .comment(methodItem.getComment())
-              // 返回值
-              .type(JavaClassCodeUtils.getTypeName(methodItem.getReturnType(), poClassName))
-              // 返回值注释
-              .returnComment(CodeComment.METHOD_QUERY_RESULT)
-              // 方法名
-              .name(methodItem.getName())
-              // 参数
-              .arguments(argumentsList)
-              .build();
-    }
+    // 方法实体信息
+    JavaMethodEntity methodInfo =
+        JavaMethodEntity.builder()
+            // 方法注释
+            .comment(methodItem.getComment())
+            // 返回值
+            .type(JavaClassCodeUtils.getTypeName(methodItem.getReturnType(), poClassName))
+            // 返回值注释
+            .returnComment(CodeComment.METHOD_QUERY_RESULT)
+            // 方法名
+            .name(methodItem.getName())
+            // 参数
+            .arguments(argumentsList)
+            .build();
 
     // 方法生成
     JavaClassCodeUtils.methodDefine(sb, methodInfo);

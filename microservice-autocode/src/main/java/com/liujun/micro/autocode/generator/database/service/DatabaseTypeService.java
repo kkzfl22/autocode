@@ -49,7 +49,7 @@ public class DatabaseTypeService {
    * @return 标识的key
    */
   public StandardTypeEnum standardAndLengthCheck(
-      DatabaseTypeEnum typeEnum, String mysqlType, Integer length) {
+      DatabaseTypeEnum typeEnum, String mysqlType, Long length) {
     DataBaseTypeInf typeInfo = DATABASE_TYPE_MAP.get(typeEnum.getDatabaseType());
 
     if (typeInfo != null) {
@@ -66,7 +66,7 @@ public class DatabaseTypeService {
    * @param databaseType 数据库的类型
    * @return 标识的key
    */
-  public Integer getDatabaseTypeLength(DatabaseTypeEnum typeEnum, String databaseType) {
+  public Long getDatabaseTypeLength(DatabaseTypeEnum typeEnum, String databaseType) {
     DataBaseTypeInf typeInfo = DATABASE_TYPE_MAP.get(typeEnum.getDatabaseType());
 
     if (typeInfo != null) {

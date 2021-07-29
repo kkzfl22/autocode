@@ -86,14 +86,19 @@ public class GenerateJavaRepositoryJunitDao {
     for (MethodInfo methodItem : methodList) {
       // 添加方法
       if (MethodTypeEnum.INSERT.getType().equals(methodItem.getOperator())) {
-        this.insertMethod(sb, methodItem, methodList);
+        this.insertMethod(sb, methodItem, methodList, targetPackage);
       }
       // 修改方法
       else if (MethodTypeEnum.UPDATE.getType().equals(methodItem.getOperator())) {
         // 插入方法
         MethodInfo insertMethod = MethodUtils.getInsertMethod(methodList);
         GenerateJunitUpdate.INSTANCE.oneUpdateMethod(
-            sb, methodItem, insertMethod, JavaKeyWord.INT_TYPE, JavaVarValue.DEFAULT_ADD_RSP);
+            sb,
+            methodItem,
+            insertMethod,
+            JavaKeyWord.INT_TYPE,
+            JavaVarValue.DEFAULT_ADD_RSP,
+            targetPackage);
       }
       // 非主键的删除方法
       else if (MethodTypeEnum.DELETE.getType().equals(methodItem.getOperator())
@@ -107,12 +112,20 @@ public class GenerateJavaRepositoryJunitDao {
             type,
             primaryKeyList,
             JavaKeyWord.INT_TYPE,
-            JavaVarName.FINAL_BATCH_INSERT_NUM);
+            JavaVarName.FINAL_BATCH_INSERT_NUM,
+            targetPackage);
       }
       // 数据查询
       else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
         this.queryMethod(
-            sb, methodItem, entityPackage, tableColumnMap, methodList, type, primaryKeyList);
+            sb,
+            methodItem,
+            entityPackage,
+            tableColumnMap,
+            methodList,
+            type,
+            primaryKeyList,
+            targetPackage);
       }
     }
 
@@ -120,7 +133,12 @@ public class GenerateJavaRepositoryJunitDao {
     MethodInfo methodItem = MethodUtils.getPrimaryDeleteMethod(methodList);
     if (null != methodItem) {
       GenerateJunitUpdate.INSTANCE.deleteMethod(
-          sb, methodItem, entityPackage, JavaKeyWord.INT_TYPE, JavaVarValue.DEFAULT_ADD_RSP);
+          sb,
+          methodItem,
+          entityPackage,
+          JavaKeyWord.INT_TYPE,
+          JavaVarValue.DEFAULT_ADD_RSP,
+          targetPackage);
     }
 
     // 结束
@@ -153,7 +171,11 @@ public class GenerateJavaRepositoryJunitDao {
    *
    * @param sb
    */
-  public void insertMethod(StringBuilder sb, MethodInfo method, List<MethodInfo> methodList) {
+  public void insertMethod(
+      StringBuilder sb,
+      MethodInfo method,
+      List<MethodInfo> methodList,
+      ImportPackageInfo targetPackage) {
 
     // 1,检查当前的添加方法是否为批量添加
     boolean batchFlag = MethodUtils.checkBatch(method.getParamType());
@@ -161,11 +183,16 @@ public class GenerateJavaRepositoryJunitDao {
     if (batchFlag) {
       // 执行批量的添加
       GenerateJunitUpdate.INSTANCE.batchInsertMethod(
-          sb, method, methodList, JavaKeyWord.INT_TYPE, JavaVarName.FINAL_BATCH_INSERT_NUM);
+          sb,
+          method,
+          methodList,
+          JavaKeyWord.INT_TYPE,
+          JavaVarName.FINAL_BATCH_INSERT_NUM,
+          targetPackage);
     } else {
       // 执行单个添加
       GenerateJunitUpdate.INSTANCE.oneInsertMethod(
-          sb, method, JavaKeyWord.INT_TYPE, JavaVarValue.DEFAULT_ADD_RSP);
+          sb, method, JavaKeyWord.INT_TYPE, JavaVarValue.DEFAULT_ADD_RSP, targetPackage);
     }
   }
 
@@ -187,7 +214,8 @@ public class GenerateJavaRepositoryJunitDao {
       Map<String, TableColumnDTO> columnMap,
       List<MethodInfo> methodList,
       DatabaseTypeEnum dbType,
-      List<TableColumnDTO> primaryList) {
+      List<TableColumnDTO> primaryList,
+      ImportPackageInfo targetPackage) {
     String methodName = NameProcess.INSTANCE.toJavaNameFirstUpper(queryMethod.getName());
 
     int tabIndex = 0;
@@ -196,11 +224,11 @@ public class GenerateJavaRepositoryJunitDao {
     GenerateJunitQuery.INSTANCE.queryMethodDefine(sb, queryMethod, methodName);
 
     // 数据查询前的插入
-    sb.append(this.queryInsert(queryMethod, poPackageInfo, columnMap, methodList));
+    sb.append(this.queryInsert(queryMethod, poPackageInfo, columnMap, methodList, targetPackage));
 
     // 添加查询的代码
     GenerateJunitQuery.INSTANCE.junitQueryMethod(
-        sb, queryMethod, poPackageInfo, columnMap, tabIndex, dbType, primaryList);
+        sb, queryMethod, poPackageInfo, columnMap, tabIndex, dbType, primaryList, targetPackage);
 
     // 方法结束
     JavaClassCodeUtils.methodEnd(sb);
@@ -218,7 +246,8 @@ public class GenerateJavaRepositoryJunitDao {
       MethodInfo queryMethod,
       ImportPackageInfo poPackageInfo,
       Map<String, TableColumnDTO> columnMap,
-      List<MethodInfo> methodList) {
+      List<MethodInfo> methodList,
+      ImportPackageInfo targetPackage) {
     int tabIndex = 0;
 
     StringBuilder sb = new StringBuilder();
@@ -232,7 +261,7 @@ public class GenerateJavaRepositoryJunitDao {
       // 调用批量添加方法
       sb.append(
           GenerateJunitUpdate.INSTANCE.invokeBatch(
-              methodList, JavaKeyWord.INT_TYPE, JavaVarName.FINAL_BATCH_INSERT_NUM));
+              methodList, JavaKeyWord.INT_TYPE, JavaVarName.FINAL_BATCH_INSERT_NUM, targetPackage));
 
       // 进行标识的设置操作
       sb.append(
@@ -246,7 +275,7 @@ public class GenerateJavaRepositoryJunitDao {
       // 调用单个添加方法
       sb.append(
           GenerateJunitUpdate.INSTANCE.insertInvokeMethod(
-              insertMethod, JavaKeyWord.INT_TYPE, JavaVarValue.DEFAULT_ADD_RSP));
+              insertMethod, JavaKeyWord.INT_TYPE, JavaVarValue.DEFAULT_ADD_RSP, targetPackage));
 
       // 进行标识的设置操作
       sb.append(GenerateJunitDefine.INSTANCE.setBatchInsertFlag(JavaVarValue.INSERT_TYPE_ONE_KEY));

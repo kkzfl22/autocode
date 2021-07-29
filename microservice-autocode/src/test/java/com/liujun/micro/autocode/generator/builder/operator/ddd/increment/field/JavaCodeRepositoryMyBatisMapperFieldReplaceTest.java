@@ -23,4 +23,6 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplaceTest {
     // mapper的字段替换
     mapperFieldReplace.generateCode(context);
   }
+
+
 }

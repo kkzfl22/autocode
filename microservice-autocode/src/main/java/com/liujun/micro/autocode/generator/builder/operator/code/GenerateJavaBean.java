@@ -12,6 +12,7 @@ import com.liujun.micro.autocode.generator.builder.operator.utils.TableColumnUti
 import com.liujun.micro.autocode.generator.convergence.TypeConvergence;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
+import com.liujun.micro.autocode.generator.javalanguage.constant.JavaDataType;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
@@ -64,7 +65,7 @@ public class GenerateJavaBean {
     // 类的定义
     StringBuilder sb =
         JavaClassCodeUtils.classDefine(
-            entityInfo, getImportList(codeMethod), ANNOTATION_LIST, author);
+            entityInfo, getImportList(codeMethod, columnList, typeEnum), ANNOTATION_LIST, author);
 
     // 作属性输出
     this.outProperties(columnList, sb, typeEnum);
@@ -82,16 +83,32 @@ public class GenerateJavaBean {
    * @param codeMethod
    * @return
    */
-  public List<String> getImportList(List<MethodInfo> codeMethod) {
+  public List<String> getImportList(
+      List<MethodInfo> codeMethod, List<TableColumnDTO> columns, DatabaseTypeEnum typeEnum) {
     List<String> importList = new ArrayList<>();
-
     importList.addAll(ANNOTATION_IMPORT_LIST);
-
     // 检查是否需要导入list包
     Set<String> inCondition = MethodUtils.getInCondition(codeMethod);
     if (!inCondition.isEmpty()) {
       importList.add(JavaKeyWord.IMPORT_LIST);
     }
+
+    // 检查当前是否需要导入类型的信息
+
+    // 添加属性的信息
+    for (int i = 0; i < columns.size(); i++) {
+      TableColumnDTO tableBean = columns.get(i);
+      // 得到java的数据类型
+      String javaDataType = TypeConvergence.getJavaType(typeEnum, tableBean.getDataType());
+
+      // 获取导入的类型
+      String importType = JavaDataType.getImportPkg(javaDataType);
+      if (null != importType && !importList.contains(importType)) {
+        importList.add(importType);
+      }
+    }
+
+    // 检查当前属性，除开基础类型，其他都需要导入
     return importList;
   }
 
@@ -163,7 +180,6 @@ public class GenerateJavaBean {
    * @return 获取名称
    */
   public static String getInConditionName(String name) {
-
     return name + JavaKeyWord.FIELD_SUFFIX_NAME;
   }
 
@@ -175,6 +191,25 @@ public class GenerateJavaBean {
    */
   private void outProperties(
       List<TableColumnDTO> columnList, StringBuilder sb, DatabaseTypeEnum typeEnum) {
+    List<JavaClassFieldEntity> javaEntityList = this.propertiesToJavaEntity(columnList, typeEnum);
+    // 执行属性对象的输出操作
+    for (JavaClassFieldEntity entity : javaEntityList) {
+      sb.append(JavaClassCodeUtils.getClassField(entity));
+    }
+  }
+
+  /**
+   * 属性输出为java的实体对象
+   *
+   * @param columnList 列集合
+   * @param typeEnum 输出的对象 信息
+   * @return 生成的对象集合
+   */
+  public List<JavaClassFieldEntity> propertiesToJavaEntity(
+      List<TableColumnDTO> columnList, DatabaseTypeEnum typeEnum) {
+
+    List<JavaClassFieldEntity> dataList = new ArrayList<>(columnList.size());
+
     // 添加属性的信息
     for (int i = 0; i < columnList.size(); i++) {
       TableColumnDTO tableBean = columnList.get(i);
@@ -196,7 +231,9 @@ public class GenerateJavaBean {
               .comment(tableBean.getColumnMsg())
               .build();
 
-      sb.append(JavaClassCodeUtils.getClassField(field));
+      dataList.add(field);
     }
+
+    return dataList;
   }
 }

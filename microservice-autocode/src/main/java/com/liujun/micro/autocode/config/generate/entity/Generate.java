@@ -1,9 +1,5 @@
 package com.liujun.micro.autocode.config.generate.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import java.util.List;
 
 /**
@@ -12,9 +8,6 @@ import java.util.List;
  * @author liujun
  * @version 0.0.1
  */
-@Getter
-@Setter
-@ToString
 public class Generate {
 
     /**
@@ -94,4 +87,137 @@ public class Generate {
      */
     private MavenInfo maven;
 
+
+    public Integer getModel() {
+        return model;
+    }
+
+    public void setModel(Integer model) {
+        this.model = model;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getDatabaseType() {
+        return databaseType;
+    }
+
+    public void setDatabaseType(String databaseType) {
+        this.databaseType = databaseType;
+    }
+
+    public String getDatabaseTableSpaceName() {
+        return databaseTableSpaceName;
+    }
+
+    public void setDatabaseTableSpaceName(String databaseTableSpaceName) {
+        this.databaseTableSpaceName = databaseTableSpaceName;
+    }
+
+    public Integer getStartErrorCode() {
+        return startErrorCode;
+    }
+
+    public void setStartErrorCode(Integer startErrorCode) {
+        this.startErrorCode = startErrorCode;
+    }
+
+    public Boolean getUpdateCode() {
+        return updateCode;
+    }
+
+    public void setUpdateCode(Boolean updateCode) {
+        this.updateCode = updateCode;
+    }
+
+    public List<MethodInfo> getCode() {
+        return code;
+    }
+
+    public void setCode(List<MethodInfo> code) {
+        this.code = code;
+    }
+
+    public CodeMenuTree getCodeMenuTree() {
+        return codeMenuTree;
+    }
+
+    public void setCodeMenuTree(CodeMenuTree codeMenuTree) {
+        this.codeMenuTree = codeMenuTree;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public void setOutput(String output) {
+        this.output = output;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    public String getModuleName() {
+        return moduleName;
+    }
+
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public MavenInfo getMaven() {
+        return maven;
+    }
+
+    public void setMaven(MavenInfo maven) {
+        this.maven = maven;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Generate{");
+        sb.append("model=").append(model);
+        sb.append(", type='").append(type).append('\'');
+        sb.append(", databaseType='").append(databaseType).append('\'');
+        sb.append(", databaseTableSpaceName='").append(databaseTableSpaceName).append('\'');
+        sb.append(", startErrorCode=").append(startErrorCode);
+        sb.append(", updateCode=").append(updateCode);
+        sb.append(", code=").append(code);
+        sb.append(", codeMenuTree=").append(codeMenuTree);
+        sb.append(", output='").append(output).append('\'');
+        sb.append(", author='").append(author).append('\'');
+        sb.append(", scope='").append(scope).append('\'');
+        sb.append(", moduleName='").append(moduleName).append('\'');
+        sb.append(", projectName='").append(projectName).append('\'');
+        sb.append(", maven=").append(maven);
+        sb.append('}');
+        return sb.toString();
+    }
 }

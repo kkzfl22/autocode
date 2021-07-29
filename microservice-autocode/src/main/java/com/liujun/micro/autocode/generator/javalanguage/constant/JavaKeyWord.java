@@ -44,6 +44,11 @@ public class JavaKeyWord {
   /** private 关键字 */
   public static final String PRIVATE = "private";
 
+  /**
+   * 受保护的
+   */
+  public static final String PROTECTED = "protected";
+
   /** 静态 */
   public static final String STATIC = "static";
 
@@ -132,7 +137,7 @@ public class JavaKeyWord {
   public static final String FOR_KEY = "for";
 
   /** String类型 */
-  public static final String TYPE_STRING = "String";
+  public static final String TYPE_STRING = JavaDataType.STRING.getType();
 
   /** java中的StringBuilder对象 */
   public static final String TYPE_STRING_BUILDER_NAME = "StringBuilder";

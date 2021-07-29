@@ -59,7 +59,7 @@ public class JavaCodeInterfaceFacadeCreate implements GenerateCodeInf {
       // 将领域的存储实现存至流程中
       ImportPackageInfo applicationServicePackage =
           new ImportPackageInfo(
-              javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
+              javaPackageStr, className, docComment, JavaVarName.FACADE_INSTANCE_NAME);
       ImportPackageUtils.putPackageInfo(
           tableName,
           param.getPackageMap(),

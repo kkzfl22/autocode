@@ -63,6 +63,13 @@ public enum JavaDomainTreeKey {
      */
     REPOSITORY_PO("po"),
 
+
+    /**
+     * 存储的接口实体
+     */
+    REPOSITORY_MYBATIS_PLUS_PO("pluspo"),
+
+
     /**
      * 领域层中的服务
      */

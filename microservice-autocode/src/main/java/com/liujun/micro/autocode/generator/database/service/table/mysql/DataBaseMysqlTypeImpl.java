@@ -22,7 +22,7 @@ public class DataBaseMysqlTypeImpl implements DataBaseTypeInf {
   }
 
   @Override
-  public StandardTypeEnum standardAndLengthCheck(String mysqlType, Integer length) {
+  public StandardTypeEnum standardAndLengthCheck(String mysqlType, Long length) {
     // 将类型转换为标准的类型
     StandardTypeEnum standardType = MysqlDataTypeEnum.standardAndLengthCheck(mysqlType, length);
 
@@ -30,7 +30,7 @@ public class DataBaseMysqlTypeImpl implements DataBaseTypeInf {
   }
 
   @Override
-  public Integer getDataTypeMax(String dbType) {
+  public Long getDataTypeMax(String dbType) {
 
     // 获取类型信息
     MysqlDataTypeEnum typeEnum = MysqlDataTypeEnum.mysqlDataType(dbType);
@@ -39,6 +39,6 @@ public class DataBaseMysqlTypeImpl implements DataBaseTypeInf {
       return null;
     }
 
-    return (int) ((long) typeEnum.getLengthEnd());
+    return typeEnum.getLengthEnd();
   }
 }

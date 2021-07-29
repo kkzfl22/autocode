@@ -9,9 +9,6 @@ import lombok.ToString;
  * @author liujun
  * @version 0.0.1
  */
-@ToString
-@Getter
-@Setter
 public class WhereInfo {
 
   /** 使用条件的字段 */
@@ -38,5 +35,39 @@ public class WhereInfo {
     this.sqlColumn = sqlColumn;
     this.operator = operator;
     this.operatorFlag = MyBatisOperatorFlag.getOperator(operator);
+  }
+
+  public String getSqlColumn() {
+    return sqlColumn;
+  }
+
+  public void setSqlColumn(String sqlColumn) {
+    this.sqlColumn = sqlColumn;
+  }
+
+  public String getOperator() {
+    return operator;
+  }
+
+  public void setOperator(String operator) {
+    this.operator = operator;
+  }
+
+  public MyBatisOperatorFlag getOperatorFlag() {
+    return operatorFlag;
+  }
+
+  public void setOperatorFlag(MyBatisOperatorFlag operatorFlag) {
+    this.operatorFlag = operatorFlag;
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("WhereInfo{");
+    sb.append("sqlColumn='").append(sqlColumn).append('\'');
+    sb.append(", operator='").append(operator).append('\'');
+    sb.append(", operatorFlag=").append(operatorFlag);
+    sb.append('}');
+    return sb.toString();
   }
 }

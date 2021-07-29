@@ -103,7 +103,7 @@ public class JavaCodeDomainServiceCreate implements GenerateCodeInf {
     // 将领域的存储实现存至流程中
     ImportPackageInfo repositoryPersistPackage =
         new ImportPackageInfo(
-            javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
+            javaPackageStr, className, docComment, JavaVarName.DOMAIN_INSTANCE_NAME);
     ImportPackageUtils.putPackageInfo(
         tableInfo.getTableName(),
         param.getPackageMap(),

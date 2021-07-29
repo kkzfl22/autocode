@@ -140,6 +140,8 @@ public class DomainMenuTree {
         repositoryModuleChildren.addChildrenOnly(JavaDomainTreeKey.REPOSITORY_PERSISTENCE);
         //持久层的实现
         repositoryModuleChildren.addChildrenOnly(JavaDomainTreeKey.REPOSITORY_PO);
+        //持久存储
+        repositoryModuleChildren.addChildrenOnly(JavaDomainTreeKey.REPOSITORY_MYBATIS_PLUS_PO);
 
 
         // 公共目录

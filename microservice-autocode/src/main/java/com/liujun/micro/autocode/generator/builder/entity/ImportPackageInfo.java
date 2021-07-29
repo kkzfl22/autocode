@@ -11,9 +11,6 @@ import lombok.ToString;
  * @author liujun
  * @version 0.0.1
  */
-@Getter
-@Setter
-@ToString
 public class ImportPackageInfo {
 
   /** java的包路径，以点分隔开 */
@@ -31,6 +28,8 @@ public class ImportPackageInfo {
   /** 注解标识 */
   private String annotation;
 
+  /** 泛型标识 */
+  private String generic;
 
   public ImportPackageInfo(String packagePath, String className) {
     this.packagePath = packagePath;
@@ -65,6 +64,21 @@ public class ImportPackageInfo {
   }
 
   /**
+   * 声明引入对象
+   *
+   * @param packagePath 包路径
+   * @param className 类名称信息
+   * @param classComment 描述
+   * @param varName 变量名
+   * @param generic 泛型
+   */
+  public ImportPackageInfo(
+      String packagePath, String className, String classComment, String varName, String generic) {
+    this(packagePath, className, classComment, varName);
+    this.generic = generic;
+  }
+
+  /**
    * 构建注解的对象信息
    *
    * @param packagePath
@@ -86,5 +100,62 @@ public class ImportPackageInfo {
    */
   public String packageOut() {
     return this.getPackagePath() + Symbol.POINT + this.getClassName();
+  }
+
+  public String getPackagePath() {
+    return packagePath;
+  }
+
+  public void setPackagePath(String packagePath) {
+    this.packagePath = packagePath;
+  }
+
+  public String getClassName() {
+    return className;
+  }
+
+  public void setClassName(String className) {
+    this.className = className;
+  }
+
+  public String getClassComment() {
+    return classComment;
+  }
+
+  public void setClassComment(String classComment) {
+    this.classComment = classComment;
+  }
+
+  public String getVarName() {
+    return varName;
+  }
+
+  public void setVarName(String varName) {
+    this.varName = varName;
+  }
+
+  public String getAnnotation() {
+    return annotation;
+  }
+
+  public void setAnnotation(String annotation) {
+    this.annotation = annotation;
+  }
+
+  public String getGeneric() {
+    return generic;
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("ImportPackageInfo{");
+    sb.append("packagePath='").append(packagePath).append('\'');
+    sb.append(", className='").append(className).append('\'');
+    sb.append(", classComment='").append(classComment).append('\'');
+    sb.append(", varName='").append(varName).append('\'');
+    sb.append(", annotation='").append(annotation).append('\'');
+    sb.append(", generic='").append(generic).append('\'');
+    sb.append('}');
+    return sb.toString();
   }
 }

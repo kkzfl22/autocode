@@ -31,7 +31,7 @@ public class TableColumnDTO {
   private Boolean primaryKey;
 
   /** 长度信息 */
-  private Integer dataLength;
+  private Long dataLength;
 
   /** 精度 */
   private Integer dataScale;

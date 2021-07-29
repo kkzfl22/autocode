@@ -71,7 +71,10 @@ public class GenerateJavaSwaggerBean {
     // 类的定义
     StringBuilder sb =
         JavaClassCodeUtils.classDefine(
-            entityInfo, getImportList(codeMethod), getAnnotationList(entityInfo), author);
+            entityInfo,
+            getImportList(codeMethod, columnList, typeEnum),
+            getAnnotationList(entityInfo),
+            author);
 
     // 作属性输出
     this.outProperties(columnList, sb, typeEnum);
@@ -89,10 +92,11 @@ public class GenerateJavaSwaggerBean {
    * @param codeMethod
    * @return
    */
-  private List<String> getImportList(List<MethodInfo> codeMethod) {
+  private List<String> getImportList(
+      List<MethodInfo> codeMethod, List<TableColumnDTO> columns, DatabaseTypeEnum typeEnum) {
 
     // 获取实体需导入的基础包
-    List<String> dataList = GenerateJavaBean.INSTANCE.getImportList(codeMethod);
+    List<String> dataList = GenerateJavaBean.INSTANCE.getImportList(codeMethod, columns, typeEnum);
 
     // 添加swagger的相关包
     dataList.addAll(ANNOTATION_IMPORT);

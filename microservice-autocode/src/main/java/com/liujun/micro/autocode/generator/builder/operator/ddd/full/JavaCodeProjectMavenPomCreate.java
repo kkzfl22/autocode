@@ -66,8 +66,6 @@ public class JavaCodeProjectMavenPomCreate implements GenerateCodeInf {
   /** 模块的定义信息 */
   private static final String API_DEFINE = "#api_define#";
 
-  @Getter
-  @ToString
   enum PomTag {
     /** 组标识 */
     GROUP("<groupId>", "</groupId>"),
@@ -97,6 +95,23 @@ public class JavaCodeProjectMavenPomCreate implements GenerateCodeInf {
 
     /** 结束 */
     private String end;
+
+    public String getStart() {
+      return start;
+    }
+
+    public String getEnd() {
+      return end;
+    }
+
+    @Override
+    public String toString() {
+      final StringBuilder sb = new StringBuilder("PomTag{");
+      sb.append("start='").append(start).append('\'');
+      sb.append(", end='").append(end).append('\'');
+      sb.append('}');
+      return sb.toString();
+    }
   }
 
   public static final JavaCodeProjectMavenPomCreate INSTANCE = new JavaCodeProjectMavenPomCreate();

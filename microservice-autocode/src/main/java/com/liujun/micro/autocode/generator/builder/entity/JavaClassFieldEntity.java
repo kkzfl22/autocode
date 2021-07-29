@@ -19,9 +19,6 @@ import java.util.List;
  * @author liujun
  * @version 0.0.1
  */
-@Getter
-@Setter
-@ToString
 public class JavaClassFieldEntity extends JavaClassElement {
 
   /** 值信息 */
@@ -146,5 +143,21 @@ public class JavaClassFieldEntity extends JavaClassElement {
 
   public static Builder builder() {
     return new Builder();
+  }
+
+  public String getValue() {
+    return value;
+  }
+
+  public void setValue(String value) {
+    this.value = value;
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("JavaClassFieldEntity{");
+    sb.append("value='").append(value).append('\'');
+    sb.append('}');
+    return sb.toString();
   }
 }

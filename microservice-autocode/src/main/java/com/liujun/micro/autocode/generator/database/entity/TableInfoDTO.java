@@ -1,9 +1,5 @@
 package com.liujun.micro.autocode.generator.database.entity;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
 
 /**
@@ -12,8 +8,6 @@ import java.util.List;
  * @author liujun
  * @version 1.0.0
  */
-@Getter
-@Setter
 public class TableInfoDTO {
 
   /** 表名 */
@@ -41,5 +35,29 @@ public class TableInfoDTO {
     sb.append(", columnList=").append(columnList);
     sb.append('}');
     return sb.toString();
+  }
+
+  public String getTableName() {
+    return tableName;
+  }
+
+  public void setTableName(String tableName) {
+    this.tableName = tableName;
+  }
+
+  public String getTableComment() {
+    return tableComment;
+  }
+
+  public void setTableComment(String tableComment) {
+    this.tableComment = tableComment;
+  }
+
+  public List<TableColumnDTO> getColumnList() {
+    return columnList;
+  }
+
+  public void setColumnList(List<TableColumnDTO> columnList) {
+    this.columnList = columnList;
   }
 }

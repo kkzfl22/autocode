@@ -91,7 +91,8 @@ public class GenerateJavaMybatisMapperXml {
         deleteMethod(sb, tableMsg, methodItem, poPackage, columnMap, primaryKeyList, typeEnum);
       }
       // 数据查询
-      else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
+      else if (MethodTypeEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())
+          || MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
         this.queryMethod(
             sb,
             tableMsg,

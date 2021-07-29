@@ -140,9 +140,7 @@ public class GenerateJavaCheck {
                 methodInfo, tableColumnList, errorCodeEnum, dtoPackageInfo, constantPkg));
       }
       // 分页查询
-      else if (MethodTypeEnum.QUERY.getType().equals(methodInfo.getOperator())
-          && null != methodInfo.getPageQueryFlag()
-          && methodInfo.getPageQueryFlag()) {
+      else if (MethodTypeEnum.QUERY_PAGE.getType().equals(methodInfo.getOperator())) {
         sb.append(
             this.pageCondition(
                 methodInfo, tableColumnList, errorCodeEnum, dtoPackageInfo, constantPkg));

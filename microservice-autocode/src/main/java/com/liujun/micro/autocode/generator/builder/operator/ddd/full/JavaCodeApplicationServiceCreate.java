@@ -120,9 +120,7 @@ public class JavaCodeApplicationServiceCreate implements GenerateCodeInf {
             sb, methodItem, domainPackageInfo, JavaVarName.DOMAIN_INSTANCE_NAME);
       }
       // 如果当前为查询分页操作
-      else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())
-          && methodItem.getPageQueryFlag() != null
-          && methodItem.getPageQueryFlag()) {
+      else if (MethodTypeEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())) {
         GenerateJavaDomainServiceInvoke.INSTANCE.pageQueryMethod(
             sb, methodItem, domainPackageInfo, JavaVarName.DOMAIN_INSTANCE_NAME);
       }

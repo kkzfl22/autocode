@@ -17,7 +17,11 @@ public enum MethodTypeEnum {
   DELETE("delete"),
 
   /** 数据库查询操作 */
-  QUERY("query");
+  QUERY("query"),
+
+  /** 数据库分页查询 */
+  QUERY_PAGE("queryPage"),
+  ;
 
   /** 类型信息 */
   private final String type;

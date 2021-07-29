@@ -12,7 +12,6 @@ import java.util.*;
  * @author liujun
  * @version 0.0.1
  */
-@Getter
 public class MenuNode {
 
   /** 编号 */
@@ -166,5 +165,21 @@ public class MenuNode {
     outJavaPackageBuilder.deleteCharAt(outJavaPackageBuilder.length() - 1);
 
     return outJavaPackageBuilder.toString();
+  }
+
+  public String getCode() {
+    return code;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public Map<String, MenuNode> getChildren() {
+    return children;
+  }
+
+  public MenuNode getParent() {
+    return parent;
   }
 }

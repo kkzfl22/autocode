@@ -25,13 +25,13 @@ import java.util.Map.Entry;
  * @author liujun
  * @version 1.0.0
  */
-public class JavaCodeRepositoryDaoInfCreate implements GenerateCodeInf {
+public class JavaCodeRepositoryMapperInfCreate implements GenerateCodeInf {
 
   private static final String DAO_SUFFIX = "Mapper";
   private static final String DAO_COMMENT = "的数据库操作";
 
-  public static final JavaCodeRepositoryDaoInfCreate INSTANCE =
-      new JavaCodeRepositoryDaoInfCreate();
+  public static final JavaCodeRepositoryMapperInfCreate INSTANCE =
+      new JavaCodeRepositoryMapperInfCreate();
 
   @Override
   public void generateCode(GenerateCodeContext param) {

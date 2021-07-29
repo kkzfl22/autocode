@@ -9,8 +9,6 @@ import lombok.ToString;
  * @author liujun
  * @version 0.0.1
  */
-@Getter
-@ToString
 public class AnnotationValueElement {
 
   /** 标识信息 */
@@ -34,5 +32,27 @@ public class AnnotationValueElement {
   public AnnotationValueElement(boolean notCharFlag, String key, String value) {
     this(key, value);
     this.notCharFlag = notCharFlag;
+  }
+
+  public String getKey() {
+    return key;
+  }
+
+  public boolean isNotCharFlag() {
+    return notCharFlag;
+  }
+
+  public String getValue() {
+    return value;
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("AnnotationValueElement{");
+    sb.append("key='").append(key).append('\'');
+    sb.append(", notCharFlag=").append(notCharFlag);
+    sb.append(", value='").append(value).append('\'');
+    sb.append('}');
+    return sb.toString();
   }
 }

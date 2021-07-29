@@ -23,11 +23,12 @@ import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInt
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeProjectCfgCopyCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeProjectMavenPomCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryAssemblerCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryDaoInfCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryMapperInfCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryJunitDaoCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryJunitMyBatisScanConfigCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryMyBatisMapperCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryObjectMyBatisPlusCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryPersistenceCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeResourceI18nEnUsCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeResourceI18nZhCnCreate;
@@ -83,8 +84,10 @@ public class GenerateCodeBuilder {
     List<GenerateCodeInf> repositoryList = new ArrayList<>(6);
     // 1,存储层实体的生成
     repositoryList.add(JavaCodeRepositoryObjectCreate.INSTANCE);
+    //
+    repositoryList.add(JavaCodeRepositoryObjectMyBatisPlusCreate.INSTANCE);
     // 2,生成mapper对象
-    repositoryList.add(JavaCodeRepositoryDaoInfCreate.INSTANCE);
+    repositoryList.add(JavaCodeRepositoryMapperInfCreate.INSTANCE);
     // 3,mybatis的mapper文件
     repositoryList.add(JavaCodeRepositoryMyBatisMapperCreate.INSTANCE);
     // 4,生成测试的配制文件
@@ -113,6 +116,8 @@ public class GenerateCodeBuilder {
     domainList.add(JavaCodeRepositoryAssemblerCreate.INSTANCE);
     // 5,存储层接口的接口实现调用
     domainList.add(JavaCodeRepositoryPersistenceCreate.INSTANCE);
+    // 6.生成单元测试的mock存储实现
+
     // 6，领域层的单元测试
     domainList.add(JavaCodeDomainJunitServiceCreate.INSTANCE);
 

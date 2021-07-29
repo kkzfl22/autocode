@@ -25,7 +25,7 @@ public interface DataBaseTypeInf {
    * @param length 长度
    * @return 标识的类型的key
    */
-  StandardTypeEnum standardAndLengthCheck(String dbType, Integer length);
+  StandardTypeEnum standardAndLengthCheck(String dbType, Long length);
 
   /**
    * 根据指定的类型获取最大值
@@ -33,5 +33,5 @@ public interface DataBaseTypeInf {
    * @param dbType 数据库的类型
    * @return 返回最大值信息
    */
-  Integer getDataTypeMax(String dbType);
+  Long getDataTypeMax(String dbType);
 }

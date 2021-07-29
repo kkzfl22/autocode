@@ -15,6 +15,7 @@ import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
+import com.liujun.micro.autocode.generator.builder.operator.utils.JavaCommentUtil;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.ReturnUtils;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
@@ -64,9 +65,9 @@ public class GenerateJavaRepositoryPersistenceInvoke {
           + METHOD_PAGE_RSP_NAME
           + " = PageHelper.startPage("
           + JavaVarName.PAGE_REQUEST
-          + ".getPageNum(), "
+          + ".getPage(), "
           + JavaVarName.PAGE_REQUEST
-          + ".getPageSize());";
+          + ".getSize());";
 
   /**
    * 生成存储层的转换接口
@@ -129,9 +130,7 @@ public class GenerateJavaRepositoryPersistenceInvoke {
             sb, methodItem, domainPackageInfo, daoAssemblerPackageInfo, poPackageInfo);
       }
       // 如果当前为查询分页操作
-      else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())
-          && methodItem.getPageQueryFlag() != null
-          && methodItem.getPageQueryFlag()) {
+      else if (MethodTypeEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())) {
         this.pqgeQueryMethod(
             sb, methodItem, domainPackageInfo, daoAssemblerPackageInfo, poPackageInfo);
       }
@@ -522,27 +521,18 @@ public class GenerateJavaRepositoryPersistenceInvoke {
       ImportPackageInfo assemblerPkg,
       ImportPackageInfo poPkg) {
 
-    List<JavaMethodArguments> argumentsList =
-        Arrays.asList(
-            JavaMethodArguments.builder()
-                .type(domainPkg.getClassName())
-                .name(JavaVarName.METHOD_PARAM_NAME)
-                .build(),
-            JavaMethodArguments.parsePackage(
-                ImportCodePackageKey.PAGE_PARAM.getPackageInfo(), JavaVarName.PAGE_REQUEST));
-
     JavaMethodEntity methodEntity =
         JavaMethodEntity.builder()
             // 访问修饰符
             .visit(JavaKeyWord.PUBLIC)
             // 返回值
-            .type(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getClassName())
+            .type(JavaCommentUtil.pageQueryReturn(domainPkg.getClassName()))
             // 方法名
             .name(method.getName())
             // 重写标识
             .annotation(CodeAnnotation.OVERRIDE)
             // 参数
-            .arguments(argumentsList)
+            .arguments(JavaCommentUtil.pageQueryParam(method, domainPkg.getClassName()))
             .build();
 
     // 1,创建方法定义
@@ -579,7 +569,7 @@ public class GenerateJavaRepositoryPersistenceInvoke {
     sb.append(method.getName()).append(Symbol.SPACE).append(JavaVarName.METHOD_PARAM_NAME);
     sb.append(Symbol.SPACE).append(Symbol.BRACE_LEFT).append(Symbol.BRACE_RIGHT);
     sb.append(Symbol.QUOTE).append(Symbol.COMMA);
-    sb.append(JavaVarName.METHOD_PARAM_NAME);
+    sb.append(ImportCodePackageKey.PAGE_PARAM.getPackageInfo().getVarName());
     sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
     sb.append(Symbol.ENTER_LINE);
 
@@ -589,7 +579,11 @@ public class GenerateJavaRepositoryPersistenceInvoke {
     sb.append(JavaVarName.ASSEMBLER_PARSE_NAME).append(Symbol.SPACE).append(Symbol.EQUAL);
     sb.append(Symbol.SPACE).append(assemblerPkg.getClassName()).append(Symbol.POINT);
     sb.append(JavaMethodName.ASSEMBLER_ENTITY_PERSIST_NAME).append(Symbol.BRACKET_LEFT);
-    sb.append(JavaVarName.METHOD_PARAM_NAME).append(Symbol.BRACKET_RIGHT);
+    sb.append(ImportCodePackageKey.PAGE_PARAM.getPackageInfo().getVarName()).append(Symbol.POINT);
+    sb.append(JavaVarName.PAGE_GENERATE_DATE_METHOD)
+        .append(Symbol.BRACKET_LEFT)
+        .append(Symbol.BRACKET_RIGHT);
+    sb.append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
 
     // 进行分页信息的相关设置
@@ -616,7 +610,7 @@ public class GenerateJavaRepositoryPersistenceInvoke {
     sb.append(Symbol.SPACE).append(JavaKeyWord.RETURN);
     sb.append(Symbol.SPACE).append(Symbol.BRACE_LEFT).append(Symbol.BRACE_RIGHT);
     sb.append(Symbol.QUOTE).append(Symbol.COMMA);
-    sb.append(JavaVarName.METHOD_PARAM_NAME);
+    sb.append(ImportCodePackageKey.PAGE_PARAM.getPackageInfo().getVarName());
     sb.append(Symbol.COMMA).append(JavaVarName.PAGE_RESPONSE);
     sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
     sb.append(Symbol.ENTER_LINE);
@@ -634,7 +628,7 @@ public class GenerateJavaRepositoryPersistenceInvoke {
     sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
 
     // 分页结果构建
-    pageRspBuilder(sb);
+    pageRspBuilder(sb, domainPkg.getClassName());
 
     // 返回语句
     sb.append(JavaFormat.appendTab(2)).append(JavaKeyWord.RETURN).append(Symbol.SPACE);
@@ -647,22 +641,27 @@ public class GenerateJavaRepositoryPersistenceInvoke {
    *
    * @param sb
    */
-  private void pageRspBuilder(StringBuilder sb) {
+  private void pageRspBuilder(StringBuilder sb, String className) {
     // 构建返回对象
     sb.append(JavaFormat.appendTab(2));
     sb.append(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getClassName());
     sb.append(Symbol.SPACE).append(JavaVarName.PAGE_RETURN_DATA).append(Symbol.SPACE);
     sb.append(Symbol.EQUAL).append(Symbol.SPACE);
     sb.append(ImportCodePackageKey.PAGE_RESULT.getPackageInfo().getClassName());
-    sb.append(Symbol.POINT).append(JavaMethodName.PAGE_BUILDER);
+    sb.append(Symbol.POINT);
+    sb.append(Symbol.ANGLE_BRACKETS_LEFT);
+    sb.append(JavaVarName.NAME_LIST_SUFFIX).append(Symbol.ANGLE_BRACKETS_LEFT);
+    sb.append(className).append(Symbol.ANGLE_BRACKETS_RIGHT);
+    sb.append(Symbol.ANGLE_BRACKETS_RIGHT);
+
+    sb.append(JavaMethodName.PAGE_BUILDER);
     sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.ENTER_LINE);
     // 当前页设置
     sb.append(JavaFormat.appendTab(10));
     sb.append(Symbol.POINT).append(JavaMethodName.PAGE_NUM);
     sb.append(Symbol.BRACKET_LEFT).append(METHOD_PAGE_RSP_NAME).append(Symbol.POINT);
-    sb.append(JavaMethodName.GET);
-    sb.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_NUM));
+    sb.append(JavaMethodName.PAGE_HELPER_NUM);
     sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.ENTER_LINE);
@@ -670,8 +669,7 @@ public class GenerateJavaRepositoryPersistenceInvoke {
     sb.append(JavaFormat.appendTab(10));
     sb.append(Symbol.POINT).append(JavaMethodName.PAGE_SIZE);
     sb.append(Symbol.BRACKET_LEFT).append(METHOD_PAGE_RSP_NAME).append(Symbol.POINT);
-    sb.append(JavaMethodName.GET);
-    sb.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_SIZE));
+    sb.append(JavaMethodName.PAGE_HELPER_SIZE);
     sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.ENTER_LINE);

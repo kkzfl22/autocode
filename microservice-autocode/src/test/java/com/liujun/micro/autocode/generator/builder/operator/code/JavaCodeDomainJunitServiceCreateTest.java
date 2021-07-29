@@ -23,7 +23,7 @@ public class JavaCodeDomainJunitServiceCreateTest {
         // 数据库转换
         JavaCodeRepositoryAssemblerCreate assembler = new JavaCodeRepositoryAssemblerCreate();
         // 数据库dao
-        JavaCodeRepositoryDaoInfCreate repositoryDaoInf = new JavaCodeRepositoryDaoInfCreate();
+        JavaCodeRepositoryMapperInfCreate repositoryDaoInf = new JavaCodeRepositoryMapperInfCreate();
         // 领域存储接口
         JavaCodeDomainRepositoryFacadeCreate repositoryFacadeInf = new JavaCodeDomainRepositoryFacadeCreate();
         // 领域存储实现

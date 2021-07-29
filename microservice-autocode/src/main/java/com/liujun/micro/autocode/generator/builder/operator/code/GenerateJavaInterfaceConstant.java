@@ -234,7 +234,7 @@ public class GenerateJavaInterfaceConstant {
    * @param tableColumn 表列信息
    * @return 类型的最大长度
    */
-  private Integer maxLength(DatabaseTypeEnum dbType, TableColumnDTO tableColumn) {
+  private Long maxLength(DatabaseTypeEnum dbType, TableColumnDTO tableColumn) {
     if (tableColumn.getDataLength() != null && tableColumn.getDataLength() != 0) {
       return tableColumn.getDataLength();
     } else {

@@ -3,6 +3,8 @@ package com.liujun.micro.autocode.generator.builder.operator.utils;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.utils.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -20,8 +22,9 @@ import java.nio.charset.StandardCharsets;
  * @author liujun
  * @version 0.0.1
  */
-@Slf4j
 public class FileReaderUtils {
+
+  private static final Logger log = LoggerFactory.getLogger(FileReaderUtils.class);
 
   /**
    * 读取文件内容

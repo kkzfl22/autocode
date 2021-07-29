@@ -79,11 +79,9 @@ generate:
     #分页查询
     - name: queryPage
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
-      operator: query
+      operator: queryPage
       #方法的注释
       comment: 分页查询
-      #分页查询标识
-      pageQueryFlag: true
       #返回值类型信息
       returns: java.util.List<table_name>
       #排序

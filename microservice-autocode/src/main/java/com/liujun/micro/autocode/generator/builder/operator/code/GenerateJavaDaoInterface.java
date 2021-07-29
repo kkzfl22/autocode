@@ -61,7 +61,8 @@ public class GenerateJavaDaoInterface {
         this.updateMethod(sb, poPackageInfo.getClassName(), methodItem);
       }
       // 方法执行查询操作
-      else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
+      else if (MethodTypeEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())
+          || MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
         // 分页查询查询方法
         this.queryMethod(sb, poPackageInfo.getClassName(), methodItem);
       }

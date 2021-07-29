@@ -31,7 +31,7 @@ public class TypeConvergence {
         DatabaseTypeService.INSTANCE.getDatabaseType(typeEnum, tempType);
 
     // 通过数据库的类型转换为java类型信息
-    return JavaDataTypeEnum.getJavaType(standardTypeEnum);
+    return JavaDataTypeEnum.getJavaTypeKey(standardTypeEnum);
   }
 
   /**
@@ -58,7 +58,7 @@ public class TypeConvergence {
    * @param tableColumn 列表信息
    * @return
    */
-  public static Integer getDbTypeMax(DatabaseTypeEnum typeEnum, TableColumnDTO tableColumn) {
+  public static Long getDbTypeMax(DatabaseTypeEnum typeEnum, TableColumnDTO tableColumn) {
     return DatabaseTypeService.INSTANCE.getDatabaseTypeLength(typeEnum, tableColumn.getDataType());
   }
 }

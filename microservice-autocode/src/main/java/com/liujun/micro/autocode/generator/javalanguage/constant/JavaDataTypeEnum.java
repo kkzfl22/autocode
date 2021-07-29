@@ -2,10 +2,7 @@ package com.liujun.micro.autocode.generator.javalanguage.constant;
 
 import com.liujun.micro.autocode.generator.database.constant.StandardTypeEnum;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+
 
 /**
  * java的数据类型枚举信息
@@ -17,123 +14,123 @@ import java.time.LocalTime;
 public enum JavaDataTypeEnum {
 
   /** byte类型 */
-  TINYINT(StandardTypeEnum.TINYINT, "Byte", Byte.class),
+  TINYINT(StandardTypeEnum.TINYINT, JavaDataType.BYTE),
 
   /** 对应java中的short类型 */
-  SMALLINT(StandardTypeEnum.SMALLINT, "Short", Short.class),
+  SMALLINT(StandardTypeEnum.SMALLINT, JavaDataType.SHORT),
 
   /** MEDIUMINT 3 字节 (-8 388 608，8 388 607) (0，16 777 215) 大整数值 */
-  MEDIUMINT(StandardTypeEnum.MEDIUMINT, "Integer", Integer.class),
+  MEDIUMINT(StandardTypeEnum.MEDIUMINT, JavaDataType.INTEGER),
 
   /** java中的Integer类型 */
-  INTEGER(StandardTypeEnum.INTEGER, "Integer", Integer.class),
+  INTEGER(StandardTypeEnum.INTEGER, JavaDataType.INTEGER),
 
   /** 对应java中的long类型 */
-  BIGINT(StandardTypeEnum.BIGINT, "Long", Long.class),
+  BIGINT(StandardTypeEnum.BIGINT, JavaDataType.LONG),
 
   /**
    * FLOAT 4 字节 (-3.402 823 466 E+38，-1.175 494 351 E-38)，0，(1.175 494 351 E-38，3.402 823 466 351
    * E+38) 0，(1.175 494 351 E-38，3.402 823 466 E+38) 单精度 浮点数值
    */
-  FLOAT(StandardTypeEnum.FLOAT, "Float", Float.class),
+  FLOAT(StandardTypeEnum.FLOAT, JavaDataType.FLOAT),
 
   /**
    * DOUBLE 8 字节 (-1.797 693 134 862 315 7 E+308，-2.225 073 858 507 201 4 E-308)，0，(2.225 073 858
    * 507 201 4 E-308，1.797 693 134 862 315 7 E+308) 0，(2.225 073 858 507 201 4 E-308，1.797 693 134
    * 862 315 7 E+308) 双精度 浮点数值
    */
-  DOUBLE(StandardTypeEnum.DOUBLE, "Double", Double.class),
+  DOUBLE(StandardTypeEnum.DOUBLE, JavaDataType.DOUBLE),
 
   /** 货币类型 */
-  DECIMAL(StandardTypeEnum.DECIMAL, "BigDecimal", BigDecimal.class),
+  DECIMAL(StandardTypeEnum.DECIMAL, JavaDataType.BIG_DECIMAL),
 
   /** 字符串类型 */
-  CHAR(StandardTypeEnum.CHAR, JavaKeyWord.TYPE_STRING, String.class),
+  CHAR(StandardTypeEnum.CHAR, JavaDataType.STRING),
 
   /** 字符串类型 */
-  VARCHAR(StandardTypeEnum.VARCHAR, JavaKeyWord.TYPE_STRING, String.class),
+  VARCHAR(StandardTypeEnum.VARCHAR, JavaDataType.STRING),
 
   /** 日期对象 */
-  DATE(StandardTypeEnum.DATE, "LocalDate", LocalDate.class),
+  DATE(StandardTypeEnum.DATE, JavaDataType.DATE),
 
   /** 时间年对象 */
-  YEAR(StandardTypeEnum.YEAR, JavaKeyWord.TYPE_STRING, String.class),
+  YEAR(StandardTypeEnum.YEAR, JavaDataType.STRING),
 
   /** 时间对象 */
-  TIME(StandardTypeEnum.TIME, "LocalTime", LocalTime.class),
+  TIME(StandardTypeEnum.TIME, JavaDataType.TIME),
 
   /** 时间对象 */
-  DATETIME(StandardTypeEnum.DATETIME, "LocalDateTime", LocalDateTime.class),
+  DATETIME(StandardTypeEnum.DATETIME, JavaDataType.DATETIME),
 
   /** 时间搓 */
-  TIMESTAMP(StandardTypeEnum.TIMESTAMP, JavaKeyWord.TYPE_STRING, String.class),
+  TIMESTAMP(StandardTypeEnum.TIMESTAMP, JavaDataType.STRING),
 
   /** TINYBLOB 0-255字节 不超过 255 个字符的二进制字符串 */
-  TINYBLOB(StandardTypeEnum.TINYBLOB, JavaKeyWord.TYPE_STRING, String.class),
+  TINYBLOB(StandardTypeEnum.TINYBLOB, JavaDataType.STRING),
 
   /** tinytext 0-255字节 短文本字符串 */
-  TINYTEXT(StandardTypeEnum.TINYTEXT, JavaKeyWord.TYPE_STRING, String.class),
+  TINYTEXT(StandardTypeEnum.TINYTEXT, JavaDataType.STRING),
 
   /** BLOB 0-65 535字节 二进制形式的长文本数据 */
-  BLOB(StandardTypeEnum.BLOB, JavaKeyWord.TYPE_STRING, String.class),
+  BLOB(StandardTypeEnum.BLOB, JavaDataType.STRING),
 
   /** TEXT 0-65 535字节 长文本数据 */
-  TEXT(StandardTypeEnum.TEXT, JavaKeyWord.TYPE_STRING, String.class),
+  TEXT(StandardTypeEnum.TEXT, JavaDataType.STRING),
 
   /** MEDIUMBLOB 0-16 777 215字节 二进制形式的中等长度文本数据 */
-  MEDIUMBLOB(StandardTypeEnum.MEDIUMBLOB, JavaKeyWord.TYPE_STRING, String.class),
+  MEDIUMBLOB(StandardTypeEnum.MEDIUMBLOB, JavaDataType.STRING),
 
   /** MEDIUMTEXT 0-16 777 215字节 中等长度文本数据 */
-  MEDIUMTEXT(StandardTypeEnum.MEDIUMTEXT, JavaKeyWord.TYPE_STRING, String.class),
+  MEDIUMTEXT(StandardTypeEnum.MEDIUMTEXT, JavaDataType.STRING),
 
   /** longblob 0-4 294 967 295字节 二进制形式的极大文本数据 */
-  LONGBLOB(StandardTypeEnum.LONGBLOB, JavaKeyWord.TYPE_STRING, String.class),
+  LONGBLOB(StandardTypeEnum.LONGBLOB, JavaDataType.STRING),
 
   /** longtext 0-4 294 967 295字节 极大文本数据 */
-  LONGTEXT(StandardTypeEnum.LONGTEXT, JavaKeyWord.TYPE_STRING, String.class),
+  LONGTEXT(StandardTypeEnum.LONGTEXT, JavaDataType.STRING),
   ;
 
   /** 类型的key */
   private final StandardTypeEnum key;
 
   /** java的类型名称 */
-  private final String javaType;
+  private final JavaDataType javaType;
 
   /** java的类型的类 */
   private final Class javaTypeClass;
 
-  JavaDataTypeEnum(StandardTypeEnum key, String javaType, Class javaTypeClass) {
+  JavaDataTypeEnum(StandardTypeEnum key, JavaDataType typeEnum) {
     this.key = key;
-    this.javaType = javaType;
-    this.javaTypeClass = javaTypeClass;
+    this.javaType = typeEnum;
+    this.javaTypeClass = typeEnum.getDeclaringClass();
   }
 
   public StandardTypeEnum getKey() {
     return key;
   }
 
-  public String getJavaType() {
+  public String getJavaTypeKey() {
+    return javaType.getType();
+  }
+
+  public JavaDataType getJavaType() {
     return javaType;
   }
 
-  public Class getJavaTypeClass() {
-    return javaTypeClass;
-  }
-
-  public static String getJavaType(StandardTypeEnum standardType) {
+  public static String getJavaTypeKey(StandardTypeEnum standardType) {
     for (JavaDataTypeEnum dataType : values()) {
       if (dataType.getKey().equals(standardType)) {
-        return dataType.getJavaType();
+        return dataType.getJavaTypeKey();
       }
     }
 
     // 默认返回String类型
-    return JavaDataTypeEnum.VARCHAR.getJavaType();
+    return JavaDataTypeEnum.VARCHAR.getJavaTypeKey();
   }
 
   public static StandardTypeEnum getStandardType(String javaType) {
     for (JavaDataTypeEnum dataType : values()) {
-      if (dataType.getJavaType().equals(javaType)) {
+      if (dataType.getJavaTypeKey().equals(javaType)) {
         return dataType.getKey();
       }
     }

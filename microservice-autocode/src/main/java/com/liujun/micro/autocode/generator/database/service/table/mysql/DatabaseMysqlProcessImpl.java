@@ -161,15 +161,15 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
         new TableColumnDTO(columnName, columnMsg, dataType, priKey, nullFlag, columnDefault);
     // 数值类型的长度
     if (null != precision) {
-      bean.setDataLength(Integer.parseInt(precision));
+      bean.setDataLength(Long.parseLong(precision));
     }
     // 数据的存储长度
     if (null != octLength) {
-      bean.setDataLength(Integer.parseInt(octLength));
+      bean.setDataLength(Long.parseLong(octLength));
     }
     // 数据的长度
     if (null != charMax) {
-      bean.setDataLength(Integer.parseInt(charMax));
+      bean.setDataLength(Long.parseLong(charMax));
     }
     // 精度
     if (null != scale) {
@@ -177,7 +177,7 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
     }
 
     bean.setAutoIncrement("auto_increment".equals(extra));
-    bean.setTableName(tableName);
+    bean.setTableName(tableName.toLowerCase());
     bean.setSqlColumnType(columnType);
 
     // 检查数据库创建表语句中是否存在长度
@@ -187,15 +187,14 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
     if (bracketStartIndex != -1) {
       int bracketIndexEnd = bean.getSqlColumnType().indexOf(Symbol.BRACKET_RIGHT);
       String valueStr = columnType.substring(bracketStartIndex + 1, bracketIndexEnd);
-      int sqlDataLength = Integer.parseInt(valueStr);
-
-      if (sqlDataLength != bean.getDataLength()) {
+      long sqlDataLength = Long.parseLong(valueStr);
+      if (null == bean.getDataLength() || sqlDataLength != bean.getDataLength()) {
         bean.setDataLength(sqlDataLength);
       }
     }
 
     if (bean.getDataLength() == null) {
-      bean.setDataLength(0);
+      bean.setDataLength(0L);
     }
 
     return bean;

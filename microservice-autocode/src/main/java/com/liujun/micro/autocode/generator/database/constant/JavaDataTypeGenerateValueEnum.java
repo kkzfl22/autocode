@@ -10,10 +10,10 @@ package com.liujun.micro.autocode.generator.database.constant;
 public enum JavaDataTypeGenerateValueEnum {
 
   /** byte类型 */
-  TINYINT(StandardTypeEnum.TINYINT, JavaGenerateValueKey.GENERATE_INT_VALUE),
+  TINYINT(StandardTypeEnum.TINYINT, "(byte)" + JavaGenerateValueKey.GENERATE_INT_VALUE),
 
   /** 对应java中的short类型 */
-  SMALLINT(StandardTypeEnum.SMALLINT, JavaGenerateValueKey.GENERATE_INT_VALUE),
+  SMALLINT(StandardTypeEnum.SMALLINT, "(short)" + JavaGenerateValueKey.GENERATE_INT_VALUE),
 
   /** MEDIUMINT 3 字节 (-8 388 608，8 388 607) (0，16 777 215) 大整数值 */
   MEDIUMINT(StandardTypeEnum.MEDIUMINT, JavaGenerateValueKey.GENERATE_INT_VALUE),
@@ -50,20 +50,16 @@ public enum JavaDataTypeGenerateValueEnum {
   DATE(StandardTypeEnum.DATE, "LocalDate.now().toString()"),
 
   /** 时间对象 */
-  TIME(StandardTypeEnum.TIME, "LocalTime.now().format(DateTimeFormatter.ofPattern(\"hh:mm:ss\"))"),
+  TIME(StandardTypeEnum.TIME, "LocalTime.now()"),
 
   /** 时间年对象 */
   YEAR(StandardTypeEnum.YEAR, "String.valueOf(LocalDate.now().getYear())"),
 
   /** 时间对象 */
-  DATETIME(
-      StandardTypeEnum.DATETIME,
-      "LocalDateTime.now().format(DateTimeFormatter.ofPattern(\"yyyy-MM-dd hh:mm:ss\"))"),
+  DATETIME(StandardTypeEnum.DATETIME, "LocalDateTime.now()"),
 
   /** 时间搓 */
-  TIMESTAMP(
-      StandardTypeEnum.TIMESTAMP,
-      "LocalDateTime.now().format(DateTimeFormatter.ofPattern(\"yyyy-MM-dd hh:mm:ss.0\"))"),
+  TIMESTAMP(StandardTypeEnum.TIMESTAMP, "LocalDateTime.now()"),
 
   /** TINYBLOB 0-255字节 不超过 255 个字符的二进制字符串 */
   TINYBLOB(StandardTypeEnum.TINYBLOB, JavaGenerateValueKey.GENERATE_ALPHABETIC_VALUE),
@@ -114,11 +110,11 @@ public enum JavaDataTypeGenerateValueEnum {
     return runFunction;
   }
 
-  public static String getGenerateFun(StandardTypeEnum key, int length) {
+  public static String getGenerateFun(StandardTypeEnum key, Long length) {
 
     String outLengthStr;
 
-    int outLength;
+    long outLength;
     if (length > DEFINE_MAX_LENGTH) {
       outLength = DEFINE_MAX_LENGTH;
     } else if (length == 0) {

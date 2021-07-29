@@ -120,9 +120,7 @@ public class MethodUtils {
 
     for (MethodInfo methodInfo : methodList) {
       // 当前存在分页查询，则返回成功
-      if (MethodTypeEnum.QUERY.getType().equals(methodInfo.getOperator())
-          && methodInfo.getPageQueryFlag() != null
-          && methodInfo.getPageQueryFlag()) {
+      if (MethodTypeEnum.QUERY_PAGE.getType().equals(methodInfo.getOperator())) {
         return true;
       }
     }

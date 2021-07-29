@@ -25,7 +25,10 @@ public enum MysqlDataTypeEnum {
   INTEGER(StandardTypeEnum.INTEGER, "INTEGER", 1, 10),
 
   /** BIGINT 8 字节 (-9,223,372,036,854,775,808，9 223 372 036 854 775 807) */
-  BIGINT(StandardTypeEnum.BIGINT, "BIGINT", 1, 19),
+  // BIGINT(StandardTypeEnum.BIGINT, "BIGINT", 1, 19),
+
+  /** BIGINT 8 字节 (0,18 446 744 073 709 551 615) */
+  BIGINT2(StandardTypeEnum.BIGINT, "BIGINT", 1, 21),
 
   /**
    * FLOAT 4 字节 (-3.402 823 466 E+38，-1.175 494 351 E-38)，0，(1.175 494 351 E-38，3.402 823 466 351
@@ -52,7 +55,7 @@ public enum MysqlDataTypeEnum {
   YEAR(StandardTypeEnum.YEAR, "YEAR", 1, 4),
 
   /** DATETIME 8 1000-01-01 00:00:00/9999-12-31 23:59:59 YYYY-MM-DD HH:MM:SS 混合日期和时间值 */
-  DATETIME(StandardTypeEnum.DATETIME, "DATETIME", 1, 20),
+  DATETIME(StandardTypeEnum.DATETIME, "DATETIME", 0, 20),
 
   /**
    * TIMESTAMP 4 1970-01-01 00:00:00/2038 结束时间是第 2147483647 秒，北京时间 2038-1-19 11:14:07，格林尼治时间
@@ -171,7 +174,7 @@ public enum MysqlDataTypeEnum {
    * @param length 类型长度
    * @return 标准的key
    */
-  public static StandardTypeEnum standardAndLengthCheck(String mysqlType, Integer length) {
+  public static StandardTypeEnum standardAndLengthCheck(String mysqlType, Long length) {
     {
       MysqlDataTypeEnum dataType = mysqlDataType(mysqlType);
 
@@ -187,6 +190,8 @@ public enum MysqlDataTypeEnum {
         throw new IllegalArgumentException(
             "mysql type :"
                 + mysqlType
+                + ",curr length :"
+                + length
                 + " is not in scope {"
                 + dataType.lengthStart
                 + " - "

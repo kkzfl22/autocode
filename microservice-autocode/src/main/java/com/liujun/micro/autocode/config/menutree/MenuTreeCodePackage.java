@@ -41,6 +41,22 @@ public class MenuTreeCodePackage {
                 .getChildren(JavaDomainTreeKey.REPOSITORY_PO);
     }
 
+
+    /**
+     * 获取数据库存储的实体对象节点
+     *
+     * @return 模块名称
+     */
+    public MenuNode getMybatisPlusRepositoryObjectNode() {
+        return menuTree
+                .getDefineRoot()
+                .getChildren(JavaDomainTreeKey.INFRASTRUCTURE)
+                .getChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY)
+                .getChildren(menuTree.getModelName())
+                .getChildren(JavaDomainTreeKey.REPOSITORY_MYBATIS_PLUS_PO);
+    }
+
+
     /**
      * 获取数据库存储的接口的节点信息
      *

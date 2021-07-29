@@ -1,7 +1,7 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryDaoInfCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryMapperInfCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryJunitDaoCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryJunitMyBatisScanConfigCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryMyBatisMapperCreate;
@@ -20,7 +20,7 @@ public class JavaCodeRepositoryJunitDaoCreateTest {
         GenerateCodeContext context = CodeBaseUtils.getBase();
 
         JavaCodeRepositoryObjectCreate poInstance = new JavaCodeRepositoryObjectCreate();
-        JavaCodeRepositoryDaoInfCreate daoInstance = new JavaCodeRepositoryDaoInfCreate();
+        JavaCodeRepositoryMapperInfCreate daoInstance = new JavaCodeRepositoryMapperInfCreate();
         JavaCodeRepositoryJunitMyBatisScanConfigCreate myBatisScanConfigCreate = JavaCodeRepositoryJunitMyBatisScanConfigCreate.INSTANCE;
         JavaCodeRepositoryJunitDaoCreate junitDaoInstance = new JavaCodeRepositoryJunitDaoCreate();
         JavaCodeRepositoryMyBatisMapperCreate mapperInstance =
