@@ -63,6 +63,9 @@ public class Symbol {
   /** 系统换行符 */
   public static final String ENTER_LINE = "\n";
 
+  /** 回车符 */
+  public static final String ENTER = "\r";
+
   /** 下划线 */
   public static final String UNDER_LINE = "_";
 
@@ -83,4 +86,7 @@ public class Symbol {
 
   /** 注解符 */
   public static final String NOTE = "@";
+
+  /** 符号 */
+  public static final String OR = "||";
 }

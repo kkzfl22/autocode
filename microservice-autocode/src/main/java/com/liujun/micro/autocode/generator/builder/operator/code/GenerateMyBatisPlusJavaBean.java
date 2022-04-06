@@ -3,7 +3,9 @@ package com.liujun.micro.autocode.generator.builder.operator.code;
 import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.builder.constant.CodeAnnotation;
+import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
+import com.liujun.micro.autocode.generator.builder.entity.DataParam;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
@@ -58,19 +60,21 @@ public class GenerateMyBatisPlusJavaBean {
   /**
    * 进行javaBean文件的生成操作
    *
-   * @param columnList 列信息
+   * @param generateParam 生成代码的参数
    * @return 生成的javabean对象
    */
-  public StringBuilder generateJavaBean(
-      ImportPackageInfo entityInfo, List<TableColumnDTO> columnList, GenerateCodeContext param) {
+  public StringBuilder generateJavaBean(DataParam generateParam) {
 
-    List<MethodInfo> codeMethod = param.getGenerateConfig().getGenerate().getCode();
-    String author = param.getGenerateConfig().getGenerate().getAuthor();
-    DatabaseTypeEnum typeEnum = param.getTypeEnum();
+    ImportPackageInfo entityInfo = generateParam.getPkg(GenerateCodePackageKey.PERSIST_PO);
+    List<TableColumnDTO> columnList = generateParam.getColumnList();
+
+    List<MethodInfo> codeMethod = generateParam.getMethodList();
+    String author = generateParam.getAuthor();
+    DatabaseTypeEnum typeEnum = generateParam.getTypeEnum();
 
     List<String> annotationList = new ArrayList<>(ANNOTATION_LIST.size() + 1);
     annotationList.addAll(ANNOTATION_LIST);
-    annotationList.add(tableName(param.getTableMap().get(columnList.get(0).getTableName())));
+    annotationList.add(tableName(generateParam.getTableInfo()));
     // 类的定义
     StringBuilder sb =
         JavaClassCodeUtils.classDefine(

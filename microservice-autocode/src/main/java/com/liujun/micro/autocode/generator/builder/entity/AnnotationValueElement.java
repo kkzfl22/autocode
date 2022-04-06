@@ -11,11 +11,11 @@ import lombok.ToString;
  */
 public class AnnotationValueElement {
 
-  /** 标识信息 */
-  private String key;
-
   /** 输出字符的标识,当值为默认时，输出字符，为true，则按原字符进行输出,即不加引号 */
   private boolean notCharFlag;
+
+  /** 标识信息 */
+  private String key;
 
   /** 值信息 */
   private String value;

@@ -1,8 +1,5 @@
 package com.liujun.micro.autocode.config.generate.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -15,6 +12,7 @@ import java.util.Objects;
  * @author liujun
  * @version 0.0.1
  */
+@ToString
 public class MethodInfo implements Comparable<MethodInfo> {
 
   /** 方法名称 */
@@ -58,6 +56,9 @@ public class MethodInfo implements Comparable<MethodInfo> {
 
   /** 排序的字段 */
   private Integer order;
+
+  /** 请求类型,HTTP.GET,HTTP.POST */
+  private String requestType;
 
   /**
    * 使用从小到大的排序方式，进行方法的输出
@@ -188,6 +189,14 @@ public class MethodInfo implements Comparable<MethodInfo> {
     this.multiRow = multiRow;
   }
 
+  public String getRequestType() {
+    return requestType;
+  }
+
+  public void setRequestType(String requestType) {
+    this.requestType = requestType;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -226,24 +235,5 @@ public class MethodInfo implements Comparable<MethodInfo> {
         returns,
         returnType,
         order);
-  }
-
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder("MethodInfo{");
-    sb.append("name='").append(name).append('\'');
-    sb.append(", disable=").append(disable);
-    sb.append(", operator='").append(operator).append('\'');
-    sb.append(", comment='").append(comment).append('\'');
-    sb.append(", where='").append(where).append('\'');
-    sb.append(", whereInfo=").append(whereInfo);
-    sb.append(", params='").append(params).append('\'');
-    sb.append(", paramType=").append(paramType);
-    sb.append(", primaryFlag=").append(primaryFlag);
-    sb.append(", returns='").append(returns).append('\'');
-    sb.append(", returnType=").append(returnType);
-    sb.append(", order=").append(order);
-    sb.append('}');
-    return sb.toString();
   }
 }

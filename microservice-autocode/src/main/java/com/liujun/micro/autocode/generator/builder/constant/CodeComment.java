@@ -119,9 +119,6 @@ public class CodeComment {
   /** 模块名称的注释 */
   public static final String MODULE_NAME_COMMENT = "模块名称";
 
-
-  /**
-   * 错误码加载至容器的方法
-   */
+  /** 错误码加载至容器的方法 */
   public static final String ERROR_CODE_LOADER_COMMENT = "错误码加载至容器的方法";
 }

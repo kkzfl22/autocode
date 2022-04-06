@@ -1,6 +1,6 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceConstantCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeConstantCreate;
 import org.junit.Test;
 
 /**
@@ -11,7 +11,7 @@ public class JavaCodeInterfaceConstantCreateTest {
 
   @Test
   public void testGenerate() {
-    JavaCodeInterfaceConstantCreate instance = new JavaCodeInterfaceConstantCreate();
+    JavaCodeFacadeConstantCreate instance = new JavaCodeFacadeConstantCreate();
 
     // 进行数据生成
     instance.generateCode(CodeBaseUtils.getBase());

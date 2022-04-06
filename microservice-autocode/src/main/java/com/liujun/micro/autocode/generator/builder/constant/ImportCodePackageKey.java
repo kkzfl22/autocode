@@ -1,6 +1,7 @@
 package com.liujun.micro.autocode.generator.builder.constant;
 
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
+import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 
 /**
  * 公共导入包的相关定义
@@ -12,7 +13,7 @@ public enum ImportCodePackageKey {
 
   /** 查询分页参数 */
   PAGE_PARAM(
-      new ImportPackageInfo(
+      PkgBuildMethod.genericClassInfo(
           "com.ddd.common.infrastructure.entity",
           "DomainPage",
           CodeComment.PAGE_REQUEST_COMMENT,
@@ -21,7 +22,7 @@ public enum ImportCodePackageKey {
 
   /** 查询分页结果集 */
   PAGE_RESULT(
-      new ImportPackageInfo(
+      PkgBuildMethod.genericClassInfo(
           "com.ddd.common.infrastructure.entity",
           "DomainPage",
           CodeComment.PAGE_RESPONSE_COMMENT,
@@ -29,125 +30,133 @@ public enum ImportCodePackageKey {
           "<List<table_name>>")),
 
   /** 查询分页结果集 */
-  PAGE_DTO(new ImportPackageInfo("com.common.entity", "PageDTO")),
+  PAGE_DTO(PkgBuildMethod.classInfo("com.common.entity", "PageDTO")),
 
   /** 用于进行方法检查 */
-  PARAM_CHECK(new ImportPackageInfo("com.common.check", "ParamCheckUtils", "错误码检查方法")),
+  PARAM_CHECK(PkgBuildMethod.classInfoComment("com.common.check", "ParamCheckUtils", "错误码检查方法")),
 
   /** 错误的对象信息 */
-  ERROR_DATA(new ImportPackageInfo("com.common.entity", "ErrorData", "错误码对象", "codeData")),
+  ERROR_DATA(
+      PkgBuildMethod.classInfoVarInfo("com.common.entity", "ErrorData", "错误码对象", "codeData")),
 
   /** 错误码容器集合 */
-  ERROR_COLLECT(new ImportPackageInfo("com.common.collect", "ErrorCodeCollect", "错误码集合")),
+  ERROR_COLLECT(PkgBuildMethod.classInfoComment("com.common.collect", "ErrorCodeCollect", "错误码集合")),
 
   /** 公共错误码枚举 */
-  ERROR_CODE_COMMON(new ImportPackageInfo("com.common.entity", "APICodeEnum", "公共错误码")),
+  ERROR_CODE_COMMON(PkgBuildMethod.classInfoComment("com.common.entity", "APICodeEnum", "公共错误码")),
 
   /** 错误码加载器对象 */
-  ERROR_LOADER_COLLECT(new ImportPackageInfo("com.common.collect", "ErrorLoaderCollect", "错误码加载器")),
+  ERROR_LOADER_COLLECT(
+      PkgBuildMethod.classInfoComment("com.common.collect", "ErrorLoaderCollect", "错误码加载器")),
 
   /** Getter的注解 */
-  ANNOTATION_GETTER(ImportPackageInfo.getAnnotationPkg("lombok", "Getter", "@Getter")),
+  ANNOTATION_GETTER(PkgBuildMethod.getAnnotationPkg("lombok", "Getter", "@Getter")),
 
   /** Setter的注解 */
-  ANNOTATION_SETTER(ImportPackageInfo.getAnnotationPkg("lombok", "Setter", "@Setter")),
+  ANNOTATION_SETTER(PkgBuildMethod.getAnnotationPkg("lombok", "Setter", "@Setter")),
 
   /** toString的注解 */
-  ANNOTATION_TOSTRING(ImportPackageInfo.getAnnotationPkg("lombok", "ToString", "@ToString")),
+  ANNOTATION_TOSTRING(PkgBuildMethod.getAnnotationPkg("lombok", "ToString", "@ToString")),
 
   /** swagger的ApiModel的注解 */
   ANNOTATION_API_MODEL(
-      ImportPackageInfo.getAnnotationPkg("io.swagger.annotations", "ApiModel", "@ApiModel")),
+      PkgBuildMethod.getAnnotationPkg("io.swagger.annotations", "ApiModel", "@ApiModel")),
 
   /** swagger的Api的注解 */
-  ANNOTATION_API(ImportPackageInfo.getAnnotationPkg("io.swagger.annotations", "Api", "@Api")),
+  ANNOTATION_API(PkgBuildMethod.getAnnotationPkg("io.swagger.annotations", "Api", "@Api")),
 
   /** swagger的Api的注解 */
   ANNOTATION_API_OPERATION(
-      ImportPackageInfo.getAnnotationPkg(
-          "io.swagger.annotations", "ApiOperation", "@ApiOperation")),
+      PkgBuildMethod.getAnnotationPkg("io.swagger.annotations", "ApiOperation", "@ApiOperation")),
 
   /** swagger的ApiModelProperty的注解 */
   ANNOTATION_API_MODEL_PROPERTY(
-      ImportPackageInfo.getAnnotationPkg(
+      PkgBuildMethod.getAnnotationPkg(
           "io.swagger.annotations", "ApiModelProperty", "@ApiModelProperty")),
 
   /** spring的RestController注解 */
   SPRING_REST_CONTROLLER(
-      ImportPackageInfo.getAnnotationPkg(
+      PkgBuildMethod.getAnnotationPkg(
           "org.springframework.web.bind.annotation", "RestController", "@RestController")),
 
   /** spring的RestController注解 */
   SPRING_REQUEST_MAPPING(
-      ImportPackageInfo.getAnnotationPkg(
+      PkgBuildMethod.getAnnotationPkg(
           "org.springframework.web.bind.annotation", "RequestMapping", "@RequestMapping")),
 
   /** spring的RestController注解 */
   SPRING_SERVICE_ANNOTATION(
-      ImportPackageInfo.getAnnotationPkg("org.springframework.stereotype", "Service", "@Service")),
+      PkgBuildMethod.getAnnotationPkg("org.springframework.stereotype", "Service", "@Service")),
 
   /** @Slf4j的注解信息 */
-  SLF4J_ANNOTATION(ImportPackageInfo.getAnnotationPkg("lombok.extern.slf4j", "Slf4j", "@Slf4j")),
+  SLF4J_ANNOTATION(PkgBuildMethod.getAnnotationPkg("lombok.extern.slf4j", "Slf4j", "@Slf4j")),
 
   /** spring的request Method注解 */
   SPRING_REQUEST_METHOD(
-      new ImportPackageInfo("org.springframework.web.bind.annotation", "RequestMethod")),
+      PkgBuildMethod.classInfo("org.springframework.web.bind.annotation", "RequestMethod")),
 
   /** spring的RequestBody注解 */
   SPRING_REQUEST_BODY(
-      ImportPackageInfo.getAnnotationPkg(
+      PkgBuildMethod.getAnnotationPkg(
           "org.springframework.web.bind.annotation", "RequestBody", "@RequestBody")),
+
+  /** 参数验证 */
+  SPRING_VALID_PARAM(
+      PkgBuildMethod.getAnnotationPkg(
+          "org.springframework.validation.annotation", "Validated", "@Validated")),
 
   /** spring的RequestBody注解 */
   HTTP_SERVLET_REQUEST(
-      new ImportPackageInfo("javax.servlet.http", "HttpServletRequest", "http请求信息", "request")),
-
-  /** API请求响应对象 */
-  API_RESPONSE(new ImportPackageInfo("com.common.entity", "ApiResponse", "返回结果信息", "response")),
-
-  /** API分页请求响应对象 */
-  API_PAGE_RESPONSE(
-      new ImportPackageInfo("com.common.entity", "ApiPageResponse", "分页结果信息", "response")),
-
-  /** API查询请求响应对象 */
-  API_DATA_RESPONSE(
-      new ImportPackageInfo("com.common.entity", "ApiDataResponse", "分页结果信息", "response")),
-
-  /** API分页请求响应对象 */
-  API_PAGE_REQUEST(
-      new ImportPackageInfo("com.common.entity", "PageDTO", "分页查询公共请求对象", "pageRequest")),
-
-  /** API分页请求响应对象 */
-  API_ASSEMBLER_PAGE(
-      new ImportPackageInfo("com.common.assembler", "PageAssembler", "分页转换对象", "assembler")),
-
-  /** 响应的错误码信息 */
-  API_RESPONSE_CODE(new ImportPackageInfo("com.common.entity", "APICodeEnum")),
+      PkgBuildMethod.classInfoVarInfo(
+          "javax.servlet.http", "HttpServletRequest", "http请求信息", "request")),
 
   /** 动态加载的接口 */
   API_CONFIG_INTERFACE(
-      new ImportPackageInfo("org.springframework.beans.factory.config", "BeanPostProcessor")),
+      PkgBuildMethod.classInfo("org.springframework.beans.factory.config", "BeanPostProcessor")),
 
   /** 加载注解 */
   API_CONFIG_LOAD_ANNOTATION(
-      ImportPackageInfo.getAnnotationPkg("javax.annotation", "PostConstruct", "@PostConstruct")),
+      PkgBuildMethod.getAnnotationPkg("javax.annotation", "PostConstruct", "@PostConstruct")),
 
   /** mybatis相关的注解信息 */
   MYBATIS_PLUS_TABLE_NAME(
-      ImportPackageInfo.getAnnotationPkg(
+      PkgBuildMethod.getAnnotationPkg(
           "com.baomidou.mybatisplus.annotation", "TableField", "@TableName")),
 
   /** mybatis相关的注解信息 */
   MYBATIS_PLUS_TABLE_FIELD(
-      ImportPackageInfo.getAnnotationPkg(
+      PkgBuildMethod.getAnnotationPkg(
           "com.baomidou.mybatisplus.annotation", "TableField", "@TableField")),
-  ;
+
+  /** 领域服务中的id生成 */
+  DOMAIN_ID_GENERATE(
+      ImportPackageInfo.builder()
+          .pkgPath("com.paraview.uid")
+          .className("UidGenerator")
+          .classComment("分布式id生成")
+          .varName("idGenerator")
+          .annotation("@Autowired\n" + "    @Qualifier(\"cachedUidGenerator\")")
+          .build()),
+
+  /** 批量生成数据的参数 */
+  DOMAIN_BATCH_ID_LIST(
+      ImportPackageInfo.builder()
+          .pkgPath(JavaKeyWord.IMPORT_LIST)
+          .className("List")
+          .classComment("批量操作的数据集")
+          .varName("batchData")
+          .build()),
+
+  /** @Qualifier注解 */
+  SPRING_BOOT_QUALIFIER(
+      PkgBuildMethod.getAnnotationPkg(
+          "org.springframework.beans.factory.annotation", "Qualifier", "@Qualifier"));
 
   /** 包定义信息 */
   private final ImportPackageInfo packageInfo;
 
-  ImportCodePackageKey(ImportPackageInfo packageInfo) {
-    this.packageInfo = packageInfo;
+  private ImportCodePackageKey(ImportPackageInfo pkgInfo) {
+    this.packageInfo = pkgInfo;
   }
 
   public ImportPackageInfo getPackageInfo() {

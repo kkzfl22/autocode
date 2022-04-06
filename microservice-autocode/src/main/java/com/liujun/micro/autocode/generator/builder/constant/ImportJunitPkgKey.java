@@ -10,82 +10,70 @@ import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
  */
 public enum ImportJunitPkgKey {
 
+  /** spring与junit结合的测试框架 */
+  SPRING_RUNNER(
+      PkgBuildMethod.getAnnotationPkg(
+          "org.springframework.test.context.junit4", "SpringRunner", "@RunWith")),
 
-    /**
-     * spring与junit结合的测试框架
-     */
-    SPRING_RUNNER(
-            ImportPackageInfo.getAnnotationPkg("org.springframework.test.context.junit4", "SpringRunner", "@RunWith")),
+  /** 指定加载类 */
+  SPRING_BOOT_TEST(
+      PkgBuildMethod.getAnnotationPkg(
+          "org.springframework.boot.test.context", "SpringBootTest", "@SpringBootTest")),
 
+  /** 指定加载类 */
+  SPRING_BOOT_TEST_MAPPER_SCAN(
+      PkgBuildMethod.getAnnotationPkg(
+          "org.mybatis.spring.annotation", "MapperScan", "@MapperScan")),
 
-    /**
-     * 指定加载类
-     */
-    SPRING_BOOT_TEST(
-            ImportPackageInfo.getAnnotationPkg("org.springframework.boot.test.context", "SpringBootTest", "@SpringBootTest")),
+  /** config的注解 */
+  SPRING_CONFIG(
+      PkgBuildMethod.getAnnotationPkg(
+          "org.springframework.context.annotation", "Configuration", "@Configuration")),
 
+  /** 测试的事务操作 */
+  SPRING_BOOT_TEST_TRANSACTIONAL(
+      PkgBuildMethod.getAnnotationPkg(
+          "org.springframework.transaction.annotation", "Transactional", "@Transactional")),
 
-    /**
-     * 指定加载类
-     */
-    SPRING_BOOT_TEST_MAPPER_SCAN(
-            ImportPackageInfo.getAnnotationPkg("org.mybatis.spring.annotation", "MapperScan", "@MapperScan")),
+  /** 测试的事务操作 */
+  SPRING_BOOT_TEST_PROPERTY_SOURCE(
+      PkgBuildMethod.getAnnotationPkg(
+          "org.springframework.test.context", "TestPropertySource", "@TestPropertySource")),
 
+  /** 测试包的导入 */
+  SPRING_BOOT_TEST_IMPORT(
+      PkgBuildMethod.getAnnotationPkg(
+          "org.springframework.context.annotation", "Import", "@Import")),
 
-    /**
-     * config的注解
-     */
-    SPRING_CONFIG(ImportPackageInfo.getAnnotationPkg("org.springframework.context.annotation", "Configuration", "@Configuration")),
+  /** 数据源注入的包 */
+  SPRING_BOOT_TEST_DATA_SOURCE(
+      PkgBuildMethod.classInfo(
+          "com.alibaba.druid.spring.boot.autoconfigure", "DruidDataSourceAutoConfigure")),
 
-    /**
-     * 测试的事务操作
-     */
-    SPRING_BOOT_TEST_TRANSACTIONAL(ImportPackageInfo.getAnnotationPkg("org.springframework.transaction.annotation", "Transactional", "@Transactional")),
+  /** mybatis的自动配制 */
+  SPRING_BOOT_TEST_MYBATIS_AUTO_CONFIG(
+      PkgBuildMethod.classInfo(
+          "org.mybatis.spring.boot.autoconfigure", "MybatisAutoConfiguration")),
 
+  /** 时间处理 */
+  SPRING_BOOT_TEST_DATETIME_UTILS(
+      PkgBuildMethod.classInfo("com.ddd.common.infrastructure.utils", "DataBaseUtils"));
 
-    /**
-     * 测试的事务操作
-     */
-    SPRING_BOOT_TEST_PROPERTY_SOURCE(ImportPackageInfo.getAnnotationPkg("org.springframework.test.context", "TestPropertySource", "@TestPropertySource")),
+  /** 包定义信息 */
+  private final ImportPackageInfo packageInfo;
 
+  ImportJunitPkgKey(ImportPackageInfo packageInfo) {
+    this.packageInfo = packageInfo;
+  }
 
-    /**
-     * 测试包的导入
-     */
-    SPRING_BOOT_TEST_IMPORT(ImportPackageInfo.getAnnotationPkg("org.springframework.context.annotation", "Import", "@Import")),
+  public ImportPackageInfo getPackageInfo() {
+    return packageInfo;
+  }
 
-
-    /**
-     * 数据源注入的包
-     */
-    SPRING_BOOT_TEST_DATA_SOURCE(new ImportPackageInfo("com.alibaba.druid.spring.boot.autoconfigure", "DruidDataSourceAutoConfigure")),
-
-
-    /**
-     * mybatis的自动配制
-     */
-    SPRING_BOOT_TEST_MYBATIS_AUTO_CONFIG(new ImportPackageInfo("org.mybatis.spring.boot.autoconfigure", "MybatisAutoConfiguration")),
-
-
-    ;
-
-    /**
-     * 包定义信息
-     */
-    private final ImportPackageInfo packageInfo;
-
-    ImportJunitPkgKey(ImportPackageInfo packageInfo) {
-        this.packageInfo = packageInfo;
-    }
-
-    public ImportPackageInfo getPackageInfo() {
-        return packageInfo;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("CreateCommKey{");
-        sb.append('}');
-        return sb.toString();
-    }
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("CreateCommKey{");
+    sb.append('}');
+    return sb.toString();
+  }
 }

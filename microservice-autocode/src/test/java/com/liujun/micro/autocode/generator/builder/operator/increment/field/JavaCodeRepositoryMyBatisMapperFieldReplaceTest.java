@@ -1,0 +1,29 @@
+package com.liujun.micro.autocode.generator.builder.operator.increment.field;
+
+import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
+import com.liujun.micro.autocode.generator.builder.operator.code.CodeBaseUtils;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.increment.field.JavaCodeRepositoryMyBatisMapperFieldReplace;
+import org.junit.Test;
+
+/**
+ * 进行字段生成的单元测试
+ *
+ * @author liujun
+ * @version 0.0.1
+ */
+public class JavaCodeRepositoryMyBatisMapperFieldReplaceTest {
+
+  @Test
+  public void testGenerate() {
+
+    GenerateCodeContext context = CodeBaseUtils.getBase();
+
+    JavaCodeRepositoryMyBatisMapperFieldReplace mapperFieldReplace =
+        JavaCodeRepositoryMyBatisMapperFieldReplace.INSTANCE;
+
+    // mapper的字段替换
+    mapperFieldReplace.generateCode(context);
+  }
+
+
+}

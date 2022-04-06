@@ -1,7 +1,7 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeProjectMavenPomCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.other.JavaCodeProjectMavenPomCreate;
 import org.junit.Test;
 
 /**

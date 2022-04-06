@@ -2,6 +2,7 @@ package com.liujun.micro.autocode.generator.builder.entity;
 
 import com.liujun.micro.autocode.generator.builder.constant.CodeAnnotation;
 import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
+import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
 import lombok.Data;
@@ -45,6 +46,31 @@ public class JavaClassFieldEntity extends JavaClassElement {
             .name(name)
             // 注释
             .comment(comment)
+            // 构建
+            .build();
+
+    return instance;
+  }
+
+  /**
+   * 获取spring注解的私有的属性构建对象
+   *
+   * @param classInfo 类信息
+   */
+  public static JavaClassFieldEntity getPrivateAutowiredField(ImportPackageInfo classInfo) {
+
+    JavaClassFieldEntity instance =
+        JavaClassFieldEntity.builder()
+            // 访问修饰符
+            .visit(JavaKeyWord.PRIVATE)
+            // 注解
+            .annotation(classInfo.getAnnotation())
+            // 类型
+            .type(classInfo.getClassName())
+            // 名称
+            .name(classInfo.getVarName())
+            // 注释
+            .comment(classInfo.getClassComment())
             // 构建
             .build();
 

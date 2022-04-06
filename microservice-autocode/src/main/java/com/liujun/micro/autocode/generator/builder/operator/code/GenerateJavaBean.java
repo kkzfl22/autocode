@@ -3,7 +3,7 @@ package com.liujun.micro.autocode.generator.builder.operator.code;
 import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
 import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
-import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
+import com.liujun.micro.autocode.generator.builder.entity.DataParam;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
@@ -52,15 +52,17 @@ public class GenerateJavaBean {
   /**
    * 进行javaBean文件的生成操作
    *
-   * @param columnList 列信息
+   * @param generateParam 列信息
    * @return 生成的javabean对象
    */
-  public StringBuilder generateJavaBean(
-      ImportPackageInfo entityInfo, List<TableColumnDTO> columnList, GenerateCodeContext param) {
+  public StringBuilder generateJavaBean(DataParam generateParam) {
 
-    List<MethodInfo> codeMethod = param.getGenerateConfig().getGenerate().getCode();
-    String author = param.getGenerateConfig().getGenerate().getAuthor();
-    DatabaseTypeEnum typeEnum = param.getTypeEnum();
+    ImportPackageInfo entityInfo = generateParam.getPkg(GenerateCodePackageKey.PERSIST_PO);
+    List<TableColumnDTO> columnList = generateParam.getColumnList();
+
+    List<MethodInfo> codeMethod = generateParam.getMethodList();
+    String author = generateParam.getAuthor();
+    DatabaseTypeEnum typeEnum = generateParam.getTypeEnum();
 
     // 类的定义
     StringBuilder sb =

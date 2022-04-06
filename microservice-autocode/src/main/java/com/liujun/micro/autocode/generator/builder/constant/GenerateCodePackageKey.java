@@ -11,9 +11,6 @@ public enum GenerateCodePackageKey {
   /** 存储层的资源实体 */
   PERSIST_PO("persist_object"),
 
-  /** 存储层的资源实体 */
-  PERSIST_MYBATIS_PLUS_PO("persist_mybatis_plus_object"),
-
   /** 数据库操作的接口 */
   PERSIST_DAO("persist_dao"),
 
@@ -25,6 +22,9 @@ public enum GenerateCodePackageKey {
 
   /** 领域层的存储实现 */
   PERSIST_PERSISTENCE("persist_persistence"),
+
+  /** dao的单元测试 */
+  PERSIST_JUNIT_DAO("persist_junit_dao"),
 
   /** 领域层的实体对象 */
   DOMAIN_DO("domain_object"),
@@ -38,11 +38,17 @@ public enum GenerateCodePackageKey {
   /** 将数据库层进行mock化 */
   DOMAIN_MOCK_MAPPER("domain_mock_mapper"),
 
+  /** 领域的单元测试服务 */
+  DOMAIN_JUNIT_SERVICE("domain_junit_service"),
+
   /** 应用服务 */
   APPLICATION_SERVICE("application_service"),
 
   /** 对外的ＡＰＩ对象 */
   INTERFACE_FACADE("interface_facade"),
+
+  /** 参数校验 */
+  INTERFACE_VALID_PARAM("interface_valid_param"),
 
   /** api层的传输对象 */
   INTERFACE_OBJECT("interface_dto"),
@@ -59,11 +65,11 @@ public enum GenerateCodePackageKey {
   /** 参数的检查 */
   INTERFACE_CHECK_PARAM("interface_check_param"),
 
-  /** 对外的ＡＰＩ对象的接口 */
-  INTERFACE_FACADE_INTERFACE("interface_facade_interface"),
-
   /** 存储的配制 */
   REPOSITORY_MAPPER_CONFIG("repository_mapper_config"),
+
+  /** 分页的对象信息 */
+  DOMAIN_PAGE_ENTITY("domain_page_entity"),
   ;
 
   private final String key;

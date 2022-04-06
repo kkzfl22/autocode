@@ -10,13 +10,13 @@ package com.liujun.micro.autocode.generator.database.constant;
 public enum MysqlDataTypeEnum {
 
   /** TINYINT 1 字节 (-128，127) */
-  TINYINT(StandardTypeEnum.TINYINT, "TINYINT", 1, 3),
+  TINYINT(StandardTypeEnum.TINYINT, "TINYINT", 1, 4),
 
   /** SMALLINT 2 字节 (-32 768，32 767) */
-  SMALLINT(StandardTypeEnum.SMALLINT, "SMALLINT", 1, 5),
+  SMALLINT(StandardTypeEnum.SMALLINT, "SMALLINT", 1, 6),
 
   /** MEDIUMINT 3 字节 (-8 388 608，8 388 607) */
-  MEDIUMINT(StandardTypeEnum.MEDIUMINT, "MEDIUMINT", 1, 7),
+  MEDIUMINT(StandardTypeEnum.MEDIUMINT, "MEDIUMINT", 1, 9),
 
   /** INT或INTEGER 4 字节 (-2 147 483 648，2 147 483 647) */
   INT(StandardTypeEnum.INTEGER, "INT", 1, 10),

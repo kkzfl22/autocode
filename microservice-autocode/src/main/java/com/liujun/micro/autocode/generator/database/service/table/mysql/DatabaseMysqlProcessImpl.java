@@ -61,6 +61,7 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
         map.put(tableInfo.getTableName(), tableInfo);
       }
     } catch (SQLException e) {
+      e.printStackTrace();
       log.error("getTableInfo ", e);
     } finally {
       DataBaseUtils.close(rs);

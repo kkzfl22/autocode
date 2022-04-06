@@ -1,9 +1,6 @@
 package com.liujun.micro.autocode.generator.builder.operator.ddd.increment.field.entity;
 
 import com.liujun.micro.autocode.generator.builder.operator.ddd.increment.field.constant.ClassFieldTypeEnum;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 

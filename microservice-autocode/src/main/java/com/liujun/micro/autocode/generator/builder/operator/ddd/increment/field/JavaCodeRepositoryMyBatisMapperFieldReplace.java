@@ -6,7 +6,7 @@ import com.liujun.micro.autocode.generator.builder.constant.MyBatisKey;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
 import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaMybatisMapperXml;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryMyBatisMapperCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisMapperXmlCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.increment.field.matcher.MatcherFieldContext;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.increment.field.matcher.MultMatcherProcess;
 import com.liujun.micro.autocode.generator.builder.operator.utils.FileReaderUtils;
@@ -123,7 +123,7 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
           // 定义项目内的完整目录结构
           param.getProjectPath().getRepositoryMybatisMapperNode().outPath(),
           // 文件名
-          JavaCodeRepositoryMyBatisMapperCreate.INSTANCE.getMapperName(tableName),
+          JavaCodeRepositoryMyBatisMapperXmlCreate.INSTANCE.getMapperName(tableName),
           false);
     }
   }
@@ -168,7 +168,7 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
     String mapperFileName =
         readPath
             + Symbol.PATH
-            + JavaCodeRepositoryMyBatisMapperCreate.INSTANCE.getMapperName(tableName);
+            + JavaCodeRepositoryMyBatisMapperXmlCreate.INSTANCE.getMapperName(tableName);
 
     return FileReaderUtils.readFile(mapperFileName);
   }

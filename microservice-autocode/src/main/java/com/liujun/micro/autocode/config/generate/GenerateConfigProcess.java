@@ -34,7 +34,7 @@ public class GenerateConfigProcess {
 
     private GenerateConfigProcess() {
         // 执行数据处理
-        process(cfgEntity.getGenerate().getCode());
+        process(cfgEntity.getGenerate().getMethodList());
     }
 
     /**
@@ -47,7 +47,7 @@ public class GenerateConfigProcess {
         cleanDisableMethod(methodList);
 
         // 1,对代码方法进行排序
-        Collections.sort(cfgEntity.getGenerate().getCode());
+        Collections.sort(cfgEntity.getGenerate().getMethodList());
 
         // 进行方法的参数设置
         for (MethodInfo method : methodList) {

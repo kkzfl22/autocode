@@ -24,7 +24,7 @@ generate:
   updateCode: true
   #作者名称，即代码写在@author中的名称
   author: liujun
-  code:
+  methodList:
     #单个插入方法
     - name: insert
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败

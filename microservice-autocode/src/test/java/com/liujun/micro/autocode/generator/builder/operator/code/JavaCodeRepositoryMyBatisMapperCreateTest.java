@@ -1,9 +1,9 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryMyBatisMapperCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryObjectCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryMapperInfCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisMapperXmlCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisMapperInfCreate;
 import org.junit.Test;
 
 /**
@@ -19,9 +19,9 @@ public class JavaCodeRepositoryMyBatisMapperCreateTest {
 
     GenerateCodeContext context = CodeBaseUtils.getBase();
 
-    JavaCodeRepositoryObjectCreate poInstance = new JavaCodeRepositoryObjectCreate();
-    JavaCodeRepositoryMapperInfCreate daoInstance = new JavaCodeRepositoryMapperInfCreate();
-    JavaCodeRepositoryMyBatisMapperCreate mapperInstance = new JavaCodeRepositoryMyBatisMapperCreate();
+    JavaCodeRepositoryMyBatisObjectCreate poInstance = new JavaCodeRepositoryMyBatisObjectCreate();
+    JavaCodeRepositoryMyBatisMapperInfCreate daoInstance = new JavaCodeRepositoryMyBatisMapperInfCreate();
+    JavaCodeRepositoryMyBatisMapperXmlCreate mapperInstance = new JavaCodeRepositoryMyBatisMapperXmlCreate();
 
     // po优先生成
     poInstance.generateCode(context);

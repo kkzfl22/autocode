@@ -139,4 +139,7 @@ public class JavaVarName {
 
   /** 获取数怕的方法 */
   public static final String PAGE_GENERATE_DATE_METHOD = "getData";
+
+  /** 主键的id的key */
+  public static final String DOMAIN_ID_KEY = "id";
 }

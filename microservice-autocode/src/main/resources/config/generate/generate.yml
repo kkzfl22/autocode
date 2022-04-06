@@ -24,7 +24,7 @@ generate:
   updateCode: true
   #作者名称，即代码写在@author中的名称
   author: liujun
-  code:
+  methodList:
     #单个插入方法
     - name: insert
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
@@ -57,9 +57,9 @@ generate:
     # 单个数据删除
     - name: delete
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
-      operator: true
+      operator: delete
       #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
-      disable: false
+      disable: true
       #方法的注释
       comment: 单个删除
       #标识当前是否为主键操作
@@ -69,9 +69,9 @@ generate:
       #排序
       order: 400
       # 批量根据主键删除数据
-    - name: deleteByIds
+    - name:  delete
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
-      operator: delete
+      operator: fase
       #方法的注释
       comment: 批量删除
       #      #标识当前是否为主键操作
@@ -84,6 +84,7 @@ generate:
     - name: queryPage
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: queryPage
+      disable: true
       #方法的注释
       comment: 分页查询
       #返回值类型信息
@@ -91,36 +92,42 @@ generate:
       #排序
       order: 600
     # 查询详细
-    - name: detail
+    - name: queryAll
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: query
       #方法的注释
-      comment: 按id查询详细
+      comment: 查询所有
       #返回值类型信息
-      returns: table_name
+      returns: java.util.List<table_name>
+      #请求类型
+      #requestType: HTTP.GET
       #排序
       order: 700
   #代码内的目录结构的配制
   codeMenuTree:
     #最基础的目标配制
-    baseMenu: com.liujun.schedule
+    baseMenu: com.paraview.zsc.domain.component.
     #最新输出的模块的名称
-    domainName: task
+    domainName: user
   #模块名称
-  moduleName: scheduletask
+  moduleName: urora-biz
   #工程名
-  projectName: schedule
+  projectName: matchTg
   #maven的配制信息
   #maven的artifactId即为各工程或者模块的名称
   maven:
-    groupId: com.liujun.schedule.task
+    groupId: com.liujun.manager.user
     version: 1.0-SNAPSHOT
-  #代码生成器需要包括的范围
-  #目前存在api,application,domain,repository
-  #api代码对外暴露的api接口，包含一系列的方法
-  #application表示聚合层
-  #domain表示领域服务层
-  #repository表示存储层的代码生成，目前使用mybatis
-  scope: api,application,domain,repository
+    #代码生成器需要包括的范围
+    #目前存在api,application,domain,repository
+    #api代码对外暴露的api接口，包含一系列的方法
+    #application表示聚合层
+    #domain表示领域服务层
+    #repository表示存储层的代码生成，目前使用mybatis
+    # repository-mybatis，即为当前存储层使用mybatis做为存储层的实现，会生成相关的po，存储的调用，mapper接口和mybatis文件。
+    # repository-mybatis-plus，采用mybatis-plus的存储层的实现。同样会生成相关的po，存储的调用，mapper接口和mybatis文件。
+    # 这种种生成方式的主要区别在于mybatis需要一些特殊的设置。在po需要指定与数据库的对应关系、mapper面要继承，以及xml文件无需全部生成。
+  scope: api,application,domain,repository-mybatis
+  #scope: application,domain,repository-mybatis-plus
   #输出文件的配制
   output: D:\java\code_gen

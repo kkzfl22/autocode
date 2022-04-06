@@ -1,5 +1,7 @@
 package com.liujun.micro.autocode.generator.database.entity;
 
+import com.liujun.micro.autocode.constant.Symbol;
+import com.liujun.micro.autocode.utils.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -59,7 +61,7 @@ public class TableColumnDTO {
       String defaultvalue) {
     super();
     this.columnName = columnName;
-    this.columnMsg = columnMsg;
+    this.columnMsg = StringUtils.containerTrim(columnMsg);
     this.dataType = dataType;
     this.primaryKey = primaryKey;
     this.nullFlag = nullFlag;

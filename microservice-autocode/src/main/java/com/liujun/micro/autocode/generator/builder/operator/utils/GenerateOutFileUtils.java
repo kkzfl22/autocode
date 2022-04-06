@@ -30,6 +30,21 @@ public class GenerateOutFileUtils {
   }
 
   /**
+   * 进行java文件输出操作
+   *
+   * @param sb 输出字符
+   * @param path 最基础的输出路径
+   * @param definePackage 工程内的路径信息
+   * @param className 输出的文件名
+   */
+  public static void outJavaFile(String sb, String path, String definePackage, String className) {
+
+    // 定义输出的文件名
+    String fileName = className + JavaKeyWord.FILE_SUFFIX;
+    outFile(new StringBuilder(sb), path, definePackage, fileName);
+  }
+
+  /**
    * 文件输出操作
    *
    * @param sb 输出字符

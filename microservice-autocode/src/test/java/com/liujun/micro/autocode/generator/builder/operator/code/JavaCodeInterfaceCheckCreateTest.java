@@ -1,10 +1,10 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceCheckCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceConstantCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceErrorCodeCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeCheckCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeConstantCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeErrorCodeCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeObjectCreate;
 import org.junit.Test;
 
 /**
@@ -17,10 +17,10 @@ public class JavaCodeInterfaceCheckCreateTest {
 
   @Test
   public void testGenerate() {
-    JavaCodeInterfaceErrorCodeCreate instance = new JavaCodeInterfaceErrorCodeCreate();
-    JavaCodeInterfaceObjectCreate dtoObjInstance = new JavaCodeInterfaceObjectCreate();
-    JavaCodeInterfaceConstantCreate constantInstance = new JavaCodeInterfaceConstantCreate();
-    JavaCodeInterfaceCheckCreate checkInstance = new JavaCodeInterfaceCheckCreate();
+    JavaCodeFacadeErrorCodeCreate instance = new JavaCodeFacadeErrorCodeCreate();
+    JavaCodeFacadeObjectCreate dtoObjInstance = new JavaCodeFacadeObjectCreate();
+    JavaCodeFacadeConstantCreate constantInstance = new JavaCodeFacadeConstantCreate();
+    JavaCodeFacadeCheckCreate checkInstance = new JavaCodeFacadeCheckCreate();
 
     GenerateCodeContext context = CodeBaseUtils.getBase();
 

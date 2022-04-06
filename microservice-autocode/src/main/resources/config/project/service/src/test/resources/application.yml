@@ -20,11 +20,11 @@ spring:
     druid:
       #监控统计拦截的filters
       filters: stat
-      driver-class-name: org.sqlite.JDBC
+      driver-class-name: com.mysql.jdbc.Driver
       #基本属性
-      url: jdbc:sqlite:user.db
-      username:
-      password:
+      url: jdbc:mysql://127.0.0.1:3306/autocode?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=false
+      username: root
+      password: '123456'
       #配置初始化大小/最小/最大
       initial-size: 1
       min-idle: 1

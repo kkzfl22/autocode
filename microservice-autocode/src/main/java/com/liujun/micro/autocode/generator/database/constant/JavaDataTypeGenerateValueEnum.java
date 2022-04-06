@@ -56,10 +56,10 @@ public enum JavaDataTypeGenerateValueEnum {
   YEAR(StandardTypeEnum.YEAR, "String.valueOf(LocalDate.now().getYear())"),
 
   /** 时间对象 */
-  DATETIME(StandardTypeEnum.DATETIME, "LocalDateTime.now()"),
+  DATETIME(StandardTypeEnum.DATETIME, "DataBaseUtils.getDatabaseLocalDateTime()"),
 
   /** 时间搓 */
-  TIMESTAMP(StandardTypeEnum.TIMESTAMP, "LocalDateTime.now()"),
+  TIMESTAMP(StandardTypeEnum.TIMESTAMP, "DataBaseUtils.getDatabaseLocalDateTime()"),
 
   /** TINYBLOB 0-255字节 不超过 255 个字符的二进制字符串 */
   TINYBLOB(StandardTypeEnum.TINYBLOB, JavaGenerateValueKey.GENERATE_ALPHABETIC_VALUE),

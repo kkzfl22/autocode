@@ -1,23 +1,25 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
-import com.liujun.micro.autocode.constant.GenerateDefineFlag;
-import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
 import com.liujun.micro.autocode.config.generate.entity.TypeInfo;
-import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
+import com.liujun.micro.autocode.constant.GenerateDefineFlag;
 import com.liujun.micro.autocode.constant.MethodTypeEnum;
+import com.liujun.micro.autocode.constant.Symbol;
+import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
 import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
+import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
-import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.javalanguage.constant.JavaKeyWord;
-import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 生成java的接口
@@ -39,13 +41,10 @@ public class GenerateJavaDaoInterface {
   public StringBuilder generateJavaInterface(GenerateCodeContext param, String tableName) {
 
     // 获取实体信息
-    ImportPackageInfo poPackageInfo =
-        ImportPackageUtils.getDefineClass(
-            param.getPackageMap(), GenerateCodePackageKey.PERSIST_PO.getKey(), tableName);
-    ImportPackageInfo daoPackageInfo =
-        ImportPackageUtils.getDefineClass(
-            param.getPackageMap(), GenerateCodePackageKey.PERSIST_DAO.getKey(), tableName);
-    List<MethodInfo> codeMethod = param.getGenerateConfig().getGenerate().getCode();
+    ImportPackageInfo poPackageInfo = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_PO);
+    ImportPackageInfo daoPackageInfo = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_DAO);
+
+    List<MethodInfo> codeMethod = param.getGenerateConfig().getGenerate().getMethodList();
     String author = param.getGenerateConfig().getGenerate().getAuthor();
 
     // 1,方法头的定义
@@ -105,7 +104,7 @@ public class GenerateJavaDaoInterface {
    * @param poPackageDefine 实体参数
    * @param importPackage 公共导入包信息
    */
-  private List<String> importMethodList(
+  public List<String> importMethodList(
       List<MethodInfo> methodList,
       ImportPackageInfo poPackageDefine,
       List<ImportPackageInfo> importPackage) {
@@ -162,7 +161,7 @@ public class GenerateJavaDaoInterface {
    * @param poClassName
    * @param methodItem
    */
-  private void updateMethod(StringBuilder sb, String poClassName, MethodInfo methodItem) {
+  public void updateMethod(StringBuilder sb, String poClassName, MethodInfo methodItem) {
 
     List<JavaMethodArguments> argumentsList = new ArrayList<>(methodItem.getParamType().size());
 
@@ -213,7 +212,7 @@ public class GenerateJavaDaoInterface {
    * @param poClassName 实体的名称
    * @param methodItem 方法实体
    */
-  private void queryMethod(StringBuilder sb, String poClassName, MethodInfo methodItem) {
+  public void queryMethod(StringBuilder sb, String poClassName, MethodInfo methodItem) {
 
     List<JavaMethodArguments> argumentsList = new ArrayList<>(methodItem.getParamType().size());
 
@@ -263,7 +262,7 @@ public class GenerateJavaDaoInterface {
    *
    * @param sb 字符信息
    */
-  private void classFinish(StringBuilder sb) {
+  public void classFinish(StringBuilder sb) {
     // 结束
     sb.append(Symbol.BRACE_RIGHT);
   }

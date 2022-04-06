@@ -17,7 +17,7 @@ public class GenerateConfigProcessTest {
   public void testLoad() {
     GenerateConfigEntity generateInstance = GenerateConfigProcess.INSTANCE.getCfgEntity();
     System.out.println(generateInstance);
-    List<MethodInfo> dataList = generateInstance.getGenerate().getCode();
+    List<MethodInfo> dataList = generateInstance.getGenerate().getMethodList();
 
     System.out.println();
     for (MethodInfo infoItem : dataList) {

@@ -1,9 +1,9 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainObjectCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceAssemblerCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.domain.JavaCodeDomainObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeAssemblerCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeObjectCreate;
 import org.junit.Test;
 
 /**
@@ -16,9 +16,9 @@ public class JavaCodeInterfaceObjectCreateTest {
 
   @Test
   public void testGenerate() {
-    JavaCodeInterfaceObjectCreate dtoObjInstance = new JavaCodeInterfaceObjectCreate();
+    JavaCodeFacadeObjectCreate dtoObjInstance = new JavaCodeFacadeObjectCreate();
     JavaCodeDomainObjectCreate domainObjInstance = new JavaCodeDomainObjectCreate();
-    JavaCodeInterfaceAssemblerCreate assemblerCreate = new JavaCodeInterfaceAssemblerCreate();
+    JavaCodeFacadeAssemblerCreate assemblerCreate = new JavaCodeFacadeAssemblerCreate();
 
     GenerateCodeContext context = CodeBaseUtils.getBase();
 

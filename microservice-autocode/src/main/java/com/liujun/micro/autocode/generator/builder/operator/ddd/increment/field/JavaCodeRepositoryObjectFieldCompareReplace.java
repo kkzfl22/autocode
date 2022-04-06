@@ -10,7 +10,7 @@ import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.JavaClassFieldEntity;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
 import com.liujun.micro.autocode.generator.builder.operator.code.GenerateJavaBean;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.increment.field.constant.ClassFieldTypeEnum;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.increment.field.entity.EntityField;
 import com.liujun.micro.autocode.generator.builder.operator.ddd.increment.field.entity.EntityInfo;
@@ -364,7 +364,7 @@ public class JavaCodeRepositoryObjectFieldCompareReplace implements GenerateCode
     String repositoryPath = param.getProjectPath().getSrcJavaNode().outPath();
     String readerPath = GeneratePathUtils.outServicePath(param) + Symbol.PATH + repositoryPath;
     String mapperFileName =
-        readerPath + Symbol.PATH + JavaCodeRepositoryObjectCreate.INSTANCE.getClassName(tableName);
+        readerPath + Symbol.PATH + JavaCodeRepositoryMyBatisObjectCreate.INSTANCE.getClassName(tableName);
 
     return FileReaderUtils.readFile(mapperFileName);
   }

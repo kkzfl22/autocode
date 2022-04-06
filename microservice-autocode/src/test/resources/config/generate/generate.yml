@@ -17,7 +17,7 @@ generate:
   #生成的目标数据库类型:mysql目标数据库为mysql;oralce，目标数据库为oracle
   databaseType: mysql
   #数据库表空间命名
-  databaseTableSpaceName: generate
+  databaseTableSpaceName: autocode
   #错误码开始编号，依次向后；如果需要重新以此开始，需删除序列文件.否则将以序列化后的文件数字，取整加2000开始
   startErrorCode: -10000
   #是否修改错误码编号,默认为true，进行修改
@@ -64,6 +64,20 @@ generate:
       #where: PKG_CODE in
       #排序
       order: 400
+    #查询所有
+    - name: queryAll
+      #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
+      operator: query
+      #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
+      disable: true
+      #方法的注释
+      comment: 查询所有数据
+      ##where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
+      ##where: PKG_CODE in
+      #返回值类型信息
+      returns: java.util.List<table_name>
+      #排序
+      order: 1000
   #代码内的目录结构的配制
   codeMenuTree:
     #最基础的目标配制

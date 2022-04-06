@@ -19,6 +19,8 @@ import java.util.Set;
  */
 public class MethodUtils {
 
+  private MethodUtils() {}
+
   /**
    * 检查当前是否为批量操作
    *
@@ -37,6 +39,52 @@ public class MethodUtils {
       }
     }
 
+    return false;
+  }
+
+  /**
+   * 检查是否需要批量添加
+   *
+   * @param methodList
+   * @return
+   */
+  public static boolean checkBatchOperator(List<MethodInfo> methodList) {
+    if (null == methodList || methodList.isEmpty()) {
+      return Boolean.FALSE;
+    }
+
+    // 进行方法结果集操作
+    for (MethodInfo method : methodList) {
+      // 如果当前为添加,并且参数存在集合
+      if (MethodTypeEnum.INSERT.getType().equals(method.getOperator())
+          && MethodUtils.checkBatch(method.getParamType())) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * 检查是否存在指定类型操作方法
+   *
+   * @param methodList
+   * @param typeInfo
+   * @return
+   */
+  public static boolean checkExistsOperatorType(
+      List<MethodInfo> methodList, MethodTypeEnum typeInfo) {
+    if (null == methodList || methodList.isEmpty()) {
+      return Boolean.FALSE;
+    }
+
+    // 进行方法结果集操作
+    for (MethodInfo method : methodList) {
+      // 如果当前为添加
+      if (typeInfo.getType().equals(method.getOperator())) {
+        return true;
+      }
+    }
     return false;
   }
 

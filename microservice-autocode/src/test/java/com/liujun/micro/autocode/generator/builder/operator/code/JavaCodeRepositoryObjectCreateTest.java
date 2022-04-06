@@ -1,6 +1,6 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
 import org.junit.Test;
 
 /**
@@ -13,7 +13,7 @@ public class JavaCodeRepositoryObjectCreateTest {
 
   @Test
   public void testGenerate() {
-    JavaCodeRepositoryObjectCreate instance = new JavaCodeRepositoryObjectCreate();
+    JavaCodeRepositoryMyBatisObjectCreate instance = new JavaCodeRepositoryMyBatisObjectCreate();
 
     // 进行数据生成
     instance.generateCode(CodeBaseUtils.getBase());

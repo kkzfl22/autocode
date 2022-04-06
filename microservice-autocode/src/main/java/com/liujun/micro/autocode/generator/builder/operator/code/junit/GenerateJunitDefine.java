@@ -3,6 +3,7 @@ package com.liujun.micro.autocode.generator.builder.operator.code.junit;
 import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
 import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.builder.constant.CodeComment;
+import com.liujun.micro.autocode.generator.builder.constant.ImportCodeJavaPackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.ImportCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.ImportJunitPkgKey;
 import com.liujun.micro.autocode.generator.builder.constant.JavaMethodName;
@@ -59,13 +60,14 @@ public class GenerateJunitDefine {
         ImportJunitPkgKey.SPRING_BOOT_TEST_PROPERTY_SOURCE.getPackageInfo().packageOut(),
         JavaKeyWord.IMPORT_LIST,
         JavaKeyWord.IMPORT_ARRAYLIST,
-        JavaKeyWord.IMPORT_MAP,
+        ImportCodeJavaPackageKey.MAP.getPackageInfo().packageOut(),
         "com.common.constant.InsertType",
         "java.util.HashMap",
         "java.math.BigDecimal",
         "java.time.LocalDate",
         "java.time.LocalDateTime",
-        "java.time.LocalTime"
+        "java.time.LocalTime",
+        ImportJunitPkgKey.SPRING_BOOT_TEST_DATETIME_UTILS.getPackageInfo().packageOut()
       };
 
   /** 测试方法的前缀 */
@@ -192,9 +194,15 @@ public class GenerateJunitDefine {
     }
     // mybatis的扫描包
     importList.add(mybatisScanConfig.packageOut());
-    // 添加必须依赖的包
-    for (ImportPackageInfo importPackage : importAnnotationPkgList) {
-      importList.add(importPackage.packageOut());
+
+    if (null != importAnnotationPkgList && !importAnnotationPkgList.isEmpty()) {
+      // 添加必须依赖的包
+      for (ImportPackageInfo importPackage : importAnnotationPkgList) {
+        if (null == importPackage) {
+          continue;
+        }
+        importList.add(importPackage.packageOut());
+      }
     }
     // 导入po包
     importList.add(poPackage.packageOut());
@@ -292,6 +300,10 @@ public class GenerateJunitDefine {
 
     outDependencyClass.append(Symbol.BRACE_LEFT);
     for (ImportPackageInfo dependencyClassItem : importPkgList) {
+      if (null == dependencyClassItem) {
+        continue;
+      }
+
       outDependencyClass.append(dependencyClassItem.getClassName()).append(ANNOTATION_VALUE_SUFFIX);
       outDependencyClass.append(Symbol.COMMA);
       outDependencyClass.append(Symbol.SPACE);
@@ -1086,7 +1098,7 @@ public class GenerateJunitDefine {
     }
     sb.append(JavaFormat.appendTab(tabIndex + 2));
     sb.append(JavaKeyWord.RETURN).append(Symbol.SPACE).append(JavaVarName.GET_KEY_NAME);
-    sb.append(Symbol.POINT).append(JavaMethodName.TOSTRING).append(Symbol.BRACKET_LEFT);
+    sb.append(Symbol.POINT).append(JavaMethodName.TO_STRING).append(Symbol.BRACKET_LEFT);
     sb.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
 
     // 方法的结束

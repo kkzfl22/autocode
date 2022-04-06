@@ -3,35 +3,40 @@ package com.liujun.micro.autocode.generator.run.builder;
 import com.liujun.micro.autocode.config.generate.entity.GenerateConfigEntity;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.operator.GenerateCodeInf;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.dependency.JavaCodeApiDependency;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.dependency.JavaCodeApplicationDependency;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.dependency.JavaCodeDomainDependency;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeApplicationServiceCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainJunitServiceCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainObjectCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainRepositoryFacadeCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeDomainServiceCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceAssemblerCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceCheckCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceConfigCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceConstantCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceErrorCodeCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceFacadeApiCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceFacadeCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceFacadeJunitCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceObjectCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeProjectCfgCopyCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeProjectMavenPomCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryAssemblerCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryMapperInfCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryJunitDaoCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryJunitMyBatisScanConfigCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryMyBatisMapperCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryObjectCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryObjectMyBatisPlusCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeRepositoryPersistenceCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeResourceI18nEnUsCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeResourceI18nZhCnCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.custom.view.facade.JavaCodeFacadeParamValidCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.application.JavaCodeApplicationDependency;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.application.JavaCodeApplicationServiceCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.domain.JavaCodeDomainDependency;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.domain.JavaCodeDomainJunitServiceCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.domain.JavaCodeDomainObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.domain.JavaCodeDomainRepositoryFacadeCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.domain.JavaCodeDomainServiceCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeAssemblerCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeCheckCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeConstantCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.custom.view.facade.JavaCodeFacadeCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeDependency;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeErrorCodeCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeJunitCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.other.JavaCodeProjectCfgCopyCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.other.JavaCodeProjectMavenPomCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.other.JavaCodeResourceI18nEnUsCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.other.JavaCodeResourceI18nZhCnCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymyatbisplus.JavaCodeRepositoryImplementCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymyatbisplus.JavaCodeRepositoryJunitDaoCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymyatbisplus.JavaCodeRepositoryJunitScanCfgCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymyatbisplus.JavaCodeRepositoryMapperInfCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymyatbisplus.JavaCodeRepositoryMapperXmlCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymyatbisplus.JavaCodeRepositoryObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymyatbisplus.JavaCodeRepositoryConverterCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisImplementCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisJunitDaoCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisJunitScanConfigCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisMapperInfCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisMapperXmlCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMybatisConverterCreate;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
 import com.liujun.micro.autocode.generator.database.service.DatabaseOperator;
@@ -51,13 +56,16 @@ import java.util.Map;
 public class GenerateCodeBuilder {
 
   /** 范围的执行的map */
-  private static final Map<GenerateScopeEnum, List<GenerateCodeInf>> SCOPE_MAP = new HashMap<>(4);
+  private static final Map<GenerateScopeEnum, List<GenerateCodeInf>> SCOPE_MAP =
+      new HashMap<>(8, 1);
 
   static {
     // 公共都需要执行的
     common();
-    // 存储层的代码加入到生成流程中
-    repository();
+    // 存储层的代码加入到生成流程中,使用mybatis
+    repositoryMybatis();
+    // 存储层的代码加入到生成流程中，使用mybatis-plus
+    repositoryMybatisPlus();
     // 领域层的代码加入到生成器中
     domain();
     // 应用层的代码加入到生成器中
@@ -79,24 +87,50 @@ public class GenerateCodeBuilder {
     SCOPE_MAP.put(GenerateScopeEnum.COMMON, commonList);
   }
 
-  /** 存储层代码生成的加入 */
-  private static void repository() {
-    List<GenerateCodeInf> repositoryList = new ArrayList<>(6);
+  /** 存储层代码生成的加入,使用mybatis */
+  private static void repositoryMybatis() {
+    List<GenerateCodeInf> repositoryList = new ArrayList<>(16);
+
     // 1,存储层实体的生成
-    repositoryList.add(JavaCodeRepositoryObjectCreate.INSTANCE);
-    //
-    repositoryList.add(JavaCodeRepositoryObjectMyBatisPlusCreate.INSTANCE);
+    repositoryList.add(JavaCodeRepositoryMyBatisObjectCreate.INSTANCE);
     // 2,生成mapper对象
-    repositoryList.add(JavaCodeRepositoryMapperInfCreate.INSTANCE);
+    repositoryList.add(JavaCodeRepositoryMyBatisMapperInfCreate.INSTANCE);
     // 3,mybatis的mapper文件
-    repositoryList.add(JavaCodeRepositoryMyBatisMapperCreate.INSTANCE);
+    repositoryList.add(JavaCodeRepositoryMyBatisMapperXmlCreate.INSTANCE);
     // 4,生成测试的配制文件
-    repositoryList.add(JavaCodeRepositoryJunitMyBatisScanConfigCreate.INSTANCE);
+    repositoryList.add(JavaCodeRepositoryMyBatisJunitScanConfigCreate.INSTANCE);
     // 5，存储层的单元测试
-    repositoryList.add(JavaCodeRepositoryJunitDaoCreate.INSTANCE);
+    repositoryList.add(JavaCodeRepositoryMyBatisJunitDaoCreate.INSTANCE);
+    // 4，存储层与领域层的实体转换
+    repositoryList.add(JavaCodeRepositoryMybatisConverterCreate.INSTANCE);
+    // 5,存储层接口的接口实现调用
+    repositoryList.add(JavaCodeRepositoryMyBatisImplementCreate.INSTANCE);
 
     // 存储层的集合
-    SCOPE_MAP.put(GenerateScopeEnum.REPOSITORY, repositoryList);
+    SCOPE_MAP.put(GenerateScopeEnum.REPOSITORY_MYBATIS, repositoryList);
+  }
+
+  /** 存储层代码生成的加入,使用mybatis */
+  private static void repositoryMybatisPlus() {
+    List<GenerateCodeInf> repositoryList = new ArrayList<>(16);
+
+    // 1.生成mybatis-plus的实体
+    repositoryList.add(JavaCodeRepositoryObjectCreate.INSTANCE);
+    // 2.生成mybatis-plus的mapper的接口文件
+    repositoryList.add(JavaCodeRepositoryMapperInfCreate.INSTANCE);
+    // 生成xml文件
+    repositoryList.add(JavaCodeRepositoryMapperXmlCreate.INSTANCE);
+    // 生成单元测试配制文件
+    repositoryList.add(JavaCodeRepositoryJunitScanCfgCreate.INSTANCE);
+    // 生成单元测试文件
+    repositoryList.add(JavaCodeRepositoryJunitDaoCreate.INSTANCE);
+    // 存储层与领域层的实体转换
+    repositoryList.add(JavaCodeRepositoryConverterCreate.INSTANCE);
+    // 存储层接口的接口实现调用
+    repositoryList.add(JavaCodeRepositoryImplementCreate.INSTANCE);
+
+    // 存储层的集合
+    SCOPE_MAP.put(GenerateScopeEnum.REPOSITORY_MYBATIS_PLUS, repositoryList);
   }
 
   /** 领域层相关代码的生成 */
@@ -112,10 +146,7 @@ public class GenerateCodeBuilder {
     domainList.add(JavaCodeDomainRepositoryFacadeCreate.INSTANCE);
     // 3,生成领域层的服务
     domainList.add(JavaCodeDomainServiceCreate.INSTANCE);
-    // 4，存储层与领域层的实体转换
-    domainList.add(JavaCodeRepositoryAssemblerCreate.INSTANCE);
-    // 5,存储层接口的接口实现调用
-    domainList.add(JavaCodeRepositoryPersistenceCreate.INSTANCE);
+
     // 6.生成单元测试的mock存储实现
 
     // 6，领域层的单元测试
@@ -141,29 +172,27 @@ public class GenerateCodeBuilder {
   private static void api() {
     List<GenerateCodeInf> apiList = new ArrayList<>(16);
     // 进行api依赖相关信息的生成
-    apiList.add(JavaCodeApiDependency.INSTANCE);
+    apiList.add(JavaCodeFacadeDependency.INSTANCE);
+    // 参数校验类生成
+    apiList.add(JavaCodeFacadeParamValidCreate.INSTANCE);
     // 1,api层的实体的生成
-    apiList.add(JavaCodeInterfaceObjectCreate.INSTANCE);
+    apiList.add(JavaCodeFacadeObjectCreate.INSTANCE);
     // 2,api层的数据转换层
-    apiList.add(JavaCodeInterfaceAssemblerCreate.INSTANCE);
+    apiList.add(JavaCodeFacadeAssemblerCreate.INSTANCE);
     // 3,api层的常量定义
-    apiList.add(JavaCodeInterfaceConstantCreate.INSTANCE);
+    apiList.add(JavaCodeFacadeConstantCreate.INSTANCE);
     // 4,api层的错误码定义
-    apiList.add(JavaCodeInterfaceErrorCodeCreate.INSTANCE);
+    apiList.add(JavaCodeFacadeErrorCodeCreate.INSTANCE);
     // 5,api层的错误码检查
-    apiList.add(JavaCodeInterfaceCheckCreate.INSTANCE);
-    // 6,生成api接口
-    apiList.add(JavaCodeInterfaceFacadeApiCreate.INSTANCE);
+    apiList.add(JavaCodeFacadeCheckCreate.INSTANCE);
     // 7,生成api的实现的代码
-    apiList.add(JavaCodeInterfaceFacadeCreate.INSTANCE);
+    apiList.add(JavaCodeFacadeCreate.INSTANCE);
     // 8,国际化中文相关的资源文件的生成
     apiList.add(JavaCodeResourceI18nZhCnCreate.INSTANCE);
     // 9,国际化英文相关的资源文件的生成
     apiList.add(JavaCodeResourceI18nEnUsCreate.INSTANCE);
-    // 10,资源码国际化文件加载
-    apiList.add(JavaCodeInterfaceConfigCreate.INSTANCE);
     // 11,api的单元测试
-    apiList.add(JavaCodeInterfaceFacadeJunitCreate.INSTANCE);
+    apiList.add(JavaCodeFacadeJunitCreate.INSTANCE);
 
     // 存储层的集合
     SCOPE_MAP.put(GenerateScopeEnum.API, apiList);
@@ -191,11 +220,14 @@ public class GenerateCodeBuilder {
     List<GenerateScopeEnum> scopeEnums =
         GenerateScopeEnum.generateScope(context.getGenerateConfig().getGenerate().getScope());
 
-    // 1,进行存储层的代码生成
-    generateScope(GenerateScopeEnum.REPOSITORY, scopeEnums);
-
-    // 2,进行领域层的代码生成
+    // 1,进行领域层的代码生成
     generateScope(GenerateScopeEnum.DOMAIN, scopeEnums);
+
+    // 2,进行存储层的代码生成
+    generateScope(GenerateScopeEnum.REPOSITORY_MYBATIS, scopeEnums);
+
+    // 进行存储层mybatis-plus的生成
+    generateScope(GenerateScopeEnum.REPOSITORY_MYBATIS_PLUS, scopeEnums);
 
     // 3，应用层代码的生成
     generateScope(GenerateScopeEnum.APPLICATION, scopeEnums);

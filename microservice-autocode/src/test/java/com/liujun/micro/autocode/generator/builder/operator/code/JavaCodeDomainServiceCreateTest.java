@@ -1,7 +1,13 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.*;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.domain.JavaCodeDomainObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.domain.JavaCodeDomainRepositoryFacadeCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.domain.JavaCodeDomainServiceCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMybatisConverterCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisMapperInfCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisImplementCreate;
 import org.junit.Test;
 
 /**
@@ -17,16 +23,16 @@ public class JavaCodeDomainServiceCreateTest {
     // 领域实体
     JavaCodeDomainObjectCreate instance = new JavaCodeDomainObjectCreate();
     // 数据库实体
-    JavaCodeRepositoryObjectCreate repositoryInstance = new JavaCodeRepositoryObjectCreate();
+    JavaCodeRepositoryMyBatisObjectCreate repositoryInstance = new JavaCodeRepositoryMyBatisObjectCreate();
     // 数据库转换
-    JavaCodeRepositoryAssemblerCreate assembler = new JavaCodeRepositoryAssemblerCreate();
+    JavaCodeRepositoryMybatisConverterCreate assembler = new JavaCodeRepositoryMybatisConverterCreate();
     // 数据库dao
-    JavaCodeRepositoryMapperInfCreate repositoryDaoInf = new JavaCodeRepositoryMapperInfCreate();
+    JavaCodeRepositoryMyBatisMapperInfCreate repositoryDaoInf = new JavaCodeRepositoryMyBatisMapperInfCreate();
     // 领域存储接口
     JavaCodeDomainRepositoryFacadeCreate repositoryFacadeInf = new JavaCodeDomainRepositoryFacadeCreate();
     // 领域存储实现
-    JavaCodeRepositoryPersistenceCreate repositoryPersistence =
-        new JavaCodeRepositoryPersistenceCreate();
+    JavaCodeRepositoryMyBatisImplementCreate repositoryPersistence =
+        new JavaCodeRepositoryMyBatisImplementCreate();
 
     JavaCodeDomainServiceCreate domainService = new JavaCodeDomainServiceCreate();
 

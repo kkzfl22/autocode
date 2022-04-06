@@ -8,6 +8,8 @@ package com.liujun.micro.autocode.generator.builder.constant;
  */
 public class JavaMethodName {
 
+  private JavaMethodName() {}
+
   /** 集合的名称 */
   public static final String LIST_ADD = "add";
 
@@ -27,7 +29,7 @@ public class JavaMethodName {
   public static final String APPEND = "append";
 
   /** 输出为字符的方法 */
-  public static final String TOSTRING = "toString";
+  public static final String TO_STRING = "toString";
 
   /** 方法名 */
   public static final String BEFORE_SET_DATA = "beforeSetData";
@@ -136,4 +138,13 @@ public class JavaMethodName {
 
   /** 成功方法 */
   public static final String RESPONSE_SUCCESS = "ok";
+
+  /** 单个插入的处理方法 */
+  public static final String DOMAIN_INSERT_UID = "insertProcess";
+
+  /** 批量插入的处理方法 */
+  public static final String DOMAIN_BATCH_INSERT_UID = "batchInsertProcess";
+
+  /** 用于id的生成的方法 */
+  public static final String DOMAIN_UID_NAME = "getUid";
 }

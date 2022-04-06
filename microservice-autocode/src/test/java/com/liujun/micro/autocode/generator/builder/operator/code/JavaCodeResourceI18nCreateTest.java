@@ -1,9 +1,9 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceErrorCodeCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeResourceI18nEnUsCreate;
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeResourceI18nZhCnCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeErrorCodeCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.other.JavaCodeResourceI18nEnUsCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.other.JavaCodeResourceI18nZhCnCreate;
 import org.junit.Test;
 
 /**
@@ -16,7 +16,7 @@ public class JavaCodeResourceI18nCreateTest {
 
   @Test
   public void testGenerate() {
-    JavaCodeInterfaceErrorCodeCreate instance = new JavaCodeInterfaceErrorCodeCreate();
+    JavaCodeFacadeErrorCodeCreate instance = new JavaCodeFacadeErrorCodeCreate();
     JavaCodeResourceI18nZhCnCreate codeResource = new JavaCodeResourceI18nZhCnCreate();
     JavaCodeResourceI18nEnUsCreate resourceData = new JavaCodeResourceI18nEnUsCreate();
 

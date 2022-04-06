@@ -21,6 +21,9 @@ public enum MethodTypeEnum {
 
   /** 数据库分页查询 */
   QUERY_PAGE("queryPage"),
+
+  /** 按id执行详细的查询操作 */
+  DETAIL("detail"),
   ;
 
   /** 类型信息 */

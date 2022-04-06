@@ -3,6 +3,7 @@ package com.liujun.micro.autocode.generator.builder.entity;
 import com.liujun.micro.autocode.config.menutree.MenuTreeCodePackage;
 import com.liujun.micro.autocode.config.menutree.MenuTreeProjectPath;
 import com.liujun.micro.autocode.config.generate.entity.GenerateConfigEntity;
+import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 额头于进行代码生成的上下文对象
+ * 额头于进行代码生成的上下文对象,每个生成器对象共享
  *
  * @author liujun
  * @version 0.0.1
@@ -52,7 +53,7 @@ public class GenerateCodeContext {
   /** 表的描述的map信息 */
   private Map<String, TableInfoDTO> tableMap;
 
-  /** 数据配制操作 */
+  /** 配制信息 */
   private GenerateConfigEntity generateConfig;
 
   /** 公共的临时参数 */
@@ -66,27 +67,6 @@ public class GenerateCodeContext {
 
   /** 用来存储需要导包的信息 */
   private Map<String, Map<String, ImportPackageInfo>> packageMap = new HashMap<>();
-
-  // public GenerateCodeContext(
-  //        String fileBasePath,
-  //        String javaPackage,
-  //        String domainName,
-  //        DatabaseTypeEnum typeEnum,
-  //        String tableSpaceName,
-  //        GenerateConfigEntity configEntity) {
-  //    this.fileBasePath = fileBasePath;
-  //    this.javaPackage = javaPackage;
-  //    this.domainName = domainName;
-  //    // 类型枚举
-  //    this.typeEnum = typeEnum;
-  //    this.mybatisBaseSpace = javaPackage;
-  //    this.tableSpaceName = tableSpaceName;
-  //    this.generateConfig = configEntity;
-  //    // 构建代码的目录树
-  //    this.javaCodePackage = MenuTreeCodePackage.INSTANCE;
-  //    // 构建项目目录树
-  //    this.projectPath = MenuTreeProjectPath.INSTANCE;
-  // }
 
   public GenerateCodeContext(GenerateConfigEntity configEntity) {
     this.fileBasePath = configEntity.getGenerate().getOutput();
@@ -216,12 +196,68 @@ public class GenerateCodeContext {
     this.projectPath = projectPath;
   }
 
-  public Map<String, Map<String, ImportPackageInfo>> getPackageMap() {
-    return packageMap;
+  /**
+   * 获取包数所信息，按定义的枚举值
+   *
+   * @param tableName 表名
+   * @param key 固定的枚举key
+   * @return 包路径定义信息
+   */
+  public ImportPackageInfo getPkg(String tableName, GenerateCodePackageKey key) {
+    Map<String, ImportPackageInfo> pkgMap = packageMap.get(tableName);
+    if (dataMap != null) {
+      return pkgMap.get(key.getKey());
+    }
+
+    return null;
   }
 
-  public void setPackageMap(Map<String, Map<String, ImportPackageInfo>> packageMap) {
-    this.packageMap = packageMap;
+  /**
+   * 向容器中放入对象
+   *
+   * @param tableName 表名
+   * @param key 参数的key
+   * @param pkgInfo 放入的文件定义信息
+   */
+  public void putPkg(String tableName, GenerateCodePackageKey key, ImportPackageInfo pkgInfo) {
+    Map<String, ImportPackageInfo> pkgMap = packageMap.get(tableName);
+    if (pkgMap == null) {
+      pkgMap = new HashMap<>(32);
+      packageMap.put(tableName, pkgMap);
+    }
+    pkgMap.put(key.getKey(), pkgInfo);
+  }
+
+  /**
+   * 获取校验参数类的信息
+   *
+   * @param tableName 表名
+   * @param key 参数key
+   * @return
+   */
+  public ImportPackageInfo getPkg(String tableName, String key) {
+    Map<String, ImportPackageInfo> pkgMap = packageMap.get(tableName);
+    if (dataMap != null) {
+      return pkgMap.get(key);
+    }
+
+    return null;
+  }
+
+  /**
+   * 放入校验参数包信息
+   *
+   * @param tableName
+   * @param key
+   * @param pkgInfo
+   */
+  public void putPkg(String tableName, String key, ImportPackageInfo pkgInfo) {
+    Map<String, ImportPackageInfo> pkgMap = packageMap.get(tableName);
+    if (pkgMap == null) {
+      pkgMap = new HashMap<>(32);
+      packageMap.put(tableName, pkgMap);
+    }
+    pkgMap.put(key, pkgInfo);
   }
 
   @Override

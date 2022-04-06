@@ -7,202 +7,125 @@ package com.liujun.micro.autocode.constant;
  * @version 0.0.1
  */
 public enum JavaDomainTreeKey {
-    /**
-     * 应用层顶层目录
-     */
-    APPLICATION("application"),
+  /** 应用层顶层目录 */
+  APPLICATION("application"),
 
-    /**
-     * 领域层目录
-     */
-    DOMAIN("domain"),
+  /** 领域层目录 */
+  DOMAIN("domain"),
 
-    /**
-     * 领域对象中的实体层
-     */
-    DOMAIN_CONSTANT("constant"),
+  /** 领域对象中的实体层 */
+  DOMAIN_CONSTANT("constant"),
 
-    /**
-     * 领域层中的实体
-     */
-    DOMAIN_ENTITY("entity"),
+  /** 领域层中的实体 */
+  DOMAIN_ENTITY("entity"),
 
-    /**
-     * 领域层中的存储
-     */
-    DOMAIN_REPOSITORY("repository"),
+  /** 领域层中的存储 */
+  DOMAIN_REPOSITORY("repository"),
 
-    /**
-     * 存储层的目录结构
-     */
-    REPOSITORY_ASSEMBLER("assembler"),
+  /** 存储层的目录结构 */
+  REPOSITORY_ASSEMBLER("converter"),
 
-    /**
-     * 存储层的与领域层交互的接口
-     */
-    REPOSITORY_FACADE("facade"),
+  /** 存储层的与领域层交互的接口 */
+  REPOSITORY_FACADE("facade"),
 
-    /**
-     * 存储层的数据库接口
-     */
-    REPOSITORY_MAPPER("mapper"),
+  /** 存储层的数据库接口 */
+  REPOSITORY_MAPPER("mapper"),
 
+  /** 在mapper目录下添加配制,用于单元测试 */
+  MAPPER_CONFIG("config"),
 
-    /**
-     * 在mapper目录下添加配制,用于单元测试
-     */
-    MAPPER_CONFIG("config"),
+  /** 存储层与领域层交互的接口实现 */
+  REPOSITORY_PERSISTENCE("persistence"),
 
-    /**
-     * 存储层与领域层交互的接口实现
-     */
-    REPOSITORY_PERSISTENCE("persistence"),
+  /** 存储的接口实体 */
+  REPOSITORY_PO("po"),
 
-    /**
-     * 存储的接口实体
-     */
-    REPOSITORY_PO("po"),
+  /** 领域层中的服务 */
+  DOMAIN_SERVICE("service"),
 
+  /** 基础资源目录 */
+  INFRASTRUCTURE("infrastructure"),
 
-    /**
-     * 存储的接口实体
-     */
-    REPOSITORY_MYBATIS_PLUS_PO("pluspo"),
+  /** 基础资源的算法目录 */
+  INFRASTRUCTURE_ALGORITHM("algorithm"),
 
+  /** 基础的api相关目录 */
+  INFRASTRUCTURE_API("api"),
 
-    /**
-     * 领域层中的服务
-     */
-    DOMAIN_SERVICE("service"),
+  /** 基础层中作为客户端调用其他服务的接口 */
+  INFRASTRUCTURE_CLIENT("client"),
 
-    /**
-     * 基础资源目录
-     */
-    INFRASTRUCTURE("infrastructure"),
+  /** 基础层中的公共信息 */
+  INFRASTRUCTURE_COMM("comm"),
 
-    /**
-     * 基础资源的算法目录
-     */
-    INFRASTRUCTURE_ALGORITHM("algorithm"),
+  /** 用于作资源请求验证的公共类 */
+  COMM_CHECK("check"),
 
-    /**
-     * 基础的api相关目录
-     */
-    INFRASTRUCTURE_API("api"),
+  /** 异常相关类 */
+  COMM_EXCEPTION("exception"),
 
-    /**
-     * 基础层中作为客户端调用其他服务的接口
-     */
-    INFRASTRUCTURE_CLIENT("client"),
+  /** 使用mq进行消息通道的传输操作 */
+  COMM_RABBITMQ("rabbitmq"),
 
-    /**
-     * 基础层中的公共信息
-     */
-    INFRASTRUCTURE_COMM("comm"),
+  /** 公共的处理类 */
+  COMM_UTILS("utils"),
 
-    /**
-     * 用于作资源请求验证的公共类
-     */
-    COMM_CHECK("check"),
+  /** 转换类 */
+  RABBITMQ_ASSEMBLER("assembler"),
 
-    /**
-     * 异常相关类
-     */
-    COMM_EXCEPTION("exception"),
+  /** rabbitmq的配制信息 */
+  RABBITMQ_CONFIG("config"),
 
-    /**
-     * 使用mq进行消息通道的传输操作
-     */
-    COMM_RABBITMQ("rabbitmq"),
+  /** 进行mq消息通讯的实体 */
+  RABBITMQ_ENTITY("entity"),
 
-    /**
-     * 公共的处理类
-     */
-    COMM_UTILS("utils"),
+  /** 事件处理 */
+  RABBITMQ_EVENT("event"),
 
-    /**
-     * 转换类
-     */
-    RABBITMQ_ASSEMBLER("assembler"),
+  /** 基础层中公共 */
+  INFRASTRUCTURE_CONSTANT("constant"),
 
-    /**
-     * rabbitmq的配制信息
-     */
-    RABBITMQ_CONFIG("config"),
+  /** 基础资源的公共实体 */
+  INFRASTRUCTURE_ENTITY("entity"),
 
-    /**
-     * 进行mq消息通讯的实体
-     */
-    RABBITMQ_ENTITY("entity"),
+  /** 对外的API目录 */
+  INTERFACE("facade"),
 
-    /**
-     * 事件处理
-     */
-    RABBITMQ_EVENT("event"),
+  /** 参数校验的类 */
+  INTERFACE_VALID("validator"),
 
-    /**
-     * 基础层中公共
-     */
-    INFRASTRUCTURE_CONSTANT("constant"),
+  /** 类转换处理,将前端的类转换为领域层对象 */
+  INTERFACE_ASSEMBLER("assembler"),
 
-    /**
-     * 基础资源的公共实体
-     */
-    INFRASTRUCTURE_ENTITY("entity"),
+  /** 接收接口后的参数校验 */
+  INTERFACE_CHECK("check"),
 
-    /**
-     * 对外的API目录
-     */
-    INTERFACE("web"),
+  /** 接口的公共参数 */
+  INTERFACE_COMM("comm"),
 
-    /**
-     * 类转换处理,将前端的类转换为领域层对象
-     */
-    INTERFACE_ASSEMBLER("assembler"),
+  /** 接口的参数实体目录 */
+  INTERFACE_DTO("dto"),
 
-    /**
-     * 接收接口后的参数校验
-     */
-    INTERFACE_CHECK("check"),
+  /** 配制信息 */
+  INTERFACE_CONFIG("config"),
 
-    /**
-     * 接口的公共参数
-     */
-    INTERFACE_COMM("comm"),
+  /** 对外服务接口 */
+  INTERFACE_FACADE("facade"),
 
-    /**
-     * 接口的参数实体目录
-     */
-    INTERFACE_DTO("dto"),
+  /** 统一的错误码 */
+  INTERFACE_ERROR_CODE("errorcode"),
 
-    /**
-     * 配制信息
-     */
-    INTERFACE_CONFIG("config"),
+  /** 静态常量信息 */
+  INTERFACE_CONSTANT("constant"),
+  ;
 
-    /**
-     * 对外服务接口
-     */
-    INTERFACE_FACADE("facade"),
+  private final String key;
 
-    /**
-     * 统一的错误码
-     */
-    INTERFACE_ERROR_CODE("errorcode"),
+  JavaDomainTreeKey(String key) {
+    this.key = key;
+  }
 
-    /**
-     * 静态常量信息
-     */
-    INTERFACE_CONSTANT("constant"),
-    ;
-
-    private final String key;
-
-    JavaDomainTreeKey(String key) {
-        this.key = key;
-    }
-
-    public String getKey() {
-        return key;
-    }
+  public String getKey() {
+    return key;
+  }
 }

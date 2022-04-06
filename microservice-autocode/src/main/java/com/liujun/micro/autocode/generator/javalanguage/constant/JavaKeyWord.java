@@ -8,8 +8,13 @@ package com.liujun.micro.autocode.generator.javalanguage.constant;
  */
 public class JavaKeyWord {
 
+  private JavaKeyWord() {}
+
   /** 文件后缀名 */
   public static final String FILE_SUFFIX = ".java";
+
+  /** class后缀 */
+  public static final String CLASS_SUFFIX = ".class";
 
   /** 定义包的关键字 */
   public static final String PACKAGE = "package";
@@ -44,9 +49,7 @@ public class JavaKeyWord {
   /** private 关键字 */
   public static final String PRIVATE = "private";
 
-  /**
-   * 受保护的
-   */
+  /** 受保护的 */
   public static final String PROTECTED = "protected";
 
   /** 静态 */
@@ -126,9 +129,6 @@ public class JavaKeyWord {
 
   /** 空集合包 */
   public static final String IMPORT_COLLECTIONS = "java.util.Collections";
-
-  /** 导入map的包 */
-  public static final String IMPORT_MAP = "java.util.Map";
 
   /** 数据库的boolean的类型 */
   public static final String TYPE_BOOLEAN = "boolean";

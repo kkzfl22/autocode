@@ -1,7 +1,10 @@
 package com.liujun.micro.autocode.generator.builder.operator.utils;
 
 import com.liujun.micro.autocode.constant.Symbol;
+import com.liujun.micro.autocode.generator.convergence.TypeConvergence;
+import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
+import com.liujun.micro.autocode.generator.javalanguage.constant.JavaDataType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +19,11 @@ import java.util.Map;
  * @version 0.0.1
  */
 public class TableColumnUtils {
+
+  private TableColumnUtils() {}
+
+  /** 主键 */
+  private static final String ID = "id";
 
   /**
    * 获取主键的key的信息 方法描述
@@ -99,5 +107,27 @@ public class TableColumnUtils {
     }
 
     throw new IllegalArgumentException("condition :" + inConditionItem + " not exists!");
+  }
+
+  /**
+   * 检查当前是否使用自增长的uid
+   *
+   * @param columnList 列信息
+   * @return true 顾在使用long的主键 , false 不存在
+   */
+  public static boolean primaryKeyUid(List<TableColumnDTO> columnList, DatabaseTypeEnum typeEnum) {
+    if (null == columnList || columnList.isEmpty()) {
+      return Boolean.FALSE;
+    }
+
+    for (TableColumnDTO column : columnList) {
+      String javaType = TypeConvergence.getJavaType(typeEnum, column.getDataType());
+
+      if (ID.equals(column.getColumnName()) && JavaDataType.LONG.getType().equals(javaType)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

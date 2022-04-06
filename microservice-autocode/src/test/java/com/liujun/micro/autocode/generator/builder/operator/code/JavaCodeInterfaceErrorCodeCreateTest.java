@@ -1,6 +1,6 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
-import com.liujun.micro.autocode.generator.builder.operator.ddd.full.JavaCodeInterfaceErrorCodeCreate;
+import com.liujun.micro.autocode.generator.builder.operator.ddd.full.facade.JavaCodeFacadeErrorCodeCreate;
 import org.junit.Test;
 
 /**
@@ -13,7 +13,7 @@ public class JavaCodeInterfaceErrorCodeCreateTest {
 
   @Test
   public void testGenerate() {
-    JavaCodeInterfaceErrorCodeCreate instance = new JavaCodeInterfaceErrorCodeCreate();
+    JavaCodeFacadeErrorCodeCreate instance = new JavaCodeFacadeErrorCodeCreate();
 
     // 进行数据生成
     instance.generateCode(CodeBaseUtils.getBase());

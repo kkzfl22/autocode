@@ -1,14 +1,15 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
-import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
+import com.liujun.micro.autocode.constant.Symbol;
+import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.JavaMethodName;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarName;
 import com.liujun.micro.autocode.generator.builder.constant.JavaVarValue;
+import com.liujun.micro.autocode.generator.builder.entity.DataParam;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodArguments;
 import com.liujun.micro.autocode.generator.builder.entity.JavaMethodEntity;
-import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.JavaClassCodeUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.TableColumnUtils;
@@ -19,8 +20,6 @@ import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -31,6 +30,9 @@ import java.util.Set;
  * @version 0.0.1
  */
 public class GenerateJavaAssembler {
+
+  /** 转换为领域实体对象方法 */
+  public static final String PAGE_ASSEMBLER_NAME = "toPageDomainEntity";
 
   public static final GenerateJavaAssembler INSTANCE = new GenerateJavaAssembler();
 
@@ -170,6 +172,37 @@ public class GenerateJavaAssembler {
 
     // 循环结束
     sb.append(JavaFormat.appendTab(tabIndex + 1)).append(Symbol.BRACE_RIGHT);
+    sb.append(Symbol.ENTER_LINE);
+  }
+
+  /**
+   * 生成私有构造方法
+   *
+   * @param assemblerPackage 转换对象
+   * @param sb
+   */
+  public void assemblerConstruct(ImportPackageInfo assemblerPackage, StringBuilder sb) {
+    // 方法实体信息
+    JavaMethodEntity methodInfo =
+        JavaMethodEntity.builder()
+            // 访问修饰
+            .visit(JavaKeyWord.PRIVATE)
+            // 返回值注释
+            .returnComment(JavaKeyWord.VOID)
+            // 方法名
+            .name(assemblerPackage.getClassName())
+            .build();
+
+    // 方法定义生成
+    JavaClassCodeUtils.methodDefine(sb, methodInfo);
+
+    // 添加空方法体
+    sb.append(Symbol.BRACE_LEFT).append(Symbol.ENTER_LINE);
+    // 添加返回的结束插号
+    sb.append(JavaFormat.appendTab(1));
+    sb.append(Symbol.BRACE_RIGHT).append(Symbol.ENTER_LINE);
+
+    sb.append(Symbol.ENTER_LINE);
     sb.append(Symbol.ENTER_LINE);
   }
 
@@ -407,11 +440,104 @@ public class GenerateJavaAssembler {
     for (String entityItem : IMPORT_PKG) {
       dataList.add(entityItem);
     }
-    // 导入实体包
-    dataList.add(entityPackageInfo1.packageOut());
+    if (null != entityPackageInfo1) {
+      // 导入实体包
+      dataList.add(entityPackageInfo1.packageOut());
+    }
     // 当导入包时可能此还不存在，需要判断
-    dataList.add(entityPackageInfo2.packageOut());
+    if (null != entityPackageInfo2) {
+      dataList.add(entityPackageInfo2.packageOut());
+    }
 
     return dataList;
+  }
+
+  /**
+   * 生成分页转换的类信息
+   *
+   * @return
+   */
+  public String generatePageAssembler(DataParam generateParam) {
+    StringBuilder dataOut = new StringBuilder();
+
+    ImportPackageInfo pageEntity = generateParam.getPkg(GenerateCodePackageKey.DOMAIN_PAGE_ENTITY);
+    ImportPackageInfo facadeObject = generateParam.getPkg(GenerateCodePackageKey.INTERFACE_OBJECT);
+    ImportPackageInfo domainObject = generateParam.getPkg(GenerateCodePackageKey.DOMAIN_DO);
+
+    // 1,方法定义
+    JavaMethodEntity methodInfo =
+        JavaMethodEntity.builder()
+            // 方法注释
+            .comment("分页查询对象封装")
+            // 访问修饰
+            .visit(JavaKeyWord.PUBLIC)
+            // 静态标识
+            .staticFlag(JavaKeyWord.STATIC)
+            // 返回值
+            .type(pageEntity.genericOut(domainObject.getClassName()))
+            // 返回值注释
+            .returnComment(pageEntity.getClassComment())
+            // 方法名
+            .name(PAGE_ASSEMBLER_NAME)
+            // 参数
+            .arguments(
+                Arrays.asList(
+                    // 源方法参数
+                    JavaMethodArguments.parsePackage(facadeObject, JavaVarName.ASSERT_DATA_SRC)))
+            .build();
+
+    // 方法定义生成
+    JavaClassCodeUtils.methodDefine(dataOut, methodInfo);
+    JavaClassCodeUtils.methodStart(dataOut);
+
+    // 构建对象
+    dataOut.append(JavaFormat.appendTab(2)).append(JavaKeyWord.RETURN).append(Symbol.SPACE);
+    dataOut
+        .append(pageEntity.getClassName())
+        .append(Symbol.POINT)
+        .append(Symbol.ANGLE_BRACKETS_LEFT);
+    dataOut.append(domainObject.getClassName()).append(Symbol.ANGLE_BRACKETS_RIGHT);
+    dataOut
+        .append(JavaMethodName.PAGE_BUILDER)
+        .append(Symbol.BRACKET_LEFT)
+        .append(Symbol.BRACKET_RIGHT);
+    dataOut.append(Symbol.POINT);
+    dataOut
+        .append(JavaMethodName.PAGE_NUM)
+        .append(Symbol.BRACKET_LEFT)
+        .append(JavaVarName.ASSERT_DATA_SRC);
+    dataOut.append(Symbol.POINT).append(JavaMethodName.GET);
+    dataOut.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_NUM));
+    dataOut.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
+    dataOut.append(Symbol.BRACKET_RIGHT);
+    dataOut.append(Symbol.ENTER_LINE);
+
+    dataOut.append(JavaFormat.appendTab(4));
+    dataOut.append(Symbol.POINT).append(JavaMethodName.SIZE).append(Symbol.BRACKET_LEFT);
+    dataOut.append(JavaVarName.ASSERT_DATA_SRC).append(Symbol.POINT);
+    dataOut.append(JavaMethodName.GET);
+    dataOut.append(NameProcess.INSTANCE.toJavaNameFirstUpper(JavaMethodName.PAGE_SIZE));
+    dataOut.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
+    dataOut.append(Symbol.BRACKET_RIGHT);
+    dataOut.append(Symbol.ENTER_LINE);
+
+    dataOut.append(JavaFormat.appendTab(4));
+    dataOut.append(Symbol.POINT).append(JavaMethodName.PAGE_DATA).append(Symbol.BRACKET_LEFT);
+    dataOut.append(JavaMethodName.ASSEMBLER_TRANSFER_DOMAIN_NAME);
+    dataOut.append(Symbol.BRACKET_LEFT).append(JavaVarName.ASSERT_DATA_SRC);
+    dataOut.append(Symbol.BRACKET_RIGHT);
+    dataOut.append(Symbol.BRACKET_RIGHT);
+    dataOut.append(Symbol.ENTER_LINE);
+
+    dataOut.append(JavaFormat.appendTab(4));
+    dataOut.append(Symbol.POINT).append(JavaMethodName.PAGE_BUILD);
+    dataOut.append(Symbol.BRACKET_LEFT);
+    dataOut.append(Symbol.BRACKET_RIGHT).append(Symbol.SEMICOLON);
+    dataOut.append(Symbol.ENTER_LINE);
+
+    // 方法结束
+    JavaClassCodeUtils.methodEnd(dataOut);
+
+    return dataOut.toString();
   }
 }

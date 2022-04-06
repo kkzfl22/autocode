@@ -1,26 +1,22 @@
 package com.liujun.micro.autocode.generator.builder.operator.code;
 
-import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.config.generate.entity.MethodInfo;
 import com.liujun.micro.autocode.config.generate.entity.WhereInfo;
 import com.liujun.micro.autocode.constant.MethodTypeEnum;
+import com.liujun.micro.autocode.constant.MyBatisOperatorFlag;
+import com.liujun.micro.autocode.constant.Symbol;
 import com.liujun.micro.autocode.generator.builder.constant.GenerateCodePackageKey;
 import com.liujun.micro.autocode.generator.builder.constant.MyBatisKey;
-import com.liujun.micro.autocode.constant.MyBatisOperatorFlag;
-import com.liujun.micro.autocode.generator.builder.constant.MybatisDataTypeEnum;
 import com.liujun.micro.autocode.generator.builder.entity.GenerateCodeContext;
 import com.liujun.micro.autocode.generator.builder.entity.ImportPackageInfo;
-import com.liujun.micro.autocode.generator.builder.operator.utils.ImportPackageUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.MethodUtils;
 import com.liujun.micro.autocode.generator.builder.operator.utils.TableColumnUtils;
 import com.liujun.micro.autocode.generator.convergence.TypeConvergence;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.micro.autocode.generator.database.constant.DatabaseTypeSourceEnum;
-import com.liujun.micro.autocode.generator.database.constant.StandardTypeEnum;
 import com.liujun.micro.autocode.generator.database.entity.DatabaseTypeMsgBO;
 import com.liujun.micro.autocode.generator.database.entity.TableColumnDTO;
 import com.liujun.micro.autocode.generator.database.entity.TableInfoDTO;
-import com.liujun.micro.autocode.generator.database.service.DatabaseTypeService;
 import com.liujun.micro.autocode.generator.database.service.datatype.DataTypeResource;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.micro.autocode.generator.javalanguage.serivce.NameProcess;
@@ -53,15 +49,11 @@ public class GenerateJavaMybatisMapperXml {
     List<TableColumnDTO> columnList = param.getColumnMapList().get(tableName);
     List<TableColumnDTO> primaryKeyList = TableColumnUtils.getPrimaryKey(columnList);
     // 获取po的完整路径
-    ImportPackageInfo poPackage =
-        ImportPackageUtils.getDefineClass(
-            param.getPackageMap(), GenerateCodePackageKey.PERSIST_PO.getKey(), tableName);
+    ImportPackageInfo poPackage = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_PO);
     // 获取dao的完整路径
-    ImportPackageInfo daoPackage =
-        ImportPackageUtils.getDefineClass(
-            param.getPackageMap(), GenerateCodePackageKey.PERSIST_DAO.getKey(), tableName);
+    ImportPackageInfo daoPackage = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_DAO);
 
-    List<MethodInfo> methodList = param.getGenerateConfig().getGenerate().getCode();
+    List<MethodInfo> methodList = param.getGenerateConfig().getGenerate().getMethodList();
     Map<String, TableColumnDTO> columnMap = param.getColumnMapMap().get(tableName);
     DatabaseTypeEnum typeEnum = param.getTypeEnum();
     TableInfoDTO tableMsg = param.getTableMap().get(tableName);
