@@ -1,5 +1,3 @@
 # autocode
 generate code 
 
-update
-
