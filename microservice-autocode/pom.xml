@@ -140,7 +140,7 @@
                             <addClasspath>true</addClasspath>
                             <!--   MANIFEST.MF 中 Class-Path -->
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.liujun.micro.autocode.MainRun</mainClass>
+                            <mainClass>com.liujun.auto.MainRun</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
