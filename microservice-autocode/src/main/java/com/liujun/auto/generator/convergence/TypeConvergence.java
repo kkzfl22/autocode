@@ -5,7 +5,7 @@ import com.liujun.auto.generator.database.constant.StandardTypeEnum;
 import com.liujun.auto.generator.database.entity.TableColumnDTO;
 import com.liujun.auto.generator.database.service.DatabaseTypeService;
 import com.liujun.auto.generator.javalanguage.constant.JavaDataTypeEnum;
-import com.liujun.auto.generator.builder.constant.MybatisDataTypeEnum;
+import com.liujun.auto.generator.builder.ddd.constant.MybatisDataTypeEnum;
 
 /**
  * 类型的聚合

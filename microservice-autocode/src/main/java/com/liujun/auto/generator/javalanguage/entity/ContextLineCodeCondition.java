@@ -3,7 +3,7 @@
  */
 package com.liujun.auto.generator.javalanguage.entity;
 
-import com.liujun.micro.autocode.generator.javalanguage.constant.CodeLineKeyWordEnum;
+import com.liujun.auto.generator.javalanguage.constant.CodeLineKeyWordEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,7 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class ContextLineCodeCondition extends com.liujun.micro.autocode.generator.javalanguage.entity.ContextLineCodeBase {
+public class ContextLineCodeCondition extends ContextLineCodeBase {
 
   /** 关键字信息 */
   private CodeLineKeyWordEnum keyword;
@@ -28,5 +28,5 @@ public class ContextLineCodeCondition extends com.liujun.micro.autocode.generato
   private String condition;
 
   /** 条件满足后需要执行的SQL */
-  private List<com.liujun.micro.autocode.generator.javalanguage.entity.ContextLineCodeBase> code;
+  private List<ContextLineCodeBase> code;
 }

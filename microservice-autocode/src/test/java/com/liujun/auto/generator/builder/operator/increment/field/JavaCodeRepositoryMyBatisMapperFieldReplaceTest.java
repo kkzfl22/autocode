@@ -1,8 +1,8 @@
 package com.liujun.auto.generator.builder.operator.increment.field;
 
 import com.liujun.auto.generator.builder.operator.code.CodeBaseUtils;
-import com.liujun.auto.generator.builder.operator.ddd.increment.field.JavaCodeRepositoryMyBatisMapperFieldReplace;
-import com.liujun.auto.generator.builder.entity.GenerateCodeContext;
+import com.liujun.auto.generator.builder.ddd.increment.field.JavaCodeRepositoryMyBatisMapperFieldReplace;
+import com.liujun.auto.generator.builder.ddd.entity.GenerateCodeContext;
 import org.junit.Test;
 
 /**

@@ -1,9 +1,9 @@
 package com.liujun.auto.generator.builder.operator.code;
 
-import com.liujun.auto.generator.builder.entity.GenerateCodeContext;
-import com.liujun.auto.generator.builder.operator.ddd.full.facade.JavaCodeFacadeErrorCodeCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.other.JavaCodeResourceI18nEnUsCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.other.JavaCodeResourceI18nZhCnCreate;
+import com.liujun.auto.generator.builder.ddd.entity.GenerateCodeContext;
+import com.liujun.auto.generator.builder.ddd.full.facade.JavaCodeFacadeErrorCodeCreate;
+import com.liujun.auto.generator.builder.ddd.full.other.JavaCodeResourceI18nEnUsCreate;
+import com.liujun.auto.generator.builder.ddd.full.other.JavaCodeResourceI18nZhCnCreate;
 import org.junit.Test;
 
 /**

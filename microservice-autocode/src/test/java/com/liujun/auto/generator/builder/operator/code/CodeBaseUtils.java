@@ -2,7 +2,7 @@ package com.liujun.auto.generator.builder.operator.code;
 
 import com.liujun.auto.config.generate.GenerateConfigProcess;
 import com.liujun.auto.config.generate.entity.GenerateConfigEntity;
-import com.liujun.auto.generator.builder.entity.GenerateCodeContext;
+import com.liujun.auto.generator.builder.ddd.entity.GenerateCodeContext;
 import com.liujun.auto.generator.run.builder.GenerateCodeBuilder;
 
 /**

@@ -1,6 +1,6 @@
 package com.liujun.auto.generator.javalanguage.entity;
 
-import com.liujun.micro.autocode.constant.Symbol;
+import com.liujun.auto.constant.Symbol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +14,14 @@ import java.util.List;
 public class JavaAnnotationList {
 
   /** 注解集合 */
-  private List<com.liujun.micro.autocode.generator.javalanguage.entity.ContextAnnotation> annotationList = new ArrayList<>();
+  private List<ContextAnnotation> annotationList = new ArrayList<>();
 
   /**
    * 添加操作
    *
    * @param annotation
    */
-  public void add(com.liujun.micro.autocode.generator.javalanguage.entity.ContextAnnotation annotation) {
+  public void add(ContextAnnotation annotation) {
     this.annotationList.add(annotation);
   }
 
@@ -30,7 +30,7 @@ public class JavaAnnotationList {
    *
    * @param annotationList
    */
-  public void addList(List<com.liujun.micro.autocode.generator.javalanguage.entity.ContextAnnotation> annotationList) {
+  public void addList(List<ContextAnnotation> annotationList) {
     this.annotationList.addAll(annotationList);
   }
 
@@ -42,7 +42,7 @@ public class JavaAnnotationList {
   public String outSpaceAnnotation() {
     StringBuilder outSpace = new StringBuilder();
 
-    for (com.liujun.micro.autocode.generator.javalanguage.entity.ContextAnnotation annotation : annotationList) {
+    for (ContextAnnotation annotation : annotationList) {
       outSpace.append(annotation.outAnnotation());
       outSpace.append(Symbol.SPACE);
     }

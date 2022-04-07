@@ -1,14 +1,14 @@
 package com.liujun.auto.generator.builder.operator.increment.field;
 
 import com.liujun.auto.generator.builder.operator.code.CodeBaseUtils;
-import com.liujun.auto.generator.builder.operator.ddd.increment.field.JavaCodeRepositoryObjectFieldCompareReplace;
-import com.liujun.auto.generator.builder.operator.ddd.increment.field.entity.EntityField;
-import com.liujun.auto.generator.builder.operator.ddd.increment.field.entity.EntityInfo;
-import com.liujun.auto.generator.builder.operator.ddd.increment.field.entity.EntityMethod;
-import com.liujun.auto.generator.builder.operator.ddd.increment.field.matcher.MatcherFieldContext;
+import com.liujun.auto.generator.builder.ddd.increment.field.JavaCodeRepositoryObjectFieldCompareReplace;
+import com.liujun.auto.generator.builder.ddd.increment.field.entity.EntityField;
+import com.liujun.auto.generator.builder.ddd.increment.field.entity.EntityInfo;
+import com.liujun.auto.generator.builder.ddd.increment.field.entity.EntityMethod;
+import com.liujun.auto.generator.builder.ddd.increment.field.matcher.MatcherFieldContext;
 import com.liujun.auto.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.auto.constant.Symbol;
-import com.liujun.auto.generator.builder.entity.GenerateCodeContext;
+import com.liujun.auto.generator.builder.ddd.entity.GenerateCodeContext;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -122,7 +122,7 @@ public class JavaCodeRepositoryObjectFieldCompareReplaceTest {
     try {
       Class cls =
           Class.forName(
-                  "com.liujun.auto.generator.builder.operator.ddd.increment.field.JavaCodeRepositoryObjectFieldCompareReplace");
+                  "com.liujun.auto.generator.builder.ddd.increment.field.JavaCodeRepositoryObjectFieldCompareReplace");
       Method methodInfo = cls.getDeclaredMethod(methodName, paramClass);
       methodInfo.setAccessible(true);
       return methodInfo;

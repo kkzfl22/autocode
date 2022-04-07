@@ -1,6 +1,6 @@
 package com.liujun.auto.generator.builder.operator.code;
 
-import com.liujun.auto.generator.builder.operator.ddd.full.facade.JavaCodeFacadeObjectCreate;
+import com.liujun.auto.generator.builder.ddd.full.facade.JavaCodeFacadeObjectCreate;
 import org.junit.Test;
 
 /**

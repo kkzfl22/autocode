@@ -1,7 +1,7 @@
 package com.liujun.auto.generator.javalanguage.entity;
 
-import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.generator.builder.entity.AnnotationValueElement;
+import com.liujun.auto.constant.Symbol;
+import com.liujun.auto.generator.builder.ddd.entity.AnnotationValueElement;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class ContextAnnotation {
      * @param annotation
      * @return
      */
-    public com.liujun.micro.autocode.generator.javalanguage.entity.ContextAnnotation.Builder annotation(String annotation) {
+    public Builder annotation(String annotation) {
       this.annotation = annotation;
       return this;
     }
@@ -72,7 +72,7 @@ public class ContextAnnotation {
      * @param value 单个注解的值
      * @return
      */
-    public com.liujun.micro.autocode.generator.javalanguage.entity.ContextAnnotation.Builder annotationValue(String value) {
+    public Builder annotationValue(String value) {
       if (null == annotationValue) {
         annotationValue = new ArrayList<>();
       }
@@ -89,7 +89,7 @@ public class ContextAnnotation {
      * @param value 注解的值
      * @return
      */
-    public com.liujun.micro.autocode.generator.javalanguage.entity.ContextAnnotation.Builder annotationValue(String key, String value) {
+    public Builder annotationValue(String key, String value) {
       if (null == annotationValue) {
         annotationValue = new ArrayList<>();
       }
@@ -105,7 +105,7 @@ public class ContextAnnotation {
      * @param value 注解的值
      * @return
      */
-    public com.liujun.micro.autocode.generator.javalanguage.entity.ContextAnnotation.Builder annotationValue(boolean notOutChar, String key, String value) {
+    public Builder annotationValue(boolean notOutChar, String key, String value) {
       if (null == annotationValue) {
         annotationValue = new ArrayList<>();
       }
@@ -120,7 +120,7 @@ public class ContextAnnotation {
      * @param key 注解的key
      * @return
      */
-    public com.liujun.micro.autocode.generator.javalanguage.entity.ContextAnnotation.Builder annotationValue(boolean notOutChar, String key) {
+    public Builder annotationValue(boolean notOutChar, String key) {
       if (null == annotationValue) {
         annotationValue = new ArrayList<>();
       }
@@ -128,12 +128,12 @@ public class ContextAnnotation {
       return this;
     }
 
-    public com.liujun.micro.autocode.generator.javalanguage.entity.ContextAnnotation build() {
-      return new com.liujun.micro.autocode.generator.javalanguage.entity.ContextAnnotation(this);
+    public ContextAnnotation build() {
+      return new ContextAnnotation(this);
     }
   }
 
-  public ContextAnnotation(com.liujun.micro.autocode.generator.javalanguage.entity.ContextAnnotation.Builder builder) {
+  public ContextAnnotation(Builder builder) {
     this.annotation = builder.annotation;
     this.value = getAnnotationValue(builder.annotationValue);
   }
@@ -183,8 +183,8 @@ public class ContextAnnotation {
     return outAnnotation.toString();
   }
 
-  public static com.liujun.micro.autocode.generator.javalanguage.entity.ContextAnnotation.Builder builder() {
-    return new com.liujun.micro.autocode.generator.javalanguage.entity.ContextAnnotation.Builder();
+  public static Builder builder() {
+    return new Builder();
   }
 
   public String getAnnotation() {

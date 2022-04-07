@@ -1,15 +1,15 @@
 package com.liujun.auto.generator.builder.operator.code;
 
-import com.liujun.auto.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisImplementCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisJunitScanConfigCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisMapperInfCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMybatisConverterCreate;
-import com.liujun.auto.generator.builder.entity.GenerateCodeContext;
-import com.liujun.auto.generator.builder.operator.ddd.full.domain.JavaCodeDomainJunitServiceCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.domain.JavaCodeDomainObjectCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.domain.JavaCodeDomainRepositoryFacadeCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.domain.JavaCodeDomainServiceCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisImplementCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisJunitScanConfigCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisMapperInfCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMybatisConverterCreate;
+import com.liujun.auto.generator.builder.ddd.entity.GenerateCodeContext;
+import com.liujun.auto.generator.builder.ddd.full.domain.JavaCodeDomainJunitServiceCreate;
+import com.liujun.auto.generator.builder.ddd.full.domain.JavaCodeDomainObjectCreate;
+import com.liujun.auto.generator.builder.ddd.full.domain.JavaCodeDomainRepositoryFacadeCreate;
+import com.liujun.auto.generator.builder.ddd.full.domain.JavaCodeDomainServiceCreate;
 import org.junit.Test;
 
 /**

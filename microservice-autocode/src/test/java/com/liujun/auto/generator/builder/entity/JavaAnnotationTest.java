@@ -1,6 +1,7 @@
 package com.liujun.auto.generator.builder.entity;
 
-import com.liujun.auto.generator.builder.constant.CodeAnnotation;
+import com.liujun.auto.generator.builder.ddd.constant.CodeAnnotation;
+import com.liujun.auto.generator.builder.ddd.entity.JavaAnnotation;
 import org.junit.Test;
 
 /**

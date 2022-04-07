@@ -24,11 +24,13 @@ generate:
   updateCode: true
   #作者名称，即代码写在@author中的名称
   author: liujun
-  code:
+  methodList:
     #单个插入方法
     - name: insert
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: insert
+      #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
+      disable: false
       #方法的描述
       comment: 单个添加
       #排序
@@ -52,10 +54,12 @@ generate:
       comment: 修改方法
       #排序
       order: 300
-    #单个数据删除
+    # 单个数据删除
     - name: delete
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
       operator: delete
+      #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
+      disable: true
       #方法的注释
       comment: 单个删除
       #标识当前是否为主键操作
@@ -64,41 +68,66 @@ generate:
       #where: PKG_CODE in
       #排序
       order: 400
-    #查询所有
-    - name: queryAll
+      # 批量根据主键删除数据
+    - name:  delete
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
-      operator: query
-      #当前方法是否禁用 true 表示禁用，false 表示启用，默认值为false，即未配制或者值为false都为启用，true表示禁用
+      operator: fase
+      #方法的注释
+      comment: 批量删除
+      #      #标识当前是否为主键操作
+      primaryFlag: true
+      #where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
+      # where: id in
+      #排序
+      order: 500
+    #分页查询
+    - name: queryPage
+      #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
+      operator: queryPage
       disable: true
       #方法的注释
-      comment: 查询所有数据
-      ##where条件使用数据库字段,多个以逗号分隔,in关键字表示在范围内匹配
-      ##where: PKG_CODE in
+      comment: 分页查询
       #返回值类型信息
       returns: java.util.List<table_name>
       #排序
-      order: 1000
+      order: 600
+    # 查询详细
+    - name: queryAll
+      #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
+      operator: query
+      #方法的注释
+      comment: 查询所有
+      #返回值类型信息
+      returns: java.util.List<table_name>
+      #请求类型
+      #requestType: HTTP.GET
+      #排序
+      order: 700
   #代码内的目录结构的配制
   codeMenuTree:
     #最基础的目标配制
-    baseMenu: com.paraview.poc.authpkg.
+    baseMenu: com.paraview.zsc.domain.component.
     #最新输出的模块的名称
-    domainName: auth
+    domainName: user
   #模块名称
-  moduleName: auth
+  moduleName: urora-biz
   #工程名
-  projectName: auth-pkg
+  projectName: matchTg
   #maven的配制信息
   #maven的artifactId即为各工程或者模块的名称
   maven:
-    groupId: com.paraview.authpkg
+    groupId: com.liujun.manager.user
     version: 1.0-SNAPSHOT
-  #代码生成器需要包括的范围
-  #目前存在api,application,domain,repository
-  #api代码对外暴露的api接口，包含一系列的方法
-  #application表示聚合层
-  #domain表示领域服务层
-  #repository表示存储层的代码生成，目前使用mybatis
-  scope: api,application,domain,repository
+    #代码生成器需要包括的范围
+    #目前存在api,application,domain,repository
+    #api代码对外暴露的api接口，包含一系列的方法
+    #application表示聚合层
+    #domain表示领域服务层
+    #repository表示存储层的代码生成，目前使用mybatis
+    # repository-mybatis，即为当前存储层使用mybatis做为存储层的实现，会生成相关的po，存储的调用，mapper接口和mybatis文件。
+    # repository-mybatis-plus，采用mybatis-plus的存储层的实现。同样会生成相关的po，存储的调用，mapper接口和mybatis文件。
+    # 这种种生成方式的主要区别在于mybatis需要一些特殊的设置。在po需要指定与数据库的对应关系、mapper面要继承，以及xml文件无需全部生成。
+  scope: api,application,domain,repository-mybatis
+  #scope: application,domain,repository-mybatis-plus
   #输出文件的配制
   output: D:\java\code_gen

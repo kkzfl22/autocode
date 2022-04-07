@@ -3,8 +3,8 @@
  */
 package com.liujun.auto.generator.javalanguage.entity;
 
-import com.liujun.micro.autocode.generator.javalanguage.constant.ClassKeyWordEnum;
-import com.liujun.micro.autocode.generator.javalanguage.constant.VisitEnum;
+import com.liujun.auto.generator.javalanguage.constant.ClassKeyWordEnum;
+import com.liujun.auto.generator.javalanguage.constant.VisitEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -32,13 +32,13 @@ public class JavaClassStruct {
   private String pkgPath;
 
   /** 引用的导入 */
-  private List<com.liujun.micro.autocode.generator.javalanguage.entity.JavaClassImportClass> referenceImport;
+  private List<JavaClassImportClass> referenceImport;
 
   /** 导入与注释之间存在的空行数 */
   private int spaceLine;
 
   /** 类注释信息 */
-  private com.liujun.micro.autocode.generator.javalanguage.entity.JavaClassDocument classDocument;
+  private JavaClassDocument classDocument;
 
   /** 类的注解信息 */
   private List<ContextAnnotationList> classAnnotation;

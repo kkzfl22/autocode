@@ -1,9 +1,9 @@
 package com.liujun.auto.generator.builder.operator.code;
 
-import com.liujun.auto.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMybatisConverterCreate;
-import com.liujun.auto.generator.builder.entity.GenerateCodeContext;
-import com.liujun.auto.generator.builder.operator.ddd.full.domain.JavaCodeDomainObjectCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMybatisConverterCreate;
+import com.liujun.auto.generator.builder.ddd.entity.GenerateCodeContext;
+import com.liujun.auto.generator.builder.ddd.full.domain.JavaCodeDomainObjectCreate;
 import org.junit.Test;
 
 /**

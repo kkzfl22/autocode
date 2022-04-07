@@ -1,6 +1,6 @@
 package com.liujun.auto.generator.database.service.datatype;
 
-import com.liujun.auto.generator.builder.operator.utils.FileReaderUtils;
+import com.liujun.auto.generator.builder.utils.FileReaderUtils;
 import com.liujun.auto.generator.database.entity.DatabaseTypeMsgBO;
 import com.liujun.auto.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.auto.generator.database.constant.DatabaseTypeSourceEnum;

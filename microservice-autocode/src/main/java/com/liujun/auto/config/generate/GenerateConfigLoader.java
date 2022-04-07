@@ -1,7 +1,7 @@
 package com.liujun.auto.config.generate;
 
 import com.liujun.auto.config.generate.entity.GenerateConfigEntity;
-import com.liujun.auto.generator.builder.operator.utils.FileReaderUtils;
+import com.liujun.auto.generator.builder.utils.FileReaderUtils;
 import com.liujun.auto.utils.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;

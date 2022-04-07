@@ -1,6 +1,6 @@
 package com.liujun.auto.generator.builder.operator.code;
 
-import com.liujun.auto.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
 import org.junit.Test;
 
 /**

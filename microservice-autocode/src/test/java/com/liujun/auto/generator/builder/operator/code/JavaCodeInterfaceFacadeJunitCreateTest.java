@@ -1,24 +1,24 @@
 package com.liujun.auto.generator.builder.operator.code;
 
-import com.liujun.auto.generator.builder.operator.ddd.custom.view.facade.JavaCodeFacadeCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisImplementCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisJunitScanConfigCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisMapperInfCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.repositorymybatis.JavaCodeRepositoryMybatisConverterCreate;
-import com.liujun.auto.generator.builder.entity.GenerateCodeContext;
-import com.liujun.auto.generator.builder.operator.ddd.full.application.JavaCodeApplicationServiceCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.domain.JavaCodeDomainObjectCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.domain.JavaCodeDomainRepositoryFacadeCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.domain.JavaCodeDomainServiceCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.facade.JavaCodeFacadeAssemblerCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.facade.JavaCodeFacadeCheckCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.facade.JavaCodeFacadeConstantCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.facade.JavaCodeFacadeErrorCodeCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.facade.JavaCodeFacadeJunitCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.facade.JavaCodeFacadeObjectCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.other.JavaCodeResourceI18nEnUsCreate;
-import com.liujun.auto.generator.builder.operator.ddd.full.other.JavaCodeResourceI18nZhCnCreate;
+import com.liujun.auto.generator.builder.ddd.custom.view.facade.JavaCodeFacadeCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisImplementCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisJunitScanConfigCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisMapperInfCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMybatisConverterCreate;
+import com.liujun.auto.generator.builder.ddd.entity.GenerateCodeContext;
+import com.liujun.auto.generator.builder.ddd.full.application.JavaCodeApplicationServiceCreate;
+import com.liujun.auto.generator.builder.ddd.full.domain.JavaCodeDomainObjectCreate;
+import com.liujun.auto.generator.builder.ddd.full.domain.JavaCodeDomainRepositoryFacadeCreate;
+import com.liujun.auto.generator.builder.ddd.full.domain.JavaCodeDomainServiceCreate;
+import com.liujun.auto.generator.builder.ddd.full.facade.JavaCodeFacadeAssemblerCreate;
+import com.liujun.auto.generator.builder.ddd.full.facade.JavaCodeFacadeCheckCreate;
+import com.liujun.auto.generator.builder.ddd.full.facade.JavaCodeFacadeConstantCreate;
+import com.liujun.auto.generator.builder.ddd.full.facade.JavaCodeFacadeErrorCodeCreate;
+import com.liujun.auto.generator.builder.ddd.full.facade.JavaCodeFacadeJunitCreate;
+import com.liujun.auto.generator.builder.ddd.full.facade.JavaCodeFacadeObjectCreate;
+import com.liujun.auto.generator.builder.ddd.full.other.JavaCodeResourceI18nEnUsCreate;
+import com.liujun.auto.generator.builder.ddd.full.other.JavaCodeResourceI18nZhCnCreate;
 import org.junit.Test;
 
 /**

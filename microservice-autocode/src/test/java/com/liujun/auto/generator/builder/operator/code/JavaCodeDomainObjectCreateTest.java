@@ -1,6 +1,6 @@
 package com.liujun.auto.generator.builder.operator.code;
 
-import com.liujun.auto.generator.builder.operator.ddd.full.domain.JavaCodeDomainObjectCreate;
+import com.liujun.auto.generator.builder.ddd.full.domain.JavaCodeDomainObjectCreate;
 import org.junit.Test;
 
 /**

@@ -1,6 +1,7 @@
 package com.liujun.auto.config.menutree;
 
 import com.liujun.auto.constant.ProjectMenuTreeKey;
+import com.liujun.auto.generator.builder.ddd.config.ProjectMenuTree;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,9 +18,9 @@ public class ProjectMenuTreeTest {
     String modelName = "pap";
     ProjectMenuTree menuTree = new ProjectMenuTree(modelName);
     // 构建项目目录树
-    MenuNode rootNode = menuTree.getRoot();
-    DomainMenuTreeTest.treeNodePrint(rootNode, 0);
-    MenuNode node =
+    DirNode rootNode = menuTree.getRoot();
+    DirTreeTest.treeNodePrint(rootNode, 0);
+    DirNode node =
         rootNode
             .getChildren(ProjectMenuTreeKey.SRC.getKey())
             .getChildren(ProjectMenuTreeKey.SRC_MAIN.getKey())

@@ -1,7 +1,7 @@
 package com.liujun.auto.generator.javalanguage.entity;
 
-import com.liujun.micro.autocode.constant.Symbol;
-import com.liujun.micro.autocode.generator.builder.entity.JavaAnnotation;
+import com.liujun.auto.constant.Symbol;
+import com.liujun.auto.generator.builder.ddd.entity.JavaAnnotation;
 
 import java.util.ArrayList;
 import java.util.List;

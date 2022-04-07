@@ -26,5 +26,5 @@ public class ContextMethodDocument {
   private String comment;
 
   /** 参数信息 */
-  private List<com.liujun.micro.autocode.generator.javalanguage.entity.ContextMethodParamDocument> paramDocuments;
+  private List<ContextMethodParamDocument> paramDocuments;
 }

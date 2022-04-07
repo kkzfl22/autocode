@@ -3,7 +3,7 @@
  */
 package com.liujun.auto.generator.javalanguage.entity;
 
-import com.liujun.micro.autocode.generator.javalanguage.constant.VisitEnum;
+import com.liujun.auto.generator.javalanguage.constant.VisitEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
