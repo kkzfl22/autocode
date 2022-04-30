@@ -1,6 +1,6 @@
-package com.liujun.auto.generator.database.service.table.mysql;
+package com.liujun.auto.generator.database.service.table.oracle;
 
-import com.liujun.auto.generator.database.constant.MysqlDataTypeEnum;
+import com.liujun.auto.generator.database.constant.OracleDataTypeEnum;
 import com.liujun.auto.generator.database.constant.StandardTypeEnum;
 import com.liujun.auto.generator.database.service.table.DataBaseTypeInf;
 
@@ -10,13 +10,13 @@ import com.liujun.auto.generator.database.service.table.DataBaseTypeInf;
  * @author liujun
  * @version 0.0.1
  */
-public class DataBaseMysqlTypeImpl implements DataBaseTypeInf {
+public class DataBaseOracleTypeImpl implements DataBaseTypeInf {
 
-  public static final DataBaseMysqlTypeImpl INSTANCE = new DataBaseMysqlTypeImpl();
+  public static final DataBaseOracleTypeImpl INSTANCE = new DataBaseOracleTypeImpl();
 
   @Override
-  public StandardTypeEnum getDataType(String mysqlDataType) {
-    StandardTypeEnum standardType = MysqlDataTypeEnum.databaseToStandKey(mysqlDataType);
+  public StandardTypeEnum getDataType(String dbType) {
+    StandardTypeEnum standardType = OracleDataTypeEnum.databaseToStandKey(dbType);
 
     return standardType;
   }
@@ -24,7 +24,7 @@ public class DataBaseMysqlTypeImpl implements DataBaseTypeInf {
   @Override
   public StandardTypeEnum standardAndLengthCheck(String mysqlType, Long length) {
     // 将类型转换为标准的类型
-    StandardTypeEnum standardType = MysqlDataTypeEnum.standardAndLengthCheck(mysqlType, length);
+    StandardTypeEnum standardType = OracleDataTypeEnum.standardAndLengthCheck(mysqlType, length);
 
     return standardType;
   }
@@ -33,7 +33,7 @@ public class DataBaseMysqlTypeImpl implements DataBaseTypeInf {
   public Long getDataTypeMax(String dbType) {
 
     // 获取类型信息
-    MysqlDataTypeEnum typeEnum = MysqlDataTypeEnum.mysqlDataType(dbType);
+    OracleDataTypeEnum typeEnum = OracleDataTypeEnum.oracleDataType(dbType);
 
     if (typeEnum == null) {
       return null;
@@ -44,6 +44,6 @@ public class DataBaseMysqlTypeImpl implements DataBaseTypeInf {
 
   @Override
   public String getDbType(StandardTypeEnum standard) {
-    return MysqlDataTypeEnum.getMysqlDbType(standard);
+    return OracleDataTypeEnum.getOracleDbType(standard);
   }
 }

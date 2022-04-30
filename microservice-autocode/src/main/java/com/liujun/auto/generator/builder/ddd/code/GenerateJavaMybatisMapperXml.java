@@ -47,7 +47,7 @@ public class GenerateJavaMybatisMapperXml {
   public StringBuilder generateMapperXml(
       String tableName, GenerateCodeContext param, String mapperXmlDoc) {
     List<TableColumnDTO> columnList = param.getColumnMapList().get(tableName);
-    List<TableColumnDTO> primaryKeyList = TableColumnUtils.getPrimaryKey(columnList);
+    List<TableColumnDTO> primaryKeyList = TableColumnUtils.getPrimaryKeyDefaultOne(columnList);
     // 获取po的完整路径
     ImportPackageInfo poPackage = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_PO);
     // 获取dao的完整路径

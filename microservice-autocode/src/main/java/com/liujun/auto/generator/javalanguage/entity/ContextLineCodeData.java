@@ -18,8 +18,6 @@ import lombok.ToString;
 @ToString
 public class ContextLineCodeData extends ContextLineCodeBase {
 
-
-
   /** final的标识 */
   private Boolean finalFlag;
 

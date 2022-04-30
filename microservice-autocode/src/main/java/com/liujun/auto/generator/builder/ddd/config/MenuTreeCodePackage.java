@@ -1,5 +1,7 @@
 package com.liujun.auto.generator.builder.ddd.config;
 
+import com.liujun.auto.config.generate.GenerateConfigProcess;
+import com.liujun.auto.config.generate.entity.GenerateConfigEntity;
 import com.liujun.auto.config.menutree.DirTree;
 import com.liujun.auto.config.menutree.DirNode;
 import com.liujun.auto.constant.JavaDomainTreeKey;
@@ -13,8 +15,7 @@ import com.liujun.auto.constant.JavaDomainTreeKey;
 public class MenuTreeCodePackage {
 
   /** 实例信息 */
-  public static final MenuTreeCodePackage INSTANCE =
-      new MenuTreeCodePackage(DirTree.INSTANCE);
+  public static final MenuTreeCodePackage INSTANCE = new MenuTreeCodePackage(DirTree.INSTANCE);
 
   private final DirTree menuTree;
 
@@ -23,7 +24,6 @@ public class MenuTreeCodePackage {
   }
 
   public DirNode getPkgRoot() {
-
     return menuTree.getRoot();
   }
 
@@ -35,9 +35,10 @@ public class MenuTreeCodePackage {
   public DirNode getRepositoryObjectNode() {
     return menuTree
         .getRoot()
+        .getChildren(JavaDomainTreeKey.BASE)
         .getChildren(JavaDomainTreeKey.INFRASTRUCTURE)
-        .getChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY)
-        .getChildren(menuTree.getModelName())
+        .getChildren(JavaDomainTreeKey.PREFIX)
+        .getChildren(JavaDomainTreeKey.MODEL_NAME)
         .getChildren(JavaDomainTreeKey.REPOSITORY_PO);
   }
 

@@ -48,6 +48,9 @@ public class Symbol {
   /** 双引号 */
   public static final String QUOTE = "\"";
 
+  /** 单引号 */
+  public static final String SINGELE_QUOTE = "\'";
+
   /** 等于 */
   public static final String EQUAL = "=";
 

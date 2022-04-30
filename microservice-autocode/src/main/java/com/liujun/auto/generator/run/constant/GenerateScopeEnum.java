@@ -30,7 +30,12 @@ public enum GenerateScopeEnum {
 
   /** 所有都会执行的阶段 */
   COMMON("common"),
-  ;
+
+  /** 数据库脚本转换 */
+  PARSE_DB("parse-db"),
+
+  /** 数据输出为标准的SQL */
+  MYSQL_OUTPUT("mysql-output");
 
   /** 生成的范围定义 */
   private String scope;

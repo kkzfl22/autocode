@@ -27,6 +27,6 @@ public class ContextLineCodeCondition extends ContextLineCodeBase {
   /** 条件的信息 */
   private String condition;
 
-  /** 条件满足后需要执行的SQL */
+  /** 条件满足后需要执行的代码 */
   private List<ContextLineCodeBase> code;
 }

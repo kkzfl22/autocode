@@ -17,13 +17,17 @@ generate:
   #生成的目标数据库类型:mysql目标数据库为mysql;oralce，目标数据库为oracle
   databaseType: mysql
   #数据库表空间命名
-  databaseTableSpaceName: autocode
+  databaseTableSpaceName: zsc
   #错误码开始编号，依次向后；如果需要重新以此开始，需删除序列文件.否则将以序列化后的文件数字，取整加2000开始
   startErrorCode: -10000
   #是否修改错误码编号,默认为true，进行修改
   updateCode: true
+  # 是否启用loombok插伯来生成相关的get和set及toString方法
+  lombok: true
   #作者名称，即代码写在@author中的名称
   author: liujun
+  # 版权信息
+  copyRight: Copyright (C), 2008-2021, Paraview All Rights Reserved.
   methodList:
     #单个插入方法
     - name: insert
@@ -127,7 +131,8 @@ generate:
     # repository-mybatis，即为当前存储层使用mybatis做为存储层的实现，会生成相关的po，存储的调用，mapper接口和mybatis文件。
     # repository-mybatis-plus，采用mybatis-plus的存储层的实现。同样会生成相关的po，存储的调用，mapper接口和mybatis文件。
     # 这种种生成方式的主要区别在于mybatis需要一些特殊的设置。在po需要指定与数据库的对应关系、mapper面要继承，以及xml文件无需全部生成。
-  scope: api,application,domain,repository-mybatis
+  #scope: api,application,domain,repository-mybatis
   #scope: application,domain,repository-mybatis-plus
+  scope: parse-db,mysql-output
   #输出文件的配制
   output: D:\java\code_gen

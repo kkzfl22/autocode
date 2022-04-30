@@ -388,7 +388,7 @@ public class JavaCodeRepositoryObjectFieldCompareReplace implements GenerateCode
     context.setColumnMap(param.getColumnMapMap().get(tableName));
     context.putValue(REPOSITORY_MATCHER_KEY, new ArrayList<>(16));
     // 获取当前主键列表
-    context.setPrimaryKeyList(TableColumnUtils.getPrimaryKey(context.getColumnList()));
+    context.setPrimaryKeyList(TableColumnUtils.getPrimaryKeyDefaultOne(context.getColumnList()));
     context.setTypeEnum(param.getTypeEnum());
 
     return context;

@@ -33,7 +33,7 @@ public class TableColumnUtils {
    * @param list 表的列信息
    * @return 主键列信息
    */
-  public static List<TableColumnDTO> getPrimaryKey(List<TableColumnDTO> list) {
+  public static List<TableColumnDTO> getPrimaryKeyDefaultOne(List<TableColumnDTO> list) {
 
     if (list == null || list.isEmpty()) {
       return Collections.emptyList();
@@ -50,6 +50,31 @@ public class TableColumnUtils {
     // 如果未定义主键，就使用第一个列
     if (primaryKey.isEmpty()) {
       primaryKey.add(list.get(0));
+    }
+
+    return primaryKey;
+  }
+
+  /**
+   * 获取主键的key的信息 ，没有返回为空
+   *
+   * <p>支持单主键与联合主键
+   *
+   * @param list 表的列信息
+   * @return 主键列信息
+   */
+  public static List<TableColumnDTO> getPrimaryKey(List<TableColumnDTO> list) {
+
+    if (list == null || list.isEmpty()) {
+      return Collections.emptyList();
+    }
+
+    List<TableColumnDTO> primaryKey = new ArrayList<>();
+
+    for (TableColumnDTO tableBean : list) {
+      if (tableBean.getPrimaryKey()) {
+        primaryKey.add(tableBean);
+      }
     }
 
     return primaryKey;

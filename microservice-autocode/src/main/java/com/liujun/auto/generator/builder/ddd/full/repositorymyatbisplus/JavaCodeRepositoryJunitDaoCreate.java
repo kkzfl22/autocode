@@ -50,7 +50,7 @@ public class JavaCodeRepositoryJunitDaoCreate implements GenerateCodeInf {
       TableInfoDTO tableInfo = param.getTableMap().get(tableName);
 
       // 获取当前主键列表
-      List<TableColumnDTO> primaryKeyList = TableColumnUtils.getPrimaryKey(columnList);
+      List<TableColumnDTO> primaryKeyList = TableColumnUtils.getPrimaryKeyDefaultOne(columnList);
 
       // 获取所有列的信息
       Map<String, TableColumnDTO> tableColumnMap = param.getColumnMapMap().get(entry.getKey());

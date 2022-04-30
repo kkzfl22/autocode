@@ -1,7 +1,10 @@
 package com.liujun.auto.config.menutree;
 
+import com.liujun.auto.config.generate.GenerateConfigProcess;
 import com.liujun.auto.constant.JavaDomainTreeKey;
 import com.liujun.auto.constant.Symbol;
+import com.liujun.auto.generator.builder.ddd.constant.DirNameEnum;
+import com.liujun.auto.generator.builder.utils.StringDataUtils;
 
 import java.util.*;
 
@@ -152,7 +155,8 @@ public class DirNode {
     List<String> javaPackage = new ArrayList<>();
 
     do {
-      String outPath = outNode.getPath() + symbolInfo;
+      String outNodePath = pathProcess(outNode.getPath());
+      String outPath = outNodePath + symbolInfo;
       javaPackage.add(outPath);
       outNode = outNode.getParent();
     } while (outNode != null && outNode.getParent() != null);
@@ -164,6 +168,43 @@ public class DirNode {
     outJavaPackageBuilder.deleteCharAt(outJavaPackageBuilder.length() - 1);
 
     return outJavaPackageBuilder.toString();
+  }
+
+  /**
+   * 路径处理
+   *
+   * @param pathName
+   * @return
+   */
+  private String pathProcess(String pathName) {
+    // 当检查到基础路径，则返回配制的路径
+    if (DirNameEnum.BASE.getName().equals(pathName)) {
+      return StringDataUtils.empty(
+          GenerateConfigProcess.INSTANCE
+              .getCfgEntity()
+              .getGenerate()
+              .getCodeMenuTree()
+              .getBaseDir());
+    }
+    // 模块的名称
+    if (DirNameEnum.MODEL_NAME.getName().equals(pathName)) {
+      return StringDataUtils.empty(
+          GenerateConfigProcess.INSTANCE
+              .getCfgEntity()
+              .getGenerate()
+              .getCodeMenuTree()
+              .getDomainName());
+    }
+    // 基础层中的名称前缀信息
+    if (DirNameEnum.PREFIX.getName().equals(pathName)) {
+      return StringDataUtils.empty(
+          GenerateConfigProcess.INSTANCE
+              .getCfgEntity()
+              .getGenerate()
+              .getCodeMenuTree()
+              .getInfrastructurePrefix());
+    }
+    return pathName;
   }
 
   public String getCode() {

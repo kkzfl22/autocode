@@ -1,7 +1,7 @@
 package com.liujun.auto.generator.database.service.table.mysql;
 
 import com.liujun.auto.generator.database.entity.TableColumnDTO;
-import com.liujun.auto.generator.database.constant.JavaDataTypeGenerateValueEnum;
+import com.liujun.auto.generator.database.constant.JavaDataTypeRandomValueEnum;
 import com.liujun.auto.generator.database.constant.MysqlDataTypeEnum;
 import com.liujun.auto.generator.database.constant.StandardTypeEnum;
 import com.liujun.auto.generator.database.service.table.DataValueInf;
@@ -26,6 +26,6 @@ public class DataParseMysqlValueImpl implements DataValueInf {
       System.out.println("error");
     }
 
-    return JavaDataTypeGenerateValueEnum.getGenerateFun(standType, bean.getDataLength());
+    return JavaDataTypeRandomValueEnum.getGenerateFun(standType, bean.getDataLength());
   }
 }

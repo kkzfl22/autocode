@@ -4,6 +4,7 @@ import com.liujun.auto.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.auto.generator.database.constant.StandardTypeEnum;
 import com.liujun.auto.generator.database.service.table.DataBaseTypeInf;
 import com.liujun.auto.generator.database.service.table.mysql.DataBaseMysqlTypeImpl;
+import com.liujun.auto.generator.database.service.table.oracle.DataBaseOracleTypeImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,9 @@ public class DatabaseTypeService {
   static {
     // 加载mysql的数据库查询实现
     DATABASE_TYPE_MAP.put(DatabaseTypeEnum.MYSQL.getDatabaseType(), DataBaseMysqlTypeImpl.INSTANCE);
+    // 加载oracle的数据库转换的实现
+    DATABASE_TYPE_MAP.put(
+        DatabaseTypeEnum.ORACLE.getDatabaseType(), DataBaseOracleTypeImpl.INSTANCE);
   }
 
   /**
@@ -54,6 +58,23 @@ public class DatabaseTypeService {
 
     if (typeInfo != null) {
       return typeInfo.standardAndLengthCheck(mysqlType, length);
+    }
+
+    return null;
+  }
+
+  /**
+   * 标准的长度检查操作
+   *
+   * @param typeEnum 类型枚举
+   * @param standardKey 数据库的类型
+   * @return 标识的key
+   */
+  public String standardToDatabase(DatabaseTypeEnum typeEnum, StandardTypeEnum standardKey) {
+    DataBaseTypeInf typeInfo = DATABASE_TYPE_MAP.get(typeEnum.getDatabaseType());
+
+    if (typeInfo != null) {
+      return typeInfo.getDbType(standardKey);
     }
 
     return null;

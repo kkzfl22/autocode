@@ -10,10 +10,13 @@ import com.liujun.auto.generator.run.CodeCreateMicroServiceRun;
  */
 public class MainRun {
 
-    public static void main(String[] args) {
-        //代码生成
-        CodeCreateMicroServiceRun.INSTANCE.generate();
+  public static void main(String[] args) {
 
-        System.out.println("finish");
-    }
+    System.out.println("start");
+
+    // 代码生成
+    CodeCreateMicroServiceRun.INSTANCE.generate();
+
+    System.out.println("finish");
+  }
 }

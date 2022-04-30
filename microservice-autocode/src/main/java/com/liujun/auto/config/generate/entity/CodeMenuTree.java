@@ -1,9 +1,5 @@
 package com.liujun.auto.config.generate.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 /**
  * 代码内的目录树相关的配制
  *
@@ -12,18 +8,23 @@ import lombok.ToString;
  */
 public class CodeMenuTree {
 
-  /** 最基础的目录 */
   private String baseMenu;
+
+  /** 最基础的目录 */
+  private String baseDir;
 
   /** 代码内的领域名称 */
   private String domainName;
 
-  public String getBaseMenu() {
-    return baseMenu;
+  /** 基础层中的前缀信息 */
+  private String infrastructurePrefix;
+
+  public String getBaseDir() {
+    return baseDir;
   }
 
-  public void setBaseMenu(String baseMenu) {
-    this.baseMenu = baseMenu;
+  public void setBaseDir(String baseDir) {
+    this.baseDir = baseDir;
   }
 
   public String getDomainName() {
@@ -34,11 +35,28 @@ public class CodeMenuTree {
     this.domainName = domainName;
   }
 
+  public String getInfrastructurePrefix() {
+    return infrastructurePrefix;
+  }
+
+  public void setInfrastructurePrefix(String infrastructurePrefix) {
+    this.infrastructurePrefix = infrastructurePrefix;
+  }
+
+  public String getBaseMenu() {
+    return baseMenu;
+  }
+
+  public void setBaseMenu(String baseMenu) {
+    this.baseMenu = baseMenu;
+  }
+
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("CodeMenuTree{");
-    sb.append("baseMenu='").append(baseMenu).append('\'');
+    sb.append("baseDir='").append(baseDir).append('\'');
     sb.append(", domainName='").append(domainName).append('\'');
+    sb.append(", infrastructurePrefix='").append(infrastructurePrefix).append('\'');
     sb.append('}');
     return sb.toString();
   }

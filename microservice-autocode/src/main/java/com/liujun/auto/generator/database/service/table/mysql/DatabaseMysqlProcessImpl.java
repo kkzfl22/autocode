@@ -27,14 +27,19 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
 
   /** 查询所有的表信息 */
   private static final String QUERY_ALL_TABLE =
-      "select table_name,table_comment from information_schema.tables  where table_schema = ? ";
+      "select table_name,table_type,table_comment from information_schema.tables  where table_type = 'BASE TABLE' and  table_schema = ? ";
 
   /** 查询所有的列信息 */
   private static final String QUERY_ALL_COLUMN =
-      "select table_name,column_name,data_type,COLUMN_COMMENT,COLUMN_KEY,EXTRA,"
-          + "NUMERIC_PRECISION,NUMERIC_SCALE,CHARACTER_MAXIMUM_LENGTH,CHARACTER_OCTET_LENGTH,"
-          + "IS_NULLABLE,COLUMN_DEFAULT,COLUMN_TYPE "
-          + "from information_schema.COLUMNS where table_schema = ? order by table_name";
+      "select t.table_name,t.column_name,t.data_type,t.COLUMN_COMMENT,t.COLUMN_KEY,t.EXTRA," +
+              "t.NUMERIC_PRECISION,t.NUMERIC_SCALE,t.CHARACTER_MAXIMUM_LENGTH,t.CHARACTER_OCTET_LENGTH," +
+              "t.IS_NULLABLE,t.COLUMN_DEFAULT,t.COLUMN_TYPE " +
+              "from information_schema.COLUMNS t  " +
+              "where  t.table_schema = ?  " +
+              "and t.table_name in ( " +
+              "select table_name from information_schema.tables scma " +
+              "where  scma.table_type = 'BASE TABLE') " +
+              "order by t.table_name";
 
   public static final DatabaseMysqlProcessImpl INSTANCE = new DatabaseMysqlProcessImpl();
 
@@ -82,6 +87,7 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
   private static TableInfoDTO parseTable(ResultSet rs) throws SQLException {
     String tableName = rs.getString("table_name");
     String columnName = rs.getString("table_comment");
+    String tableType = rs.getString("table_type");
     // 在存储时所有字母小写
     tableName = tableName.toLowerCase();
     int spitIndex = columnName.indexOf(Symbol.SEMICOLON);
@@ -89,7 +95,10 @@ public class DatabaseMysqlProcessImpl implements DatabaseProcessInf {
       columnName = columnName.substring(0, spitIndex);
     }
 
-    return new TableInfoDTO(tableName, columnName);
+    TableInfoDTO tableInfo = new TableInfoDTO(tableName, columnName);
+    tableInfo.setTableType(tableType);
+
+    return tableInfo;
   }
 
   @Override

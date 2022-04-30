@@ -18,6 +18,12 @@ import lombok.ToString;
 @ToString
 public class ContextLineCodeBase {
 
+  /** 空行数 */
+  private int topLine;
+
+  /** 左边空格数 */
+  private int leftSpace;
+
   /** 行注释信息 */
   private ContextFieldDocument document;
 

@@ -75,7 +75,12 @@ public class DirTree {
   public static void readFileDir(File file, DirNode node) {
     if (file.isDirectory()) {
       for (File item : file.listFiles()) {
-        DirNode childrenNode = node.addChildren(item.getName());
+
+        String name = item.getName();
+
+
+
+        DirNode childrenNode = node.addChildren(name);
 
         readFileDir(item, childrenNode);
       }

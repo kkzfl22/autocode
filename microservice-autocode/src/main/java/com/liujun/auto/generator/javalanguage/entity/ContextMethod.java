@@ -24,6 +24,9 @@ public class ContextMethod extends ContextBase {
   /** 空格数 */
   private int spaceLine;
 
+  /** 左边空格数 */
+  private int leftSpace;
+
   /** 方法的注释信息 */
   private ContextMethodDocument document;
 
@@ -47,4 +50,7 @@ public class ContextMethod extends ContextBase {
 
   /** 方法的参数信息 */
   private List<ContextMethodParam> param;
+
+  /** 方法中的代码行信息 */
+  private List<ContextLineCodeBase> codeLine;
 }

@@ -16,6 +16,9 @@ public class TableInfoDTO {
   /** 表描述信息 */
   private String tableComment;
 
+  /** 表的类型信息 */
+  private String tableType;
+
   /** 列信息 */
   private List<TableColumnDTO> columnList;
 
@@ -27,14 +30,12 @@ public class TableInfoDTO {
     this.tableComment = tableComment;
   }
 
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder("TableInfoDTO{");
-    sb.append("tableName='").append(tableName).append('\'');
-    sb.append(", tableComment='").append(tableComment).append('\'');
-    sb.append(", columnList=").append(columnList);
-    sb.append('}');
-    return sb.toString();
+  public String getTableType() {
+    return tableType;
+  }
+
+  public void setTableType(String tableType) {
+    this.tableType = tableType;
   }
 
   public String getTableName() {
@@ -59,5 +60,16 @@ public class TableInfoDTO {
 
   public void setColumnList(List<TableColumnDTO> columnList) {
     this.columnList = columnList;
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("TableInfoDTO{");
+    sb.append("tableName='").append(tableName).append('\'');
+    sb.append(", tableComment='").append(tableComment).append('\'');
+    sb.append(", tableType='").append(tableType).append('\'');
+    sb.append(", columnList=").append(columnList);
+    sb.append('}');
+    return sb.toString();
   }
 }

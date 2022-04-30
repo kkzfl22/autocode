@@ -7,6 +7,16 @@ package com.liujun.auto.constant;
  * @version 0.0.1
  */
 public enum JavaDomainTreeKey {
+
+  /** 工程的基础路径 */
+  BASE("base"),
+
+  /** 模块的名称 */
+  MODEL_NAME("modelName"),
+
+  /** 基础层中，infrastructure与moduleName之间的路径 */
+  PREFIX("prefix"),
+
   /** 应用层顶层目录 */
   APPLICATION("application"),
 

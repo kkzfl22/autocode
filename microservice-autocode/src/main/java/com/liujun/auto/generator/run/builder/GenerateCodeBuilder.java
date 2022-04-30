@@ -17,6 +17,8 @@ import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepo
 import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisMapperXmlCreate;
 import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
 import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMybatisConverterCreate;
+import com.liujun.auto.generator.builder.ddd.full.sql.MysqlDataOutputSqlCreate;
+import com.liujun.auto.generator.builder.ddd.full.sql.OracleSqlCreate;
 import com.liujun.auto.generator.database.entity.TableColumnDTO;
 import com.liujun.auto.generator.database.entity.TableInfoDTO;
 import com.liujun.auto.generator.database.service.DatabaseOperator;
@@ -72,6 +74,23 @@ public class GenerateCodeBuilder {
     application();
     // api层的代码加入到生成器
     api();
+
+    // 数据库结构转换
+    parseDb();
+
+    // 数据库数据导出为标准的SQL
+    mysqlOutput();
+  }
+
+  /** 将数据库中的数据导出为标准的SQL */
+  private static void mysqlOutput() {
+    List<GenerateCodeInf> dataList = new ArrayList<>(4);
+
+    // 数据导出成标准的SQL
+    dataList.add(MysqlDataOutputSqlCreate.INSTANCE);
+
+    // 存储层的集合
+    SCOPE_MAP.put(GenerateScopeEnum.MYSQL_OUTPUT, dataList);
   }
 
   /** 存储层代码生成的加入 */
@@ -85,6 +104,16 @@ public class GenerateCodeBuilder {
 
     // 存储层的集合
     SCOPE_MAP.put(GenerateScopeEnum.COMMON, commonList);
+  }
+
+  private static void parseDb() {
+    List<GenerateCodeInf> commonList = new ArrayList<>(2);
+
+    // 1,项目配制文件的拷贝
+    commonList.add(OracleSqlCreate.INSTANCE);
+
+    // 存储层的集合
+    SCOPE_MAP.put(GenerateScopeEnum.PARSE_DB, commonList);
   }
 
   /** 存储层代码生成的加入,使用mybatis */
@@ -234,6 +263,12 @@ public class GenerateCodeBuilder {
 
     // 4,api层的代码的生成
     generateScope(GenerateScopeEnum.API, scopeEnums);
+
+    // 进行数据库转换脚本的生成
+    generateScope(GenerateScopeEnum.PARSE_DB, scopeEnums);
+
+    // 进行数据转换的生成
+    generateScope(GenerateScopeEnum.MYSQL_OUTPUT, scopeEnums);
 
     // 5，公共的的文件的生成
     runGenerate(SCOPE_MAP.get(GenerateScopeEnum.COMMON));

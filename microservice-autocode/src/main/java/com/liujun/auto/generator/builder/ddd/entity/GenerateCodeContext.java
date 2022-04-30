@@ -1,5 +1,6 @@
 package com.liujun.auto.generator.builder.ddd.entity;
 
+import com.liujun.auto.config.generate.entity.Generate;
 import com.liujun.auto.config.generate.entity.GenerateConfigEntity;
 import com.liujun.auto.generator.builder.ddd.config.MenuTreeCodePackage;
 import com.liujun.auto.generator.builder.ddd.config.MenuTreeProjectPath;
@@ -65,9 +66,12 @@ public class GenerateCodeContext {
   /** 用来存储需要导包的信息 */
   private Map<String, Map<String, ImportPackageInfo>> packageMap = new HashMap<>();
 
+  /** 生成的相关配制信息 */
+  private Generate generateCfg;
+
   public GenerateCodeContext(GenerateConfigEntity configEntity) {
     this.fileBasePath = configEntity.getGenerate().getOutput();
-    this.javaPackage = configEntity.getGenerate().getCodeMenuTree().getBaseMenu();
+    this.javaPackage = configEntity.getGenerate().getCodeMenuTree().getBaseDir();
     this.moduleName = configEntity.getGenerate().getModuleName();
     this.domainName = configEntity.getGenerate().getCodeMenuTree().getDomainName();
     // 类型枚举
@@ -79,6 +83,7 @@ public class GenerateCodeContext {
     this.javaCodePackage = MenuTreeCodePackage.INSTANCE;
     // 构建项目目录树
     this.projectPath = MenuTreeProjectPath.INSTANCE;
+    this.generateCfg = configEntity.getGenerate();
   }
 
   public String getFileBasePath() {
@@ -193,6 +198,14 @@ public class GenerateCodeContext {
     this.projectPath = projectPath;
   }
 
+  public Generate getGenerateCfg() {
+    return generateCfg;
+  }
+
+  public void setGenerateCfg(Generate generateCfg) {
+    this.generateCfg = generateCfg;
+  }
+
   /**
    * 获取包数所信息，按定义的枚举值
    *
@@ -275,6 +288,7 @@ public class GenerateCodeContext {
     sb.append(", javaCodePackage=").append(javaCodePackage);
     sb.append(", projectPath=").append(projectPath);
     sb.append(", packageMap=").append(packageMap);
+    sb.append(", generateCfg=").append(generateCfg);
     sb.append('}');
     return sb.toString();
   }

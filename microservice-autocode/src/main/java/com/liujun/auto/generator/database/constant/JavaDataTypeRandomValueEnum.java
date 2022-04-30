@@ -7,7 +7,7 @@ package com.liujun.auto.generator.database.constant;
  * @version 0.0.1
  * @date 2019/10/29
  */
-public enum JavaDataTypeGenerateValueEnum {
+public enum JavaDataTypeRandomValueEnum {
 
   /** byte类型 */
   TINYINT(StandardTypeEnum.TINYINT, "(byte)" + JavaGenerateValueKey.GENERATE_INT_VALUE),
@@ -97,7 +97,7 @@ public enum JavaDataTypeGenerateValueEnum {
 
   private static final int DEFINE_MAX_LENGTH = 20;
 
-  JavaDataTypeGenerateValueEnum(StandardTypeEnum key, String runFunction) {
+  JavaDataTypeRandomValueEnum(StandardTypeEnum key, String runFunction) {
     this.key = key;
     this.runFunction = runFunction;
   }
@@ -125,7 +125,7 @@ public enum JavaDataTypeGenerateValueEnum {
 
     outLengthStr = String.valueOf(outLength);
 
-    for (JavaDataTypeGenerateValueEnum item : values()) {
+    for (JavaDataTypeRandomValueEnum item : values()) {
       if (item.getKey().equals(key)) {
         String itemValue = item.getRunFunction();
         if (itemValue.indexOf(LENGTH_KEY) != -1) {

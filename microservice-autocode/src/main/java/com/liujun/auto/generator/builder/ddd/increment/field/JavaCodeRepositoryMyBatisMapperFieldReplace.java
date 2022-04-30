@@ -148,7 +148,7 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
     context.setOutValueIncrement(
         new StringBuilder(dataContext.length() + (int) ((dataContext.length()) * 0.2)));
     // 获取当前主键列表
-    context.setPrimaryKeyList(TableColumnUtils.getPrimaryKey(context.getColumnList()));
+    context.setPrimaryKeyList(TableColumnUtils.getPrimaryKeyDefaultOne(context.getColumnList()));
     context.setTypeEnum(param.getTypeEnum());
 
     return context;

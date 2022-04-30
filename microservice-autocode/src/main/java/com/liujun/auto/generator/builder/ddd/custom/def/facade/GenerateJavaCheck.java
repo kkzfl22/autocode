@@ -502,7 +502,7 @@ public class GenerateJavaCheck {
     // 存在，则按条件进行设置
     else {
       // 1, 提取出主键
-      List<TableColumnDTO> primaryColumnList = TableColumnUtils.getPrimaryKey(tableColumnList);
+      List<TableColumnDTO> primaryColumnList = TableColumnUtils.getPrimaryKeyDefaultOne(tableColumnList);
       // 进行空与最大值参数的检查
       outInsert.append(
           checkNullAndMaxParam(
@@ -545,7 +545,7 @@ public class GenerateJavaCheck {
     // 存在，则按条件进行设置
     else {
       // 1, 提取出主键
-      List<TableColumnDTO> primaryColumnList = TableColumnUtils.getPrimaryKey(tableColumnList);
+      List<TableColumnDTO> primaryColumnList = TableColumnUtils.getPrimaryKeyDefaultOne(tableColumnList);
       // 进行空与最大值参数的检查
       outInsert.append(
           checkNullAndMaxParamPage(

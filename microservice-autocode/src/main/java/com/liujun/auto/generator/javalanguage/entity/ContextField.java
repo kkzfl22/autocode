@@ -22,7 +22,10 @@ import java.util.List;
 public class ContextField extends ContextBase {
 
   /** 空格数 */
-  private int spaceLine;
+  private int topLine;
+
+  /** 左边空格数 */
+  private int leftSpace;
 
   /** 属性的注释信息 */
   private ContextFieldDocument document;

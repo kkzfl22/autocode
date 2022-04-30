@@ -1,7 +1,9 @@
 package com.liujun.auto.generator.builder.ddd.full.repositorymybatis;
 
+import com.liujun.auto.config.generate.GenerateConfigProcess;
 import com.liujun.auto.constant.Symbol;
 import com.liujun.auto.generator.builder.ddd.constant.GenerateCodePackageKey;
+import com.liujun.auto.generator.builder.ddd.constant.ImportCodePackageKey;
 import com.liujun.auto.generator.builder.ddd.constant.JavaVarName;
 import com.liujun.auto.generator.builder.ddd.constant.PkgBuildMethod;
 import com.liujun.auto.generator.builder.ddd.entity.DataParam;
@@ -13,8 +15,11 @@ import com.liujun.auto.generator.builder.utils.GenerateOutFileUtils;
 import com.liujun.auto.generator.builder.utils.GeneratePathUtils;
 import com.liujun.auto.generator.database.entity.TableColumnDTO;
 import com.liujun.auto.generator.database.entity.TableInfoDTO;
+import com.liujun.auto.generator.javalanguage.entity.JavaClassStruct;
 import com.liujun.auto.generator.javalanguage.serivce.NameProcess;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +93,27 @@ public class JavaCodeRepositoryMyBatisObjectCreate implements GenerateCodeInf {
           outPackagePath,
           packageInfo.getClassName());
     }
+  }
+
+  private JavaClassStruct buildRepositoryObject(DataParam param, GenerateCodeContext context) {
+    JavaClassStruct classStruct = new JavaClassStruct();
+    // 最开始的版本信息
+    classStruct.setCopyRight(
+        GenerateConfigProcess.INSTANCE.getCfgEntity().getGenerate().getCopyRight());
+    // 导包
+    classStruct.setPkgPath(context.getJavaCodePackage().getRepositoryObjectNode().outJavaPackage());
+
+    List<String> importPkgList = new ArrayList<>();
+    // 检查是否启用loombok插伯来生成相关的get和set及toString方法
+    if (null != context.getGenerateCfg().getLombok() && context.getGenerateCfg().getLombok()) {
+      importPkgList.add(ImportCodePackageKey.ANNOTATION_SETTER.getPackageInfo().packageOut());
+      importPkgList.add(ImportCodePackageKey.ANNOTATION_GETTER.getPackageInfo().packageOut());
+      importPkgList.add(ImportCodePackageKey.ANNOTATION_TOSTRING.getPackageInfo().packageOut());
+    }
+
+    //
+
+    return classStruct;
   }
 
   /**

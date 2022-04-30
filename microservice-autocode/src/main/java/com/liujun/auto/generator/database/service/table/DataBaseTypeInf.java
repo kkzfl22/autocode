@@ -11,7 +11,7 @@ import com.liujun.auto.generator.database.constant.StandardTypeEnum;
 public interface DataBaseTypeInf {
 
   /**
-   * 通过
+   * 数据库的类型获取到标准的类型信息
    *
    * @param dbType 数据库类型
    * @return 标识的类型枚举
@@ -26,6 +26,14 @@ public interface DataBaseTypeInf {
    * @return 标识的类型的key
    */
   StandardTypeEnum standardAndLengthCheck(String dbType, Long length);
+
+  /**
+   * 通过标准的key获取据库的类型
+   *
+   * @param standard 标准的类型
+   * @return
+   */
+  String getDbType(StandardTypeEnum standard);
 
   /**
    * 根据指定的类型获取最大值

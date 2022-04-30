@@ -37,8 +37,14 @@ public class Generate {
   /** 输出文件的配制 */
   private String output;
 
+  /** 是否启用loombok插伯来生成相关的get和set及toString方法 */
+  private Boolean lombok;
+
   /** 作者名称 */
   private String author;
+
+  /** 版权信息 */
+  private String copyRight;
 
   /**
    * #代码生成器需要包括的范围 #目前存在api,application,domain,repository #api代码对外暴露的api接口，包含一系列的方法
@@ -167,6 +173,22 @@ public class Generate {
     this.maven = maven;
   }
 
+  public String getCopyRight() {
+    return copyRight;
+  }
+
+  public void setCopyRight(String copyRight) {
+    this.copyRight = copyRight;
+  }
+
+  public Boolean getLombok() {
+    return lombok;
+  }
+
+  public void setLombok(Boolean lombok) {
+    this.lombok = lombok;
+  }
+
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("Generate{");
@@ -176,10 +198,12 @@ public class Generate {
     sb.append(", databaseTableSpaceName='").append(databaseTableSpaceName).append('\'');
     sb.append(", startErrorCode=").append(startErrorCode);
     sb.append(", updateCode=").append(updateCode);
-    sb.append(", code=").append(methodList);
+    sb.append(", methodList=").append(methodList);
     sb.append(", codeMenuTree=").append(codeMenuTree);
     sb.append(", output='").append(output).append('\'');
+    sb.append(", lombok='").append(lombok).append('\'');
     sb.append(", author='").append(author).append('\'');
+    sb.append(", copyRight='").append(copyRight).append('\'');
     sb.append(", scope='").append(scope).append('\'');
     sb.append(", moduleName='").append(moduleName).append('\'');
     sb.append(", projectName='").append(projectName).append('\'');
