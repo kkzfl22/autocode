@@ -29,7 +29,7 @@ public class TableColumnDTO {
   private String dataType;
 
   /** 列上的索引类型 主键-->PRI | 唯一索引 -->UNI 一般索引 -->MUL */
-  private String keyType;
+  private String columnKey;
 
   /** 是否为主键 */
   private Boolean primaryKey;

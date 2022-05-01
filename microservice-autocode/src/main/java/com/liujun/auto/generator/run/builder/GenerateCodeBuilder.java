@@ -17,8 +17,8 @@ import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepo
 import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisMapperXmlCreate;
 import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
 import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMybatisConverterCreate;
-import com.liujun.auto.generator.builder.ddd.full.sql.MysqlDataOutputSqlCreate;
-import com.liujun.auto.generator.builder.ddd.full.sql.OracleSqlCreate;
+import com.liujun.auto.generator.builder.ddd.full.sql.OracleOutputDataToSqlCreate;
+import com.liujun.auto.generator.builder.ddd.full.sql.OracleOutputSchemaToSqlCreate;
 import com.liujun.auto.generator.database.entity.TableColumnDTO;
 import com.liujun.auto.generator.database.entity.TableInfoDTO;
 import com.liujun.auto.generator.database.service.DatabaseOperator;
@@ -87,7 +87,7 @@ public class GenerateCodeBuilder {
     List<GenerateCodeInf> dataList = new ArrayList<>(4);
 
     // 数据导出成标准的SQL
-    dataList.add(MysqlDataOutputSqlCreate.INSTANCE);
+    dataList.add(OracleOutputDataToSqlCreate.INSTANCE);
 
     // 存储层的集合
     SCOPE_MAP.put(GenerateScopeEnum.MYSQL_OUTPUT, dataList);
@@ -110,7 +110,7 @@ public class GenerateCodeBuilder {
     List<GenerateCodeInf> commonList = new ArrayList<>(2);
 
     // 1,项目配制文件的拷贝
-    commonList.add(OracleSqlCreate.INSTANCE);
+    commonList.add(OracleOutputSchemaToSqlCreate.INSTANCE);
 
     // 存储层的集合
     SCOPE_MAP.put(GenerateScopeEnum.PARSE_DB, commonList);
@@ -292,8 +292,11 @@ public class GenerateCodeBuilder {
     // 读取数据库中列信息
     context.setColumnMapList(tableColumnList);
 
+    // 读取表中的索引信息
+    context.setTableIndexMap(DatabaseOperator.INSTANCE.getTableIndex(context.getTableSpaceName()));
+
     // 设置二层map，一层key为表名，二层key为列名
-    context.setColumnMapMap(DatabaseOperator.INSTANCE.parseColumnMap(tableColumnList));
+    context.setColumnMap(DatabaseOperator.INSTANCE.parseColumnMap(tableColumnList));
   }
 
   public GenerateCodeContext getContext() {

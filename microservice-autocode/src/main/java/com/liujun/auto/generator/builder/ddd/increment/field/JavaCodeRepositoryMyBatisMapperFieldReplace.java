@@ -144,7 +144,7 @@ public class JavaCodeRepositoryMyBatisMapperFieldReplace implements GenerateCode
     context.setLastIndex(0);
     context.setTableInfo(param.getTableMap().get(tableName));
     context.setColumnList(param.getColumnMapList().get(tableName));
-    context.setColumnMap(param.getColumnMapMap().get(tableName));
+    context.setColumnMap(param.getColumnMap().get(tableName));
     context.setOutValueIncrement(
         new StringBuilder(dataContext.length() + (int) ((dataContext.length()) * 0.2)));
     // 获取当前主键列表

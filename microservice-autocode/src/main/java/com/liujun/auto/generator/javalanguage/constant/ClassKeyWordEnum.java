@@ -1,6 +1,3 @@
-/*
- * Copyright (C), 2008-2021, Paraview All Rights Reserved.
- */
 package com.liujun.auto.generator.javalanguage.constant;
 
 import lombok.Getter;
@@ -16,30 +13,18 @@ import lombok.ToString;
 @ToString
 public enum ClassKeyWordEnum {
 
+  /** 类的关键字 */
+  CLASS("class"),
 
-    /**
-     * 类的关键字
-     */
-    CLASS("class"),
+  /** 接口关键字 */
+  INTERFACE("interface"),
 
+  /** 枚举的关键字 */
+  ENUM("enum");
 
-    /**
-     * 接口关键字
-     */
-    INTERFACE("interface"),
+  private String keyWord;
 
-
-    /**
-     * 枚举的关键字
-     */
-    ENUM("enum");
-
-
-    private String keyWord;
-
-    private ClassKeyWordEnum(String keyWord) {
-        this.keyWord = keyWord;
-    }
-
-
+  private ClassKeyWordEnum(String keyWord) {
+    this.keyWord = keyWord;
+  }
 }

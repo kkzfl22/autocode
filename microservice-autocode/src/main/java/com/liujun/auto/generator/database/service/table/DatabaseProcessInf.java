@@ -1,6 +1,7 @@
 package com.liujun.auto.generator.database.service.table;
 
 import com.liujun.auto.generator.database.entity.TableColumnDTO;
+import com.liujun.auto.generator.database.entity.TableIndexDTO;
 import com.liujun.auto.generator.database.entity.TableInfoDTO;
 
 import java.util.List;
@@ -29,4 +30,12 @@ public interface DatabaseProcessInf {
    * @return 表的所有表信息
    */
   Map<String, List<TableColumnDTO>> getTableColumn(String tableFlag);
+
+  /**
+   * 查询表的索引信息
+   *
+   * @param tableFlag 标识信息，当为数据库时，为表空间。doc文件时，为文件名
+   * @return 表的所有表信息
+   */
+  Map<String, Map<String, TableIndexDTO>> getTableIndex(String tableFlag);
 }

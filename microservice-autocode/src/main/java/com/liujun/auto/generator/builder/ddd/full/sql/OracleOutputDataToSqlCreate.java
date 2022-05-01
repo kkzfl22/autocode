@@ -12,7 +12,6 @@ import com.liujun.auto.generator.database.entity.TableColumnDTO;
 import com.liujun.auto.generator.database.entity.TableDataOutDTO;
 import com.liujun.auto.generator.database.entity.TableInfoDTO;
 import com.liujun.auto.generator.database.service.table.mysql.DatabaseMysqlDataOutputImpl;
-import net.sourceforge.pmd.util.DateTimeUtil;
 
 import java.util.Iterator;
 import java.util.List;
@@ -25,15 +24,21 @@ import java.util.Map.Entry;
  * @author liujun
  * @version 1.0.0
  */
-public class MysqlDataOutputSqlCreate implements GenerateCodeInf {
+public class OracleOutputDataToSqlCreate implements GenerateCodeInf {
 
-  public static final MysqlDataOutputSqlCreate INSTANCE = new MysqlDataOutputSqlCreate();
+  public static final OracleOutputDataToSqlCreate INSTANCE = new OracleOutputDataToSqlCreate();
 
   /** 特殊的时间 */
   private static final String ZERO_TIME = "0000-00-00 00:00:00";
 
+  /** 清理文件名 */
+  private static final String FILE_NAME = "oracle-data-output.sql";
+
   @Override
   public void generateCode(GenerateCodeContext param) {
+
+    // 执行文件清理操作
+    GenerateOutFileUtils.cleanFile(GeneratePathUtils.outServicePath(param), "", FILE_NAME);
 
     Map<String, TableInfoDTO> tableMap = param.getTableMap();
     Map<String, List<TableColumnDTO>> map = param.getColumnMapList();
@@ -74,13 +79,13 @@ public class MysqlDataOutputSqlCreate implements GenerateCodeInf {
       // 将转换为的SQL写入文件
       // 输到文件中,持续的追加
       GenerateOutFileUtils.outFile(
-          dataList, GeneratePathUtils.outServicePath(param), "", "sql-mysql-data-output.sql", true);
+          dataList, GeneratePathUtils.outServicePath(param), "", FILE_NAME, true);
 
       // 每次完成分页到下一页
       start += 1;
 
       // 当结果为空时，停止再次查询
-    } while (dataResult == null || dataResult.isEmpty());
+    } while (dataResult != null && !dataResult.isEmpty());
 
     return;
   }
@@ -189,26 +194,6 @@ public class MysqlDataOutputSqlCreate implements GenerateCodeInf {
   }
 
   /**
-   * 结束转换为间值
-   *
-   * @param dataResult
-   * @param column
-   * @return
-   */
-  private String parseSqlEnd(
-      Map<String, Object> dataResult, Entry<String, List<TableColumnDTO>> column) {
-    StringBuilder outInsertSql = new StringBuilder();
-
-    outInsertSql.append(outValue(column, dataResult));
-
-    outInsertSql.append(Symbol.SEMICOLON);
-    outInsertSql.append(Symbol.ENTER_LINE);
-    outInsertSql.append(Symbol.ENTER_LINE);
-
-    return outInsertSql.toString();
-  }
-
-  /**
    * 列值输出
    *
    * @param column
@@ -228,13 +213,13 @@ public class MysqlDataOutputSqlCreate implements GenerateCodeInf {
           value = DateTimeUtils.localDataTimeOut(DateTimeUtils.getCurrDateTime());
         }
 
-        outInsertSql.append(Symbol.SINGELE_QUOTE);
+        outInsertSql.append(Symbol.SINGLE_QUOTE);
 
         // 进行值的处理操作
         value = valueProcess(String.valueOf(value));
 
         outInsertSql.append(value);
-        outInsertSql.append(Symbol.SINGELE_QUOTE);
+        outInsertSql.append(Symbol.SINGLE_QUOTE);
 
       } else {
         outInsertSql.append(value);

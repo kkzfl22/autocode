@@ -92,20 +92,19 @@ public class DatabaseMysqlDataOutputImpl {
   }
 
   private Map<String, Object> dataOutParseResult(ResultSet rs, TableDataOutDTO column) {
-
     Map<String, Object> dataValueMap = new HashMap<>(column.getTableColumn().getValue().size());
 
-    for (TableColumnDTO columnInfo : column.getTableColumn().getValue()) {
-
-      Object value = null;
-      try {
+    try {
+      for (TableColumnDTO columnInfo : column.getTableColumn().getValue()) {
+        Object value = null;
         value =
             DbToJavaTypeValueEnum.getValue(
                 DatabaseTypeEnum.MYSQL, columnInfo.getDataType(), rs, columnInfo.getColumnName());
-      } catch (SQLException sql) {
-        sql.printStackTrace();
+
+        dataValueMap.put(columnInfo.getColumnName(), value);
       }
-      dataValueMap.put(columnInfo.getColumnName(), value);
+    } catch (SQLException sql) {
+      sql.printStackTrace();
     }
 
     return dataValueMap;

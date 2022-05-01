@@ -1,6 +1,3 @@
-/*
- * Copyright (C), 2008-2021, Paraview All Rights Reserved.
- */
 package com.liujun.auto.generator.database.constant;
 
 /**
@@ -25,4 +22,38 @@ public class SqlKeyWord {
 
   /** 值信息 */
   public static final String VALUES = "values";
+
+  /** 删除操作 */
+  public static final String DROP = "DROP";
+
+  /** 表操作 */
+  public static final String TABLE = "TABLE";
+
+  public static final String IF = "IF";
+
+  public static final String EXISTS = "EXISTS";
+
+  public static final String CREATE = "CREATE";
+
+  public static final String NOT = "NOT";
+
+  public static final String NULL = "NULL";
+
+  public static final String COMMENT = "COMMENT";
+
+  public static final String ON = "ON";
+
+  public static final String IS = "is";
+
+  public static final String COLUMN = "COLUMN";
+
+  public static final String ALTER = "ALTER";
+
+  public static final String ADD = "ADD";
+
+  public static final String CONSTRAINT = "CONSTRAINT";
+
+  public static final String PRIMARY_KEY = "PRIMARY KEY";
+
+  public static final String UNIQUE = "UNIQUE";
 }

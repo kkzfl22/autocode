@@ -133,6 +133,6 @@ generate:
     # 这种种生成方式的主要区别在于mybatis需要一些特殊的设置。在po需要指定与数据库的对应关系、mapper面要继承，以及xml文件无需全部生成。
   #scope: api,application,domain,repository-mybatis
   #scope: application,domain,repository-mybatis-plus
-  scope: parse-db,mysql-output
+  scope: parse-db
   #输出文件的配制
   output: D:\java\code_gen

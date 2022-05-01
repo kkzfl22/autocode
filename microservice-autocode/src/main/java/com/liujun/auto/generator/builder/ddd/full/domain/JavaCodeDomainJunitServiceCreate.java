@@ -53,7 +53,7 @@ public class JavaCodeDomainJunitServiceCreate implements GenerateCodeInf {
       List<TableColumnDTO> primaryKeyList = TableColumnUtils.getPrimaryKeyDefaultOne(columnList);
 
       // 获取所有列的信息
-      Map<String, TableColumnDTO> tableColumnMap = param.getColumnMapMap().get(entry.getKey());
+      Map<String, TableColumnDTO> tableColumnMap = param.getColumnMap().get(entry.getKey());
 
       // 获取domain领域对象实体
       ImportPackageInfo domainPackage = param.getPkg(tableName, GenerateCodePackageKey.DOMAIN_DO);

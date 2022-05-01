@@ -1,6 +1,7 @@
 package com.liujun.auto.generator.database.service;
 
 import com.liujun.auto.generator.database.entity.TableColumnDTO;
+import com.liujun.auto.generator.database.entity.TableIndexDTO;
 import com.liujun.auto.generator.database.entity.TableInfoDTO;
 import com.liujun.auto.generator.database.service.table.DatabaseProcessInf;
 import com.liujun.auto.config.generate.GenerateConfigProcess;
@@ -58,6 +59,21 @@ public class DatabaseOperator {
       throw new IllegalArgumentException(dbType + " type not exists");
     }
     return tableInfo.getTableColumn(tableSpace);
+  }
+
+  /**
+   * 获取表的索引信息
+   *
+   * @param tableSpace
+   * @return
+   */
+  public Map<String, Map<String, TableIndexDTO>> getTableIndex(String tableSpace) {
+    String dbType = GenerateConfigProcess.INSTANCE.getCfgEntity().getGenerate().getDatabaseType();
+    DatabaseProcessInf tableInfo = DATABASE_PROC_MAP.get(dbType);
+    if (null == tableInfo) {
+      throw new IllegalArgumentException(dbType + " type not exists");
+    }
+    return tableInfo.getTableIndex(tableSpace);
   }
 
   /**

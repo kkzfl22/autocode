@@ -1,6 +1,3 @@
-/*
- * Copyright (C), 2008-2021, Paraview All Rights Reserved.
- */
 package com.liujun.auto.generator.javalanguage.entity;
 
 import lombok.Getter;

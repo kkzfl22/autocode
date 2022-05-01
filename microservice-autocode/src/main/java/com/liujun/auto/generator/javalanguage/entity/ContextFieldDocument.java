@@ -1,6 +1,3 @@
-/*
- * Copyright (C), 2008-2021, Paraview All Rights Reserved.
- */
 package com.liujun.auto.generator.javalanguage.entity;
 
 import lombok.Builder;
@@ -20,10 +17,6 @@ import lombok.ToString;
 @Builder
 public class ContextFieldDocument {
 
-    /**
-     * 类注释信息
-     */
-    private String comment;
-
-
+  /** 类注释信息 */
+  private String comment;
 }

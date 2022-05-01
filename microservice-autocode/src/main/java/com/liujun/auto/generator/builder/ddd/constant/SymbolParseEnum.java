@@ -1,6 +1,3 @@
-/*
- * Copyright (C), 2008-2021, Paraview All Rights Reserved.
- */
 package com.liujun.auto.generator.builder.ddd.constant;
 
 import lombok.Getter;
@@ -33,6 +30,12 @@ public enum SymbolParseEnum {
     this.target = target;
   }
 
+  /**
+   * 进行数据的处理
+   *
+   * @param src
+   * @return
+   */
   public static String symbolParse(String src) {
     String target = src;
 

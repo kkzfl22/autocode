@@ -54,7 +54,7 @@ public class GenerateJavaMybatisMapperXml {
     ImportPackageInfo daoPackage = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_DAO);
 
     List<MethodInfo> methodList = param.getGenerateConfig().getGenerate().getMethodList();
-    Map<String, TableColumnDTO> columnMap = param.getColumnMapMap().get(tableName);
+    Map<String, TableColumnDTO> columnMap = param.getColumnMap().get(tableName);
     DatabaseTypeEnum typeEnum = param.getTypeEnum();
     TableInfoDTO tableMsg = param.getTableMap().get(tableName);
 

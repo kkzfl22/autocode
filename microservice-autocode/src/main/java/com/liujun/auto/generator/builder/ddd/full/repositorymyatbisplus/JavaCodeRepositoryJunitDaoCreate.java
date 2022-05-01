@@ -53,7 +53,7 @@ public class JavaCodeRepositoryJunitDaoCreate implements GenerateCodeInf {
       List<TableColumnDTO> primaryKeyList = TableColumnUtils.getPrimaryKeyDefaultOne(columnList);
 
       // 获取所有列的信息
-      Map<String, TableColumnDTO> tableColumnMap = param.getColumnMapMap().get(entry.getKey());
+      Map<String, TableColumnDTO> tableColumnMap = param.getColumnMap().get(entry.getKey());
 
       // 获取dao的完整路径
       ImportPackageInfo daoPackage = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_DAO);

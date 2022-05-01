@@ -6,6 +6,7 @@ import com.liujun.auto.generator.builder.ddd.config.MenuTreeCodePackage;
 import com.liujun.auto.generator.builder.ddd.config.MenuTreeProjectPath;
 import com.liujun.auto.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.auto.generator.database.entity.TableColumnDTO;
+import com.liujun.auto.generator.database.entity.TableIndexDTO;
 import com.liujun.auto.generator.database.entity.TableInfoDTO;
 import com.liujun.auto.generator.builder.ddd.constant.GenerateCodePackageKey;
 
@@ -46,7 +47,10 @@ public class GenerateCodeContext {
   private Map<String, List<TableColumnDTO>> columnMapList;
 
   /** 以表名为key，再以列名为key */
-  private Map<String, Map<String, TableColumnDTO>> columnMapMap;
+  private Map<String, Map<String, TableColumnDTO>> columnMap;
+
+  /** 表的索引map,一级表名为key，二级索引名为key */
+  private Map<String, Map<String, TableIndexDTO>> tableIndexMap;
 
   /** 表的描述的map信息 */
   private Map<String, TableInfoDTO> tableMap;
@@ -150,12 +154,12 @@ public class GenerateCodeContext {
     this.columnMapList = columnMapList;
   }
 
-  public Map<String, Map<String, TableColumnDTO>> getColumnMapMap() {
-    return columnMapMap;
+  public Map<String, Map<String, TableColumnDTO>> getColumnMap() {
+    return columnMap;
   }
 
-  public void setColumnMapMap(Map<String, Map<String, TableColumnDTO>> columnMapMap) {
-    this.columnMapMap = columnMapMap;
+  public void setColumnMap(Map<String, Map<String, TableColumnDTO>> columnMap) {
+    this.columnMap = columnMap;
   }
 
   public Map<String, TableInfoDTO> getTableMap() {
@@ -204,6 +208,14 @@ public class GenerateCodeContext {
 
   public void setGenerateCfg(Generate generateCfg) {
     this.generateCfg = generateCfg;
+  }
+
+  public Map<String, Map<String, TableIndexDTO>> getTableIndexMap() {
+    return tableIndexMap;
+  }
+
+  public void setTableIndexMap(Map<String, Map<String, TableIndexDTO>> tableIndexMap) {
+    this.tableIndexMap = tableIndexMap;
   }
 
   /**
@@ -281,7 +293,7 @@ public class GenerateCodeContext {
     sb.append(", tableSpaceName='").append(tableSpaceName).append('\'');
     sb.append(", typeEnum=").append(typeEnum);
     sb.append(", columnMapList=").append(columnMapList);
-    sb.append(", columnMapMap=").append(columnMapMap);
+    sb.append(", columnMapMap=").append(columnMap);
     sb.append(", tableMap=").append(tableMap);
     sb.append(", generateConfig=").append(generateConfig);
     sb.append(", dataMap=").append(dataMap);
@@ -289,6 +301,7 @@ public class GenerateCodeContext {
     sb.append(", projectPath=").append(projectPath);
     sb.append(", packageMap=").append(packageMap);
     sb.append(", generateCfg=").append(generateCfg);
+    sb.append(", tableIndexMap=").append(tableIndexMap);
     sb.append('}');
     return sb.toString();
   }
