@@ -82,7 +82,7 @@ public class DatabaseOperator {
    * @param tableColumnList 表集合数据
    * @return 二层map，一层以表名为key,二层以列名为key
    */
-  public Map<String, Map<String, TableColumnDTO>> parseColumnMap(
+  public  Map<String, Map<String, TableColumnDTO>> parseColumnMap(
       Map<String, List<TableColumnDTO>> tableColumnList) {
 
     Map<String, Map<String, TableColumnDTO>> result = new HashMap<>(tableColumnList.size());

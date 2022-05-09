@@ -25,6 +25,7 @@ import java.util.Set;
  * @author liujun
  * @version 0.0.1
  */
+@Deprecated
 public class GenerateJavaBean {
 
   public static final GenerateJavaBean INSTANCE = new GenerateJavaBean();

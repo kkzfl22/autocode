@@ -1,5 +1,9 @@
 package com.liujun.auto.config.generate.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.List;
 
 /**
@@ -8,6 +12,9 @@ import java.util.List;
  * @author liujun
  * @version 0.0.1
  */
+@Setter
+@Getter
+@ToString
 public class Generate {
 
   /** 当前的模式：1，先删除后添加,2，追加模式,3,追加覆盖模式 */
@@ -60,155 +67,4 @@ public class Generate {
 
   /** 生成项目时maven的相关设置 */
   private MavenInfo maven;
-
-  public Integer getModel() {
-    return model;
-  }
-
-  public void setModel(Integer model) {
-    this.model = model;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public String getDatabaseType() {
-    return databaseType;
-  }
-
-  public void setDatabaseType(String databaseType) {
-    this.databaseType = databaseType;
-  }
-
-  public String getDatabaseTableSpaceName() {
-    return databaseTableSpaceName;
-  }
-
-  public void setDatabaseTableSpaceName(String databaseTableSpaceName) {
-    this.databaseTableSpaceName = databaseTableSpaceName;
-  }
-
-  public Integer getStartErrorCode() {
-    return startErrorCode;
-  }
-
-  public void setStartErrorCode(Integer startErrorCode) {
-    this.startErrorCode = startErrorCode;
-  }
-
-  public Boolean getUpdateCode() {
-    return updateCode;
-  }
-
-  public void setUpdateCode(Boolean updateCode) {
-    this.updateCode = updateCode;
-  }
-
-  public List<MethodInfo> getMethodList() {
-    return methodList;
-  }
-
-  public void setMethodList(List<MethodInfo> methodList) {
-    this.methodList = methodList;
-  }
-
-  public CodeMenuTree getCodeMenuTree() {
-    return codeMenuTree;
-  }
-
-  public void setCodeMenuTree(CodeMenuTree codeMenuTree) {
-    this.codeMenuTree = codeMenuTree;
-  }
-
-  public String getOutput() {
-    return output;
-  }
-
-  public void setOutput(String output) {
-    this.output = output;
-  }
-
-  public String getAuthor() {
-    return author;
-  }
-
-  public void setAuthor(String author) {
-    this.author = author;
-  }
-
-  public String getScope() {
-    return scope;
-  }
-
-  public void setScope(String scope) {
-    this.scope = scope;
-  }
-
-  public String getModuleName() {
-    return moduleName;
-  }
-
-  public void setModuleName(String moduleName) {
-    this.moduleName = moduleName;
-  }
-
-  public String getProjectName() {
-    return projectName;
-  }
-
-  public void setProjectName(String projectName) {
-    this.projectName = projectName;
-  }
-
-  public MavenInfo getMaven() {
-    return maven;
-  }
-
-  public void setMaven(MavenInfo maven) {
-    this.maven = maven;
-  }
-
-  public String getCopyRight() {
-    return copyRight;
-  }
-
-  public void setCopyRight(String copyRight) {
-    this.copyRight = copyRight;
-  }
-
-  public Boolean getLombok() {
-    return lombok;
-  }
-
-  public void setLombok(Boolean lombok) {
-    this.lombok = lombok;
-  }
-
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder("Generate{");
-    sb.append("model=").append(model);
-    sb.append(", type='").append(type).append('\'');
-    sb.append(", databaseType='").append(databaseType).append('\'');
-    sb.append(", databaseTableSpaceName='").append(databaseTableSpaceName).append('\'');
-    sb.append(", startErrorCode=").append(startErrorCode);
-    sb.append(", updateCode=").append(updateCode);
-    sb.append(", methodList=").append(methodList);
-    sb.append(", codeMenuTree=").append(codeMenuTree);
-    sb.append(", output='").append(output).append('\'');
-    sb.append(", lombok='").append(lombok).append('\'');
-    sb.append(", author='").append(author).append('\'');
-    sb.append(", copyRight='").append(copyRight).append('\'');
-    sb.append(", scope='").append(scope).append('\'');
-    sb.append(", moduleName='").append(moduleName).append('\'');
-    sb.append(", projectName='").append(projectName).append('\'');
-    sb.append(", maven=").append(maven);
-    sb.append('}');
-    return sb.toString();
-  }
 }

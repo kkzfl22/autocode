@@ -78,8 +78,6 @@ public class DirTree {
 
         String name = item.getName();
 
-
-
         DirNode childrenNode = node.addChildren(name);
 
         readFileDir(item, childrenNode);

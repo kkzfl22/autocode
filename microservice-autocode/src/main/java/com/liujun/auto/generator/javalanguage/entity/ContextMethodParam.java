@@ -1,6 +1,6 @@
 package com.liujun.auto.generator.javalanguage.entity;
 
-import lombok.Builder;
+import com.liujun.auto.constant.Symbol;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,12 +14,27 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Builder
-public class ContextMethodParam {
+public class ContextMethodParam implements OutCodeInf {
 
   /** 类名信息 */
   private String className;
 
   /** 引用名称 */
   private String referenceName;
+
+  public static ContextMethodParam builderParam(String className, String referenceName) {
+    ContextMethodParam param = new ContextMethodParam();
+
+    param.setClassName(className);
+    param.setReferenceName(referenceName);
+
+    return param;
+  }
+
+  @Override
+  public String outCode() {
+    StringBuilder paramOut = new StringBuilder();
+    paramOut.append(className).append(Symbol.SPACE).append(referenceName);
+    return paramOut.toString();
+  }
 }

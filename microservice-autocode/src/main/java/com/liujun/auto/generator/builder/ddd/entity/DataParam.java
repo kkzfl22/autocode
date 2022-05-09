@@ -18,6 +18,7 @@ import java.util.Map;
  * @since 2021/8/26
  */
 @ToString
+@Deprecated
 public class DataParam {
 
   /** 导包信息 */

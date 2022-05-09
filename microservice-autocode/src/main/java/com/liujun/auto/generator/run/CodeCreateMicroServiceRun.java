@@ -12,18 +12,17 @@ import com.liujun.auto.generator.run.builder.GenerateCodeBuilder;
  */
 public class CodeCreateMicroServiceRun {
 
+  public static final CodeCreateMicroServiceRun INSTANCE = new CodeCreateMicroServiceRun();
 
-    public static final CodeCreateMicroServiceRun INSTANCE = new CodeCreateMicroServiceRun();
+  public void generate() {
 
+    // 生成构建器
+    GenerateCodeBuilder builder =
+        new GenerateCodeBuilder(GenerateConfigProcess.INSTANCE.getCfgEntity());
 
-    public void generate() {
+    // 进行代码的生成操作
+    builder.generate();
 
-        //生成构建器
-        GenerateCodeBuilder builder = new GenerateCodeBuilder(GenerateConfigProcess.INSTANCE.getCfgEntity());
-
-        //进行代码的生成操作
-        builder.generate();
-
-        System.out.println("代码生成结束");
-    }
+    System.out.println("代码生成结束");
+  }
 }

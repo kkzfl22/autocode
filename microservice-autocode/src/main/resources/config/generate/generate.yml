@@ -23,7 +23,7 @@ generate:
   #是否修改错误码编号,默认为true，进行修改
   updateCode: true
   # 是否启用loombok插伯来生成相关的get和set及toString方法
-  lombok: true
+  lombok: false
   #作者名称，即代码写在@author中的名称
   author: liujun
   # 版权信息
@@ -110,9 +110,11 @@ generate:
   #代码内的目录结构的配制
   codeMenuTree:
     #最基础的目标配制
-    baseMenu: com.paraview.zsc.domain.component.
+    baseDir: com.paraview.zsc.domain.component.
     #最新输出的模块的名称
     domainName: user
+    ## 基础层以infrastructure为基础，至模块之前的前缀
+    infrastructurePrefix: client.persistence
   #模块名称
   moduleName: urora-biz
   #工程名
@@ -131,8 +133,9 @@ generate:
     # repository-mybatis，即为当前存储层使用mybatis做为存储层的实现，会生成相关的po，存储的调用，mapper接口和mybatis文件。
     # repository-mybatis-plus，采用mybatis-plus的存储层的实现。同样会生成相关的po，存储的调用，mapper接口和mybatis文件。
     # 这种种生成方式的主要区别在于mybatis需要一些特殊的设置。在po需要指定与数据库的对应关系、mapper面要继承，以及xml文件无需全部生成。
-  #scope: api,application,domain,repository-mybatis
+    # parse-db 执行数据的的脚本转换行成
+  scope: repository-mybatis
   #scope: application,domain,repository-mybatis-plus
-  scope: parse-db
+  #scope: parse-db
   #输出文件的配制
   output: D:\java\code_gen

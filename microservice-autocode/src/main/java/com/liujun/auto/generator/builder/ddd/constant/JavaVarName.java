@@ -142,4 +142,7 @@ public class JavaVarName {
 
   /** 主键的id的key */
   public static final String DOMAIN_ID_KEY = "id";
+
+  /** ToString方法输出的名称 */
+  public static final String TO_STRING_OUT_NAME = "sb";
 }

@@ -1,6 +1,12 @@
 package com.liujun.auto.generator.database.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 表名信息
@@ -8,6 +14,9 @@ import java.util.List;
  * @author liujun
  * @version 1.0.0
  */
+@Getter
+@Setter
+@ToString
 public class TableInfoDTO {
 
   /** 表名 */
@@ -22,6 +31,12 @@ public class TableInfoDTO {
   /** 列信息 */
   private List<TableColumnDTO> columnList;
 
+  /** 以表名为key，再以列名为key */
+  private Map<String, TableColumnDTO> columnMap;
+
+  /** 索引名为key */
+  private Map<String, TableIndexDTO> tableIndexMap;
+
   public TableInfoDTO() {}
 
   public TableInfoDTO(String tableName, String tableComment) {
@@ -30,46 +45,53 @@ public class TableInfoDTO {
     this.tableComment = tableComment;
   }
 
-  public String getTableType() {
-    return tableType;
+  /**
+   * 进行列的设置操作
+   *
+   * @param tableMap
+   * @param indexMap 索引信息
+   */
+  public static void setIndex(
+      Map<String, TableInfoDTO> tableMap, Map<String, Map<String, TableIndexDTO>> indexMap) {
+
+    for (Map.Entry<String, TableInfoDTO> itemTable : tableMap.entrySet()) {
+      Map<String, TableIndexDTO> tableIndex = indexMap.get(itemTable.getKey());
+      // 设置索引
+      itemTable.getValue().setTableIndexMap(tableIndex);
+    }
   }
 
-  public void setTableType(String tableType) {
-    this.tableType = tableType;
+  /**
+   * 进行列的设置操作
+   *
+   * @param tableMap
+   * @param columnMap
+   */
+  public static void setColumn(
+      Map<String, TableInfoDTO> tableMap, Map<String, List<TableColumnDTO>> columnMap) {
+
+    for (Map.Entry<String, TableInfoDTO> itemTable : tableMap.entrySet()) {
+      List<TableColumnDTO> columnList = columnMap.get(itemTable.getKey());
+      // 设置列集合
+      itemTable.getValue().setColumnList(columnList);
+      // 同是转换一个列的Map用于快速取数据
+      itemTable.getValue().setColumnMap(parseColumnToMap(columnList));
+    }
   }
 
-  public String getTableName() {
-    return tableName;
-  }
+  /**
+   * 将列转换为Map 以列名为key，以列信息为值
+   *
+   * @param columnList 列集合
+   * @return 列信息
+   */
+  private static Map<String, TableColumnDTO> parseColumnToMap(List<TableColumnDTO> columnList) {
+    Map<String, TableColumnDTO> resultMap = new HashMap<>(columnList.size(), 1);
 
-  public void setTableName(String tableName) {
-    this.tableName = tableName;
-  }
+    for (TableColumnDTO columnInfo : columnList) {
+      resultMap.put(columnInfo.getColumnName(), columnInfo);
+    }
 
-  public String getTableComment() {
-    return tableComment;
-  }
-
-  public void setTableComment(String tableComment) {
-    this.tableComment = tableComment;
-  }
-
-  public List<TableColumnDTO> getColumnList() {
-    return columnList;
-  }
-
-  public void setColumnList(List<TableColumnDTO> columnList) {
-    this.columnList = columnList;
-  }
-
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder("TableInfoDTO{");
-    sb.append("tableName='").append(tableName).append('\'');
-    sb.append(", tableComment='").append(tableComment).append('\'');
-    sb.append(", tableType='").append(tableType).append('\'');
-    sb.append(", columnList=").append(columnList);
-    sb.append('}');
-    return sb.toString();
+    return resultMap;
   }
 }

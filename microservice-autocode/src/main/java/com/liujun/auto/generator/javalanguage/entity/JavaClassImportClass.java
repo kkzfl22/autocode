@@ -1,6 +1,5 @@
 package com.liujun.auto.generator.javalanguage.entity;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,18 +13,30 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-@Builder
 public class JavaClassImportClass {
 
-    /**
-     * 是否为静态导入
-     */
-    private boolean staticImport;
+  /** 是否为静态导入 */
+  private boolean staticImport;
 
+  /** 导入的相对路径 */
+  private String referencePath;
 
-    /**
-     * 导入的相对路径
-     */
-    private String referencePath;
+  public static JavaClassImportClass staticImport(String referencePath) {
+    JavaClassImportClass importClass = new JavaClassImportClass();
+    importClass.setStaticImport(Boolean.TRUE);
+    importClass.setReferencePath(referencePath);
+    return importClass;
+  }
 
+  /**
+   * 普通的属性导入
+   *
+   * @param referencePath
+   * @return
+   */
+  public static JavaClassImportClass normalImport(String referencePath) {
+    JavaClassImportClass importClass = new JavaClassImportClass();
+    importClass.setReferencePath(referencePath);
+    return importClass;
+  }
 }

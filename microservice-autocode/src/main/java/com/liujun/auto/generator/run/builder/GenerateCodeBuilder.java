@@ -10,6 +10,7 @@ import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.JavaCode
 import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.JavaCodeRepositoryMapperInfCreate;
 import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.JavaCodeRepositoryMapperXmlCreate;
 import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.JavaCodeRepositoryObjectCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.CodeDDDRepositoryMyBatisObjectCreate;
 import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisImplementCreate;
 import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisJunitDaoCreate;
 import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisJunitScanConfigCreate;
@@ -20,6 +21,7 @@ import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepo
 import com.liujun.auto.generator.builder.ddd.full.sql.OracleOutputDataToSqlCreate;
 import com.liujun.auto.generator.builder.ddd.full.sql.OracleOutputSchemaToSqlCreate;
 import com.liujun.auto.generator.database.entity.TableColumnDTO;
+import com.liujun.auto.generator.database.entity.TableIndexDTO;
 import com.liujun.auto.generator.database.entity.TableInfoDTO;
 import com.liujun.auto.generator.database.service.DatabaseOperator;
 import com.liujun.auto.generator.builder.ddd.entity.GenerateCodeContext;
@@ -121,7 +123,8 @@ public class GenerateCodeBuilder {
     List<GenerateCodeInf> repositoryList = new ArrayList<>(16);
 
     // 1,存储层实体的生成
-    repositoryList.add(JavaCodeRepositoryMyBatisObjectCreate.INSTANCE);
+    // repositoryList.add(JavaCodeRepositoryMyBatisObjectCreate.INSTANCE);
+    repositoryList.add(CodeDDDRepositoryMyBatisObjectCreate.INSTANCE);
     // 2,生成mapper对象
     repositoryList.add(JavaCodeRepositoryMyBatisMapperInfCreate.INSTANCE);
     // 3,mybatis的mapper文件
@@ -292,8 +295,16 @@ public class GenerateCodeBuilder {
     // 读取数据库中列信息
     context.setColumnMapList(tableColumnList);
 
+    Map<String, Map<String, TableIndexDTO>> tableIndexMap =
+        DatabaseOperator.INSTANCE.getTableIndex(context.getTableSpaceName());
+
     // 读取表中的索引信息
-    context.setTableIndexMap(DatabaseOperator.INSTANCE.getTableIndex(context.getTableSpaceName()));
+    context.setTableIndexMap(tableIndexMap);
+
+    // 进行表列的设置操作
+    TableInfoDTO.setColumn(tableMap, tableColumnList);
+    // 设置表的索引信息
+    TableInfoDTO.setIndex(tableMap, context.getTableIndexMap());
 
     // 设置二层map，一层key为表名，二层key为列名
     context.setColumnMap(DatabaseOperator.INSTANCE.parseColumnMap(tableColumnList));

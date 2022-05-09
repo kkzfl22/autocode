@@ -9,6 +9,9 @@ import com.liujun.auto.generator.database.entity.TableColumnDTO;
 import com.liujun.auto.generator.database.entity.TableIndexDTO;
 import com.liujun.auto.generator.database.entity.TableInfoDTO;
 import com.liujun.auto.generator.builder.ddd.constant.GenerateCodePackageKey;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +23,9 @@ import java.util.Map;
  * @author liujun
  * @version 0.0.1
  */
+@ToString
+@Getter
+@Setter
 public class GenerateCodeContext {
 
   /** 文件的基本路径 */
@@ -43,6 +49,9 @@ public class GenerateCodeContext {
   /** 当前的数据库类型 */
   private DatabaseTypeEnum typeEnum;
 
+  /** 表的描述的map信息 */
+  private Map<String, TableInfoDTO> tableMap;
+
   /** 列描述的map信息 */
   private Map<String, List<TableColumnDTO>> columnMapList;
 
@@ -51,9 +60,6 @@ public class GenerateCodeContext {
 
   /** 表的索引map,一级表名为key，二级索引名为key */
   private Map<String, Map<String, TableIndexDTO>> tableIndexMap;
-
-  /** 表的描述的map信息 */
-  private Map<String, TableInfoDTO> tableMap;
 
   /** 配制信息 */
   private GenerateConfigEntity generateConfig;
@@ -88,134 +94,6 @@ public class GenerateCodeContext {
     // 构建项目目录树
     this.projectPath = MenuTreeProjectPath.INSTANCE;
     this.generateCfg = configEntity.getGenerate();
-  }
-
-  public String getFileBasePath() {
-    return fileBasePath;
-  }
-
-  public void setFileBasePath(String fileBasePath) {
-    this.fileBasePath = fileBasePath;
-  }
-
-  public String getJavaPackage() {
-    return javaPackage;
-  }
-
-  public void setJavaPackage(String javaPackage) {
-    this.javaPackage = javaPackage;
-  }
-
-  public String getModuleName() {
-    return moduleName;
-  }
-
-  public void setModuleName(String moduleName) {
-    this.moduleName = moduleName;
-  }
-
-  public String getDomainName() {
-    return domainName;
-  }
-
-  public void setDomainName(String domainName) {
-    this.domainName = domainName;
-  }
-
-  public String getMybatisBaseSpace() {
-    return mybatisBaseSpace;
-  }
-
-  public void setMybatisBaseSpace(String mybatisBaseSpace) {
-    this.mybatisBaseSpace = mybatisBaseSpace;
-  }
-
-  public String getTableSpaceName() {
-    return tableSpaceName;
-  }
-
-  public void setTableSpaceName(String tableSpaceName) {
-    this.tableSpaceName = tableSpaceName;
-  }
-
-  public DatabaseTypeEnum getTypeEnum() {
-    return typeEnum;
-  }
-
-  public void setTypeEnum(DatabaseTypeEnum typeEnum) {
-    this.typeEnum = typeEnum;
-  }
-
-  public Map<String, List<TableColumnDTO>> getColumnMapList() {
-    return columnMapList;
-  }
-
-  public void setColumnMapList(Map<String, List<TableColumnDTO>> columnMapList) {
-    this.columnMapList = columnMapList;
-  }
-
-  public Map<String, Map<String, TableColumnDTO>> getColumnMap() {
-    return columnMap;
-  }
-
-  public void setColumnMap(Map<String, Map<String, TableColumnDTO>> columnMap) {
-    this.columnMap = columnMap;
-  }
-
-  public Map<String, TableInfoDTO> getTableMap() {
-    return tableMap;
-  }
-
-  public void setTableMap(Map<String, TableInfoDTO> tableMap) {
-    this.tableMap = tableMap;
-  }
-
-  public GenerateConfigEntity getGenerateConfig() {
-    return generateConfig;
-  }
-
-  public void setGenerateConfig(GenerateConfigEntity generateConfig) {
-    this.generateConfig = generateConfig;
-  }
-
-  public Map<String, Object> getDataMap() {
-    return dataMap;
-  }
-
-  public void setDataMap(Map<String, Object> dataMap) {
-    this.dataMap = dataMap;
-  }
-
-  public MenuTreeCodePackage getJavaCodePackage() {
-    return javaCodePackage;
-  }
-
-  public void setJavaCodePackage(MenuTreeCodePackage javaCodePackage) {
-    this.javaCodePackage = javaCodePackage;
-  }
-
-  public MenuTreeProjectPath getProjectPath() {
-    return projectPath;
-  }
-
-  public void setProjectPath(MenuTreeProjectPath projectPath) {
-    this.projectPath = projectPath;
-  }
-
-  public Generate getGenerateCfg() {
-    return generateCfg;
-  }
-
-  public void setGenerateCfg(Generate generateCfg) {
-    this.generateCfg = generateCfg;
-  }
-
-  public Map<String, Map<String, TableIndexDTO>> getTableIndexMap() {
-    return tableIndexMap;
-  }
-
-  public void setTableIndexMap(Map<String, Map<String, TableIndexDTO>> tableIndexMap) {
-    this.tableIndexMap = tableIndexMap;
   }
 
   /**
@@ -282,27 +160,12 @@ public class GenerateCodeContext {
     pkgMap.put(key, pkgInfo);
   }
 
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder("GenerateCodeContext{");
-    sb.append("fileBasePath='").append(fileBasePath).append('\'');
-    sb.append(", javaPackage='").append(javaPackage).append('\'');
-    sb.append(", moduleName='").append(moduleName).append('\'');
-    sb.append(", domainName='").append(domainName).append('\'');
-    sb.append(", mybatisBaseSpace='").append(mybatisBaseSpace).append('\'');
-    sb.append(", tableSpaceName='").append(tableSpaceName).append('\'');
-    sb.append(", typeEnum=").append(typeEnum);
-    sb.append(", columnMapList=").append(columnMapList);
-    sb.append(", columnMapMap=").append(columnMap);
-    sb.append(", tableMap=").append(tableMap);
-    sb.append(", generateConfig=").append(generateConfig);
-    sb.append(", dataMap=").append(dataMap);
-    sb.append(", javaCodePackage=").append(javaCodePackage);
-    sb.append(", projectPath=").append(projectPath);
-    sb.append(", packageMap=").append(packageMap);
-    sb.append(", generateCfg=").append(generateCfg);
-    sb.append(", tableIndexMap=").append(tableIndexMap);
-    sb.append('}');
-    return sb.toString();
+  /**
+   * 是否启用了lombok的插件
+   *
+   * @return true 表示启用，false表示未启用
+   */
+  public boolean lombokOpen() {
+    return null != this.getGenerateCfg().getLombok() && this.getGenerateCfg().getLombok();
   }
 }

@@ -95,7 +95,10 @@ public class JavaKeyWord {
   public static final String DOC_VERSION = " * @version 0.0.1";
 
   /** 作者 */
-  public static final String DOC_AUTH = " * @author ";
+  public static final String DOC_AUTH = "@author";
+
+  /** 类注释中的时间 */
+  public static final String DOC_SINCE = "@since";
 
   /** 集合开始 */
   public static final String LIST_TYPE = "List<";
@@ -139,8 +142,8 @@ public class JavaKeyWord {
   /** String类型 */
   public static final String TYPE_STRING = JavaDataType.STRING.getType();
 
-  /** java中的StringBuilder对象 */
-  public static final String TYPE_STRING_BUILDER_NAME = "StringBuilder";
+  /// ** java中的StringBuilder对象 */
+  // public static final String TYPE_STRING_BUILDER_NAME = "StringBuilder";
 
   /** 行注释 */
   public static final String LINE_ANNOTATION = "//";

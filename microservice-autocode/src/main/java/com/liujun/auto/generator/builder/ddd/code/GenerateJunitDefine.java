@@ -23,6 +23,7 @@ import com.liujun.auto.generator.database.constant.DatabaseTypeEnum;
 import com.liujun.auto.generator.database.entity.TableColumnDTO;
 import com.liujun.auto.generator.database.service.DatabaseValue;
 import com.liujun.auto.generator.javalanguage.constant.JavaKeyWord;
+import com.liujun.auto.generator.javalanguage.constant.JavaUseClassEnum;
 import com.liujun.auto.generator.javalanguage.serivce.JavaFormat;
 import com.liujun.auto.generator.javalanguage.serivce.NameProcess;
 
@@ -1076,10 +1077,10 @@ public class GenerateJunitDefine {
     JavaClassCodeUtils.methodStart(sb);
 
     // 声明StringBuilder对象
-    sb.append(JavaFormat.appendTab(tabIndex + 2)).append(JavaKeyWord.TYPE_STRING_BUILDER_NAME);
+    sb.append(JavaFormat.appendTab(tabIndex + 2)).append(JavaUseClassEnum.STRING_BUILDER.getName());
     sb.append(Symbol.SPACE).append(JavaVarName.GET_KEY_NAME).append(Symbol.SPACE);
     sb.append(Symbol.EQUAL).append(Symbol.SPACE).append(JavaKeyWord.NEW);
-    sb.append(Symbol.SPACE).append(JavaKeyWord.TYPE_STRING_BUILDER_NAME);
+    sb.append(Symbol.SPACE).append(JavaUseClassEnum.STRING_BUILDER.getName());
     sb.append(Symbol.BRACKET_LEFT).append(Symbol.BRACKET_RIGHT);
     sb.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
 

@@ -5,6 +5,7 @@ import com.liujun.auto.generator.builder.ddd.entity.AnnotationValueElement;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,6 +21,16 @@ public class ContextAnnotation {
 
   /** 注解的值 */
   private String value;
+
+  /**
+   * 快捷构建一个注解
+   *
+   * @param name
+   * @return
+   */
+  public static List<ContextAnnotation> annotation(String name) {
+    return Arrays.asList(ContextAnnotation.builder().annotation(name).build());
+  }
 
   /**
    * 进行注解的输出
