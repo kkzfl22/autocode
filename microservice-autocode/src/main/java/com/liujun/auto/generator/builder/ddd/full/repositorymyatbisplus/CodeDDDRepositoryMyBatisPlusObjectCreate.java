@@ -1,4 +1,4 @@
-package com.liujun.auto.generator.builder.ddd.full.repositorymybatis;
+package com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus;
 
 import com.liujun.auto.config.generate.GenerateConfigProcess;
 import com.liujun.auto.constant.Symbol;
@@ -8,7 +8,6 @@ import com.liujun.auto.generator.builder.ddd.constant.ClassCommonCfg;
 import com.liujun.auto.generator.builder.ddd.constant.CodeAnnotation;
 import com.liujun.auto.generator.builder.ddd.constant.GenerateCodePackageKey;
 import com.liujun.auto.generator.builder.ddd.constant.ImportCodePackageKey;
-import com.liujun.auto.generator.builder.ddd.constant.JavaMethodName;
 import com.liujun.auto.generator.builder.ddd.constant.JavaVarName;
 import com.liujun.auto.generator.builder.ddd.constant.PkgBuildMethod;
 import com.liujun.auto.generator.builder.ddd.entity.GenerateCodeContext;
@@ -19,17 +18,12 @@ import com.liujun.auto.generator.convergence.TypeConvergence;
 import com.liujun.auto.generator.database.entity.TableColumnDTO;
 import com.liujun.auto.generator.database.entity.TableInfoDTO;
 import com.liujun.auto.generator.javalanguage.constant.ClassKeyWordEnum;
-import com.liujun.auto.generator.javalanguage.constant.JavaKeyWord;
-import com.liujun.auto.generator.javalanguage.constant.JavaUseClassEnum;
 import com.liujun.auto.generator.javalanguage.constant.PrefixSpaceEnum;
 import com.liujun.auto.generator.javalanguage.constant.VisitEnum;
-import com.liujun.auto.generator.javalanguage.entity.ContentField;
-import com.liujun.auto.generator.javalanguage.entity.ContentMethod;
-import com.liujun.auto.generator.javalanguage.entity.ContextAnnotation;
 import com.liujun.auto.generator.javalanguage.entity.ContentBase;
+import com.liujun.auto.generator.javalanguage.entity.ContentField;
+import com.liujun.auto.generator.javalanguage.entity.ContextAnnotation;
 import com.liujun.auto.generator.javalanguage.entity.ContextFieldDocument;
-import com.liujun.auto.generator.javalanguage.entity.ContextLineCode;
-import com.liujun.auto.generator.javalanguage.entity.ContextMethodParam;
 import com.liujun.auto.generator.javalanguage.entity.JavaClassDocument;
 import com.liujun.auto.generator.javalanguage.entity.JavaClassImportClass;
 import com.liujun.auto.generator.javalanguage.entity.JavaClassStruct;
@@ -37,7 +31,6 @@ import com.liujun.auto.generator.javalanguage.serivce.NameProcess;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -49,17 +42,17 @@ import java.util.Map;
  * @version 0.0.1
  * @since 2020/04/08
  */
-public class CodeDDDRepositoryMyBatisObjectCreate implements GenerateCodeInf {
+public class CodeDDDRepositoryMyBatisPlusObjectCreate implements GenerateCodeInf {
 
   /** 注释中的描述 */
-  private static final String DOC_ANNOTATION = "的数据库存储实体信息";
+  private static final String DOC_ANNOTATION = "mybatis-plus的数据库存储实体信息";
 
   /** 用来生成存储层的实体名称 */
-  private static final String REPOSITORY_PO = "PO";
+  private static final String PERSIST_PO = "PO";
 
   /** 实例对象 */
-  public static final CodeDDDRepositoryMyBatisObjectCreate INSTANCE =
-      new CodeDDDRepositoryMyBatisObjectCreate();
+  public static final CodeDDDRepositoryMyBatisPlusObjectCreate INSTANCE =
+      new CodeDDDRepositoryMyBatisPlusObjectCreate();
 
   @Override
   public void generateCode(GenerateCodeContext param) {
@@ -116,7 +109,7 @@ public class CodeDDDRepositoryMyBatisObjectCreate implements GenerateCodeInf {
     classStruct.setPkgPath(context.getJavaCodePackage().getRepositoryObjectNode().outJavaPackage());
 
     // 导包信息
-    classStruct.setReferenceImport(GenerateCodeJavaEntity.packageImpport(context));
+    classStruct.setReferenceImport(this.pkgImport(context));
 
     // 空行
     classStruct.setSpaceLine(ClassCommonCfg.IMPORT_DOC_SPACE_LINE);
@@ -129,7 +122,7 @@ public class CodeDDDRepositoryMyBatisObjectCreate implements GenerateCodeInf {
             packagePo, context.getGenerateConfig().getGenerate().getAuthor()));
 
     // 类的注解信息
-    classStruct.setClassAnnotation(GenerateCodeJavaEntity.classAnnotation(context));
+    classStruct.setClassAnnotation(this.classAnnotationList(tableInfo, context));
 
     // 访问修饰符
     classStruct.setClassVisit(VisitEnum.PUBLIC);
@@ -147,6 +140,66 @@ public class CodeDDDRepositoryMyBatisObjectCreate implements GenerateCodeInf {
   }
 
   /**
+   * 导包
+   *
+   * @param context
+   * @return
+   */
+  private List<JavaClassImportClass> pkgImport(GenerateCodeContext context) {
+    List<JavaClassImportClass> result = GenerateCodeJavaEntity.packageImpport(context);
+
+    // 表类定义的导入
+    result.add(
+        JavaClassImportClass.normalImport(
+            ImportCodePackageKey.MYBATIS_PLUS_TABLE_NAME.getPackageInfo().packageOut()));
+
+    // 字段名
+    result.add(
+        JavaClassImportClass.normalImport(
+            ImportCodePackageKey.MYBATIS_PLUS_TABLE_FIELD.getPackageInfo().packageOut()));
+
+    return result;
+  }
+
+  /**
+   * 类注解信息
+   *
+   * @param tableInfo
+   * @param context
+   * @return
+   */
+  private List<ContextAnnotation> classAnnotationList(
+      TableInfoDTO tableInfo, GenerateCodeContext context) {
+    List<ContextAnnotation> annotationList = GenerateCodeJavaEntity.classAnnotation(context);
+
+    // 添加plus的实体注解
+    annotationList.add(annotationTable(tableInfo));
+
+    return annotationList;
+  }
+
+  /**
+   * 注解表名
+   *
+   * @param tableInfo 表信息
+   * @return 表名输出
+   */
+  private ContextAnnotation annotationTable(TableInfoDTO tableInfo) {
+
+    ContextAnnotation annotation =
+        ContextAnnotation.builder()
+            // 注解名
+            .annotation(
+                ImportCodePackageKey.MYBATIS_PLUS_TABLE_NAME.getPackageInfo().getAnnotation())
+            // 注解表名
+            .annotationValue(tableInfo.getTableName())
+            // 构建
+            .build();
+
+    return annotation;
+  }
+
+  /**
    * 构建代码的内容信息
    *
    * @return
@@ -155,7 +208,7 @@ public class CodeDDDRepositoryMyBatisObjectCreate implements GenerateCodeInf {
     List<ContentBase> contentList = new ArrayList<>();
 
     // 1,输出属性
-    contentList.addAll(GenerateCodeJavaEntity.countFieldList(tableInfo, context));
+    contentList.addAll(countFieldList(tableInfo, context));
 
     // 输出Get方法
     contentList.addAll(GenerateCodeJavaEntity.countFieldMethodGetList(tableInfo, context));
@@ -167,6 +220,78 @@ public class CodeDDDRepositoryMyBatisObjectCreate implements GenerateCodeInf {
     contentList.addAll(GenerateCodeJavaEntity.countFieldMethodToString(tableInfo, context));
 
     return contentList;
+  }
+
+  /**
+   * 执行所有属性的输出
+   *
+   * @param tableInfo 表信息
+   * @return 属性信息
+   */
+  public static List<ContentBase> countFieldList(
+      TableInfoDTO tableInfo, GenerateCodeContext context) {
+    List<ContentBase> result = new ArrayList<>();
+
+    for (TableColumnDTO tableColumn : tableInfo.getColumnList()) {
+      result.add(builderField(tableColumn, context));
+    }
+
+    return result;
+  }
+
+  /**
+   * 构建属性
+   *
+   * @param tableColumn
+   * @param context
+   * @return
+   */
+  private static ContentField builderField(
+      TableColumnDTO tableColumn, GenerateCodeContext context) {
+    ContentField field = new ContentField();
+
+    // 得到java输出的名称
+    String javaName = NameProcess.INSTANCE.toFieldName(tableColumn.getColumnName());
+
+    field.setDocument(ContextFieldDocument.buildFieldDoc(tableColumn.getColumnMsg()));
+    // 间隔行数1
+    field.setTopLine(ClassCommonCfg.FIELD_TOP_LINE);
+    // 左边空格2个
+    field.setLeftSpace(PrefixSpaceEnum.ONE);
+    // 注解
+    field.setAnnotation(Arrays.asList(annotation(tableColumn)));
+    // 访问修饰符私有
+    field.setVisit(VisitEnum.PRIVATE);
+    // 类型
+    // 得到java的数据类型
+    String javaDataType =
+        TypeConvergence.getJavaType(context.getTypeEnum(), tableColumn.getDataType());
+    field.setClassType(javaDataType);
+    // 名称
+    field.setName(javaName);
+
+    return field;
+  }
+
+  /**
+   * 添加注解操作
+   *
+   * @param tableBean
+   * @return
+   */
+  private static ContextAnnotation annotation(TableColumnDTO tableBean) {
+    ContextAnnotation annotation =
+        ContextAnnotation.builder()
+            // 注解名
+            .annotation(
+                ImportCodePackageKey.MYBATIS_PLUS_TABLE_FIELD.getPackageInfo().getAnnotation())
+            // 注解中的值
+            .annotationValue(CodeAnnotation.SWAGGER_API_VALUE, tableBean.getColumnName())
+
+            // 构建
+            .build();
+
+    return annotation;
   }
 
   /**
@@ -212,6 +337,6 @@ public class CodeDDDRepositoryMyBatisObjectCreate implements GenerateCodeInf {
     // 得到类名
     String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
 
-    return tableClassName + REPOSITORY_PO;
+    return tableClassName + PERSIST_PO;
   }
 }

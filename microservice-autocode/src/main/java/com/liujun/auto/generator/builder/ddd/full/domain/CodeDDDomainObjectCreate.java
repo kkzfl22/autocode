@@ -1,4 +1,4 @@
-package com.liujun.auto.generator.builder.ddd.full.repositorymybatis;
+package com.liujun.auto.generator.builder.ddd.full.domain;
 
 import com.liujun.auto.config.generate.GenerateConfigProcess;
 import com.liujun.auto.constant.Symbol;
@@ -23,10 +23,10 @@ import com.liujun.auto.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.auto.generator.javalanguage.constant.JavaUseClassEnum;
 import com.liujun.auto.generator.javalanguage.constant.PrefixSpaceEnum;
 import com.liujun.auto.generator.javalanguage.constant.VisitEnum;
+import com.liujun.auto.generator.javalanguage.entity.ContentBase;
 import com.liujun.auto.generator.javalanguage.entity.ContentField;
 import com.liujun.auto.generator.javalanguage.entity.ContentMethod;
 import com.liujun.auto.generator.javalanguage.entity.ContextAnnotation;
-import com.liujun.auto.generator.javalanguage.entity.ContentBase;
 import com.liujun.auto.generator.javalanguage.entity.ContextFieldDocument;
 import com.liujun.auto.generator.javalanguage.entity.ContextLineCode;
 import com.liujun.auto.generator.javalanguage.entity.ContextMethodParam;
@@ -49,17 +49,16 @@ import java.util.Map;
  * @version 0.0.1
  * @since 2020/04/08
  */
-public class CodeDDDRepositoryMyBatisObjectCreate implements GenerateCodeInf {
+public class CodeDDDomainObjectCreate implements GenerateCodeInf {
 
   /** 注释中的描述 */
-  private static final String DOC_ANNOTATION = "的数据库存储实体信息";
+  private static final String DOC_ANNOTATION = "的领域实体信息";
 
-  /** 用来生成存储层的实体名称 */
-  private static final String REPOSITORY_PO = "PO";
+  /** 领域层的后缀名 */
+  private static final String DOMAIN_PO = "DO";
 
   /** 实例对象 */
-  public static final CodeDDDRepositoryMyBatisObjectCreate INSTANCE =
-      new CodeDDDRepositoryMyBatisObjectCreate();
+  public static final CodeDDDomainObjectCreate INSTANCE = new CodeDDDomainObjectCreate();
 
   @Override
   public void generateCode(GenerateCodeContext param) {
@@ -74,7 +73,7 @@ public class CodeDDDRepositoryMyBatisObjectCreate implements GenerateCodeInf {
       String tableName = tableEntry.getKey();
 
       // 存储层实体
-      ImportPackageInfo packageInfo = repositorySaveToContext(param, tableMap.get(tableName));
+      ImportPackageInfo packageInfo = domainEntitySaveToContext(param, tableMap.get(tableName));
 
       // 获取表信息
       TableInfoDTO tableInfo = param.getTableMap().get(tableName);
@@ -122,7 +121,7 @@ public class CodeDDDRepositoryMyBatisObjectCreate implements GenerateCodeInf {
     classStruct.setSpaceLine(ClassCommonCfg.IMPORT_DOC_SPACE_LINE);
 
     ImportPackageInfo packagePo =
-        context.getPkg(tableInfo.getTableName(), GenerateCodePackageKey.PERSIST_PO);
+        context.getPkg(tableInfo.getTableName(), GenerateCodePackageKey.DOMAIN_DO);
     // 类的注释
     classStruct.setClassDocument(
         JavaClassDocument.buildDoc(
@@ -175,10 +174,10 @@ public class CodeDDDRepositoryMyBatisObjectCreate implements GenerateCodeInf {
    * @param param 参数
    * @param tableInfo 表信息
    */
-  public ImportPackageInfo repositorySaveToContext(
+  public ImportPackageInfo domainEntitySaveToContext(
       GenerateCodeContext param, TableInfoDTO tableInfo) {
     // 获取以java定义的package路径
-    String javaPackageStr = param.getJavaCodePackage().getRepositoryObjectNode().outJavaPackage();
+    String javaPackageStr = param.getJavaCodePackage().getDomainObjectNode().outJavaPackage();
 
     // 注释
     String docComment =
@@ -197,7 +196,7 @@ public class CodeDDDRepositoryMyBatisObjectCreate implements GenerateCodeInf {
             docComment,
             JavaVarName.INSTANCE_NAME_ENTITY);
 
-    param.putPkg(tableInfo.getTableName(), GenerateCodePackageKey.PERSIST_PO, packageInfo);
+    param.putPkg(tableInfo.getTableName(), GenerateCodePackageKey.DOMAIN_DO, packageInfo);
 
     return packageInfo;
   }
@@ -212,6 +211,6 @@ public class CodeDDDRepositoryMyBatisObjectCreate implements GenerateCodeInf {
     // 得到类名
     String tableClassName = NameProcess.INSTANCE.toJavaClassName(tableName);
 
-    return tableClassName + REPOSITORY_PO;
+    return tableClassName + DOMAIN_PO;
   }
 }

@@ -1,7 +1,9 @@
 package com.liujun.auto.generator.builder.utils;
 
 import com.liujun.auto.constant.Symbol;
+import com.liujun.auto.generator.builder.ddd.config.MenuTreeProjectPath;
 import com.liujun.auto.generator.builder.ddd.entity.GenerateCodeContext;
+import com.liujun.auto.generator.builder.ddd.entity.ImportPackageInfo;
 
 /**
  * 生成的路径处理
@@ -41,5 +43,16 @@ public class GeneratePathUtils {
     return param.getFileBasePath()
         + Symbol.PATH
         + param.getGenerateConfig().getGenerate().getProjectName();
+  }
+
+  /**
+   * 输出项目内的相对路径
+   *
+   * @param projectPath 项目路径信息
+   * @param pkg 包信息
+   * @return 相对路径信息
+   */
+  public static String outRelativePath(MenuTreeProjectPath projectPath, ImportPackageInfo pkg) {
+    return projectPath.getSrcJavaNode().outPath() + Symbol.PATH + pkg.getPackagePath();
   }
 }

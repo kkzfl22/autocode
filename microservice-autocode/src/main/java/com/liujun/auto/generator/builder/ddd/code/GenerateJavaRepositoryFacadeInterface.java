@@ -3,7 +3,7 @@ package com.liujun.auto.generator.builder.ddd.code;
 import com.liujun.auto.config.generate.entity.MethodInfo;
 import com.liujun.auto.config.generate.entity.TypeInfo;
 import com.liujun.auto.constant.GenerateDefineFlag;
-import com.liujun.auto.constant.MethodTypeEnum;
+import com.liujun.auto.constant.MethodOperatorEnum;
 import com.liujun.auto.constant.Symbol;
 import com.liujun.auto.generator.builder.ddd.constant.CodeComment;
 import com.liujun.auto.generator.builder.ddd.constant.GenerateCodePackageKey;
@@ -69,20 +69,20 @@ public class GenerateJavaRepositoryFacadeInterface {
 
     for (MethodInfo methodItem : param.getMethodList()) {
       // 方法执行修改操作,即所有的数据的，添加、修改、删除
-      if (MethodTypeEnum.UPDATE.getType().equals(methodItem.getOperator())
-          || MethodTypeEnum.INSERT.getType().equals(methodItem.getOperator())
-          || MethodTypeEnum.DELETE.getType().equals(methodItem.getOperator())) {
+      if (MethodOperatorEnum.UPDATE.getType().equals(methodItem.getOperator())
+          || MethodOperatorEnum.INSERT.getType().equals(methodItem.getOperator())
+          || MethodOperatorEnum.DELETE.getType().equals(methodItem.getOperator())) {
 
         // 修改方法,包括，增加、删、改
         this.updateMethod(sb, domainPkg.getClassName(), methodItem);
       }
       // 方法分页执行查询操作
-      else if (MethodTypeEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())) {
+      else if (MethodOperatorEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())) {
         // 分页查询查询方法
         this.pageQueryMethod(sb, domainPkg.getClassName(), methodItem);
       }
       // 方法执行查询操作
-      else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
+      else if (MethodOperatorEnum.QUERY.getType().equals(methodItem.getOperator())) {
         // 分页查询查询方法
         this.queryMethod(sb, domainPkg.getClassName(), methodItem);
       }

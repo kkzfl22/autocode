@@ -54,7 +54,7 @@ public class JavaCodeDomainJunitMockMapperCreate implements GenerateCodeInf {
       this.daoRepositoryDependency(param, tableInfo);
 
       // 获取以java定义的package路径
-      String javaPackageStr = param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage();
+      String javaPackageStr = param.getJavaCodePackage().getRepositoryMapperNode().outJavaPackage();
 
       // 进行dao的相关方法的生成
       StringBuilder sb = GenerateJavaDaoInterface.INSTANCE.generateJavaInterface(param, tableName);
@@ -89,7 +89,7 @@ public class JavaCodeDomainJunitMockMapperCreate implements GenerateCodeInf {
    */
   public void daoRepositoryDependency(GenerateCodeContext param, TableInfoDTO tableInfo) {
     // 获取以java定义的package路径
-    String javaPackageStr = param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage();
+    String javaPackageStr = param.getJavaCodePackage().getRepositoryMapperNode().outJavaPackage();
 
     // 注释
     String docComment = tableInfo.getTableComment() + MOCK_COMMENT;

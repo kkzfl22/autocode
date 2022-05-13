@@ -5,9 +5,10 @@ import com.liujun.auto.config.generate.entity.MethodInfo;
 import com.liujun.auto.config.generate.entity.TypeInfo;
 import com.liujun.auto.config.generate.entity.WhereInfo;
 import com.liujun.auto.constant.GenerateDefineFlag;
-import com.liujun.auto.constant.MethodTypeEnum;
+import com.liujun.auto.constant.MethodOperatorEnum;
 import com.liujun.auto.constant.Symbol;
-import com.liujun.auto.generator.javalanguage.constant.JavaKeyWord;
+import com.liujun.auto.generator.builder.ddd.constant.CodeComment;
+import com.liujun.auto.generator.builder.ddd.constant.JavaVarName;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class GenerateConfigProcess {
 
   private GenerateConfigProcess() {
     // 执行数据处理
-    // process(cfgEntity.getGenerate().getMethodList());
+    process(cfgEntity.getGenerate().getMethodList());
   }
 
   /**
@@ -55,6 +56,8 @@ public class GenerateConfigProcess {
       method.setReturnType(this.getReturnType(method, method.getReturns()));
       // 设置where条件
       method.setWhereInfo(this.getWhereInfo(method.getWhere()));
+      // 设置类型
+      method.setOperatorType(MethodOperatorEnum.getType(method.getOperator()));
     }
   }
 
@@ -85,10 +88,14 @@ public class GenerateConfigProcess {
   private List<TypeInfo> getParamType(String dataItem) {
 
     if (StringUtils.isEmpty(dataItem)) {
-      return Arrays.asList(this.getTypeEntity(GenerateDefineFlag.TABLE_NAME.getDefineFlag()));
+      return Arrays.asList(
+          this.getTypeEntity(
+              GenerateDefineFlag.TABLE_NAME.getDefineFlag(),
+              JavaVarName.DEF_METHOD_PARAM_NAME,
+              CodeComment.METHOD_PARAM_DOC));
     }
 
-    return this.getTypeInfo(dataItem);
+    return this.getParamTypeInfo(dataItem);
   }
 
   /**
@@ -100,11 +107,7 @@ public class GenerateConfigProcess {
    */
   private TypeInfo getReturnType(MethodInfo method, String dataItem) {
 
-    if (method.getOperator().equals(MethodTypeEnum.UPDATE.getType())) {
-      return new TypeInfo(JavaKeyWord.INT_TYPE);
-    }
-
-    return this.getTypeEntity(dataItem);
+    return this.getTypeEntity(dataItem, null, CodeComment.METHOD_RESULT_UPDATE_DOC);
   }
 
   /**
@@ -119,7 +122,7 @@ public class GenerateConfigProcess {
    * @param paramTypeStr
    * @return
    */
-  private List<TypeInfo> getTypeInfo(String paramTypeStr) {
+  private List<TypeInfo> getParamTypeInfo(String paramTypeStr) {
     if (StringUtils.isEmpty(paramTypeStr)) {
       return new ArrayList<>(0);
     }
@@ -127,7 +130,9 @@ public class GenerateConfigProcess {
     String[] dataInfo = paramTypeStr.split(Symbol.COMMA);
     List<TypeInfo> dataList = new ArrayList<>(dataInfo.length);
     for (String dataItem : dataInfo) {
-      TypeInfo entity = getTypeEntity(dataItem);
+
+      TypeInfo entity =
+          getTypeEntity(dataItem, JavaVarName.DEF_METHOD_PARAM_NAME, CodeComment.METHOD_PARAM_DOC);
       if (null != entity) {
         dataList.add(entity);
       }
@@ -142,31 +147,63 @@ public class GenerateConfigProcess {
    * @param dataItem 字符配制
    * @return
    */
-  private TypeInfo getTypeEntity(String dataItem) {
+  private TypeInfo getTypeEntity(String dataItem, String varName, String comment) {
     if (StringUtils.isEmpty(dataItem)) {
-      return null;
+      // TypeInfo typeInfo = new TypeInfo(classPath, className);
+      return TypeInfo.builder()
+          // 注释
+          .comment(comment)
+          .build();
     }
 
     // 如果存在尖括号说明为集合带泛型的情况
     int leftIndex = dataItem.indexOf(Symbol.ANGLE_BRACKETS_LEFT);
     if (leftIndex != -1) {
-      String name = dataItem.substring(0, leftIndex);
-      int subIndex = name.lastIndexOf(Symbol.POINT);
+      String classPath = dataItem.substring(0, leftIndex);
+      int subIndex = classPath.lastIndexOf(Symbol.POINT);
       subIndex = subIndex == -1 ? 0 : subIndex + 1;
       String className = dataItem.substring(subIndex);
 
-      return new TypeInfo(name, className);
+      // TypeInfo typeInfo = new TypeInfo(classPath, className);
+      return TypeInfo.builder()
+          // 类路径
+          .importPath(classPath)
+          // 类名
+          .importClassName(className)
+          // 引用变量名
+          .varName(varName)
+          // 注释
+          .comment(comment)
+          .build();
     }
 
     // 检查当前是否存在.的情况，带路径，需要导入
     int indexPoint = dataItem.indexOf(Symbol.COMMA);
     if (indexPoint != -1) {
       String className = dataItem.substring(indexPoint);
-      return new TypeInfo(dataItem, className);
+      // return new TypeInfo(dataItem, className);
+      return TypeInfo.builder()
+          // 类路径
+          .importPath(dataItem)
+          // 类名
+          .importClassName(className)
+          // 引用变量名
+          .varName(varName)
+          // 注释
+          .comment(comment)
+          .build();
     }
 
     // 当其他情况都不匹配，说当前不需要导入包
-    return new TypeInfo(dataItem);
+    // return new TypeInfo(dataItem);
+    return TypeInfo.builder()
+        // 类名
+        .importClassName(dataItem)
+        // 引用变量名
+        .varName(varName)
+        // 注释
+        .comment(comment)
+        .build();
   }
 
   private List<WhereInfo> getWhereInfo(String whereStr) {

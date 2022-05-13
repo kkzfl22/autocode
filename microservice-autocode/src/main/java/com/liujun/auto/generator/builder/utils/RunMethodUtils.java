@@ -1,7 +1,7 @@
 package com.liujun.auto.generator.builder.utils;
 
 import com.liujun.auto.config.generate.entity.MethodInfo;
-import com.liujun.auto.constant.MethodTypeEnum;
+import com.liujun.auto.constant.MethodOperatorEnum;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class RunMethodUtils {
    * @param methodType 指定的类型
    * @return true 存在, false 不存在
    */
-  public static boolean checkMethodExists(List<MethodInfo> methodList, MethodTypeEnum methodType) {
+  public static boolean checkMethodExists(List<MethodInfo> methodList, MethodOperatorEnum methodType) {
 
     if (null == methodList || methodList.isEmpty()) {
       return false;

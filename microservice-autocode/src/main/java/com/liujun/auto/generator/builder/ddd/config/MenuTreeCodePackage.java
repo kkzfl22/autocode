@@ -47,12 +47,13 @@ public class MenuTreeCodePackage {
    *
    * @return 模块名称
    */
-  public DirNode getRepositoryDaoNode() {
+  public DirNode getRepositoryMapperNode() {
     return menuTree
         .getRoot()
+        .getChildren(JavaDomainTreeKey.BASE)
         .getChildren(JavaDomainTreeKey.INFRASTRUCTURE)
-        .getChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY)
-        .getChildren(menuTree.getModelName())
+        .getChildren(JavaDomainTreeKey.PREFIX)
+        .getChildren(JavaDomainTreeKey.MODEL_NAME)
         .getChildren(JavaDomainTreeKey.REPOSITORY_MAPPER);
   }
 
@@ -62,13 +63,14 @@ public class MenuTreeCodePackage {
    * @return 模块名称
    */
   public DirNode getRepositoryDaoNodeConfig() {
+
     return menuTree
         .getRoot()
+        .getChildren(JavaDomainTreeKey.BASE)
         .getChildren(JavaDomainTreeKey.INFRASTRUCTURE)
         .getChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY)
-        .getChildren(menuTree.getModelName())
-        .getChildren(JavaDomainTreeKey.REPOSITORY_MAPPER)
-        .getChildren(JavaDomainTreeKey.MAPPER_CONFIG);
+        .getChildren(JavaDomainTreeKey.MODEL_NAME)
+        .getChildren(JavaDomainTreeKey.REPOSITORY_MAPPER);
   }
 
   /**
@@ -119,11 +121,11 @@ public class MenuTreeCodePackage {
    * @return 模块名称
    */
   public DirNode getDomainObjectNode() {
-
     return menuTree
         .getRoot()
+        .getChildren(JavaDomainTreeKey.BASE)
         .getChildren(JavaDomainTreeKey.DOMAIN)
-        .getChildren(menuTree.getModelName())
+        .getChildren(JavaDomainTreeKey.MODEL_NAME)
         .getChildren(JavaDomainTreeKey.DOMAIN_ENTITY);
   }
 

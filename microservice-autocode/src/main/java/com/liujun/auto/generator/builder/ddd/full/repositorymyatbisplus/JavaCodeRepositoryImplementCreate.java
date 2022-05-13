@@ -62,8 +62,8 @@ public class JavaCodeRepositoryImplementCreate implements GenerateCodeInf {
                   GenerateCodePackageKey.DOMAIN_DO,
                   param.getPkg(tableName, GenerateCodePackageKey.DOMAIN_DO))
               .putPkg(
-                  GenerateCodePackageKey.PERSIST_DAO,
-                  param.getPkg(tableName, GenerateCodePackageKey.PERSIST_DAO))
+                  GenerateCodePackageKey.PERSIST_MAPPER,
+                  param.getPkg(tableName, GenerateCodePackageKey.PERSIST_MAPPER))
               .putPkg(
                   GenerateCodePackageKey.PERSIST_ASSEMBLER,
                   param.getPkg(tableName, GenerateCodePackageKey.PERSIST_ASSEMBLER))

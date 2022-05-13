@@ -27,6 +27,7 @@ import java.util.Map;
  * @version 0.0.1
  * @since 2020/04/08
  */
+@Deprecated
 public class JavaCodeDomainObjectCreate implements GenerateCodeInf {
 
   /** 注释中的描述 */

@@ -6,7 +6,7 @@ package com.liujun.auto.constant;
  * @author liujun
  * @version 0.0.1
  */
-public enum MethodTypeEnum {
+public enum MethodOperatorEnum {
   /** 添加操作 */
   INSERT("insert"),
 
@@ -29,7 +29,7 @@ public enum MethodTypeEnum {
   /** 类型信息 */
   private final String type;
 
-  MethodTypeEnum(String type) {
+  MethodOperatorEnum(String type) {
     this.type = type;
   }
 
@@ -37,14 +37,45 @@ public enum MethodTypeEnum {
     return type;
   }
 
-  public static MethodTypeEnum getType(String typeInfo) {
-    for (MethodTypeEnum typeItem : values()) {
+  public static MethodOperatorEnum getType(String typeInfo) {
+    for (MethodOperatorEnum typeItem : values()) {
       if (typeItem.getType().equals(typeInfo)) {
         return typeItem;
       }
     }
 
     return null;
+  }
+
+  /**
+   * 检查当前是否为更新类操作，包括，添加、修改、删除
+   *
+   * @return 当前为插入，false 为查询
+   */
+  public boolean isUpdate() {
+
+    if (MethodOperatorEnum.INSERT.equals(this)
+        || MethodOperatorEnum.UPDATE.equals(this)
+        || MethodOperatorEnum.DELETE.equals(this)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * 当前是否为查询操作
+   *
+   * @return
+   */
+  public boolean isQuery() {
+    if (MethodOperatorEnum.QUERY.equals(this)
+        || MethodOperatorEnum.QUERY_PAGE.equals(this)
+        || MethodOperatorEnum.DETAIL.equals(this)) {
+      return true;
+    }
+
+    return false;
   }
 
   @Override

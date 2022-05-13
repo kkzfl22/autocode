@@ -9,7 +9,10 @@ import com.liujun.auto.generator.javalanguage.utils.JavaCodeOutUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,9 +25,6 @@ import java.util.List;
 @Getter
 @ToString
 public class JavaClassStruct implements OutCodeInf {
-
-  /** 文件的路径 */
-  private String filePath;
 
   /** 文件最开始定义的版本信息 */
   private String copyRight;
@@ -53,6 +53,12 @@ public class JavaClassStruct implements OutCodeInf {
   /** 类名 */
   private String className;
 
+  /** 继承的类 */
+  private String extendClass;
+
+  /** 实现的接口列表 */
+  private List<String> implementsClass;
+
   /** 所有的类的内容中的信息（包括属性、方法、静态代码块等） */
   private List<ContentBase> content;
 
@@ -64,7 +70,9 @@ public class JavaClassStruct implements OutCodeInf {
     classInfo.append(outCopyRight(PrefixSpaceEnum.NONE, copyRight));
     // 输出包定义信息
     classInfo.append(JavaKeyWord.PACKAGE).append(Symbol.SPACE).append(pkgPath);
-    classInfo.append(Symbol.SEMICOLON).append(Symbol.ENTER_LINE);
+    classInfo.append(Symbol.SEMICOLON);
+    classInfo.append(Symbol.ENTER_LINE);
+    classInfo.append(Symbol.ENTER_LINE);
     // 输出导包信息
     classInfo.append(importPkg(this.getReferenceImport()));
     // 空行输出
@@ -75,7 +83,31 @@ public class JavaClassStruct implements OutCodeInf {
     classInfo.append(JavaCodeOutUtils.outAnnotation(classAnnotation));
     // 类定义输出
     classInfo.append(classVisit.getVisit()).append(Symbol.SPACE).append(classKeyWord.getKeyWord());
-    classInfo.append(Symbol.SPACE).append(className).append(Symbol.SPACE).append(Symbol.BRACE_LEFT);
+    classInfo.append(Symbol.SPACE).append(className).append(Symbol.SPACE);
+
+    // 继承的类
+    if (StringUtils.isNotEmpty(extendClass)) {
+      classInfo.append(JavaKeyWord.EXTEND).append(Symbol.SPACE);
+      classInfo.append(extendClass).append(Symbol.SPACE);
+    }
+
+    // 实现的接口
+    if (null != implementsClass && !implementsClass.isEmpty()) {
+      classInfo.append(JavaKeyWord.IMPLEMENTS);
+
+      for (int i = 0; i < implementsClass.size(); i++) {
+        classInfo.append(Symbol.SPACE);
+        classInfo.append(implementsClass.get(i));
+        // 不为最后一个时输出逗号
+        if (i != implementsClass.size() - 1) {
+          classInfo.append(Symbol.COMMA);
+        }
+      }
+
+      classInfo.append(Symbol.SPACE);
+    }
+
+    classInfo.append(Symbol.BRACE_LEFT);
     classInfo.append(Symbol.ENTER_LINE);
 
     // 执行代码的属性与方法的输出操作

@@ -56,7 +56,7 @@ public class JavaCodeRepositoryJunitDaoCreate implements GenerateCodeInf {
       Map<String, TableColumnDTO> tableColumnMap = param.getColumnMap().get(entry.getKey());
 
       // 获取dao的完整路径
-      ImportPackageInfo daoPackage = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_DAO);
+      ImportPackageInfo daoPackage = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_MAPPER);
 
       // 首字母大写
       String className =
@@ -64,7 +64,7 @@ public class JavaCodeRepositoryJunitDaoCreate implements GenerateCodeInf {
               + NameProcess.INSTANCE.toJavaNameFirstUpper(daoPackage.getClassName());
 
       // 获取以java定义的package路径
-      String javaDaoPackageStr = param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage();
+      String javaDaoPackageStr = param.getJavaCodePackage().getRepositoryMapperNode().outJavaPackage();
 
       // 定义项目内的完整目录结构
       String baseJavaPath = param.getProjectPath().getTestJavaNode().outPath();
@@ -72,7 +72,7 @@ public class JavaCodeRepositoryJunitDaoCreate implements GenerateCodeInf {
 
       // 单元测试的路径
       String junitDaoPackageStr =
-          param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage();
+          param.getJavaCodePackage().getRepositoryMapperNode().outJavaPackage();
 
       // 包信息
       ImportPackageInfo junitPackageInfo =
@@ -85,8 +85,8 @@ public class JavaCodeRepositoryJunitDaoCreate implements GenerateCodeInf {
                   GenerateCodePackageKey.PERSIST_PO,
                   param.getPkg(tableName, GenerateCodePackageKey.PERSIST_PO))
               .putPkg(
-                  GenerateCodePackageKey.PERSIST_DAO,
-                  param.getPkg(tableName, GenerateCodePackageKey.PERSIST_DAO))
+                  GenerateCodePackageKey.PERSIST_MAPPER,
+                  param.getPkg(tableName, GenerateCodePackageKey.PERSIST_MAPPER))
               .putPkg(GenerateCodePackageKey.PERSIST_JUNIT_DAO, junitPackageInfo)
               .putPkg(
                   GenerateCodePackageKey.DOMAIN_DO,

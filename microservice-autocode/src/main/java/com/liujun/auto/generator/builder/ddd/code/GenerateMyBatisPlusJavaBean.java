@@ -28,6 +28,7 @@ import java.util.Set;
  * @author liujun
  * @version 0.0.1
  */
+@Deprecated
 public class GenerateMyBatisPlusJavaBean {
 
   public static final GenerateMyBatisPlusJavaBean INSTANCE = new GenerateMyBatisPlusJavaBean();

@@ -1,7 +1,7 @@
 package com.liujun.auto.generator.builder.ddd.full.facade;
 
 import com.liujun.auto.config.generate.entity.MethodInfo;
-import com.liujun.auto.constant.MethodTypeEnum;
+import com.liujun.auto.constant.MethodOperatorEnum;
 import com.liujun.auto.constant.Symbol;
 import com.liujun.auto.generator.builder.ddd.code.GenerateJavaAssembler;
 import com.liujun.auto.generator.builder.ddd.constant.CodeComment;
@@ -175,7 +175,7 @@ public class JavaCodeFacadeAssemblerCreate implements GenerateCodeInf {
 
     // 检查是否存在分页查询方法
     if (RunMethodUtils.checkMethodExists(
-        generateParam.getMethodList(), MethodTypeEnum.QUERY_PAGE)) {
+        generateParam.getMethodList(), MethodOperatorEnum.QUERY_PAGE)) {
       // 构建分页方的对象信息
       sb.append(GenerateJavaAssembler.INSTANCE.generatePageAssembler(generateParam));
     }

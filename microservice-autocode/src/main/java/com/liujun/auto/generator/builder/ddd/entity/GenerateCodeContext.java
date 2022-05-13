@@ -53,12 +53,15 @@ public class GenerateCodeContext {
   private Map<String, TableInfoDTO> tableMap;
 
   /** 列描述的map信息 */
+  @Deprecated
   private Map<String, List<TableColumnDTO>> columnMapList;
 
   /** 以表名为key，再以列名为key */
+  @Deprecated
   private Map<String, Map<String, TableColumnDTO>> columnMap;
 
   /** 表的索引map,一级表名为key，二级索引名为key */
+  @Deprecated
   private Map<String, Map<String, TableIndexDTO>> tableIndexMap;
 
   /** 配制信息 */

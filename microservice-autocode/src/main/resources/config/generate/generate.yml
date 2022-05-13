@@ -23,7 +23,7 @@ generate:
   #是否修改错误码编号,默认为true，进行修改
   updateCode: true
   # 是否启用loombok插伯来生成相关的get和set及toString方法
-  lombok: false
+  lombok: true
   #作者名称，即代码写在@author中的名称
   author: liujun
   # 版权信息
@@ -75,7 +75,7 @@ generate:
       # 批量根据主键删除数据
     - name:  delete
       #此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败
-      operator: fase
+      operator: delete
       #方法的注释
       comment: 批量删除
       #      #标识当前是否为主键操作
@@ -110,7 +110,7 @@ generate:
   #代码内的目录结构的配制
   codeMenuTree:
     #最基础的目标配制
-    baseDir: com.paraview.zsc.domain.component.
+    baseDir: com.paraview.zsc.domain.component
     #最新输出的模块的名称
     domainName: user
     ## 基础层以infrastructure为基础，至模块之前的前缀
@@ -134,7 +134,7 @@ generate:
     # repository-mybatis-plus，采用mybatis-plus的存储层的实现。同样会生成相关的po，存储的调用，mapper接口和mybatis文件。
     # 这种种生成方式的主要区别在于mybatis需要一些特殊的设置。在po需要指定与数据库的对应关系、mapper面要继承，以及xml文件无需全部生成。
     # parse-db 执行数据的的脚本转换行成
-  scope: repository-mybatis
+  scope: domain,repository-mybatis-plus
   #scope: application,domain,repository-mybatis-plus
   #scope: parse-db
   #输出文件的配制

@@ -3,7 +3,7 @@ package com.liujun.auto.generator.builder.utils;
 import com.liujun.auto.config.generate.entity.MethodInfo;
 import com.liujun.auto.config.generate.entity.TypeInfo;
 import com.liujun.auto.config.generate.entity.WhereInfo;
-import com.liujun.auto.constant.MethodTypeEnum;
+import com.liujun.auto.constant.MethodOperatorEnum;
 import com.liujun.auto.constant.MyBatisOperatorFlag;
 import com.liujun.auto.generator.javalanguage.constant.JavaKeyWord;
 
@@ -56,7 +56,7 @@ public class MethodUtils {
     // 进行方法结果集操作
     for (MethodInfo method : methodList) {
       // 如果当前为添加,并且参数存在集合
-      if (MethodTypeEnum.INSERT.getType().equals(method.getOperator())
+      if (MethodOperatorEnum.INSERT.getType().equals(method.getOperator())
           && MethodUtils.checkBatch(method.getParamType())) {
         return true;
       }
@@ -73,7 +73,7 @@ public class MethodUtils {
    * @return
    */
   public static boolean checkExistsOperatorType(
-      List<MethodInfo> methodList, MethodTypeEnum typeInfo) {
+      List<MethodInfo> methodList, MethodOperatorEnum typeInfo) {
     if (null == methodList || methodList.isEmpty()) {
       return Boolean.FALSE;
     }
@@ -101,7 +101,7 @@ public class MethodUtils {
 
     for (MethodInfo methodInfo : methodList) {
       // 当前是否存在删除方法,并且为主键删除
-      if (MethodTypeEnum.DELETE.getType().equals(methodInfo.getOperator())
+      if (MethodOperatorEnum.DELETE.getType().equals(methodInfo.getOperator())
           && methodInfo.getPrimaryFlag()) {
         return methodInfo;
       }
@@ -123,7 +123,7 @@ public class MethodUtils {
 
     for (MethodInfo methodInfo : methodList) {
       // 获取添加方法,并且参数不能为集合，则为单数据添加
-      if (MethodTypeEnum.INSERT.getType().equals(methodInfo.getOperator())
+      if (MethodOperatorEnum.INSERT.getType().equals(methodInfo.getOperator())
           && methodInfo.getParams() == null) {
         return methodInfo;
       }
@@ -145,7 +145,7 @@ public class MethodUtils {
 
     for (MethodInfo methodInfo : methodList) {
       // 类型为插入，数据类型为集合则为批量插入
-      if (MethodTypeEnum.INSERT.getType().equals(methodInfo.getOperator())
+      if (MethodOperatorEnum.INSERT.getType().equals(methodInfo.getOperator())
           && methodInfo.getParams() != null
           && methodInfo.getParams().indexOf(JavaKeyWord.IMPORT_LIST) != -1) {
         return methodInfo;
@@ -168,7 +168,7 @@ public class MethodUtils {
 
     for (MethodInfo methodInfo : methodList) {
       // 当前存在分页查询，则返回成功
-      if (MethodTypeEnum.QUERY_PAGE.getType().equals(methodInfo.getOperator())) {
+      if (MethodOperatorEnum.QUERY_PAGE.getType().equals(methodInfo.getOperator())) {
         return true;
       }
     }

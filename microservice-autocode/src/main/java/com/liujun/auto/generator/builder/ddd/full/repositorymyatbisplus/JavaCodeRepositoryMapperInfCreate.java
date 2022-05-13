@@ -1,7 +1,7 @@
 package com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus;
 
 import com.liujun.auto.config.generate.entity.MethodInfo;
-import com.liujun.auto.constant.MethodTypeEnum;
+import com.liujun.auto.constant.MethodOperatorEnum;
 import com.liujun.auto.constant.Symbol;
 import com.liujun.auto.generator.builder.ddd.constant.GenerateCodePackageKey;
 import com.liujun.auto.generator.builder.ddd.constant.JavaVarName;
@@ -31,6 +31,7 @@ import java.util.Map.Entry;
  * @author liujun
  * @version 1.0.0
  */
+@Deprecated
 public class JavaCodeRepositoryMapperInfCreate implements GenerateCodeInf {
 
   private static final String DAO_SUFFIX = "Mapper";
@@ -61,7 +62,7 @@ public class JavaCodeRepositoryMapperInfCreate implements GenerateCodeInf {
       this.daoRepositoryDependency(param, tableInfo);
 
       // 获取以java定义的package路径
-      String javaPackageStr = param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage();
+      String javaPackageStr = param.getJavaCodePackage().getRepositoryMapperNode().outJavaPackage();
 
       // 进行dao的相关方法的生成
       StringBuilder sb = this.generateJavaInterface(param, tableName);
@@ -87,7 +88,7 @@ public class JavaCodeRepositoryMapperInfCreate implements GenerateCodeInf {
 
     // 获取实体信息
     ImportPackageInfo poPackageInfo = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_PO);
-    ImportPackageInfo daoPackageInfo = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_DAO);
+    ImportPackageInfo daoPackageInfo = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_MAPPER);
     List<MethodInfo> codeMethod = param.getGenerateConfig().getGenerate().getMethodList();
     String author = param.getGenerateConfig().getGenerate().getAuthor();
 
@@ -98,7 +99,7 @@ public class JavaCodeRepositoryMapperInfCreate implements GenerateCodeInf {
 
     for (MethodInfo methodItem : codeMethod) {
       // 方法执行修改操作,即所有的数据的，添加、修改、删除
-      if (MethodTypeEnum.UPDATE.getType().equals(methodItem.getOperator())
+      if (MethodOperatorEnum.UPDATE.getType().equals(methodItem.getOperator())
           || batchAddCheck(methodItem)) {
 
         // 修改方法,包括，增加、删、改
@@ -106,8 +107,8 @@ public class JavaCodeRepositoryMapperInfCreate implements GenerateCodeInf {
             sb, poPackageInfo.getClassName(), methodItem);
       }
       // 方法执行查询操作
-      else if (MethodTypeEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())
-          || MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
+      else if (MethodOperatorEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())
+          || MethodOperatorEnum.QUERY.getType().equals(methodItem.getOperator())) {
         // 分页查询查询方法
         GenerateJavaDaoInterface.INSTANCE.queryMethod(sb, poPackageInfo.getClassName(), methodItem);
       }
@@ -176,7 +177,7 @@ public class JavaCodeRepositoryMapperInfCreate implements GenerateCodeInf {
   }
 
   private boolean batchAddCheck(MethodInfo methodItem) {
-    return MethodTypeEnum.INSERT.getType().equals(methodItem.getOperator())
+    return MethodOperatorEnum.INSERT.getType().equals(methodItem.getOperator())
         && null != methodItem.getBatchFlag()
         && methodItem.getBatchFlag();
   }
@@ -201,7 +202,7 @@ public class JavaCodeRepositoryMapperInfCreate implements GenerateCodeInf {
    */
   public void daoRepositoryDependency(GenerateCodeContext param, TableInfoDTO tableInfo) {
     // 获取以java定义的package路径
-    String javaPackageStr = param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage();
+    String javaPackageStr = param.getJavaCodePackage().getRepositoryMapperNode().outJavaPackage();
 
     // 注释
     String docComment =
@@ -218,6 +219,6 @@ public class JavaCodeRepositoryMapperInfCreate implements GenerateCodeInf {
         PkgBuildMethod.classInfoVarInfo(
             javaPackageStr, className, docComment, JavaVarName.SPRING_INSTANCE_NAME);
 
-    param.putPkg(tableInfo.getTableName(), GenerateCodePackageKey.PERSIST_DAO, daoPackageInfo);
+    param.putPkg(tableInfo.getTableName(), GenerateCodePackageKey.PERSIST_MAPPER, daoPackageInfo);
   }
 }

@@ -1,7 +1,7 @@
 package com.liujun.auto.generator.builder.ddd.custom.def.facade;
 
 import com.liujun.auto.config.generate.entity.MethodInfo;
-import com.liujun.auto.constant.MethodTypeEnum;
+import com.liujun.auto.constant.MethodOperatorEnum;
 import com.liujun.auto.constant.Symbol;
 import com.liujun.auto.generator.builder.ddd.constant.CodeAnnotation;
 import com.liujun.auto.generator.builder.ddd.constant.CodeComment;
@@ -130,17 +130,17 @@ public class GenerateJavaAction {
 
     for (MethodInfo methodItem : param.getMethodList()) {
       // 1,针对增删除改的方法进行调用
-      if (MethodTypeEnum.INSERT.getType().equals(methodItem.getOperator())
-          || MethodTypeEnum.UPDATE.getType().equals(methodItem.getOperator())
-          || MethodTypeEnum.DELETE.getType().equals(methodItem.getOperator())) {
+      if (MethodOperatorEnum.INSERT.getType().equals(methodItem.getOperator())
+          || MethodOperatorEnum.UPDATE.getType().equals(methodItem.getOperator())
+          || MethodOperatorEnum.DELETE.getType().equals(methodItem.getOperator())) {
         sb.append(this.updateMethod(param, methodItem, HTTP_POST));
       }
       // 如果当前为查询分页操作
-      else if (MethodTypeEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())) {
+      else if (MethodOperatorEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())) {
         sb.append(this.pageQueryMethod(param, methodItem));
       }
       // 如果当前为查询则进行查询调用操作
-      else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
+      else if (MethodOperatorEnum.QUERY.getType().equals(methodItem.getOperator())) {
         sb.append(this.queryMethod(param, methodItem));
       }
     }

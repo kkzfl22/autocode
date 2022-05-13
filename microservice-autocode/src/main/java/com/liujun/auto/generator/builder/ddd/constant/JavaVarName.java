@@ -9,7 +9,10 @@ package com.liujun.auto.generator.builder.ddd.constant;
 public class JavaVarName {
 
   /** 用于定义参数的变量名称 */
-  public static final String METHOD_PARAM_NAME = "param";
+  @Deprecated public static final String METHOD_PARAM_NAME = "param";
+
+  /** 参数名称 */
+  public static final String DEF_METHOD_PARAM_NAME = "paramData";
 
   /** 转换后的数据信息名称 */
   public static final String ASSEMBLER_PARSE_NAME = "parseData";

@@ -37,4 +37,10 @@ public class CodeAnnotation {
 
   /** 请求方法 */
   public static final String SPRING_REQUEST_MAPPING_METHOD = "method";
+
+  /** 方法的参数注解 */
+  public static final String METHOD_PARAM = "@param";
+
+  /** 方法的响应 */
+  public static final String METHOD_RESULT = "@return";
 }

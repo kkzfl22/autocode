@@ -1,7 +1,7 @@
 package com.liujun.auto.generator.builder.ddd.custom.view.facade;
 
 import com.liujun.auto.config.generate.entity.MethodInfo;
-import com.liujun.auto.constant.MethodTypeEnum;
+import com.liujun.auto.constant.MethodOperatorEnum;
 import com.liujun.auto.constant.Symbol;
 import com.liujun.auto.generator.builder.ddd.entity.GenerateCodeContext;
 import com.liujun.auto.generator.builder.ddd.entity.ImportPackageInfo;
@@ -34,7 +34,7 @@ public class JavaCodeFacadeParamValidCreate implements GenerateCodeInf {
   private static final String CLASS_COMMENT = "的spring校验类";
 
   /** 跳过的类信息 */
-  private static final List<String> JUMP = Arrays.asList(MethodTypeEnum.DETAIL.getType());
+  private static final List<String> JUMP = Arrays.asList(MethodOperatorEnum.DETAIL.getType());
 
   public static final JavaCodeFacadeParamValidCreate INSTANCE =
       new JavaCodeFacadeParamValidCreate();

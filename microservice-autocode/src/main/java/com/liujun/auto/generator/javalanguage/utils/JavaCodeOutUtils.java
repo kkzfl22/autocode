@@ -53,7 +53,7 @@ public class JavaCodeOutUtils {
     StringBuilder space = new StringBuilder();
 
     for (int i = 0; i < leftSpace.getLevel(); i++) {
-      space.append(Symbol.SPACE);
+      space.append(Symbol.SPACE).append(Symbol.SPACE);
     }
     return space.toString();
   }

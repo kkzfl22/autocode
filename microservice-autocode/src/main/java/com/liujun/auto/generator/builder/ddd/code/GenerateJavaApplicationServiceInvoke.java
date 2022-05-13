@@ -1,7 +1,7 @@
 package com.liujun.auto.generator.builder.ddd.code;
 
 import com.liujun.auto.config.generate.entity.MethodInfo;
-import com.liujun.auto.constant.MethodTypeEnum;
+import com.liujun.auto.constant.MethodOperatorEnum;
 import com.liujun.auto.generator.builder.ddd.constant.GenerateCodePackageKey;
 import com.liujun.auto.generator.builder.ddd.constant.ImportCodePackageKey;
 import com.liujun.auto.generator.builder.ddd.constant.JavaVarName;
@@ -69,19 +69,19 @@ public class GenerateJavaApplicationServiceInvoke {
 
     for (MethodInfo methodItem : generateParam.getMethodList()) {
       // 1,针对增删除改的方法进行调用
-      if (MethodTypeEnum.INSERT.getType().equals(methodItem.getOperator())
-          || MethodTypeEnum.UPDATE.getType().equals(methodItem.getOperator())
-          || MethodTypeEnum.DELETE.getType().equals(methodItem.getOperator())) {
+      if (MethodOperatorEnum.INSERT.getType().equals(methodItem.getOperator())
+          || MethodOperatorEnum.UPDATE.getType().equals(methodItem.getOperator())
+          || MethodOperatorEnum.DELETE.getType().equals(methodItem.getOperator())) {
         GenerateJavaApplicationServiceInvoke.INSTANCE.updateMethod(
             sb, methodItem, domainPackageInfo, JavaVarName.DOMAIN_INSTANCE_NAME);
       }
       // 如果当前为查询分页操作
-      else if (MethodTypeEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())) {
+      else if (MethodOperatorEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())) {
         GenerateJavaApplicationServiceInvoke.INSTANCE.pageQueryMethod(
             sb, methodItem, domainPackageInfo, JavaVarName.DOMAIN_INSTANCE_NAME);
       }
       // 如果当前为查询则进行查询调用操作
-      else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
+      else if (MethodOperatorEnum.QUERY.getType().equals(methodItem.getOperator())) {
         GenerateJavaApplicationServiceInvoke.INSTANCE.queryMethod(
             sb, methodItem, domainPackageInfo, JavaVarName.DOMAIN_INSTANCE_NAME);
       }

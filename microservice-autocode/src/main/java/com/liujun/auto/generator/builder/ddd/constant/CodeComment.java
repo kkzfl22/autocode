@@ -11,6 +11,12 @@ public class CodeComment {
   /** 参数信息 */
   public static final String METHOD_PARAM_DOC = "参数信息";
 
+  /** 响应 */
+  public static final String METHOD_RESULT_UPDATE_DOC = "数据库影响的行数";
+
+  /** 响应 */
+  public static final String METHOD_RESULT_QUERY_DOC = "数据库查询结果集";
+
   /** 分页请求参数 */
   public static final String PAGE_REQUEST_COMMENT = "分页查询请求参数";
 

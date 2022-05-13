@@ -26,6 +26,7 @@ import java.util.Map;
  * @version 0.0.1
  * @since 2020/04/08
  */
+@Deprecated
 public class JavaCodeRepositoryObjectCreate implements GenerateCodeInf {
 
   /** 注释中的描述 */
@@ -56,8 +57,7 @@ public class JavaCodeRepositoryObjectCreate implements GenerateCodeInf {
       repositoryObjectDependency(param, tableMap.get(tableName));
 
       // 将po记录到公共的上下文对象中
-      ImportPackageInfo packageInfo =
-          param.getPkg(tableName, GenerateCodePackageKey.PERSIST_PO);
+      ImportPackageInfo packageInfo = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_PO);
 
       // 构建参数信息
       DataParam generateParam =
@@ -99,7 +99,7 @@ public class JavaCodeRepositoryObjectCreate implements GenerateCodeInf {
    */
   public void repositoryObjectDependency(GenerateCodeContext param, TableInfoDTO tableInfo) {
     // 获取以java定义的package路径
-    String javaPackageStr = param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage();
+    String javaPackageStr = param.getJavaCodePackage().getRepositoryMapperNode().outJavaPackage();
 
     // 注释
     String docComment =
@@ -118,8 +118,7 @@ public class JavaCodeRepositoryObjectCreate implements GenerateCodeInf {
             docComment,
             JavaVarName.INSTANCE_NAME_ENTITY);
 
-    param.putPkg(
-        tableInfo.getTableName(), GenerateCodePackageKey.PERSIST_PO, packageInfo);
+    param.putPkg(tableInfo.getTableName(), GenerateCodePackageKey.PERSIST_PO, packageInfo);
   }
 
   /**

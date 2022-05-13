@@ -1,7 +1,7 @@
 package com.liujun.auto.generator.builder.ddd.code;
 
 import com.liujun.auto.config.generate.entity.MethodInfo;
-import com.liujun.auto.constant.MethodTypeEnum;
+import com.liujun.auto.constant.MethodOperatorEnum;
 import com.liujun.auto.constant.Symbol;
 import com.liujun.auto.generator.builder.ddd.constant.GenerateCodePackageKey;
 import com.liujun.auto.generator.builder.ddd.constant.ImportCodePackageKey;
@@ -92,7 +92,7 @@ public class GenerateJavaDomainEntity {
 
     // 检查是否存在添加方法
     boolean insertFlag =
-        MethodUtils.checkExistsOperatorType(generateParam.getMethodList(), MethodTypeEnum.INSERT);
+        MethodUtils.checkExistsOperatorType(generateParam.getMethodList(), MethodOperatorEnum.INSERT);
     // 检查是否存在需要创建UID
     boolean primaryKeyUidFlag =
         TableColumnUtils.primaryKeyUid(generateParam.getColumnList(), generateParam.getTypeEnum());

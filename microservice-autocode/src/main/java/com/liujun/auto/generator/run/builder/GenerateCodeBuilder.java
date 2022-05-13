@@ -1,38 +1,13 @@
 package com.liujun.auto.generator.run.builder;
 
 import com.liujun.auto.config.generate.entity.GenerateConfigEntity;
+import com.liujun.auto.generator.builder.GenerateCodeInf;
 import com.liujun.auto.generator.builder.ddd.custom.view.facade.JavaCodeFacadeCreate;
 import com.liujun.auto.generator.builder.ddd.custom.view.facade.JavaCodeFacadeParamValidCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.JavaCodeRepositoryConverterCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.JavaCodeRepositoryImplementCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.JavaCodeRepositoryJunitDaoCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.JavaCodeRepositoryJunitScanCfgCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.JavaCodeRepositoryMapperInfCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.JavaCodeRepositoryMapperXmlCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.JavaCodeRepositoryObjectCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.CodeDDDRepositoryMyBatisObjectCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisImplementCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisJunitDaoCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisJunitScanConfigCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisMapperInfCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisMapperXmlCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMyBatisObjectCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.JavaCodeRepositoryMybatisConverterCreate;
-import com.liujun.auto.generator.builder.ddd.full.sql.OracleOutputDataToSqlCreate;
-import com.liujun.auto.generator.builder.ddd.full.sql.OracleOutputSchemaToSqlCreate;
-import com.liujun.auto.generator.database.entity.TableColumnDTO;
-import com.liujun.auto.generator.database.entity.TableIndexDTO;
-import com.liujun.auto.generator.database.entity.TableInfoDTO;
-import com.liujun.auto.generator.database.service.DatabaseOperator;
 import com.liujun.auto.generator.builder.ddd.entity.GenerateCodeContext;
-import com.liujun.auto.generator.builder.GenerateCodeInf;
 import com.liujun.auto.generator.builder.ddd.full.application.JavaCodeApplicationDependency;
 import com.liujun.auto.generator.builder.ddd.full.application.JavaCodeApplicationServiceCreate;
-import com.liujun.auto.generator.builder.ddd.full.domain.JavaCodeDomainDependency;
-import com.liujun.auto.generator.builder.ddd.full.domain.JavaCodeDomainJunitServiceCreate;
-import com.liujun.auto.generator.builder.ddd.full.domain.JavaCodeDomainObjectCreate;
-import com.liujun.auto.generator.builder.ddd.full.domain.JavaCodeDomainRepositoryFacadeCreate;
-import com.liujun.auto.generator.builder.ddd.full.domain.JavaCodeDomainServiceCreate;
+import com.liujun.auto.generator.builder.ddd.full.domain.CodeDDDomainObjectCreate;
 import com.liujun.auto.generator.builder.ddd.full.facade.JavaCodeFacadeAssemblerCreate;
 import com.liujun.auto.generator.builder.ddd.full.facade.JavaCodeFacadeCheckCreate;
 import com.liujun.auto.generator.builder.ddd.full.facade.JavaCodeFacadeConstantCreate;
@@ -44,6 +19,16 @@ import com.liujun.auto.generator.builder.ddd.full.other.JavaCodeProjectCfgCopyCr
 import com.liujun.auto.generator.builder.ddd.full.other.JavaCodeProjectMavenPomCreate;
 import com.liujun.auto.generator.builder.ddd.full.other.JavaCodeResourceI18nEnUsCreate;
 import com.liujun.auto.generator.builder.ddd.full.other.JavaCodeResourceI18nZhCnCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.CodeDDDRepositoryMyBatisPlusMapperCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.CodeDDDRepositoryMyBatisPlusObjectCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.JavaCodeRepositoryMapperInfCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.CodeDDDRepositoryMyBatisObjectCreate;
+import com.liujun.auto.generator.builder.ddd.full.sql.OracleOutputDataToSqlCreate;
+import com.liujun.auto.generator.builder.ddd.full.sql.OracleOutputSchemaToSqlCreate;
+import com.liujun.auto.generator.database.entity.TableColumnDTO;
+import com.liujun.auto.generator.database.entity.TableIndexDTO;
+import com.liujun.auto.generator.database.entity.TableInfoDTO;
+import com.liujun.auto.generator.database.service.DatabaseOperator;
 import com.liujun.auto.generator.run.constant.GenerateScopeEnum;
 
 import java.util.ArrayList;
@@ -125,18 +110,18 @@ public class GenerateCodeBuilder {
     // 1,存储层实体的生成
     // repositoryList.add(JavaCodeRepositoryMyBatisObjectCreate.INSTANCE);
     repositoryList.add(CodeDDDRepositoryMyBatisObjectCreate.INSTANCE);
-    // 2,生成mapper对象
-    repositoryList.add(JavaCodeRepositoryMyBatisMapperInfCreate.INSTANCE);
-    // 3,mybatis的mapper文件
-    repositoryList.add(JavaCodeRepositoryMyBatisMapperXmlCreate.INSTANCE);
-    // 4,生成测试的配制文件
-    repositoryList.add(JavaCodeRepositoryMyBatisJunitScanConfigCreate.INSTANCE);
-    // 5，存储层的单元测试
-    repositoryList.add(JavaCodeRepositoryMyBatisJunitDaoCreate.INSTANCE);
-    // 4，存储层与领域层的实体转换
-    repositoryList.add(JavaCodeRepositoryMybatisConverterCreate.INSTANCE);
-    // 5,存储层接口的接口实现调用
-    repositoryList.add(JavaCodeRepositoryMyBatisImplementCreate.INSTANCE);
+    //// 2,生成mapper对象
+    // repositoryList.add(JavaCodeRepositoryMyBatisMapperInfCreate.INSTANCE);
+    //// 3,mybatis的mapper文件
+    // repositoryList.add(JavaCodeRepositoryMyBatisMapperXmlCreate.INSTANCE);
+    //// 4,生成测试的配制文件
+    // repositoryList.add(JavaCodeRepositoryMyBatisJunitScanConfigCreate.INSTANCE);
+    //// 5，存储层的单元测试
+    // repositoryList.add(JavaCodeRepositoryMyBatisJunitDaoCreate.INSTANCE);
+    //// 4，存储层与领域层的实体转换
+    // repositoryList.add(JavaCodeRepositoryMybatisConverterCreate.INSTANCE);
+    //// 5,存储层接口的接口实现调用
+    // repositoryList.add(JavaCodeRepositoryMyBatisImplementCreate.INSTANCE);
 
     // 存储层的集合
     SCOPE_MAP.put(GenerateScopeEnum.REPOSITORY_MYBATIS, repositoryList);
@@ -147,19 +132,20 @@ public class GenerateCodeBuilder {
     List<GenerateCodeInf> repositoryList = new ArrayList<>(16);
 
     // 1.生成mybatis-plus的实体
-    repositoryList.add(JavaCodeRepositoryObjectCreate.INSTANCE);
-    // 2.生成mybatis-plus的mapper的接口文件
-    repositoryList.add(JavaCodeRepositoryMapperInfCreate.INSTANCE);
-    // 生成xml文件
-    repositoryList.add(JavaCodeRepositoryMapperXmlCreate.INSTANCE);
-    // 生成单元测试配制文件
-    repositoryList.add(JavaCodeRepositoryJunitScanCfgCreate.INSTANCE);
-    // 生成单元测试文件
-    repositoryList.add(JavaCodeRepositoryJunitDaoCreate.INSTANCE);
-    // 存储层与领域层的实体转换
-    repositoryList.add(JavaCodeRepositoryConverterCreate.INSTANCE);
-    // 存储层接口的接口实现调用
-    repositoryList.add(JavaCodeRepositoryImplementCreate.INSTANCE);
+    // repositoryList.add(JavaCodeRepositoryObjectCreate.INSTANCE);
+    repositoryList.add(CodeDDDRepositoryMyBatisPlusObjectCreate.INSTANCE);
+    //// 2.生成mybatis-plus的mapper的接口文件
+    repositoryList.add(CodeDDDRepositoryMyBatisPlusMapperCreate.INSTANCE);
+    //// 生成xml文件
+    // repositoryList.add(JavaCodeRepositoryMapperXmlCreate.INSTANCE);
+    //// 生成单元测试配制文件
+    // repositoryList.add(JavaCodeRepositoryJunitScanCfgCreate.INSTANCE);
+    //// 生成单元测试文件
+    // repositoryList.add(JavaCodeRepositoryJunitDaoCreate.INSTANCE);
+    //// 存储层与领域层的实体转换
+    // repositoryList.add(JavaCodeRepositoryConverterCreate.INSTANCE);
+    //// 存储层接口的接口实现调用
+    // repositoryList.add(JavaCodeRepositoryImplementCreate.INSTANCE);
 
     // 存储层的集合
     SCOPE_MAP.put(GenerateScopeEnum.REPOSITORY_MYBATIS_PLUS, repositoryList);
@@ -170,19 +156,19 @@ public class GenerateCodeBuilder {
     List<GenerateCodeInf> domainList = new ArrayList<>(8);
 
     // 基础依赖
-    domainList.add(JavaCodeDomainDependency.INSTANCE);
+    //  domainList.add(JavaCodeDomainDependency.INSTANCE);
 
     // 1,生成领域层的实体
-    domainList.add(JavaCodeDomainObjectCreate.INSTANCE);
-    // 2,领域的存储层接口
-    domainList.add(JavaCodeDomainRepositoryFacadeCreate.INSTANCE);
-    // 3,生成领域层的服务
-    domainList.add(JavaCodeDomainServiceCreate.INSTANCE);
-
-    // 6.生成单元测试的mock存储实现
-
-    // 6，领域层的单元测试
-    domainList.add(JavaCodeDomainJunitServiceCreate.INSTANCE);
+    domainList.add(CodeDDDomainObjectCreate.INSTANCE);
+    //// 2,领域的存储层接口
+    // domainList.add(JavaCodeDomainRepositoryFacadeCreate.INSTANCE);
+    //// 3,生成领域层的服务
+    // domainList.add(JavaCodeDomainServiceCreate.INSTANCE);
+    //
+    //// 6.生成单元测试的mock存储实现
+    //
+    //// 6，领域层的单元测试
+    // domainList.add(JavaCodeDomainJunitServiceCreate.INSTANCE);
 
     // 存储层的集合
     SCOPE_MAP.put(GenerateScopeEnum.DOMAIN, domainList);

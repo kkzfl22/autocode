@@ -12,7 +12,7 @@ public enum GenerateCodePackageKey {
   PERSIST_PO("persist_object"),
 
   /** 数据库操作的接口 */
-  PERSIST_DAO("persist_dao"),
+  PERSIST_MAPPER("persist_mapper"),
 
   /** 领域层与存储层的转换类 */
   PERSIST_ASSEMBLER("persist_assembler"),

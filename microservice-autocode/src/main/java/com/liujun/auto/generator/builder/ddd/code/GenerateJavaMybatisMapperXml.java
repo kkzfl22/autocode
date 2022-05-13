@@ -4,7 +4,7 @@ import com.liujun.auto.generator.builder.utils.MethodUtils;
 import com.liujun.auto.generator.builder.utils.TableColumnUtils;
 import com.liujun.auto.config.generate.entity.MethodInfo;
 import com.liujun.auto.config.generate.entity.WhereInfo;
-import com.liujun.auto.constant.MethodTypeEnum;
+import com.liujun.auto.constant.MethodOperatorEnum;
 import com.liujun.auto.constant.MyBatisOperatorFlag;
 import com.liujun.auto.constant.Symbol;
 import com.liujun.auto.generator.builder.ddd.constant.GenerateCodePackageKey;
@@ -51,7 +51,7 @@ public class GenerateJavaMybatisMapperXml {
     // 获取po的完整路径
     ImportPackageInfo poPackage = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_PO);
     // 获取dao的完整路径
-    ImportPackageInfo daoPackage = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_DAO);
+    ImportPackageInfo daoPackage = param.getPkg(tableName, GenerateCodePackageKey.PERSIST_MAPPER);
 
     List<MethodInfo> methodList = param.getGenerateConfig().getGenerate().getMethodList();
     Map<String, TableColumnDTO> columnMap = param.getColumnMap().get(tableName);
@@ -70,21 +70,21 @@ public class GenerateJavaMybatisMapperXml {
 
     for (MethodInfo methodItem : methodList) {
       // 添加方法
-      if (MethodTypeEnum.INSERT.getType().equals(methodItem.getOperator())) {
+      if (MethodOperatorEnum.INSERT.getType().equals(methodItem.getOperator())) {
         sb.append(insertMethod(tableMsg, methodItem, poPackage, columnList, typeEnum));
       }
       // 数据库修改
-      else if (MethodTypeEnum.UPDATE.getType().equals(methodItem.getOperator())) {
+      else if (MethodOperatorEnum.UPDATE.getType().equals(methodItem.getOperator())) {
         updateMethod(
             sb, tableMsg, methodItem, poPackage, columnList, columnMap, primaryKeyList, typeEnum);
       }
       // 数据删除
-      else if (MethodTypeEnum.DELETE.getType().equals(methodItem.getOperator())) {
+      else if (MethodOperatorEnum.DELETE.getType().equals(methodItem.getOperator())) {
         deleteMethod(sb, tableMsg, methodItem, poPackage, columnMap, primaryKeyList, typeEnum);
       }
       // 数据查询
-      else if (MethodTypeEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())
-          || MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
+      else if (MethodOperatorEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())
+          || MethodOperatorEnum.QUERY.getType().equals(methodItem.getOperator())) {
         this.queryMethod(
             sb,
             tableMsg,
@@ -590,7 +590,7 @@ public class GenerateJavaMybatisMapperXml {
     }
 
     for (MethodInfo methodItem : methodList) {
-      if (methodItem.getOperator().equals(MethodTypeEnum.QUERY.getType())) {
+      if (methodItem.getOperator().equals(MethodOperatorEnum.QUERY.getType())) {
         return true;
       }
     }

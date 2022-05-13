@@ -74,7 +74,7 @@ public class JavaCodeRepositoryMyBatisJunitScanConfigCreate implements GenerateC
           JavaClassCodeUtils.classDefine(
               mybatisScanConfig,
               IMPORT_CLASS,
-              annotationList(param.getJavaCodePackage().getRepositoryDaoNode().outJavaPackage()),
+              annotationList(param.getJavaCodePackage().getRepositoryMapperNode().outJavaPackage()),
               param.getGenerateConfig().getGenerate().getAuthor());
 
       // 事务的获取逻辑

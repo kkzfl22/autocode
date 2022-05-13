@@ -1,6 +1,8 @@
 package com.liujun.auto.generator.builder.utils;
 
 import com.liujun.auto.constant.Symbol;
+import com.liujun.auto.generator.builder.ddd.entity.GenerateCodeContext;
+import com.liujun.auto.generator.builder.ddd.entity.ImportPackageInfo;
 import com.liujun.auto.generator.javalanguage.constant.JavaKeyWord;
 import com.liujun.auto.utils.FileUtils;
 import org.apache.commons.lang3.StringUtils;

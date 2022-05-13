@@ -23,7 +23,7 @@ import java.util.List;
 public class ContentMethod extends ContentBase {
 
   /** 属性的注释信息 */
-  private ContextFieldDocument document;
+  private ContextMethodDocument document;
 
   /** 属性的的注解信息 */
   private List<ContextAnnotation> annotation;
@@ -65,10 +65,14 @@ public class ContentMethod extends ContentBase {
       // 输出注解
       outCode.append(JavaCodeOutUtils.outAnnotation(this.getAnnotation()));
     }
+
     // 输出左空格数
     outCode.append(JavaCodeOutUtils.outSpace(this.getLeftSpace()));
-    // 访问修饰符
-    outCode.append(visit.getVisit()).append(Symbol.SPACE);
+    if (StringUtils.isNotEmpty(visit.getVisit())) {
+      // 访问修饰符
+      outCode.append(visit.getVisit()).append(Symbol.SPACE);
+    }
+
     // 静态标识
     if (staticFlag) {
       outCode.append(JavaKeyWord.STATIC).append(Symbol.SPACE);
@@ -83,19 +87,22 @@ public class ContentMethod extends ContentBase {
     outCode.append(name);
     // 方法参数
     outCode.append(JavaCodeOutUtils.outParam(param));
-    // 方法左括号
-    outCode.append(Symbol.SPACE).append(Symbol.BRACE_LEFT).append(Symbol.ENTER_LINE);
 
     // 执行代码行的输出操作
     if (null != codeLine && !codeLine.isEmpty()) {
+      // 方法左括号
+      outCode.append(Symbol.SPACE);
+      outCode.append(Symbol.BRACE_LEFT).append(Symbol.ENTER_LINE);
       for (ContextLineCode lineCodeItem : codeLine) {
         outCode.append(lineCodeItem.outCode());
       }
+      // 右括号
+      outCode.append(JavaCodeOutUtils.outSpace(this.getLeftSpace()));
+      outCode.append(Symbol.BRACE_RIGHT);
+    } else {
+      outCode.append(Symbol.SEMICOLON);
     }
 
-    // 右括号
-    outCode.append(JavaCodeOutUtils.outSpace(this.getLeftSpace()));
-    outCode.append(Symbol.BRACE_RIGHT);
     outCode.append(Symbol.ENTER_LINE);
 
     return outCode.toString();

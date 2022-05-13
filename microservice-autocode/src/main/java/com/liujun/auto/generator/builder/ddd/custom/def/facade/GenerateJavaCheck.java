@@ -2,7 +2,7 @@ package com.liujun.auto.generator.builder.ddd.custom.def.facade;
 
 import com.liujun.auto.config.generate.entity.MethodInfo;
 import com.liujun.auto.config.generate.entity.WhereInfo;
-import com.liujun.auto.constant.MethodTypeEnum;
+import com.liujun.auto.constant.MethodOperatorEnum;
 import com.liujun.auto.constant.MyBatisOperatorFlag;
 import com.liujun.auto.constant.Symbol;
 import com.liujun.auto.generator.builder.ddd.constant.ImportCodeActionDefaultPackageKey;
@@ -111,14 +111,14 @@ public class GenerateJavaCheck {
 
     for (MethodInfo methodInfo : methodList) {
       // 如果当前数据为添加
-      if (MethodTypeEnum.INSERT.getType().equals(methodInfo.getOperator())
+      if (MethodOperatorEnum.INSERT.getType().equals(methodInfo.getOperator())
           && !MethodUtils.checkBatch(methodInfo.getParamType())) {
         sb.append(
             this.checkInsert(
                 methodInfo, tableColumnList, errorCodeEnum, dtoPackageInfo, constantPkg));
       }
       // 如果当前的数据为批量添加
-      else if (MethodTypeEnum.INSERT.getType().equals(methodInfo.getOperator())
+      else if (MethodOperatorEnum.INSERT.getType().equals(methodInfo.getOperator())
           && MethodUtils.checkBatch(methodInfo.getParamType())) {
         sb.append(
             this.checkInsertBatch(
@@ -131,26 +131,26 @@ public class GenerateJavaCheck {
       }
 
       // 修改
-      else if (MethodTypeEnum.UPDATE.getType().equals(methodInfo.getOperator())) {
+      else if (MethodOperatorEnum.UPDATE.getType().equals(methodInfo.getOperator())) {
         sb.append(
             this.checkUpdate(
                 methodInfo, tableColumnList, errorCodeEnum, dtoPackageInfo, constantPkg));
       }
       // 删除
-      else if (MethodTypeEnum.DELETE.getType().equals(methodInfo.getOperator())) {
+      else if (MethodOperatorEnum.DELETE.getType().equals(methodInfo.getOperator())) {
         sb.append(
             this.whereCondition(
                 methodInfo, tableColumnList, errorCodeEnum, dtoPackageInfo, constantPkg));
       }
       // 分页查询
-      else if (MethodTypeEnum.QUERY_PAGE.getType().equals(methodInfo.getOperator())) {
+      else if (MethodOperatorEnum.QUERY_PAGE.getType().equals(methodInfo.getOperator())) {
         sb.append(
             this.pageCondition(
                 methodInfo, tableColumnList, errorCodeEnum, dtoPackageInfo, constantPkg));
       }
 
       // 查询
-      else if (MethodTypeEnum.QUERY.getType().equals(methodInfo.getOperator())) {
+      else if (MethodOperatorEnum.QUERY.getType().equals(methodInfo.getOperator())) {
         sb.append(
             this.whereCondition(
                 methodInfo, tableColumnList, errorCodeEnum, dtoPackageInfo, constantPkg));
@@ -294,7 +294,7 @@ public class GenerateJavaCheck {
 
     // 单个添加的方法名
     String addName =
-        NAME_PREFIX + NameProcess.INSTANCE.toJavaClassName(MethodTypeEnum.INSERT.name());
+        NAME_PREFIX + NameProcess.INSTANCE.toJavaClassName(MethodOperatorEnum.INSERT.name());
 
     out.append(Symbol.BRACKET_LEFT).append(addName);
     out.append(Symbol.BRACKET_LEFT).append(JavaVarName.FOREACH_TEMP_NAME);
@@ -358,8 +358,8 @@ public class GenerateJavaCheck {
    */
   private MethodInfo builderMethod() {
     MethodInfo methodInfo = new MethodInfo();
-    methodInfo.setName(MethodTypeEnum.INSERT.name());
-    methodInfo.setParams(MethodTypeEnum.INSERT.name());
+    methodInfo.setName(MethodOperatorEnum.INSERT.name());
+    methodInfo.setParams(MethodOperatorEnum.INSERT.name());
     methodInfo.setComment(ADD_METHOD_NAME);
 
     return methodInfo;
@@ -375,7 +375,7 @@ public class GenerateJavaCheck {
 
     for (MethodInfo methodInfo : methodList) {
       // 检查是否存在单个添加方法
-      if (MethodTypeEnum.INSERT.getType().equals(methodInfo.getOperator())
+      if (MethodOperatorEnum.INSERT.getType().equals(methodInfo.getOperator())
           && !MethodUtils.checkBatch(methodInfo.getParamType())) {
         return true;
       }

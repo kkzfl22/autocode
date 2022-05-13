@@ -3,7 +3,7 @@ package com.liujun.auto.generator.builder.ddd.custom.def.facade;
 import com.liujun.auto.config.generate.entity.MethodInfo;
 import com.liujun.auto.config.generate.entity.TypeInfo;
 import com.liujun.auto.constant.GenerateDefineFlag;
-import com.liujun.auto.constant.MethodTypeEnum;
+import com.liujun.auto.constant.MethodOperatorEnum;
 import com.liujun.auto.constant.Symbol;
 import com.liujun.auto.generator.builder.ddd.constant.ImportCodeActionDefaultPackageKey;
 import com.liujun.auto.generator.builder.ddd.constant.ImportCodePackageKey;
@@ -97,11 +97,11 @@ public class GenerateJavaFacadeJunitApi {
 
     for (MethodInfo methodItem : methodList) {
       // 添加方法
-      if (MethodTypeEnum.INSERT.getType().equals(methodItem.getOperator())) {
+      if (MethodOperatorEnum.INSERT.getType().equals(methodItem.getOperator())) {
         this.insertMethod(sb, methodItem, methodList, targetPackage);
       }
       // 修改方法
-      else if (MethodTypeEnum.UPDATE.getType().equals(methodItem.getOperator())) {
+      else if (MethodOperatorEnum.UPDATE.getType().equals(methodItem.getOperator())) {
         // 插入方法
         MethodInfo insertMethod = MethodUtils.getInsertMethod(methodList);
         GenerateJunitUpdate.INSTANCE.oneUpdateMethod(
@@ -114,7 +114,7 @@ public class GenerateJavaFacadeJunitApi {
             targetPackage);
       }
       // 主键的删除方法
-      else if (MethodTypeEnum.DELETE.getType().equals(methodItem.getOperator())
+      else if (MethodOperatorEnum.DELETE.getType().equals(methodItem.getOperator())
           && !Boolean.TRUE.equals(methodItem.getPrimaryFlag())) {
         GenerateJunitUpdate.INSTANCE.batchDelete(
             sb,
@@ -130,7 +130,7 @@ public class GenerateJavaFacadeJunitApi {
             targetPackage);
       }
       // 分页查询方法
-      else if (MethodTypeEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())) {
+      else if (MethodOperatorEnum.QUERY_PAGE.getType().equals(methodItem.getOperator())) {
         this.pageQueryMethod(
             sb,
             methodItem,
@@ -142,7 +142,7 @@ public class GenerateJavaFacadeJunitApi {
             targetPackage);
       }
       // 数据查询
-      else if (MethodTypeEnum.QUERY.getType().equals(methodItem.getOperator())) {
+      else if (MethodOperatorEnum.QUERY.getType().equals(methodItem.getOperator())) {
         this.queryMethod(
             sb,
             methodItem,

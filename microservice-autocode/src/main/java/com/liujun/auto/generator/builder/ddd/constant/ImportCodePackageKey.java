@@ -121,12 +121,16 @@ public enum ImportCodePackageKey {
   /** mybatis相关的注解信息 */
   MYBATIS_PLUS_TABLE_NAME(
       PkgBuildMethod.getAnnotationPkg(
-          "com.baomidou.mybatisplus.annotation", "TableField", "@TableName")),
+          "com.baomidou.mybatisplus.annotation", "TableName", "@TableName")),
 
   /** mybatis相关的注解信息 */
   MYBATIS_PLUS_TABLE_FIELD(
       PkgBuildMethod.getAnnotationPkg(
           "com.baomidou.mybatisplus.annotation", "TableField", "@TableField")),
+
+  /** mybatis-plus的基础父类信息 */
+  MYBATIS_PLUS_MAPPER_BASE(
+      PkgBuildMethod.classInfo("com.baomidou.mybatisplus.core.mapper", "BaseMapper")),
 
   /** 领域服务中的id生成 */
   DOMAIN_ID_GENERATE(

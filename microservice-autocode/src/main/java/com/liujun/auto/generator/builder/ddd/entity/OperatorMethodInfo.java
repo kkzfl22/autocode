@@ -1,6 +1,6 @@
 package com.liujun.auto.generator.builder.ddd.entity;
 
-import com.liujun.auto.constant.MethodTypeEnum;
+import com.liujun.auto.constant.MethodOperatorEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -32,7 +32,7 @@ public class OperatorMethodInfo {
   private String rspComment;
 
   /** 数据操作类型,主要用于区别查询与修改 */
-  private MethodTypeEnum operatorType;
+  private MethodOperatorEnum operatorType;
 
   /** 方法参数 */
   private List<MethodParamInfo> paramList = new ArrayList<>(3);

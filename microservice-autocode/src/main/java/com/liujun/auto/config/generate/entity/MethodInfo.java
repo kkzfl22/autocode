@@ -1,5 +1,9 @@
 package com.liujun.auto.config.generate.entity;
 
+import com.liujun.auto.constant.MethodOperatorEnum;
+import com.liujun.auto.generator.builder.ddd.entity.OperatorMethodInfo;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -13,6 +17,8 @@ import java.util.Objects;
  * @version 0.0.1
  */
 @ToString
+@Getter
+@Setter
 public class MethodInfo implements Comparable<MethodInfo> {
 
   /** 方法名称 */
@@ -23,6 +29,9 @@ public class MethodInfo implements Comparable<MethodInfo> {
 
   /** 此标识用于在方法操作时对返回类型进行改变，修改在数据库层返回int，操作的行数，在业务层返回boolean，标识成功与失败 */
   private String operator;
+
+  /** 操作的类型 */
+  private MethodOperatorEnum operatorType;
 
   /** 方法的注释 */
   private String comment;
@@ -75,126 +84,6 @@ public class MethodInfo implements Comparable<MethodInfo> {
       return -1;
     }
     return 0;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public Boolean getDisable() {
-    return disable;
-  }
-
-  public void setDisable(Boolean disable) {
-    this.disable = disable;
-  }
-
-  public String getOperator() {
-    return operator;
-  }
-
-  public void setOperator(String operator) {
-    this.operator = operator;
-  }
-
-  public String getComment() {
-    return comment;
-  }
-
-  public void setComment(String comment) {
-    this.comment = comment;
-  }
-
-  public String getWhere() {
-    return where;
-  }
-
-  public void setWhere(String where) {
-    this.where = where;
-  }
-
-  public List<WhereInfo> getWhereInfo() {
-    return whereInfo;
-  }
-
-  public void setWhereInfo(List<WhereInfo> whereInfo) {
-    this.whereInfo = whereInfo;
-  }
-
-  public String getParams() {
-    return params;
-  }
-
-  public void setParams(String params) {
-    this.params = params;
-  }
-
-  public List<TypeInfo> getParamType() {
-    return paramType;
-  }
-
-  public void setParamType(List<TypeInfo> paramType) {
-    this.paramType = paramType;
-  }
-
-  public Boolean getPrimaryFlag() {
-    return primaryFlag;
-  }
-
-  public void setPrimaryFlag(Boolean primaryFlag) {
-    this.primaryFlag = primaryFlag;
-  }
-
-  public String getReturns() {
-    return returns;
-  }
-
-  public void setReturns(String returns) {
-    this.returns = returns;
-  }
-
-  public TypeInfo getReturnType() {
-    return returnType;
-  }
-
-  public void setReturnType(TypeInfo returnType) {
-    this.returnType = returnType;
-  }
-
-  public Integer getOrder() {
-    return order;
-  }
-
-  public void setOrder(Integer order) {
-    this.order = order;
-  }
-
-  public Boolean getBatchFlag() {
-    return batchFlag;
-  }
-
-  public void setBatchFlag(Boolean batchFlag) {
-    this.batchFlag = batchFlag;
-  }
-
-  public Boolean getMultiRow() {
-    return multiRow;
-  }
-
-  public void setMultiRow(Boolean multiRow) {
-    this.multiRow = multiRow;
-  }
-
-  public String getRequestType() {
-    return requestType;
-  }
-
-  public void setRequestType(String requestType) {
-    this.requestType = requestType;
   }
 
   @Override

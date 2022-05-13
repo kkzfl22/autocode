@@ -28,7 +28,7 @@ public class ContextAnnotation {
    * @param name
    * @return
    */
-  public static List<ContextAnnotation> annotation(String name) {
+  public static List<ContextAnnotation> annotationList(String name) {
     return Arrays.asList(ContextAnnotation.builder().annotation(name).build());
   }
 
