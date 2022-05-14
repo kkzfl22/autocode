@@ -181,7 +181,7 @@ public class OracleOutputSchemaToSqlCreate implements GenerateCodeInf {
         .append(Symbol.QUOTE)
         .append(Symbol.SPACE);
     outOracleSql.append(SqlKeyWord.IS).append(Symbol.SPACE);
-    outOracleSql.append(Symbol.SINGLE_QUOTE).append(Symbol.SPACE);
+    outOracleSql.append(Symbol.SINGLE_QUOTE);
     outOracleSql.append(tableInfo.getTableComment());
     outOracleSql.append(Symbol.SINGLE_QUOTE);
     outOracleSql.append(Symbol.SEMICOLON);
@@ -206,7 +206,7 @@ public class OracleOutputSchemaToSqlCreate implements GenerateCodeInf {
       outOracleSql.append(SqlKeyWord.IS).append(Symbol.SPACE);
 
       outOracleSql.append(Symbol.SINGLE_QUOTE);
-      if (StringUtils.isNotEmpty(tableInfo.getTableComment())) {
+      if (StringUtils.isNotEmpty(column.getColumnMsg())) {
         outOracleSql.append(column.getColumnMsg());
       } else {
         outOracleSql.append(Symbol.EMPTY);

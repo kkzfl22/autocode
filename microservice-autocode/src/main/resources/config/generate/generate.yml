@@ -134,7 +134,7 @@ generate:
     # repository-mybatis-plus，采用mybatis-plus的存储层的实现。同样会生成相关的po，存储的调用，mapper接口和mybatis文件。
     # 这种种生成方式的主要区别在于mybatis需要一些特殊的设置。在po需要指定与数据库的对应关系、mapper面要继承，以及xml文件无需全部生成。
     # parse-db 执行数据的的脚本转换行成
-  scope: domain,repository-mybatis-plus
+  scope: domain,repository-mybatis-plus,parse-db
   #scope: application,domain,repository-mybatis-plus
   #scope: parse-db
   #输出文件的配制
