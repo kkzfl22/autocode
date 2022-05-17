@@ -93,11 +93,13 @@ public class MenuTreeCodePackage {
    * @return 模块信息
    */
   public DirNode getRepositoryAssemblerNode() {
+
     return menuTree
         .getRoot()
+        .getChildren(JavaDomainTreeKey.BASE)
         .getChildren(JavaDomainTreeKey.INFRASTRUCTURE)
-        .getChildren(JavaDomainTreeKey.DOMAIN_REPOSITORY)
-        .getChildren(menuTree.getModelName())
+        .getChildren(JavaDomainTreeKey.PREFIX)
+        .getChildren(JavaDomainTreeKey.MODEL_NAME)
         .getChildren(JavaDomainTreeKey.REPOSITORY_ASSEMBLER);
   }
 

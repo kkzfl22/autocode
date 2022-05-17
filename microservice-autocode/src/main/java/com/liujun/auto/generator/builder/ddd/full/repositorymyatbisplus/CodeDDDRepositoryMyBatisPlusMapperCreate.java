@@ -4,6 +4,7 @@ import com.liujun.auto.config.generate.GenerateConfigProcess;
 import com.liujun.auto.config.generate.entity.MethodInfo;
 import com.liujun.auto.config.generate.entity.TypeInfo;
 import com.liujun.auto.constant.GenerateDefineFlag;
+import com.liujun.auto.constant.MethodOperatorEnum;
 import com.liujun.auto.constant.Symbol;
 import com.liujun.auto.generator.builder.GenerateCodeInf;
 import com.liujun.auto.generator.builder.ddd.code.GenerateCodeJavaEntity;
@@ -257,6 +258,22 @@ public class CodeDDDRepositoryMyBatisPlusMapperCreate implements GenerateCodeInf
     List<ContentBase> result = new ArrayList<>();
 
     for (MethodInfo methodInfo : context.getGenerateCfg().getMethodList()) {
+      // 1,如果当为单个添加方法，不需要，使用mybatis-plus的标准插入即可
+      if (MethodOperatorEnum.INSERT.equals(methodInfo.getOperatorType())) {
+        // 如果为单个插入则，跳过
+        if (!methodInfo.getBatchFlag()) {
+          continue;
+        }
+      }
+      // 1,如果当为单个删除方法，不需要，使用mybatis-plus的标准插入即可
+      else if (MethodOperatorEnum.DELETE.equals(methodInfo.getOperatorType())) {
+        continue;
+      }
+      // 如果为查询方法，则默认跳过处理
+      else if (MethodOperatorEnum.QUERY.equals(methodInfo.getOperatorType())) {
+        continue;
+      }
+
       result.add(builderMethod(methodInfo, tableInfo, context));
     }
 

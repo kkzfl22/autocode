@@ -29,6 +29,7 @@ import java.util.Set;
  * @author liujun
  * @version 0.0.1
  */
+@Deprecated
 public class GenerateJavaAssembler {
 
   /** 转换为领域实体对象方法 */

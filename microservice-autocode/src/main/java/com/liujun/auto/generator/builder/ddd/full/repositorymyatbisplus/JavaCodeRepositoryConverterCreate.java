@@ -29,6 +29,7 @@ import java.util.Map.Entry;
  * @author liujun
  * @version 1.0.0
  */
+@Deprecated
 public class JavaCodeRepositoryConverterCreate implements GenerateCodeInf {
 
   private static final String NAME_SUFFIX = "PersistConverter";

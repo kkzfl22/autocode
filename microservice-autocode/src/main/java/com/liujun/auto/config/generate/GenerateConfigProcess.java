@@ -58,6 +58,14 @@ public class GenerateConfigProcess {
       method.setWhereInfo(this.getWhereInfo(method.getWhere()));
       // 设置类型
       method.setOperatorType(MethodOperatorEnum.getType(method.getOperator()));
+      // 批量标识处理
+      methodBatch(method);
+    }
+  }
+
+  private void methodBatch(MethodInfo method) {
+    if (null == method.getBatchFlag()) {
+      method.setBatchFlag(Boolean.FALSE);
     }
   }
 

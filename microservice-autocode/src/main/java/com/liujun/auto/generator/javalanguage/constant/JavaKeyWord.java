@@ -68,16 +68,16 @@ public class JavaKeyWord {
   public static final String IMPLEMENTS = "implements";
 
   /** 判断 */
-  public static final String IF = "if ";
+  public static final String IF = "if";
 
   /** 判断 */
-  public static final String ELSE_IF = "else if ";
+  public static final String ELSE_IF = "else if";
 
   /** else 的判断 */
   public static final String ELSE = "else";
 
   /** 空关键字 */
-  public static final String NULL = "null ";
+  public static final String NULL = "null";
 
   /** 类注释开始 */
   public static final String ANNO_CLASS = "/**";

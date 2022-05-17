@@ -49,6 +49,9 @@ public class ContentMethod extends ContentBase {
   /** 方法中的代码行信息 */
   private List<ContextLineCode> codeLine;
 
+  /** 是否为空方法体，一般在构建方法时，为空方法体 */
+  private Boolean emptyCode;
+
   @Override
   public String outCode() {
     StringBuilder outCode = new StringBuilder();
@@ -81,12 +84,19 @@ public class ContentMethod extends ContentBase {
     if (finalFlag) {
       outCode.append(JavaKeyWord.FINAL).append(Symbol.SPACE);
     }
-    // 返回类型
-    outCode.append(returnClass).append(Symbol.SPACE);
+
+    if (StringUtils.isNotEmpty(returnClass)) {
+      // 返回类型
+      outCode.append(returnClass).append(Symbol.SPACE);
+    }
+
     // 方法名
     outCode.append(name);
-    // 方法参数
-    outCode.append(JavaCodeOutUtils.outParam(param));
+
+    if (null != param && !param.isEmpty()) {
+      // 方法参数
+      outCode.append(JavaCodeOutUtils.outParam(param));
+    }
 
     // 执行代码行的输出操作
     if (null != codeLine && !codeLine.isEmpty()) {
@@ -99,8 +109,17 @@ public class ContentMethod extends ContentBase {
       // 右括号
       outCode.append(JavaCodeOutUtils.outSpace(this.getLeftSpace()));
       outCode.append(Symbol.BRACE_RIGHT);
-    } else {
-      outCode.append(Symbol.SEMICOLON);
+    }
+
+    // 如果当前为空方法体
+    if (null != emptyCode && emptyCode) {
+      // 方法左括号
+      outCode.append(Symbol.SPACE);
+      outCode.append(Symbol.BRACE_LEFT).append(Symbol.ENTER_LINE);
+
+      // 右括号
+      outCode.append(JavaCodeOutUtils.outSpace(this.getLeftSpace()));
+      outCode.append(Symbol.BRACE_RIGHT);
     }
 
     outCode.append(Symbol.ENTER_LINE);

@@ -58,23 +58,13 @@ public class NameProcess {
   }
 
   /**
-   * 转换为action的名字
-   *
-   * @param str
-   * @return
-   */
-  protected String toActionStr(String str) {
-    return str.substring(0, 1).toLowerCase() + str.substring(1);
-  }
-
-  /**
    * java属性的命名,首字线小写，其他的首字母大写
    *
-   * @param str
+   * @param tableName
    * @return
    */
-  public String toFieldName(String str) {
-    String[] nameTemps = str.split(Symbol.UNDER_LINE);
+  public String toFieldName(String tableName) {
+    String[] nameTemps = tableName.split(Symbol.UNDER_LINE);
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < nameTemps.length; i++) {
       if (i == 0) {
@@ -90,11 +80,11 @@ public class NameProcess {
   /**
    * 转换为java属性get与set命名规则
    *
-   * @param str
+   * @param tableName
    * @return
    */
-  public String toProJavaName(String str) {
-    String[] strs = str.split(Symbol.UNDER_LINE);
+  public String toProJavaName(String tableName) {
+    String[] strs = tableName.split(Symbol.UNDER_LINE);
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < strs.length; i++) {
       sb.append(strs[i].substring(0, 1).toUpperCase());

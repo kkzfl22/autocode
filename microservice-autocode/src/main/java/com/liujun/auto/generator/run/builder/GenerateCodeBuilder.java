@@ -19,9 +19,9 @@ import com.liujun.auto.generator.builder.ddd.full.other.JavaCodeProjectCfgCopyCr
 import com.liujun.auto.generator.builder.ddd.full.other.JavaCodeProjectMavenPomCreate;
 import com.liujun.auto.generator.builder.ddd.full.other.JavaCodeResourceI18nEnUsCreate;
 import com.liujun.auto.generator.builder.ddd.full.other.JavaCodeResourceI18nZhCnCreate;
+import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.CodeDDDRepositoryMyBatisPlusConverterCreate;
 import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.CodeDDDRepositoryMyBatisPlusMapperCreate;
 import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.CodeDDDRepositoryMyBatisPlusObjectCreate;
-import com.liujun.auto.generator.builder.ddd.full.repositorymyatbisplus.JavaCodeRepositoryMapperInfCreate;
 import com.liujun.auto.generator.builder.ddd.full.repositorymybatis.CodeDDDRepositoryMyBatisObjectCreate;
 import com.liujun.auto.generator.builder.ddd.full.sql.OracleOutputDataToSqlCreate;
 import com.liujun.auto.generator.builder.ddd.full.sql.OracleOutputSchemaToSqlCreate;
@@ -110,6 +110,7 @@ public class GenerateCodeBuilder {
     // 1,存储层实体的生成
     // repositoryList.add(JavaCodeRepositoryMyBatisObjectCreate.INSTANCE);
     repositoryList.add(CodeDDDRepositoryMyBatisObjectCreate.INSTANCE);
+
     //// 2,生成mapper对象
     // repositoryList.add(JavaCodeRepositoryMyBatisMapperInfCreate.INSTANCE);
     //// 3,mybatis的mapper文件
@@ -136,6 +137,10 @@ public class GenerateCodeBuilder {
     repositoryList.add(CodeDDDRepositoryMyBatisPlusObjectCreate.INSTANCE);
     //// 2.生成mybatis-plus的mapper的接口文件
     repositoryList.add(CodeDDDRepositoryMyBatisPlusMapperCreate.INSTANCE);
+
+    // 2，存储层与领域层的实体转换
+    repositoryList.add(CodeDDDRepositoryMyBatisPlusConverterCreate.INSTANCE);
+
     //// 生成xml文件
     // repositoryList.add(JavaCodeRepositoryMapperXmlCreate.INSTANCE);
     //// 生成单元测试配制文件

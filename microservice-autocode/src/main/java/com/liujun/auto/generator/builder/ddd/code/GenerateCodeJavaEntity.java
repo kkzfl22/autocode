@@ -226,7 +226,7 @@ public class GenerateCodeJavaEntity {
     outCode.append(Symbol.QUOTE);
     outCode.append(Symbol.BRACKET_RIGHT);
 
-    return ContextLineCode.builderCode(outCode.toString());
+    return ContextLineCode.builderCodeFinish(outCode.toString());
   }
 
   /**
@@ -277,7 +277,7 @@ public class GenerateCodeJavaEntity {
       outCode.append(Symbol.BRACKET_RIGHT);
     }
 
-    return ContextLineCode.builderCode(outCode.toString());
+    return ContextLineCode.builderCodeFinish(outCode.toString());
   }
 
   /**
@@ -298,7 +298,7 @@ public class GenerateCodeJavaEntity {
     outCode.append(Symbol.QUOTE);
     outCode.append(Symbol.BRACKET_RIGHT);
 
-    return ContextLineCode.builderCode(outCode.toString());
+    return ContextLineCode.builderCodeFinish(outCode.toString());
   }
   /**
    * 构建最后一行的ToString方法操作
@@ -317,7 +317,7 @@ public class GenerateCodeJavaEntity {
     outCode.append(Symbol.BRACKET_LEFT);
     outCode.append(Symbol.BRACKET_RIGHT);
 
-    return ContextLineCode.builderCode(outCode.toString());
+    return ContextLineCode.builderCodeFinish(outCode.toString());
   }
 
   /**
@@ -392,12 +392,7 @@ public class GenerateCodeJavaEntity {
     outCode.append(Symbol.POINT);
     outCode.append(javaName);
 
-    ContextLineCode line = new ContextLineCode();
-
-    line.setLeftSpace(PrefixSpaceEnum.TWO);
-    line.setLineCode(outCode.toString());
-
-    return Arrays.asList(line);
+    return Arrays.asList(ContextLineCode.builderCodeFinish(outCode.toString()));
   }
 
   /**
@@ -482,11 +477,6 @@ public class GenerateCodeJavaEntity {
     outCode.append(Symbol.SPACE);
     outCode.append(referenceName);
 
-    ContextLineCode line = new ContextLineCode();
-
-    line.setLeftSpace(PrefixSpaceEnum.TWO);
-    line.setLineCode(outCode.toString());
-
-    return Arrays.asList(line);
+    return Arrays.asList(ContextLineCode.builderCodeFinish(outCode.toString()));
   }
 }
