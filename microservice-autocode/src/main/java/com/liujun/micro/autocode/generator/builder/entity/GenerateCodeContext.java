@@ -196,6 +196,10 @@ public class GenerateCodeContext {
     this.projectPath = projectPath;
   }
 
+  public Map<String, Map<String, ImportPackageInfo>> getPackageMap() {
+    return packageMap;
+  }
+
   /**
    * 获取包数所信息，按定义的枚举值
    *

@@ -106,17 +106,17 @@ generate:
   #代码内的目录结构的配制
   codeMenuTree:
     #最基础的目标配制
-    baseMenu: com.paraview.zsc.domain.component.
+    baseMenu: com.paraview.common
     #最新输出的模块的名称
-    domainName: user
+    domainName: yaum
   #模块名称
-  moduleName: urora-biz
+  moduleName: yaum-biz
   #工程名
-  projectName: matchTg
+  projectName: yaum
   #maven的配制信息
   #maven的artifactId即为各工程或者模块的名称
   maven:
-    groupId: com.liujun.manager.user
+    groupId: com.paraview.common
     version: 1.0-SNAPSHOT
     #代码生成器需要包括的范围
     #目前存在api,application,domain,repository
